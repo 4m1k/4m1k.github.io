@@ -337,16 +337,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://standby.cub.red/plugin/tmdb-proxy', 'TMDB Proxy', '@lampa', 'TMDB');
+							itemON('https://cub.red/plugin/tmdb-proxy', 'TMDB Proxy', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://standby.cub.red/plugin/tmdb-proxy";
+							var pluginToRemoveUrl = "https://cub.red/plugin/tmdb-proxy";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://standby.cub.red/plugin/tmdb-proxy')
+						/*var myResult = checkPlugin('https://cub.red/plugin/tmdb-proxy')
 						setTimeout(function() {	
 							$('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -355,7 +355,7 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="TMDB"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://standby.cub.red/plugin/tmdb-proxy');
+						var myResult = checkPlugin('https://cub.red/plugin/tmdb-proxy');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>');
@@ -831,15 +831,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://standby.cub.red/plugin/collections', 'Коллекции', '@lampa', 'Collections');
+						       itemON('https://cub.red/plugin/collections', 'Коллекции', '@lampa', 'Collections');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://standby.cub.red/plugin/collections";
+							var pluginToRemoveUrl = "https://cub.red/plugin/collections";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://standby.cub.red/plugin/collections')
+						/*var myResult = checkPlugin('https://cub.red/plugin/collections')
 						setTimeout(function() {	
 							$('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -848,13 +848,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Collections"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://standby.cub.red/plugin/collections');
+						var myResult = checkPlugin('https://cub.red/plugin/collections');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://standby.cub.red/plugin/collections') {
+                                                          if (pluginsArray[i].url === 'https://cub.red/plugin/collections') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
