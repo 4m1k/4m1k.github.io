@@ -337,16 +337,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/tmdb-proxy', 'TMDB Proxy', '@lampa', 'TMDB');
+							itemON('https://standby.cub.red/plugin/tmdb-proxy', 'TMDB Proxy', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/tmdb-proxy";
+							var pluginToRemoveUrl = "https://standby.cub.red/plugin/tmdb-proxy";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/tmdb-proxy')
+						/*var myResult = checkPlugin('https://standby.cub.red/plugin/tmdb-proxy')
 						setTimeout(function() {	
 							$('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -355,13 +355,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="TMDB"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/tmdb-proxy');
+						var myResult = checkPlugin('https://standby.cub.red/plugin/tmdb-proxy');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/tmdb-proxy') {
+                                                          if (pluginsArray[i].url === 'https://standby.cub.red/plugin/tmdb-proxy') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -831,15 +831,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://cub.red/plugin/collections', 'Коллекции', '@lampa', 'Collections');
+						       itemON('https://standby.cub.red/plugin/collections', 'Коллекции', '@lampa', 'Collections');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://cub.red/plugin/collections";
+							var pluginToRemoveUrl = "https://standby.cub.red/plugin/collections";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://cub.red/plugin/collections')
+						/*var myResult = checkPlugin('https://standby.cub.red/plugin/collections')
 						setTimeout(function() {	
 							$('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -848,13 +848,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Collections"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://cub.red/plugin/collections');
+						var myResult = checkPlugin('https://standby.cub.red/plugin/collections');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://cub.red/plugin/collections') {
+                                                          if (pluginsArray[i].url === 'https://standby.cub.red/plugin/collections') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -886,15 +886,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/weather.js', 'Погода', '@scabrum', 'Weather');
+						       itemON('https://4m1k.github.io/weather.js', 'Погода', '@scabrum', 'Weather');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/weather.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/weather.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('hhttps://amikdn.github.io/plg/weather.js')
+						/*var myResult = checkPlugin('hhttps://4m1k.github.io/weather.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -903,13 +903,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/weather.js');
+						var myResult = checkPlugin('https://4m1k.github.io/weather.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/weather.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/weather.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -941,15 +941,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/cuboff.js', 'Cub Off', '@lampa', 'Cub_off');
+						       itemON('https://4m1k.github.io/cuboff.js', 'Cub Off', '@lampa', 'Cub_off');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/cuboff.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/cuboff.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('hhttps://amikdn.github.io/plg/cuboff.js')
+						/*var myResult = checkPlugin('hhttps://4m1k.github.io/cuboff.js')
 						setTimeout(function() {	
 							$('div[data-name="Cub_off"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -958,13 +958,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Cub_off"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/cuboff.js');
+						var myResult = checkPlugin('https://4m1k.github.io/cuboff.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Cub_off"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/cuboff.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/cuboff.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -996,15 +996,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/interface.js', 'Стильный Интерфейс', '@lampa', 'Style_interface_fix');
+						       itemON('https://4m1k.github.io/interface.js', 'Стильный Интерфейс', '@lampa', 'Style_interface_fix');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/interface.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/interface.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/interface.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/interface.js')
 						setTimeout(function() {	
 							$('div[data-name="Style_interface_fix"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1013,13 +1013,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Style_interface_fix"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/interface.js');
+						var myResult = checkPlugin('https://4m1k.github.io/interface.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Style_interface_fix"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/interface.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/interface.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1106,15 +1106,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/source.js', 'Дополнительные Источники', '@lampa', 'New_source');
+						       itemON('https://4m1k.github.io/source.js', 'Дополнительные Источники', '@lampa', 'New_source');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/source.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/source.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/source.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/source.js')
 						setTimeout(function() {	
 							$('div[data-name="New_source"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1123,13 +1123,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="New_source"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/source.js');
+						var myResult = checkPlugin('https://4m1k.github.io/source.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="New_source"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/source.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/source.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1161,15 +1161,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/start.js', 'Start', '@scabrum', 'Start');
+						       itemON('https://4m1k.github.io/start.js', 'Start', '@scabrum', 'Start');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/start.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/start.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/start.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/start.js')
 						setTimeout(function() {	
 							$('div[data-name="Start"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1178,13 +1178,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Start"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/start.js');
+						var myResult = checkPlugin('https://4m1k.github.io/start.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Start"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/start.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/start.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1439,10 +1439,10 @@ Lampa.SettingsApi.addComponent({
 						},
 						onChange: function(value) {
 							if (value == '1') {
-								itemON('https://amikdn.github.io/plg/nots.js', 'Remove TS', '@AndreyURL54', 'ts_del');
+								itemON('https://4m1k.github.io/nots.js', 'Remove TS', '@AndreyURL54', 'ts_del');
 							}
 							if (value == '2') {
-								var pluginToRemoveUrl = "https://amikdn.github.io/plg/nots.js";
+								var pluginToRemoveUrl = "https://4m1k.github.io/nots.js";
 								deletePlugin(pluginToRemoveUrl);
 							}
 						},
@@ -1456,13 +1456,13 @@ Lampa.SettingsApi.addComponent({
 									$('div[data-name="ts_del"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 								}
 							}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/nots.js');
+						var myResult = checkPlugin('https://4m1k.github.io/nots.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="ts_del"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/nots.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/nots.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1495,15 +1495,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/rusmovies.js', 'Русские Новинки', '@lampa', 'rus_movie');
+						       itemON('https://4m1k.github.io/rusmovies.js', 'Русские Новинки', '@lampa', 'rus_movie');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/rusmovies.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/rusmovies.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/weather.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/weather.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1512,13 +1512,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/rusmovies.js');
+						var myResult = checkPlugin('https://4m1k.github.io/rusmovies.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="rus_movie"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/rusmovies.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/rusmovies.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1553,15 +1553,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/logo.js', 'Лого Вместо Названия', '@lampa', 'logo_title');
+						       itemON('https://4m1k.github.io/logo.js', 'Лого Вместо Названия', '@lampa', 'logo_title');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/logo.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/logo.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/logo.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/logo.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1570,13 +1570,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/logo.js');
+						var myResult = checkPlugin('https://4m1k.github.io/logo.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="logo_title"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/logo.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/logo.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1617,7 +1617,7 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/logo.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/logo.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1673,7 +1673,7 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/logo.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/logo.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1721,15 +1721,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/cardify.js', 'Cardify', '@lampa', 'cardify');
+						       itemON('https://4m1k.github.io/cardify.js', 'Cardify', '@lampa', 'cardify');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/cardify.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/cardify.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/logo.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/logo.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1738,13 +1738,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/cardify.js');
+						var myResult = checkPlugin('https://4m1k.github.io/cardify.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="cardify"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/cardify.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/cardify.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1778,15 +1778,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/foreign.js', 'Зарубежные Подборки', '@lampa', 'inter_movie');
+						       itemON('https://4m1k.github.io/foreign.js', 'Зарубежные Подборки', '@lampa', 'inter_movie');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/foreign.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/foreign.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/weather.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/weather.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1795,13 +1795,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/foreign.js');
+						var myResult = checkPlugin('https://4m1k.github.io/foreign.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="inter_movie"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/foreign.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/foreign.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -1835,15 +1835,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/seaseps.js', 'Состояние Сериала', '@lampa', 'eps_and_seas');
+						       itemON('https://4m1k.github.io/seaseps.js', 'Состояние Сериала', '@lampa', 'eps_and_seas');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/seaseps.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/seaseps.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/weather.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/weather.js')
 						setTimeout(function() {	
 							$('div[data-name="Weather"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -1852,13 +1852,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Weather"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/seaseps.js');
+						var myResult = checkPlugin('https://4m1k.github.io/seaseps.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="eps_and_seas"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/seaseps.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/seaseps.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -2327,15 +2327,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://amikdn.github.io/plg/redirect.js', 'Смена Сервера', '@scabrum', 'Redirect');
+						       itemON('https://4m1k.github.io/redirect.js', 'Смена Сервера', '@scabrum', 'Redirect');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/redirect.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/redirect.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/redirect.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/redirect.js')
 						setTimeout(function() {	
 							$('div[data-name="Redirect"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2344,13 +2344,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Redirect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/redirect.js');
+						var myResult = checkPlugin('https://4m1k.github.io/redirect.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Redirect"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/redirect.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/redirect.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -2440,10 +2440,10 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://amikdn.github.io/plg/menusort.js', 'Сортировка Главного Меню', '@AndreyURL54', 'Sort_mainmenu');
+							itemON('https://4m1k.github.io/menusort.js', 'Сортировка Главного Меню', '@AndreyURL54', 'Sort_mainmenu');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/menusort.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/menusort.js";
 							deletePlugin(pluginToRemoveUrl);
 						}	
 					},
@@ -2457,13 +2457,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/menusort.js');
+						var myResult = checkPlugin('https://4m1k.github.io/menusort.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Sort_mainmenu"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/menusort.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/menusort.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -2561,7 +2561,7 @@ Lampa.SettingsApi.addComponent({
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/redirect.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/redirect.js')
 						setTimeout(function() {	
 							$('div[data-name="Redirect"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2767,15 +2767,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://amikdn.github.io/plg/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
+							itemON('https://4m1k.github.io/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/cinema.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/cinema.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/cinema.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/cinema.js')
 						setTimeout(function() {	
 							$('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2784,13 +2784,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/cinema.js');
+						var myResult = checkPlugin('https://4m1k.github.io/cinema.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/cinema.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/cinema.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3147,15 +3147,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://amikdn.github.io/plg/jackett.js', 'Переключение Парсеров', '@AndreyURL54', 'Switch_Parser');
+							itemON('https://4m1k.github.io/jackett.js', 'Переключение Парсеров', '@AndreyURL54', 'Switch_Parser');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/jackett.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/jackett.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/jackett.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/jackett.js')
 						setTimeout(function() {	
 							$('div[data-name="Switch_Parser"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3164,13 +3164,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Switch_Parser"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/jackett.js');
+						var myResult = checkPlugin('https://4m1k.github.io/jackett.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Switch_Parser"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/jackett.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/jackett.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3753,12 +3753,12 @@ Lampa.SettingsApi.addComponent({
 							itemON('https://bylampa.github.io/tv.js', 'Hack TV', '@scabrum', 'Hack_TV');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/plg/tv.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/tv.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/plg/tv.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/tv.js')
 						setTimeout(function() {	
 							$('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3767,13 +3767,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/plg/tv.js');
+						var myResult = checkPlugin('https://4m1k.github.io/tv.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/plg/tv.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/tv.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
