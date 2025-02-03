@@ -337,16 +337,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://cub.red/plugin/tmdb-proxy', 'TMDB Proxy', '@lampa', 'TMDB');
+							itemON('https://4m1k.github.io/tmdb.js', 'TMDB Proxy', '@lampa', 'TMDB');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://cub.red/plugin/tmdb-proxy";
+							var pluginToRemoveUrl = "https://4m1k.github.io/tmdb.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://cub.red/plugin/tmdb-proxy')
+						/*var myResult = checkPlugin('https://4m1k.github.io/tmdb.js')
 						setTimeout(function() {	
 							$('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -355,13 +355,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="TMDB"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://cub.red/plugin/tmdb-proxy');
+						var myResult = checkPlugin('https://4m1k.github.io/tmdb.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://cub.red/plugin/tmdb-proxy') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/tmdb.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
