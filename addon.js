@@ -361,7 +361,7 @@ Lampa.SettingsApi.addComponent({
                                                        $('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://standby.cub.red/plugin/tmdb-proxy') {
+                                                          if (pluginsArray[i].url === 'https://cub.red/plugin/tmdb-proxy') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -831,15 +831,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://cub.red/plugin/collections', 'Коллекции', '@lampa', 'Collections');
+						       itemON('https://4m1k.github.io/collections.js', 'Коллекции', '@lampa', 'Collections');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://cub.red/plugin/collections";
+							var pluginToRemoveUrl = "https://4m1k.github.io/collections.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
-						/*var myResult = checkPlugin('https://cub.red/plugin/collections')
+						/*var myResult = checkPlugin('https://4m1k.github.io/collections.js')
 						setTimeout(function() {	
 							$('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -848,13 +848,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Collections"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://cub.red/plugin/collections');
+						var myResult = checkPlugin('https://4m1k.github.io/collections.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://cub.red/plugin/collections') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/collections.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3259,15 +3259,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/etor', 'Настройка Торрентов', '@lampa', 'Setting_torrents');
+							itemON('https://4m1k.github.io/etor.js', 'Настройка Торрентов', '@lampa', 'Setting_torrents');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/etor";
+							var pluginToRemoveUrl = "https://4m1k.github.io/etor.js";
 							deletePlugin(pluginToRemoveUrl);
                                                 }
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/etor')
+						/*var myResult = checkPlugin('https://4m1k.github.io/etor.js')
 						setTimeout(function() {	
 							$('div[data-name="Setting_torrents"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3276,13 +3276,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Setting_torrents"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/etor');
+						var myResult = checkPlugin('https://4m1k.github.io/etor.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Setting_torrents"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/etor') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/etor.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
