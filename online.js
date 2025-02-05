@@ -1617,8 +1617,8 @@
       if (e.type == 'complite') {
         setTimeout(function(){
                 $(".view--online_cinema", Lampa.Activity.active().activity.render()).empty().append('<svg viewBox="0 0 102 102" xmlns="http://www.w3.org/2000/svg">
-<path fill="
-" d="
+<path fill="currentColor" 
+d="
 M70,16
 c0,20,-10,30,-20,30
 c10,0,20,10,20,30
