@@ -1616,7 +1616,7 @@
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
         setTimeout(function(){
-                $(".view--online_cinema", Lampa.Activity.active().activity.render()).empty().append('&nbsp&nbspOnline');
+                $(".view--online_cinema", Lampa.Activity.active().activity.render()).empty().append('Online');
         }, 5);
         if (Lampa.Storage.get('card_interfice_type') === 'new') {
                 addButton({
