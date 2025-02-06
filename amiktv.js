@@ -1561,7 +1561,7 @@ if 	(Lampa.Storage.field('DIESEL_AccessVariant') == 'LOGIN') {
 	if (!diesel_iptv_passwd) Lampa.Storage.set('diesel_iptv_passwd', '')
 	/* выставляем таймаут, иначе undefined - скрипт отрабатывает раньше, чем получаем значение. Не касается случая, когда логин и пароль уже внесены */
 	//setTimeout(function() {
-		var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + diesel_iptv_login + '/' + diesel_iptv_passwd + Lampa.Storage.field('diesel_source_server') + 'playlist.m3u8';
+		var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u';
 		//console.log ('Playlist', diesel_playlist);
 	//}, 200);
 }
