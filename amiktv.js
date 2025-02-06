@@ -1572,16 +1572,16 @@ if (Lampa.Storage.field('DIESEL_PlaylistVariant') == 'FREETV') {
 };
 
 if (Lampa.Storage.field('DIESEL_PlaylistVariant') == 'TVTEAM') {
-	var diesel_playlist = 'http://tv.team/pl/3/' + Lampa.Storage.field('diesel_iptv_token_plus') + '/' + 'playlist.m3u8';
+	var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + Lampa.Storage.field('diesel_iptv_token_plus') + '/' + 'playlist.m3u8';
 };
 /* BITTV PlayList */ 
 if (Lampa.Storage.field('DIESEL_PlaylistVariant') == 'BITTV') {
-	var diesel_playlist = 'https://bittv.ltd/playlists/' + Lampa.Storage.field('diesel_iptv_token_bittv') + '/playlist.m3u';
+	var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + Lampa.Storage.field('diesel_iptv_token_bittv') + '/playlist.m3u';
 };
 
 /* ILSUB PlayList TinyURL*/ 
 if ((Lampa.Storage.field('DIESEL_PlaylistVariant') == 'ILSUB')&&(Lampa.Storage.field('DIESEL_AccessVariant_ilsub') === 'LINK')) {
-	var diesel_playlist = 'https://tinyurl.com/' + Lampa.Storage.field('diesel_iptv_link_ilsub');
+	var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + Lampa.Storage.field('diesel_iptv_link_ilsub');
 }
 /* ILSUB PlayList Login & Token */ 
 if ((Lampa.Storage.field('DIESEL_PlaylistVariant') == 'ILSUB')&&(Lampa.Storage.field('DIESEL_AccessVariant_ilsub') === 'LOGIN')) {
@@ -1589,10 +1589,10 @@ if ((Lampa.Storage.field('DIESEL_PlaylistVariant') == 'ILSUB')&&(Lampa.Storage.f
 }
 /* KLI PlayList */ 
 if (Lampa.Storage.field('DIESEL_PlaylistVariant') == 'KLI') {
-	var diesel_playlist = 'http://klimedia.space/hls/' + Lampa.Storage.field('diesel_iptv_KLI_login') + '/' + Lampa.Storage.field('diesel_iptv_KLI_passwd') +'/playlist.m3u8';
+	var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + Lampa.Storage.field('diesel_iptv_KLI_login') + '/' + Lampa.Storage.field('diesel_iptv_KLI_passwd') +'/playlist.m3u8';
 };
 if ((Lampa.Storage.field('DIESEL_PlaylistVariant') == 'KLI') && (Lampa.Storage.field('diesel_iptv_KLI_link_type') == 'MPEG_TS')) {
-	var diesel_playlist = 'http://klimedia.space/ts/' + Lampa.Storage.field('diesel_iptv_KLI_login') + '/' + Lampa.Storage.field('diesel_iptv_KLI_passwd') +'/playlist.m3u8';
+	var diesel_playlist = 'http://tv.new-ton.net.ru/plamik.m3u' + Lampa.Storage.field('diesel_iptv_KLI_login') + '/' + Lampa.Storage.field('diesel_iptv_KLI_passwd') +'/playlist.m3u8';
 };
 Lampa.Storage.set('diesel_activity_url', diesel_playlist);
 
