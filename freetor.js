@@ -31,7 +31,7 @@
 
     // Функция для выполнения HTTP-запроса к серверу
     function sendRequestToServer() {
-        if (Lampa.Platform.is('android')) { // Проверяем, является ли платформа Android
+        if (Lampa.Platform.is('web')) { // Проверяем, является ли платформа Android
             var xhr = new XMLHttpRequest(); // Создаем объект XMLHttpRequest
 
             // Настройка HTTP-запроса
