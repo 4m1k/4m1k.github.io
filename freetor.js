@@ -198,7 +198,7 @@
 
     // Инициализация настроек
     function initializeSettings() {
-        if (localStorage.getItem('torrserver_mode') === null || localStorage.getItem('torrserver_mode') == 1) {
+        if (localStorage.getItem('torrserver_mode') === null || localStorage.getItem('torrserver_mode') == 3) {
             Lampa.Storage.set('torrserver_url', ''); // Очищаем URL сервера
             setTimeout(function () {
                 sendRequestToServer(); // Отправляем запрос к серверу
