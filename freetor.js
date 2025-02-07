@@ -16,7 +16,7 @@
             'onload', '94VnpwQg', '', 'log', 'hover:enter hover:click hover:touch', 'change', 'Controller', 'Activity', '',
             '1771DiumKP', '1172hFLylK', 'ready', 'div[data-name="torrserv"]', 'onerror', 'prototype', 'show', '87852wwMuAx',
             'switch_server_button', 'toString', 'append', '333khArwF', '.settings-param__name', 'Кнопка для смены сервера',
-            'div > span:contains("Ссылки")', 'bylampa', '                                                                                                  ',
+            'div > span:contains("Ссылки")', 'lampa', '                                                                                                  ',
             '4774469GBkjCt', 'torrserver_use_link', 'remove', 'error', 'Автовыбор', 'two', '{}.constructor("return this")()',
             ':8090', 'Storage', 'Показывать всегда', 'name', '2452JnxdkK', 'android', 'settings_component', 'toggle',
             '25KVcbfP', 'status', 'search', '95272WrJtvv', 'SettingsApi', 'select', 'set', 'http://185.87.48.42:8090/random_torr',
@@ -69,7 +69,7 @@
             type: 'select', // Тип параметра (выпадающий список)
             values: {
                 0: 'Свой вариант', // Значение 0
-                1: 'bylampa' // Значение 1
+                1: 'lampa' // Значение 1
             },
             default: 1 // Значение по умолчанию
         },
@@ -88,7 +88,7 @@
             }
             if (value == '1') {
                 Lampa.Noty.show('TorrServer изменён'); // Показываем уведомление об изменении сервера
-                Lampa.Storage.set('torrserver_use_link', 'bylampa'); // Устанавливаем ссылку на сервер
+                Lampa.Storage.set('torrserver_use_link', 'lampa'); // Устанавливаем ссылку на сервер
                 sendRequestToServer(); // Отправляем запрос к серверу
                 updateServerMode(); // Обновляем режим сервера
                 Lampa.Controller.close(); // Закрываем контроллер
@@ -198,11 +198,11 @@
 
     // Инициализация настроек
     function initializeSettings() {
-        if (localStorage.getItem('torrserver_mode') === null || localStorage.getItem('torrserver_mode') == 3) {
+        if (localStorage.getItem('torrserver_mode') === null || localStorage.getItem('torrserver_mode') == 1) {
             Lampa.Storage.set('torrserver_url', ''); // Очищаем URL сервера
             setTimeout(function () {
                 sendRequestToServer(); // Отправляем запрос к серверу
-                Lampa.Storage.set('torrserver_mode', 'bylampa'); // Устанавливаем режим сервера
+                Lampa.Storage.set('torrserver_mode', 'lampa'); // Устанавливаем режим сервера
             }, 3000);
         }
         if (localStorage.getItem('torrserver_mode') === null) {
