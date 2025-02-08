@@ -1444,8 +1444,8 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '1.4.3',
-      name: 'Lampac',
+      version: '1.0',
+      name: '4m1k online',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1477,7 +1477,7 @@
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Смотреть онлайн',
+        ru: 'Онлайн',
         en: 'Watch online',
         uk: 'Дивитися онлайн',
         zh: '在线观看'
