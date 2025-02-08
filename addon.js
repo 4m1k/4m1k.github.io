@@ -376,62 +376,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-				Lampa.SettingsApi.addParam({
-					component: 'add_interface_plugin',
-					param: {
-						name: 'TMDB alt',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-                    			//default: '1',
-						},
-					field: {
-						name: 'TMDB Proxy alt',
-						description: 'Алтернативный прокси для сайта TMDB'
-                            },
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://khuyampa.best/tmdbproxy.js', 'TMDB Proxy alt', '@lampa', 'TMDB');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://khuyampa.best/tmdbproxy.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {
-						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://khuyampa.best/tmdbproxy.js')
-						setTimeout(function() {	
-							$('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('http://khuyampa.best/tmdbproxy.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="TMDB alt"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://khuyampa.best/tmdbproxy.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="TMDB alt"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
+
 
 					Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
