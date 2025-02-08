@@ -2643,61 +2643,7 @@ Lampa.SettingsApi.addComponent({
 					}
         });
         
-		Lampa.SettingsApi.addParam({
-					component: 'add_online_plugin',
-					param: {
-                                		name: 'Онлайн_Prestige',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-					},
-					//default: '1',
-					},
-					field: {
-						name: 'Онлайн Prestige',
-						description: 'Аналог плагина Online от разработчика приложения Lampa, но с новым информативным интерфейсом для просмотра фильмов и сериалов в онлайн'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://bwa.to/plugins/prestige.js', 'Онлайн Prestige', '@lampa', 'Онлайн_Prestige');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://bwa.to/plugins/prestige.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-               },
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://bwa.to/plugins/prestige.js')
-						setTimeout(function() {	
-							$('div[data-name="Онлайн_Prestige"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Онлайн_Prestige"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Онлайн_Prestige"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://bwa.to/plugins/prestige.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Онлайн_Prestige"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://bwa.to/plugins/prestige.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Онлайн_Prestige"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Онлайн_Prestige"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Онлайн_Prestige"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);		   
-					}
-        });
+
         
 	        Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
