@@ -1444,7 +1444,7 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '',
+     */ version: '', */
       name: '4m1k Online',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
