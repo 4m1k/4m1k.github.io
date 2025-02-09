@@ -1477,9 +1477,9 @@
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Онлайн 4am1k',
-        en: 'Online 4am1k',
-        uk: 'Онлайн 4am1k',
+        ru: 'Онлайн 4m1k',
+        en: 'Online 4m1k',
+        uk: 'Онлайн 4m1k',
         zh: '在线观看'
       },
       lampac_video: { //
