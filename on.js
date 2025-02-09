@@ -1616,29 +1616,7 @@
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
         setTimeout(function(){
-                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg xmlns="http://www.w3.org/2000/svg" width="2048" height="2048" viewBox="0 0 24 24"><path fill="currentColor" M70,16
-c0,20,-10,30,-20,30
-c10,0,20,10,20,30
-c0,-20,10,-30,20,-30
-c-10,0,-20,-10,-20,-30
-z
-M30,0
-c0,20,-10,30,-20,30
-
-Cubic Bézier Curve
-Rel
-
-c10,0,20,10,20,30
-c0,-20,10,-30,20,-30
-c-10,0,-20,-10,-20,-30
-z
-M43,42
-c0,20,-10,30,-20,30
-c10,0,20,10,20,30
-c0,-20,10,-30,20,-30
-c-10,0,-20,-10,-20,-30
-z
-"/></svg></svg>&nbsp&nbsp4m1k Online');
+                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg xmlns="http://www.w3.org/2000/svg" ><path fill="currentColor" M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1"/></svg></svg>&nbsp&nbsp4m1k Online');
         }, 5);
         if (Lampa.Storage.get('card_interfice_type') === 'new') {
                 addButton({
