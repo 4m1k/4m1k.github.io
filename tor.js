@@ -26,7 +26,7 @@
     // Добавление SVG-кнопки для смены сервера
     function addSwitchServerButton() {
       const svgButton = `
-        <svg id="SWITCH_SERVER" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" style="cursor: pointer; fill: white;">
+        <svg id="SWITCH_SERVER" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 40 40" style="cursor: pointer; fill: white;">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c-.79 0-1.4-.61-1.4-1.4V7c0-.79.61-1.4 1.4-1.4h1.4c.79 0 1.4.61 1.4 1.4v2.1c0 .79-.61 1.4-1.4 1.4h-1.4zM7.9 7h1.4c.79 0 1.4.61 1.4 1.4v2.1c0 .79-.61 1.4-1.4 1.4h-1.4c-.79 0-1.4-.61-1.4-1.4V8.4c0-.79.61-1.4 1.4-1.4z"/>
         </svg>
       `;
