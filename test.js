@@ -167,7 +167,7 @@
       }
 
       function checkCode() {
-          if (isCodeObtained) return;
+          
 
           var randomCode = document.getElementById('randomCodeDisplay').innerText;
 
@@ -182,7 +182,11 @@
                   window.location.reload();
                 }
               },
-             
+              error: function(xhr) {
+                  if (xhr.status === 400) {
+                      showModal();
+                  }
+              }
           });
       }
 
