@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'http://showwwy.com/', // Можно изменить на домен второго кода, если нужно
+    localhost: 'http://showwwy.com/', // Используем домен второго кода
     apn: ''
   };
 
@@ -11,23 +11,6 @@
   if (!unic_id) {
     unic_id = Lampa.Utils.uid(8).toLowerCase();
     Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
-
-  // Проверка типа подключения (из второго кода)
-  var rchtype = 'web';
-  var check = function(good) {
-    rchtype = Lampa.Platform.is('android') ? 'apk' : good ? 'cors' : 'web';
-  };
-  if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
-  else {
-    var net = new Lampa.Reguest();
-    net.silent('https://github.com/', function() {
-      check(true);
-    }, function() {
-      check(false);
-    }, false, {
-      dataType: 'text'
-    });
   }
 
   function BlazorNet() {
@@ -116,7 +99,7 @@
         var token = '';
         if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
       }
-      url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + Lampa.Storage.get('token'));
+      url = Lampa.Utils.addUrlComponent(url, 'showy_token=' + Lampa.Storage.get('showy_token'));
       return url;
     }
 
@@ -205,7 +188,7 @@
         }
         hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
         hubConnection.start().then(function() {
-          window.rch.Registry('https://abmsx.tech', hubConnection, function() {
+          window.rch.Registry('http://showwwy.com', hubConnection, function() {
             if (!noreset) _this2.find();
             else noreset();
           });
@@ -221,7 +204,7 @@
         }
       };
       if (typeof signalR == 'undefined') {
-        Lampa.Utils.putScript(["https://abmsx.tech/signalr-6.0.25_es5.js"], function() {}, false, function() {
+        Lampa.Utils.putScript(["http://89.110.72.185:9118/signalr-6.0.25_es5.js"], function() {}, false, function() {
           load();
         }, true);
       } else load();
@@ -277,9 +260,7 @@
       query.push('original_language=' + (object.movie.original_language || ''));
       query.push('year=' + ((object.movie.release_date || object.movie.first_air_date || '0000') + '').slice(0, 4));
       query.push('source=' + card_source);
-      query.push('rchtype=' + rchtype); // Добавляем rchtype из второго кода
       query.push('clarification=' + (object.clarification ? 1 : 0));
-      if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
       return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
     };
 
@@ -703,8 +684,8 @@
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '2.1', // Объединенный номер версии
-      name: '4m1K Showy',
+      version: '2.0', // Версия плагина
+      name: 'Showy',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -730,10 +711,10 @@
 
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Онлайн 4am1k Showy',
-        en: 'Online 4am1k Showy',
-        uk: 'Онлайн 4am1k Showy',
-        zh: '在线观看 4am1k Showy'
+        ru: 'Смотреть онлайн',
+        en: 'Watch online',
+        uk: 'Дивитися онлайн',
+        zh: '在线观看'
       }
     });
 
@@ -774,7 +755,7 @@
     });
 
     if (Lampa.Manifest.app_digital >= 177) {
-      var balansers_sync = ["filmix", "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino"];
+      var balansers_sync = ["filmix", "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "seasonvar", "kinopub", "vokino"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
