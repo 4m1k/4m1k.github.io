@@ -150,29 +150,7 @@
           document.getElementById("qrCodeImage").src = "http://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://t.me/showybot?start=" + randomCode;
       }
 
-      function checkCode() {
-          if (isCodeObtained) return;
 
-          var randomCode = document.getElementById('randomCodeDisplay').innerText;
-
-          $.ajax({
-              url: 'http://showwwy.com/api/check_code/',
-              method: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify({ code: randomCode }),
-              success: function(response) {
-                if (response.status === 'success') {
-                  Lampa.Storage.set('showy_token', response.token);
-                  window.location.reload();
-                }
-              },
-              error: function(xhr) {
-                  if (xhr.status === 400) {
-                      showModal();
-                  }
-              }
-          });
-      }
 
 
       function deleteDeviceToken() {
@@ -194,74 +172,9 @@
           window.location.href = '/';
   }
 
-    function showModal() {
-        function getRandomCode() {
-            if (codeAttempts >= maxCodeAttempts) {
-                isCodeObtained = true;
-                $('.modal').remove();
-                Lampa.Controller.toggle('content');
-                return;
-            }
 
-            codeAttempts++;
 
-            return $.ajax({
-                url: 'http://showwwy.com/api/get_code/',
-                method: 'POST',
-                dataType: 'json',
-                success: function(data) {
-                    var randomCode = data.code;
-                    Lampa.Storage.set('random_code', randomCode);
-                    updateModalContent(randomCode);
-                },
-                error: function(jqXHR) {
-                    setTimeout(getRandomCode, 1000);
-                }
-            });
-        }
 
-        getRandomCode();
-
-        var modalHtml = '<div>' +
-                            '<img id="qrCodeImage"/>' +
-                            '<p>Р”Р»СЏ РїСЂРѕСЃРјРѕС‚СЂР° С‡РµСЂРµР· РѕРЅР»Р°Р№РЅ РїР»Р°РіРёРЅ Showy С‚СЂРµР±СѓРµС‚СЃСЏ Р°РІС‚РѕСЂРёР·Р°С†РёСЏ, РїРѕР¶Р°Р»СѓР№СЃС‚Р° РѕС‚СЃРєР°РЅРёСЂСѓР№С‚Рµ QR РёР»Рё РІРІРµРґРёС‚Рµ РєРѕРґ РІ С‚РµР»РµРіСЂР°Рј-Р±РѕС‚Рµ @showybot РёР»Рё РїРѕ СЃСЃС‹Р»РєРµ t.me/showybot</p>' +
-                            '<p><strong id="randomCodeDisplay"></strong></p>' +
-                            '<p id="notification" style="display: none; background-color: #4caf50; color: white; padding: 10px; border-radius: 5px; margin-top: 10px;"></p>' +
-                        '</div>';
-
-        if ($('.modal').length) {
-            $('.modal').remove();
-        }
-
-        Lampa.Modal.open({
-            title: '',
-            align: 'center',
-            zIndex: 300,
-            html: $(modalHtml),
-            onBack: function() {
-                window.location.href = '/';
-            }
-        });
-
-        checkCodeInterval();
-    }
-
-    function checkCodeInterval() {
-        if (codeAttempts >= maxCodeAttempts) {
-            window.location.href = '/';
-            return;
-        }
-
-        checkCode();
-
-        codeAttempts++;
-
-        setTimeout(function() {
-            if (!isCodeObtained) {
-                checkCodeInterval();
-            }
-        }, 3000); // РџСЂРѕРІРµСЂРєР° РєР°Р¶РґС‹Рµ 3 СЃРµРєСѓРЅРґС‹
-    }
     function balanserName(j) {
       var bals = j.balanser;
       var name = j.name.split(' ')[0];
