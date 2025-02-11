@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://abmsx.tech/', // Можно изменить на домен второго кода, если нужно
+    localhost: 'http://showwwy.com/', // Можно изменить на домен второго кода, если нужно
     apn: ''
   };
 
