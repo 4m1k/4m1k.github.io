@@ -97,23 +97,7 @@
     };
     var balansers_with_search = ['eneyida', 'seasonvar', 'lostfilmhd', 'kinotochka', 'kinopub', 'kinoprofi', 'kinokrad', 'kinobase', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr'];
 
-    function account(url) {
-      url = url + '';
-      if (url.indexOf('account_email=') == -1) {
-        var email = Lampa.Storage.get('account_email');
-        if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
-      }
-      if (url.indexOf('uid=') == -1) {
-        var uid = Lampa.Storage.get('lampac_unic_id', '');
-        if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
-      }
-      if (url.indexOf('token=') == -1) {
-        var token = '';
-        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
-      }
-      url = Lampa.Utils.addUrlComponent(url, 'showy_token=' + Lampa.Storage.get('showy_token'));
-      return url;
-    }
+
    function showHavePROModal() {
         if (isCodeObtained) return;
         var modalHtml = '<div>' +
@@ -167,7 +151,7 @@
       }
 
       function checkCode() {
-          
+          if (isCodeObtained) return;
 
           var randomCode = document.getElementById('randomCodeDisplay').innerText;
 
