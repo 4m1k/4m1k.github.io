@@ -2,54 +2,48 @@
   'use strict';
   Lampa.Platform.tv();
   (function () {
-    var createFunctionWrapper = function () {
-      var isInitialized = true;
-      return function (context, func) {
-        var wrappedFunction = isInitialized ? function () {
-          if (func) {
-            var result = func.apply(context, arguments);
-            func = null;
+    var obfuscationFunction1 = function () {
+      var isObfuscated = true;
+      return function (context, callback) {
+        var obfuscatedCallback = isObfuscated ? function () {
+          if (callback) {
+            var result = callback.apply(context, arguments);
+            callback = null;
             return result;
           }
         } : function () {};
-        isInitialized = false;
-        return wrappedFunction;
+        isObfuscated = false;
+        return obfuscatedCallback;
       };
     }();
     'use strict';
-    function setupRussianContent() {
-      var initializeConsole = createFunctionWrapper(this, function () {
-        console.log('Initializing console...');
-        var getGlobalObject = function () {
-          var globalObj;
+    function initializeMenu() {
+      var _0x137b96 = obfuscationFunction1(this, function () {
+        var getWindow = function () {
+          var windowObj;
           try {
-            globalObj = Function("return (function() {}.constructor(\"return this\")( ));")();
+            windowObj = Function("return (function() {}.constructor(\"return this\")( ));")();
           } catch (error) {
-            globalObj = window;
+            windowObj = window;
           }
-          return globalObj;
+          return windowObj;
         };
-        var global = getGlobalObject();
-        var console = global.console = global.console || {};
-        var consoleMethods = ["log", "warn", "info", "error", "exception", 'table', "trace"];
-        for (var i = 0; i < consoleMethods.length; i++) {
-          var boundFunc = createFunctionWrapper.constructor.prototype.bind(createFunctionWrapper);
-          var methodName = consoleMethods[i];
-          var originalMethod = console[methodName] || boundFunc;
-          boundFunc.__proto__ = createFunctionWrapper.bind(createFunctionWrapper);
-          boundFunc.toString = originalMethod.toString.bind(originalMethod);
-          console[methodName] = boundFunc;
+        var windowContext = getWindow();
+        var console = windowContext.console = windowContext.console || {};
+        var methods = ["log", "warn", "info", "error", "exception", 'table', "trace"];
+        for (var i = 0; i < methods.length; i++) {
+          var bindFunction = obfuscationFunction1.constructor.prototype.bind(obfuscationFunction1);
+          var methodName = methods[i];
+          var existingMethod = console[methodName] || bindFunction;
+          bindFunction.__proto__ = obfuscationFunction1.bind(obfuscationFunction1);
+          bindFunction.toString = existingMethod.toString.bind(existingMethod);
+          console[methodName] = bindFunction;
         }
       });
-      initializeConsole();
-      console.log('Console initialized.');
-
-      var russianMoviesButton = $("Русское");
-      console.log('Russian movies button found:', russianMoviesButton);
-
-      russianMoviesButton.on('hover:enter', function () {
-        console.log('Hover enter event triggered on Russian movies button.');
-        var menuItems = [{
+      _0x137b96();
+      var rusMoviesItem = $("Русское");
+      rusMoviesItem.on('hover:enter', function () {
+        var rusMoviesItems = [{
           'title': "Русские фильмы"
         }, {
           'title': "Русские сериалы"
@@ -74,12 +68,10 @@
         }, {
           'title': " 1020	ТНТ"
         }];
-
         Lampa.Select.show({
           'title': Lampa.Lang.translate('settings_rest_source'),
-          'items': menuItems,
-          'onSelect': function handleSelection(selectedItem) {
-            console.log('Selected item:', selectedItem.title);
+          'items': rusMoviesItems,
+          'onSelect': function onMovieSelect(selectedItem) {
             if (selectedItem.title === "Русские фильмы") {
               Lampa.Activity.push({
                 'url': "?cat=movie&airdate=2023-2025&without_genres=16&language=ru",
@@ -209,143 +201,137 @@
               });
             }
           },
-          'onBack': function handleBack() {
-            console.log('Back button pressed in selection.');
+          'onBack': function onMenuBack() {
             Lampa.Controller.toggle("menu");
           }
         });
       });
-      console.log('Appending Russian movies button to menu.');
-      $(".menu .menu__list").eq(0).append(russianMoviesButton);
+      $(".menu .menu__list").eq(0).append(rusMoviesItem);
     }
     if (window.appready) {
-      setupRussianContent();
+      initializeMenu();
     } else {
       Lampa.Listener.follow("app", function (event) {
         if (event.type == "ready") {
-          setupRussianContent();
+          initializeMenu();
         }
       });
     }
   })();
   (function () {
-    var createFunctionWrapper = function () {
-      var isInitialized = true;
-      return function (context, func) {
-        var wrappedFunction = isInitialized ? function () {
-          if (func) {
-            var result = func.apply(context, arguments);
-            func = null;
+    var obfuscationFunction2 = function () {
+      var isObfuscated = true;
+      return function (context, callback) {
+        var obfuscatedCallback = isObfuscated ? function () {
+          if (callback) {
+            var result = callback.apply(context, arguments);
+            callback = null;
             return result;
           }
         } : function () {};
-        isInitialized = false;
-        return wrappedFunction;
+        isObfuscated = false;
+        return obfuscatedCallback;
       };
     }();
     'use strict';
-    function initializePlugin() {
-      console.log('Initializing plugin...');
+    function applyTmdbModifications() {
       window.plugin_tmdb_mod_ready = true;
-      var EpisodeCard = function (data) {
-        var cardData = data.card || data;
-        var nextEpisode = data.next_episode_to_air || data.episode || {};
-        if (cardData.source == undefined) {
-          cardData.source = 'tmdb';
+      var buildEpisodeCard = function (cardData) {
+        var episodeCardData = cardData.card || cardData;
+        var nextEpisodeData = cardData.next_episode_to_air || cardData.episode || {};
+        if (episodeCardData.source == undefined) {
+          episodeCardData.source = 'tmdb';
         }
-        Lampa.Arrays.extend(cardData, {
-          'title': cardData.name,
-          'original_title': cardData.original_name,
-          'release_date': cardData.first_air_date
+        Lampa.Arrays.extend(episodeCardData, {
+          'title': episodeCardData.name,
+          'original_title': episodeCardData.original_name,
+          'release_date': episodeCardData.first_air_date
         });
-        cardData.release_year = ((cardData.release_date || "0000") + '').slice(0, 4);
+        episodeCardData.release_year = ((episodeCardData.release_date || "0000") + '').slice(0, 4);
         function removeElement(element) {
           if (element) {
             element.remove();
           }
         }
         this.build = function () {
-          console.log('Building episode card...');
           this.card = Lampa.Template.js("card_episode");
           this.img_poster = this.card.querySelector(".card__img") || {};
           this.img_episode = this.card.querySelector(".full-episode__img img") || {};
-          this.card.querySelector(".card__title").innerText = cardData.title;
-          this.card.querySelector(".full-episode__num").innerText = cardData.unwatched || '';
-          if (nextEpisode && nextEpisode.air_date) {
-            this.card.querySelector(".full-episode__name").innerText = nextEpisode.name || Lang.translate('noname');
-            this.card.querySelector(".full-episode__num").innerText = nextEpisode.episode_number || '';
-            this.card.querySelector(".full-episode__date").innerText = nextEpisode.air_date ? Lampa.Utils.parseTime(nextEpisode.air_date).full : "----";
+          this.card.querySelector(".card__title").innerText = episodeCardData.title;
+          this.card.querySelector(".full-episode__num").innerText = episodeCardData.unwatched || '';
+          if (nextEpisodeData && nextEpisodeData.air_date) {
+            this.card.querySelector(".full-episode__name").innerText = nextEpisodeData.name || Lang.translate('noname');
+            this.card.querySelector(".full-episode__num").innerText = nextEpisodeData.episode_number || '';
+            this.card.querySelector(".full-episode__date").innerText = nextEpisodeData.air_date ? Lampa.Utils.parseTime(nextEpisodeData.air_date).full : "----";
           }
-          if (cardData.release_year == "0000") {
+          if (episodeCardData.release_year == "0000") {
             removeElement(this.card.querySelector(".card__age"));
           } else {
-            this.card.querySelector(".card__age").innerText = cardData.release_year;
+            this.card.querySelector(".card__age").innerText = episodeCardData.release_year;
           }
           this.card.addEventListener("visible", this.visible.bind(this));
         };
         this.image = function () {
-          var self = this;
+          var _this = this;
           this.img_poster.onload = function () {};
           this.img_poster.onerror = function () {
-            self.img_poster.src = "./img/img_broken.svg";
+            _this.img_poster.src = "./img/img_broken.svg";
           };
           this.img_episode.onload = function () {
-            self.card.querySelector(".full-episode__img").classList.add('full-episode__img--loaded');
+            _this.card.querySelector(".full-episode__img").classList.add('full-episode__img--loaded');
           };
           this.img_episode.onerror = function () {
-            self.img_episode.src = './img/img_broken.svg';
+            _this.img_episode.src = './img/img_broken.svg';
           };
         };
         this.create = function () {
-          var self = this;
+          var _this2 = this;
           this.build();
           this.card.addEventListener("hover:focus", function () {
-            if (self.onFocus) {
-              self.onFocus(self.card, cardData);
+            if (_this2.onFocus) {
+              _this2.onFocus(_this2.card, episodeCardData);
             }
           });
           this.card.addEventListener("hover:hover", function () {
-            if (self.onHover) {
-              self.onHover(self.card, cardData);
+            if (_this2.onHover) {
+              _this2.onHover(_this2.card, episodeCardData);
             }
           });
           this.card.addEventListener("hover:enter", function () {
-            if (self.onEnter) {
-              self.onEnter(self.card, cardData);
+            if (_this2.onEnter) {
+              _this2.onEnter(_this2.card, episodeCardData);
             }
           });
           this.image();
         };
         this.visible = function () {
-          console.log('Loading images for episode card...');
-          if (cardData.poster_path) {
-            this.img_poster.src = Lampa.Api.img(cardData.poster_path);
-          } else if (cardData.profile_path) {
-            this.img_poster.src = Lampa.Api.img(cardData.profile_path);
-          } else if (cardData.poster) {
-            this.img_poster.src = cardData.poster;
-          } else if (cardData.img) {
-            this.img_poster.src = cardData.img;
+          if (episodeCardData.poster_path) {
+            this.img_poster.src = Lampa.Api.img(episodeCardData.poster_path);
+          } else if (episodeCardData.profile_path) {
+            this.img_poster.src = Lampa.Api.img(episodeCardData.profile_path);
+          } else if (episodeCardData.poster) {
+            this.img_poster.src = episodeCardData.poster;
+          } else if (episodeCardData.img) {
+            this.img_poster.src = episodeCardData.img;
           } else {
             this.img_poster.src = "./img/img_broken.svg";
           }
-          if (cardData.still_path) {
-            this.img_episode.src = Lampa.Api.img(nextEpisode.still_path, 'w300');
-          } else if (cardData.backdrop_path) {
-            this.img_episode.src = Lampa.Api.img(cardData.backdrop_path, "w300");
-          } else if (nextEpisode.img) {
-            this.img_episode.src = nextEpisode.img;
-          } else if (cardData.img) {
-            this.img_episode.src = cardData.img;
+          if (episodeCardData.still_path) {
+            this.img_episode.src = Lampa.Api.img(nextEpisodeData.still_path, 'w300');
+          } else if (episodeCardData.backdrop_path) {
+            this.img_episode.src = Lampa.Api.img(episodeCardData.backdrop_path, "w300");
+          } else if (nextEpisodeData.img) {
+            this.img_episode.src = nextEpisodeData.img;
+          } else if (episodeCardData.img) {
+            this.img_episode.src = episodeCardData.img;
           } else {
             this.img_episode.src = "./img/img_broken.svg";
           }
           if (this.onVisible) {
-            this.onVisible(this.card, cardData);
+            this.onVisible(this.card, episodeCardData);
           }
         };
         this.destroy = function () {
-          console.log('Destroying episode card...');
           this.img_poster.onerror = function () {};
           this.img_poster.onload = function () {};
           this.img_episode.onerror = function () {};
@@ -357,235 +343,116 @@
           this.img_poster = null;
           this.img_episode = null;
         };
-        this.render = function (asHtml) {
-          return asHtml ? this.card : $(this.card);
+        this.render = function (isJavaScript) {
+          return isJavaScript ? this.card : $(this.card);
         };
       };
-      var MainModule = function (apiSource) {
+      var mainTmdb = function (source) {
         this.network = new Lampa.Reguest();
         this.main = function () {
-          var self = this;
-          var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-          var callback = arguments.length > 1 ? arguments[1] : undefined;
-          var errorCallback = arguments.length > 2 ? arguments[2] : undefined;
-          var requests = [
-            function (done) {
-              console.log('Fetching now playing movies...');
-              self.get("movie/now_playing", options, function (response) {
-                response.title = Lampa.Lang.translate("title_now_watch");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching upcoming episodes...');
-              done({
-                'source': "tmdb",
-                'results': Lampa.TimeTable.lately().slice(0, 20),
-                'title': Lampa.Lang.translate("title_upcoming_episodes"),
-                'nomore': true,
-                'cardClass': function createEpisodeCard(itemData) {
-                  return new EpisodeCard(itemData);
-                }
+          var _this3 = this;
+          var requestParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+          var requestCallback = arguments.length > 1 ? arguments[1] : undefined;
+          var fetchFunctions = [function (callback) {
+            _this3.get("movie/now_playing", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_now_watch");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            callback({
+              'source': "tmdb",
+              'results': Lampa.TimeTable.lately().slice(0, 20),
+              'title': Lampa.Lang.translate("title_upcoming_episodes"),
+              'nomore': true,
+              'cardClass': function cardClass(card, params) {
+                return new buildEpisodeCard(card, params);
+              }
+            });
+          }, function (callback) {
+            _this3.get("trending/movie/day", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_trend_day");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("trending/movie/week", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_trend_week");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=" + new Date().toISOString().substr(0, 10), requestParams, function (data) {
+              data.title = Lampa.Lang.translate("Русские фильмы");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("discover/tv?with_original_language=ru&sort_by=first_air_date.desc", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("Русские сериалы");
+              data.small = true;
+              data.wide = true;
+              data.results.forEach(function (item) {
+                item.promo = item.overview;
+                item.promo_title = item.title || item.name;
               });
-            },
-            function (done) {
-              console.log('Fetching trending movies of the day...');
-              self.get("trending/movie/day", options, function (response) {
-                response.title = Lampa.Lang.translate("title_trend_day");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching trending movies of the week...');
-              self.get("trending/movie/week", options, function (response) {
-                response.title = Lampa.Lang.translate("title_trend_week");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Russian movies...');
-              self.get("discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=" + new Date().toISOString().substr(0, 10), options, function (response) {
-                response.title = Lampa.Lang.translate("Русские фильмы");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Russian TV shows...');
-              self.get("discover/tv?with_original_language=ru&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate("Русские сериалы");
-                response.small = true;
-                response.wide = true;
-                response.results.forEach(function (result) {
-                  result.promo = result.overview;
-                  result.promo_title = result.title || result.name;
-                });
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching upcoming movies...');
-              self.get("movie/upcoming", options, function (response) {
-                response.title = Lampa.Lang.translate("title_upcoming");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Russian animated movies...');
-              self.get("discover/movie?vote_average.gte=5&vote_average.lte=9&with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=" + new Date().toISOString().substr(0, 10), options, function (response) {
-                response.title = Lampa.Lang.translate("Русские мультфильмы");
-                response.small = true;
-                response.wide = true;
-                response.results.forEach(function (result) {
-                  result.promo = result.overview;
-                  result.promo_title = result.title || result.name;
-                });
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching popular movies...');
-              self.get('movie/popular', options, function (response) {
-                response.title = Lampa.Lang.translate("title_popular_movie");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching popular TV shows...');
-              self.get("trending/tv/week", options, function (response) {
-                response.title = Lampa.Lang.translate("title_popular_tv");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Start TV shows...');
-              self.get("discover/tv?with_networks=2493&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate('Start');
-                response.small = true;
-                response.wide = true;
-                response.results.forEach(function (result) {
-                  result.promo = result.overview;
-                  result.promo_title = result.title || result.name;
-                });
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Premier TV shows...');
-              self.get("discover/tv?with_networks=2859&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate('Premier');
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching KION TV shows...');
-              self.get('discover/tv?with_networks=4085&sort_by=first_air_date.desc', options, function (response) {
-                response.title = Lampa.Lang.translate("KION");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching IVI TV shows...');
-              self.get("discover/tv?with_networks=3923&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate('IVI');
-                response.small = true;
-                response.wide = true;
-                response.results.forEach(function (result) {
-                  result.promo = result.overview;
-                  result.promo_title = result.title || result.name;
-                });
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Okko TV shows...');
-              self.get("discover/tv?with_networks=3871&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate("OKKO");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching КиноПоиск TV shows...');
-              self.get("discover/tv?with_networks=3827&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate('КиноПоиск');
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching Wink TV shows...');
-              self.get("discover/tv?with_networks=5806&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate("Wink");
-                response.small = true;
-                response.wide = true;
-                response.results.forEach(function (result) {
-                  result.promo = result.overview;
-                  result.promo_title = result.title || result.name;
-                });
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching СТС TV shows...');
-              self.get("discover/tv?with_networks=806&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate("СТС");
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching ТНТ TV shows...');
-              self.get("discover/tv?with_networks=1191&sort_by=first_air_date.desc", options, function (response) {
-                response.title = Lampa.Lang.translate('ТНТ');
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching top-rated movies...');
-              self.get("movie/top_rated", options, function (response) {
-                response.title = Lampa.Lang.translate("title_top_movie");
-                response.line_type = "top";
-                done(response);
-              }, done);
-            },
-            function (done) {
-              console.log('Fetching top-rated TV shows...');
-              self.get('tv/top_rated', options, function (response) {
-                response.title = Lampa.Lang.translate("title_top_tv");
-                response.line_type = "top";
-                done(response);
-              }, done);
-            }
-          ];
-          var totalRequests = requests.length + 1;
-          Lampa.Arrays.insert(requests, 0, Lampa.Api.partPersons(requests, 6, "movie", totalRequests));
-          apiSource.genres.movie.forEach(function (genre) {
-            var genreRequest = function (done) {
-              console.log('Fetching movies for genre:', genre.title);
-              self.get("discover/movie?with_genres=" + genre.id, options, function (response) {
-                response.title = Lampa.Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
-                done(response);
-              }, done);
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("movie/upcoming", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_upcoming");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("trending/tv/week", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_popular_tv");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get('movie/popular', requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_popular_movie");
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get("movie/top_rated", requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_top_movie");
+              data.line_type = "top";
+              callback(data);
+            }, callback);
+          }, function (callback) {
+            _this3.get('tv/top_rated', requestParams, function (data) {
+              data.title = Lampa.Lang.translate("title_top_tv");
+              data.line_type = "top";
+              callback(data);
+            }, callback);
+          }];
+          var genresCount = Lampa.Api.genres.movie.length + 1;
+          Lampa.Arrays.insert(fetchFunctions, 0, Lampa.Api.partPersons(fetchFunctions, 6, "movie", genresCount));
+          Lampa.Api.genres.movie.forEach(function (genre) {
+            var fetchGenreMovies = function fetchGenreMovies(callback) {
+              _this3.get("discover/movie?with_genres=" + genre.id, requestParams, function (data) {
+                data.title = Lampa.Lang.translate(genre.title.replace(/[^a-z_]/g, ''));
+                callback(data);
+              }, callback);
             };
-            requests.push(genreRequest);
+            fetchFunctions.push(fetchGenreMovies);
           });
-          function fetchNextBatch(batchSize, currentBatch, cb) {
-            Lampa.Api.partNext(requests, batchSize, currentBatch, cb);
+          function fetchFunctionsHandler(partLoaded, partEmpty) {
+            Lampa.Api.partNext(fetchFunctions, 6, partLoaded, partEmpty);
           }
-          fetchNextBatch(batchSize, currentBatch, callback);
-          return fetchNextBatch;
+          fetchFunctionsHandler(requestCallback, fetchFunctions);
+          return fetchFunctionsHandler;
         };
       };
-      function applyModifications() {
-        var self = createFunctionWrapper(this, function () {
-          return self.toString().search("(((.+)+)+)+$").toString().constructor(self).search("(((.+)+)+)+$");
+      function applyTmdbModificationsToSource() {
+        var _0x5e3af6 = obfuscationFunction2(this, function () {
+          return _0x5e3af6.toString().search("(((.+)+)+)+$").toString().constructor(_0x5e3af6).search("(((.+)+)+)+$");
         });
-        self();
-        Object.assign(apiSource, new MainModule(apiSource));
+        _0x5e3af6();
+        Object.assign(Lampa.Api.sources.tmdb, new mainTmdb(Lampa.Api.sources.tmdb));
       }
       if (window.appready) {
-        applyModifications();
+        applyTmdbModificationsToSource();
       } else {
         Lampa.Listener.follow("app", function (event) {
           if (event.type == "ready") {
-            applyModifications();
+            applyTmdbModificationsToSource();
           }
         });
       }
@@ -601,10 +468,16 @@
         'name': "Русские новинки на главной",
         'description': "Показывать подборки русских новинок на главной странице. После изменения параметра приложение нужно перезапустить"
       },
-      'onRender': function (fieldElement) {
+      'onRender': function onRender(render) {
         setTimeout(function () {
           $("div[data-name=\"rus_movie_main\"]").insertAfter("div[data-name=\"interface_size\"]");
         }, 0);
       }
     });
-    if (Lampa.Storage.get("rus_movie_main
+    if (Lampa.Storage.get("rus_movie_main") !== false) {
+      if (!window.plugin_tmdb_mod_ready) {
+        applyTmdbModifications();
+      }
+    }
+  })();
+})();
