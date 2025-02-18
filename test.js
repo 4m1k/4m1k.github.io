@@ -3,10 +3,22 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam5.akter-black.com/',
-    apn: '8'
+    localhost: 'http://146.185.233.88:12975/',
+    apn: ''
   };
 
+  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
+  if (!unic_id) {
+	unic_id = Lampa.Utils.uid(8).toLowerCase();
+	Lampa.Storage.set('lampac_unic_id', unic_id);
+  }
+  
+  if (!window.rch) {
+    Lampa.Utils.putScript(["http://146.185.233.88:12975/invc-rch.js"], function() {}, false, function() {
+      if (!window.rch.startTypeInvoke)
+        window.rch.typeInvoke('http://146.185.233.88:12975', function() {});
+    }, true);
+  }
 
   function BlazorNet() {
     this.net = new Lampa.Reguest();
@@ -210,7 +222,7 @@
         }
         hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
         hubConnection.start().then(function() {
-          window.rch.Registry('https://lam5.akter-black.com', hubConnection, function() {
+          window.rch.Registry('http://146.185.233.88:12975', hubConnection, function() {
             console.log('RCH', 'hubConnection start');
             if (!noreset) _this2.find();
             else noreset()
@@ -227,7 +239,7 @@
 		}
       };
       if (typeof signalR == 'undefined') {
-        Lampa.Utils.putScript(["https://lam5.akter-black.com/signalr-6.0.25_es5.js"], function() {}, false, function() {
+        Lampa.Utils.putScript(["http://146.185.233.88:12975/signalr-6.0.25_es5.js"], function() {}, false, function() {
           load();
         }, true);
       } else load();
