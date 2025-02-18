@@ -3,22 +3,9 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://abmsx.tech/',
-    apn: ''
+    localhost: 'https://lam5.akter-black.com/',
+    apn: '8'
   };
-
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-  if (!unic_id) {
-	unic_id = Lampa.Utils.uid(8).toLowerCase();
-	Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
-
-  if (!window.rch) {
-    Lampa.Utils.putScript(["https://abmsx.tech/invc-rch.js"], function() {}, false, function() {
-      if (!window.rch.startTypeInvoke)
-        window.rch.typeInvoke('https://abmsx.tech', function() {});
-    }, true);
-  }
 
   function BlazorNet() {
     this.net = new Lampa.Reguest();
