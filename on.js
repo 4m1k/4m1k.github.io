@@ -3,8 +3,8 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam5.akter-black.com/',
-    apn: '8'
+    localhost: 'https://akter-black.com/',
+    apn: ''
   };
 
   function BlazorNet() {
