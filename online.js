@@ -3,8 +3,8 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'http://185.87.48.42:2627/',
-    apn: ''
+    localhost: 'https://akter-black.com/',
+    apn: '8'
   };
 
   var unic_id = Lampa.Storage.get('lampac_unic_id', '');
