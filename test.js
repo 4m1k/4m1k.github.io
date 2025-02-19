@@ -1,17 +1,3 @@
-/**
- * Paste or drop some JavaScript here and explore
- * the syntax tree created by chosen parser.
- * You can use all the cool new features from ES6
- * and even more. Enjoy!
- */
-let spit = [
-    /**
-     * Paste or drop some JavaScript here and explore
-     * the syntax tree created by chosen parser.
-     * You can use all the cool new features from ES6
-     * and even more. Enjoy!
-     */
-    let, spit = [
         (function () {
             'use strict';
             Lampa.Platform.tv();
