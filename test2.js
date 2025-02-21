@@ -1,13 +1,31 @@
 (function () {
     'use strict';
-	
-    var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-    if (!unic_id) {
-      unic_id = Lampa.Utils.uid(8).toLowerCase();
-      Lampa.Storage.set('lampac_unic_id', unic_id);
-    }
 
-    Lampa.Storage.set('torrserver_url','akter-black.com/ts');
+    var adBlocker = {
+        name: 'Блокировщик рекламы',
+        version: '1.0',
+        description: 'Отключает воспроизведение рекламы в кинотеатре'
+    };
 
-	
+    Lampa.Listener.follow('app', function(e) {
+        if (e.type == 'ready') {
+            // Переопределяем конструктор VideoBlock
+            window.VideoBlock = function() {
+                // Переопределяем метод start
+                this.start = function() {
+                    // Просто игнорируем воспроизведение рекламы
+                };
+
+                // Переопределяем методы create и load
+                this.create = function() {
+                    // Пустая функция создания рекламного блока
+                };
+
+                this.load = function() {
+                    // Пустая функция загрузки рекламы
+                };
+            };
+        }
+    });
+
 })();
