@@ -60,7 +60,7 @@
     plugins.forEach(function(plug) {
         if (plug.url && plug.url.indexOf('plugins/all.js') >= 0) {
             updatePlugins = true;
-            plug.url = (plug.url + '').replace('http://4m1k.github.io/all.js', 'https://4m1k.github.io/addon.js');
+            plug.url = (plug.url + '').replace('http://4m1k.github.io/all.js', 'http://4m1k.github.io/addon.js');
             plug.url = (plug.url + '').replace('https://4m1k.github.io/all.js', 'https://4m1k.github.io/addon.js');
         }
     });
