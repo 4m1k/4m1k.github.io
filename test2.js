@@ -1,31 +1,43 @@
 (function () {
-    'use strict';
+    console.log("Блокировка рекламы активирована");
 
-    var adBlocker = {
-        name: 'Блокировщик рекламы',
-        version: '1.0',
-        description: 'Отключает воспроизведение рекламы в кинотеатре'
-    };
+    // Подменяем проверку подписки (премиум аккаунт)
+    window.Account = window.Account || {};
+    window.Account.hasPremium = () => true;
 
-    Lampa.Listener.follow('app', function(e) {
-        if (e.type == 'ready') {
-            // Переопределяем конструктор VideoBlock
-            window.VideoBlock = function() {
-                // Переопределяем метод start
-                this.start = function() {
-                    // Просто игнорируем воспроизведение рекламы
+    // Ломаем создание <video> для рекламы
+    document.createElement = new Proxy(document.createElement, {
+        apply(target, thisArg, args) {
+            if (args[0] === "video") {
+                console.log("Перехватываем создание <video> для рекламы!");
+
+                let fakeVideo = target.apply(thisArg, args);
+
+                // Запрещаем рекламе воспроизводиться
+                fakeVideo.play = function () {
+                    console.log("Рекламное видео заблокировано!");
+                    setTimeout(() => {
+                        fakeVideo.ended = true;
+                        fakeVideo.dispatchEvent(new Event("ended")); // Эмулируем завершение рекламы
+                    }, 500);
                 };
 
-                // Переопределяем методы create и load
-                this.create = function() {
-                    // Пустая функция создания рекламного блока
-                };
-
-                this.load = function() {
-                    // Пустая функция загрузки рекламы
-                };
-            };
+                return fakeVideo;
+            }
+            return target.apply(thisArg, args);
         }
     });
 
+    // Очищаем таймеры рекламы
+    function clearAdTimers() {
+        console.log("Очищаем рекламные таймеры...");
+        let highestTimeout = setTimeout(() => {}, 0);
+        for (let i = 0; i <= highestTimeout; i++) {
+            clearTimeout(i);
+            clearInterval(i);
+        }
+    }
+
+    // Убираем рекламу после загрузки страницы
+    document.addEventListener("DOMContentLoaded", clearAdTimers);
 })();
