@@ -25,18 +25,18 @@
   overrideConsole();
 
   var menuCategories = [
-    { title: "Русские фильмы", url: "?cat=movie&airdate=2023-2025&without_genres=16&language=ru" },
-    { title: "Русские сериалы", url: "discover/tv?&with_original_language=ru" },
-    { title: "Русские мультфильмы", url: "?cat=movie&airdate=2020-2025&genre=16&language=ru" },
-    { title: "Okko", url: "discover/tv?network=3871" },
-    { title: "КиноПоиск", url: "discover/tv?network=3502" },
-    { title: "Wink", url: "discover/tv?network=5024" },
-    { title: "Start", url: "discover/tv?network=2493" },
-    { title: "Premier", url: "discover/tv?network=2859" },
-    { title: "ИВИ", url: "discover/tv?network=3923" },
-    { title: "KION", url: "discover/tv?network=4085" },
-    { title: "СТС", url: "discover/tv?network=4009" },
-    { title: "ТНТ", url: "discover/tv?network=4031" }
+    { title: "Русские фильмы", url: "?cat=movie&airdate=2023-2025&without_genres=16&language=ru", icon: "<svg viewBox='0 0 48 48'><path d='M12 4h24v40H12z'/></svg>" },
+    { title: "Русские сериалы", url: "discover/tv?&with_original_language=ru", icon: "<svg viewBox='0 0 48 48'><circle cx='24' cy='24' r='20'/></svg>" },
+    { title: "Русские мультфильмы", url: "?cat=movie&airdate=2020-2025&genre=16&language=ru", icon: "<svg viewBox='0 0 48 48'><polygon points='24,4 44,44 4,44'/></svg>" },
+    { title: "Okko", url: "discover/tv?network=3871", icon: "<svg viewBox='0 0 48 48'><path d='M8 8h32v32H8z'/></svg>" },
+    { title: "КиноПоиск", url: "discover/tv?network=3502", icon: "<svg viewBox='0 0 48 48'><path d='M24 4L44 24 24 44 4 24z'/></svg>" },
+    { title: "Wink", url: "discover/tv?network=5024", icon: "<svg viewBox='0 0 48 48'><path d='M12 4h24v40H12z'/></svg>" },
+    { title: "Start", url: "discover/tv?network=2493", icon: "<svg viewBox='0 0 48 48'><circle cx='24' cy='24' r='20'/></svg>" },
+    { title: "Premier", url: "discover/tv?network=2859", icon: "<svg viewBox='0 0 48 48'><polygon points='24,4 44,44 4,44'/></svg>" },
+    { title: "ИВИ", url: "discover/tv?network=3923", icon: "<svg viewBox='0 0 48 48'><path d='M8 8h32v32H8z'/></svg>" },
+    { title: "KION", url: "discover/tv?network=4085", icon: "<svg viewBox='0 0 48 48'><path d='M24 4L44 24 24 44 4 24z'/></svg>" },
+    { title: "СТС", url: "discover/tv?network=4009", icon: "<svg viewBox='0 0 48 48'><circle cx='24' cy='24' r='20'/></svg>" },
+    { title: "ТНТ", url: "discover/tv?network=4031", icon: "<svg viewBox='0 0 48 48'><polygon points='24,4 44,44 4,44'/></svg>" }
   ];
 
   Lampa.Select.show({
