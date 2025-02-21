@@ -31,7 +31,7 @@
         'https://4m1k.github.io/seaseps.js',
         'https://4m1k.github.io/source.js',
         'http://llpp.in/ur/notrailer.js',
-		'https://4m1k.github.io/tor.js'
+	'https://4m1k.github.io/tor.js'
         
     ];
 
