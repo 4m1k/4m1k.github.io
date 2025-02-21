@@ -7,7 +7,7 @@
       Lampa.Storage.set('lampac_unic_id', unic_id);
     }
 
-    Lampa.Storage.set('torrserver_url','akter-black.com/ts');
+    Lampa.Storage.set('torrserver_url_two','akter-black.com/ts');
 
 	
 })();
