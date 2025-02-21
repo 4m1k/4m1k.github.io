@@ -4,7 +4,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'http://185.87.48.42:2627/',
+    localhost: 'https://lam.akter-black.com/',
     apn: ''
   };
 
@@ -28,7 +28,7 @@
     if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
     else {
       var net = new Lampa.Reguest();
-      net.silent('http://185.87.48.42:2627'.indexOf(location.host) >= 0 ? 'https://github.com/' : 'http://185.87.48.42:2627/cors/check', function() {
+      net.silent('https://lam.akter-black.com/'.indexOf(location.host) >= 0 ? 'https://github.com/' : 'https://lam.akter-black.com/cors/check', function() {
         check(true);
       }, function() {
         check(false);
