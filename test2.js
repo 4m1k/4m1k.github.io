@@ -48,22 +48,19 @@
   // --- Формирование меню выбора парсера ---
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
-      // Добавляем пункт "Свой вариант" в начало
+      // Добавляем в начало пункт "Свой вариант"
       results.unshift({
         title: "Свой вариант",
         url: "",
         apiKey: "",
-        status: null // статус для "Свой вариант" не проверяется
+        status: null // статус не проверяется для "Свой вариант"
       });
 
       const currentSelected = Lampa.Storage.get('selected_parser');
 
-      // Формируем элементы меню:
-      // — Если парсер не "Свой вариант", его название окрашивается: зелёным (#64e364) если рабочий, красным (#ff2121) если нет.
-      // — Если парсер совпадает с текущим выбранным, перед названием выводится синяя галочка (&#10004; с цветом #4285f4).
-      // — Для "Свой вариант" если он не выбран – без маркера.
+      // Формируем элементы меню.
       const items = results.map(parser => {
-        let color = "inherit";
+        let color = "inherit"; // по умолчанию
         if (parser.title !== "Свой вариант") {
           color = parser.status ? "#64e364" : "#ff2121";
         }
@@ -98,7 +95,7 @@
           updateParserField(item.title);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
-          // При выборе, если выбран не "Свой вариант", скрываем поля "ссылка" и "Api-ключ"
+          // Скрываем поля "ссылка" и "API-ключ", если выбран не "Свой вариант"
           if (item.parser.title !== "Свой вариант") {
             $("div[data-name='jackett_url']").hide();
             $("div[data-name='jackett_key']").hide();
@@ -169,9 +166,8 @@
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-        // Если включён режим использования парсера и тип парсера для торрентов не равен "jackett"
-        // (т.е. если torrent type равен "jackett", мы скрываем меню выбора парсера)
-        if (Lampa.Storage.field("parser_use") && Lampa.Storage.field("parser_torrent_type") !== "jackett") {
+        // Показываем меню выбора парсера, если включён режим использования парсера
+        if (Lampa.Storage.field("parser_use")) {
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
@@ -185,8 +181,8 @@
         } else {
           elem.hide();
         }
-        // Дополнительно: если выбран вариант не "Свой вариант", скрываем поля "ссылка" и "Api-ключ"
-        if (Lampa.Storage.get("jackett_urltwo") !== "no_parser") {
+        // Если выбран пункт не "Свой вариант", скрываем поля "ссылка" и "Api-ключ"
+        if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
           $("div[data-name='jackett_url']").hide();
           $("div[data-name='jackett_key']").hide();
         } else {
