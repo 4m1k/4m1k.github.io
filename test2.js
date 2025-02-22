@@ -58,6 +58,8 @@
 
       const currentSelected = Lampa.Storage.get('selected_parser');
 
+      // Формируем элементы меню: название стандартного парсера окрашивается зелёным или красным,
+      // а если это текущий выбранный парсер – перед названием добавляется синяя галочка.
       const items = results.map(parser => {
         let color = "inherit";
         if (parser.title !== "Свой вариант") {
@@ -89,14 +91,14 @@
             Lampa.Storage.set('jackett_url', item.parser.url);
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
-            // При выборе стандартного парсера устанавливаем тип парсера для торрентов в "jackett"
+            // При выборе стандартного парсера автоматически меняем тип парсера на "jackett"
             Lampa.Storage.set("parser_torrent_type", "jackett");
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
-          // Скрываем или показываем поля "ссылка" и "API-ключ"
+          // Если выбран стандартный парсер – скрываем поля "ссылка" и "API-ключ"
           if (item.parser.title !== "Свой вариант") {
             $("div[data-name='jackett_url']").hide();
             $("div[data-name='jackett_key']").hide();
@@ -167,7 +169,6 @@
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-        // Показываем пункт, если включён режим использования парсера
         if (Lampa.Storage.field("parser_use")) {
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
@@ -182,7 +183,7 @@
         } else {
           elem.hide();
         }
-        // Показываем/скрываем поля "ссылка" и "API-ключ" в зависимости от выбранного варианта
+        // Отображаем или скрываем поля "ссылка" и "API-ключ" в зависимости от выбранного парсера
         if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
           $("div[data-name='jackett_url']").hide();
           $("div[data-name='jackett_key']").hide();
