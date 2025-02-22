@@ -8,13 +8,15 @@
     var readyOnce = function () {
       var flag = true;
       return function (context, callback) {
-        var inner = flag ? function () {
-          if (callback) {
-            var result = callback.apply(context, arguments);
-            callback = null;
-            return result;
-          }
-        } : function () {};
+        var inner = flag
+          ? function () {
+              if (callback) {
+                var result = callback.apply(context, arguments);
+                callback = null;
+                return result;
+              }
+            }
+          : function () {};
         flag = false;
         return inner;
       };
@@ -23,13 +25,15 @@
     var oneTime = function () {
       var flag = true;
       return function (context, callback) {
-        var inner = flag ? function () {
-          if (callback) {
-            var result = callback.apply(context, arguments);
-            callback = null;
-            return result;
-          }
-        } : function () {};
+        var inner = flag
+          ? function () {
+              if (callback) {
+                var result = callback.apply(context, arguments);
+                callback = null;
+                return result;
+              }
+            }
+          : function () {};
         flag = false;
         return inner;
       };
@@ -201,59 +205,52 @@
       Lampa.Storage.set("parse_lang", 'lg');
     }
 
-    // Функция для проверки работоспособности парсера с отладкой
+    // Функция проверки работоспособности парсера с корректной обёрткой Promise
     function checkParser(url, title, parserObj) {
-      console.log('Начало проверки парсера:', url);
-      let protocol = location.protocol === "https:" ? "https://" : "http://";
-      let apiKey = '';
-      if (url === "spawn.pp.ua:59117") {
-        apiKey = '2';
-      }
-      if (url === "79.137.204.8:9117") {
-        apiKey = "777";
-      }
-      if (url === "jr.maxvol.pro") {
-        protocol = "https://";
-      } else {
-        protocol = "http://";
-      }
-      let apiUrl = protocol + url + "/api/v2.0/indexers/status:healthy/results?apikey=" + apiKey;
-      console.log('Формируется запрос к:', apiUrl);
-      let xhr = new XMLHttpRequest();
-      xhr.open("GET", apiUrl, true);
-      xhr.timeout = 3000;
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          parserObj.title = `<span style="color: #64e364;">&#10004;&nbsp;&nbsp;${title}</span>`;
-        } else {
-          parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
-        }
-        console.log('Результат проверки для', url, ':', parserObj.title);
-        resolveParser();
-      };
-      xhr.onerror = function () {
-        parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
-        console.error('Ошибка при запросе к', url);
-        resolveParser();
-      };
-      xhr.ontimeout = function () {
-        parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
-        console.error('Таймаут запроса к', url);
-        resolveParser();
-      };
-      xhr.send();
-
-      function resolveParser() {
-        // Возвращаем объект через Promise-резолв
-        resolve(parserObj);
-      }
-      // Оборачиваем выполнение в Promise
       return new Promise(function (resolve) {
-        // Фактический resolve происходит внутри xhr.onload, onerror, ontimeout
+        console.log('Начало проверки парсера:', url);
+        let protocol = location.protocol === "https:" ? "https://" : "http://";
+        let apiKey = '';
+        if (url === "spawn.pp.ua:59117") {
+          apiKey = '2';
+        }
+        if (url === "79.137.204.8:9117") {
+          apiKey = "777";
+        }
+        if (url === "jr.maxvol.pro") {
+          protocol = "https://";
+        } else {
+          protocol = "http://";
+        }
+        let apiUrl = protocol + url + "/api/v2.0/indexers/status:healthy/results?apikey=" + apiKey;
+        console.log('Формируется запрос к:', apiUrl);
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", apiUrl, true);
+        xhr.timeout = 3000;
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            parserObj.title = `<span style="color: #64e364;">&#10004;&nbsp;&nbsp;${title}</span>`;
+          } else {
+            parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
+          }
+          console.log('Результат проверки для', url, ':', parserObj.title);
+          resolve(parserObj);
+        };
+        xhr.onerror = function () {
+          parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
+          console.error('Ошибка при запросе к', url);
+          resolve(parserObj);
+        };
+        xhr.ontimeout = function () {
+          parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
+          console.error('Таймаут запроса к', url);
+          resolve(parserObj);
+        };
+        xhr.send();
       });
     }
 
-    // Для корректного ожидания всех проверок оборачиваем вызов checkParser
+    // Функция для ожидания всех проверок
     function selectParsers(parsers) {
       let promises = [];
       for (let i = 0; i < parsers.length; i++) {
@@ -414,6 +411,6 @@
       }
     }
 
-    // Ранее здесь располагался код Яндекс.Метрики – он полностью удалён.
+    // Код Яндекс.Метрики удалён.
   })();
 })();
