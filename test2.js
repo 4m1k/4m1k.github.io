@@ -163,6 +163,10 @@
             elem.show();
             $('.settings-param__name', elem).css("color", "ffffff");
             $("div[data-name=\"jackett_urltwo\"]").insertAfter("div[data-name=\"parser_torrent_type\"]");
+            // При нажатии на кнопку запускается функция проверки и формирования меню парсеров
+            elem.off("click").on("click", function () {
+              showParserMenu();
+            });
           } else {
             elem.hide();
           }
@@ -205,7 +209,7 @@
       Lampa.Storage.set("parse_lang", 'lg');
     }
 
-    // Функция проверки работоспособности парсера с корректной обёрткой Promise
+    // Функция проверки работоспособности парсера с Promise
     function checkParser(url, title, parserObj) {
       return new Promise(function (resolve) {
         console.log('Начало проверки парсера:', url);
@@ -250,7 +254,7 @@
       });
     }
 
-    // Функция для ожидания всех проверок
+    // Функция для ожидания результатов проверки всех парсеров
     function selectParsers(parsers) {
       let promises = [];
       for (let i = 0; i < parsers.length; i++) {
@@ -259,6 +263,7 @@
       return Promise.all(promises);
     }
 
+    // Функция формирования меню выбора парсера с подсветкой рабочие/нерабочие
     function showParserMenu() {
       console.log('Вызов функции showParserMenu');
       let current = Lampa.Controller.enabled().name;
@@ -375,42 +380,6 @@
       });
     }
 
-    var observer;
-    Lampa.Storage.listener.follow("change", function (change) {
-      if (change.name == "activity") {
-        if (Lampa.Activity.active().component == "torrents") {
-          startObserver();
-        } else {
-          stopObserver();
-        }
-      }
-    });
-
-    function startObserver() {
-      stopObserver();
-      var target = document.body;
-      var config = {
-        childList: true,
-        subtree: true
-      };
-      observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-          if ($('.empty__title').length && Lampa.Storage.field('parser_torrent_type') == 'jackett') {
-            showParserMenu();
-            stopObserver();
-          }
-        });
-      });
-      observer.observe(target, config);
-    }
-
-    function stopObserver() {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
-    }
-
-    // Код Яндекс.Метрики удалён.
+    // Удалён блок MutationObserver – проверка запускается только по нажатию на кнопку.
   })();
 })();
