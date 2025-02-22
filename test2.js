@@ -108,19 +108,20 @@
 function updateParserField(text) {
   $("div[data-name='jackett_urltwo']").html(
     `<div class="settings-folder" style="padding:0!important">
-       <div style="width:1.3em;height:1.3em;padding-right:.1em">
+       <div style="width:1.5em; height:1.5em; padding-right:0.2em">
          <!-- SVG-иконка при необходимости -->
        </div>
-       <div style="font-size:1.0em">
-         <div style="padding: 0.3em 0.3em; padding-top: 0;">
-           <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
-             <div style="line-height: 0.3; color: black;">${text}</div>
+       <div style="font-size:1.2em; font-weight: bold;">
+         <div style="padding: 0.5em 0.5em 0 0.5em;">
+           <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 5px solid #d99821;">
+             <div style="line-height: 1.2; color: black;">${text}</div>
            </div>
          </div>
        </div>
      </div>`
   );
 }
+
 
 
   Lampa.SettingsApi.addParam({
