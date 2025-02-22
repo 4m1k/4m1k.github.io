@@ -1,3 +1,7 @@
+/* 
+ * Полностью деобфусцированный код (версия с переименованными переменными и функциями)
+ * Без антиотладочной логики (getDeobfuscated и связанных с ней вызовов).
+ */
 
 (function () {
   "use strict";
@@ -23,38 +27,7 @@
     };
   }());
 
-  // Протектор – проверка на попытки дебаггинга (антиотладка)
-  var protect = once(this, function () {
-    // Здесь производится проверка исходного кода функции protect,
-    // заменённая на плейсхолдер для понятности.
-    return protect
-      .toString()
-      .search("(((.+)+)+)+$")
-      .toString()
-      .constructor(protect)
-      .search("(((.+)+)+)+$");
-  });
-  protect();
-
-  // Еще одна однократная функция для защиты
-  var onceAgain = (function () {
-    var firstCallAgain = true;
-    return function (context, func) {
-      var resultFunc = firstCallAgain
-        ? function () {
-            if (func) {
-              var result = func.apply(context, arguments);
-              func = null;
-              return result;
-            }
-          }
-        : function () {};
-      firstCallAgain = false;
-      return resultFunc;
-    };
-  }());
-
-();
+  // Удалены все функции и вызовы, связанные с антиотладочной логикой
 
   // Функция для привязки (bind) – однократный вызов
   var bindOnce = (function () {
@@ -105,7 +78,7 @@
   var totalRequestCount = 0;
   var proxyRequestCount = 0;
 
-();
+  // Удален запуск интервала с getDeobfuscated
 
   var goodRequestCount = 0;
   var menuList = [];
@@ -114,7 +87,6 @@
 
   // Функция для получения данных с API
   function getData(urlSuffix, onSuccess, onError) {
-    // Решаем, использовать ли прокси (на основании количества запросов)
     var useProxy =
       totalRequestCount >= 10 && goodRequestCount > totalRequestCount / 2;
     if (!useProxy) {
@@ -182,16 +154,12 @@
 
   // Функции работы с кэшем
   function getCacheData(key) {
-    // Здесь происходит проверка кэша по ключу и возврат сохраненных данных,
-    // либо обновление кэша при устаревании.
-    // (Логика переименована и упрощена для читаемости)
     var cached = cache[key];
     if (cached) {
       var oneHourAgo = new Date().getTime() - 3600000;
       if (cached.timestamp > oneHourAgo) {
         return cached.value;
       }
-      // Очистка устаревших значений кэша
       for (var k in cache) {
         if (cache[k].timestamp <= oneHourAgo) {
           delete cache[k];
@@ -367,7 +335,6 @@
 
     var episodes = seasonData.episodes || [];
     episodes = episodes.map(function (ep) {
-      // Здесь для каждого эпизода формируется объект с данными
       return {
         season_number: ep.seasonNumber,
         episode_number: ep.episodeNumber,
@@ -437,7 +404,7 @@
     }, onError);
   }
 
-  // Функция для получения данных по ID (например, для детальной информации о фильме)
+  // Функция для получения данных по ID
   function _getById(id, onSuccess, onError, onFallback) {
     var apiUrl = "api/v2.2/films/" + id;
     var cachedData = getCacheData(apiUrl);
@@ -473,14 +440,14 @@
     }
   }
 
-  // Обертка для getById с дополнительными настройками меню
+  // Обертка для getById
   function getById(id, params = {}, onSuccess, onError) {
     menu({}, function () {
       return _getById(id, params, onSuccess, onError);
     });
   }
 
-  // Главная функция формирования разделов (категорий) в приложении
+  // Главная функция формирования разделов
   function main(sectionsParams = {}, onReady, onError) {
     var sections = [
       function (callback) {
@@ -528,7 +495,6 @@
     menu({}, function () {
       var countryId = countriesMap["Россия"];
       if (countryId) {
-        // Добавление разделов для российских фильмов/сериалов
         sections.splice(3, 0, function (callback) {
           getList("api/v2.2/films?order=NUM_VOTE&countries=" + countryId + "&type=FILM", sectionsParams, function (data) {
             data.title = "Популярные российские фильмы";
@@ -810,7 +776,7 @@
     }
   }
 
-  // Функция menuCategory – здесь просто возвращает пустой список (для совместимости)
+  // Функция menuCategory – возвращает пустой список
   function menuCategory(source, callback) {
     callback([]);
   }
@@ -889,196 +855,7 @@
     startPlugin();
   }
 
-  // Определяем манифест, список меню и инициализируем настройки
-  var manifest;
-  menuList = [];
-  console.log("App", "protocol:", window.location.protocol === "https:" ? "https://" : "http://");
-
-  var Lmp = {
-    init: function () {
-      this.sources();
-      if (!window.FX) {
-        window.FX = { max_qualitie: 720, is_max_qualitie: true, auth: false };
-      }
-    },
-    sources: function () {
-      var sourcesObj;
-      if (Lampa.Params.values && Lampa.Params.values.source) {
-        sourcesObj = Object.assign({}, Lampa.Params.values.source);
-        sourcesObj.filmix = "FILMIX";
-      } else {
-        sourcesObj = { tmdb: "TMDB", cub: "CUB", filmix: "FILMIX" };
-      }
-      Lampa.Params.select("source", sourcesObj, "tmdb");
-    },
-    setCache: function (key, data) {
-      setCacheData(key, data);
-    },
-    getCache: function (key) {
-      return getCacheData(key);
-    }
-  };
-
-  // Пример реализации плагина Filmix
-  var Filmix = {
-    network: new Lampa.Reguest(),
-    api_url: "http://filmixapp.cyou/api/v2/",
-    token: Lampa.Storage.get("filmix_token", ""),
-    user_dev:
-      "app_lang=ru_RU&user_dev_apk=2.1.2&user_dev_id=" +
-      Lampa.Utils.uid(16) +
-      "&user_dev_name=Xiaomi&user_dev_os=11&user_dev_vendor=Xiaomi&user_dev_token=",
-    add_new: function () {
-      var codeDisplay = "";
-      var tokenCode = "";
-      var modalHtml = $(
-        "<div><div class=\"broadcast__text\">" +
-          Lampa.Lang.translate("filmix_modal_text") +
-          "</div><div class=\"broadcast__device selector\" style=\"text-align: center\">Ожидаем код...</div><br><div class=\"broadcast__scan\"><div></div></div></div></div>"
-      );
-      Lampa.Modal.open({
-        title: "",
-        html: modalHtml,
-        onBack: function () {
-          Lampa.Modal.close();
-          Lampa.Controller.toggle("settings_component");
-          clearInterval(ping_auth);
-        },
-        onSelect: function () {
-          Lampa.Utils.copyTextToClipboard(codeDisplay, function () {
-            Lampa.Noty.show(Lampa.Lang.translate("filmix_copy_secuses"));
-          }, function () {
-            Lampa.Noty.show(Lampa.Lang.translate("filmix_copy_fail"));
-          });
-        }
-      });
-      ping_auth = setInterval(function () {
-        Filmix.checkPro(tokenCode, function (data) {
-          if (data && data.user_data) {
-            Lampa.Modal.close();
-            clearInterval(ping_auth);
-            Lampa.Storage.set("filmix_token", tokenCode);
-            Filmix.token = tokenCode;
-            $("[data-name=\"filmix_token\"] .settings-param__value").text(tokenCode);
-            Lampa.Controller.toggle("settings_component");
-          }
-        });
-      }, 2000);
-      this.network.clear();
-      this.network.timeout(10000);
-      this.network.quiet(
-        this.api_url + "token_request?" + this.user_dev,
-        function (response) {
-          if (response.status == "ok") {
-            tokenCode = response.code;
-            codeDisplay = response.user_code;
-            modalHtml.find(".selector").text(codeDisplay);
-          } else {
-            Lampa.Noty.show(response);
-          }
-        },
-        function (error, details) {
-          Lampa.Noty.show(Filmix.network.errorDecode(error, details));
-        }
-      );
-    }
-  };
-
-  var Pub = { network: new Lampa.Reguest() };
-
-  function startFilmixPlugin() {
-    window.plugin_lmp = true;
-    manifest = {};
-    Lampa.Manifest.plugins = manifest;
-    if (!Lampa.Lang) {
-      var langData = {};
-      Lampa.Lang = {
-        add: function (data) {
-          langData = data;
-        },
-        translate: function (key) {
-          return langData[key] ? langData[key].ru : key;
-        }
-      };
-    }
-    // Далее – добавление переводов для плагина Filmix
-    var translations = {
-      pub_sort_views: { ru: "По просмотрам" },
-      pub_sort_watchers: { ru: "По подпискам" },
-      pub_sort_updated: { ru: "По обновлению" },
-      pub_sort_created: { ru: "По дате добавления" },
-      pub_search_coll: { ru: "Поиск по подборкам" },
-      pub_title_all: { ru: "Все" },
-      pub_title_popular: { ru: "Популярные" },
-      pub_title_new: { ru: "Новые" },
-      pub_title_hot: { ru: "Горячие" },
-      pub_title_fresh: { ru: "Свежие" },
-      pub_title_rating: { ru: "Рейтинговые" },
-      pub_title_allingenre: { ru: "Всё в жанре" },
-      pub_title_popularfilm: { ru: "Популярные фильмы" },
-      pub_title_popularserial: { ru: "Популярные сериалы" },
-      pub_title_newfilm: { ru: "Новые фильмы" },
-      pub_title_newserial: { ru: "Новые сериалы" },
-      pub_title_newconcert: { ru: "Новые концерты" },
-      pub_title_newdocfilm: { ru: "Новые док. фильмы" },
-      pub_title_newdocserial: { ru: "Новые док. сериалы" },
-      pub_title_newtvshow: { ru: "Новое ТВ шоу" }
-    };
-    Lampa.Lang.add(translations);
-
-    function initPlugin() {
-      Lmp.init();
-    }
-    if (window.appready) {
-      initPlugin();
-    } else {
-      Lampa.Listener.follow("app", function (event) {
-        if (event.type == "ready") {
-          initPlugin();
-        }
-      });
-    }
-    // Дополнительные функции плагина Filmix (например, формирование URL для API)
-    function buildFilmixUrl(path, params) {
-      var url = params ? params : "";
-      if (params.genres) {
-        url =
-          "catalog" +
-          (url + (/\?/.test(url) ? "&" : "?") + "orderby=date&orderdir=desc&filter=s996-" + params.genres.replace("f", "g"));
-      }
-      if (params.page) {
-        url += (/\?/.test(url) ? "&" : "?") + "page=" + params.page;
-      }
-      if (params.query) {
-        url += (/\?/.test(url) ? "&" : "?") + "story=" + params.query;
-      }
-      if (params.type) {
-        url += (/\?/.test(url) ? "&" : "?") + "type=" + params.type;
-      }
-      if (params.field) {
-        url += (/\?/.test(url) ? "&" : "?") + "field=" + params.field;
-      }
-      if (params.perpage) {
-        url += (/\?/.test(url) ? "&" : "?") + "perpage=" + params.perpage;
-      }
-      url += (/\?/.test(url) ? "&" : "?") + (Filmix.user_dev + Lampa.Storage.get("filmix_token", "aaaabbbbccccddddeeeeffffaaaabbbb"));
-      if (params.filter) {
-        for (var key in params.filter) {
-          url += (/\?/.test(url) ? "&" : "?") + key + "=" + params.filter[key];
-        }
-      }
-      return "http://filmixapp.cyou/api/v2/" + url;
-    }
-    // Другие функции для работы с Filmix (запросы, обработка ответов, кеширование и т.д.)
-    // …
-  }
-
-  // Регистрируем плагин Filmix, если он еще не был подключен
-  if (!window.plugin_lmp) {
-    startFilmixPlugin();
-  }
-
-  // Дополнительная логика приложения (например, инициализация манифеста, меню, источники)
+  // Инициализация манифеста и меню
   manifest = {};
   Lampa.Manifest.plugins = manifest;
   menuList = [];
@@ -1109,7 +886,7 @@
     }
   };
 
-  // Регистрируем источник Filmix в API
+  // Регистрируем источник Filmix
   var filmixSource = {
     main: main,
     menu: menu,
@@ -1125,7 +902,6 @@
   };
   Lampa.Api.sources.filmix = filmixSource;
 
-  // Конфигурация дополнительных источников
   var source_tmdb = { name: "tmdb", title: "TMDB" };
   var source_cub = { name: "cub", title: "CUB" };
   var source_pub = { name: "pub", title: "PUB" };
@@ -1133,8 +909,7 @@
   var source_KP = { name: "KP", title: kpSource.SOURCE_TITLE };
   var ALL_SOURCES = [source_tmdb, source_cub, source_pub, source_filmix, source_KP];
 
-  // Функция для старта плагина и установки настроек источников
-  function startPlugin() {
+  function startPlugin2() {
     window.kp_source_plugin = true;
     manifest = {};
     Lampa.Manifest.plugins = manifest;
@@ -1164,8 +939,6 @@
     Lampa.Params.select("source", currentSources, "tmdb");
   }
   if (!window.kp_source_plugin) {
-    startPlugin();
+    startPlugin2();
   }
-
-
 })();
