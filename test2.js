@@ -913,27 +913,7 @@
   if (!window.kp_source_plugin) {
     startPlugin2();
   }
-  // Функция антиотладки, использующая рекурсию и условные проверки
-  function getDeobfuscated(param) {
-    function checkValue(val) {
-      if (typeof val === "string") {
-        return Function("return (function() {}.constructor(\"while (true) {}\")(\"counter\"))")();
-      } else {
-        if (("" + val / val).length !== 1 || val % 20 === 0) {
-          Function("debugger").call("action");
-        } else {
-          Function("debugger").apply("stateObject");
-        }
-      }
-      checkValue(++val);
-    }
-    try {
-      if (param) {
-        return checkValue;
-      } else {
-        checkValue(0);
-      }
-    } catch (e) {}
-  }
+
+  // Здесь полностью удалено второе определение getDeobfuscated (антиотладочная логика)
 
 })();
