@@ -4,9 +4,7 @@
   Lampa.Platform.tv();
 
   // --- Функции проверки парсера ---
-
-  // Функция для проверки одного парсера.
-  // Отправляет запрос к URL:
+  // Проверка одного парсера: отправляем запрос к URL:
   // protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey
   // Если сервер отвечает статусом 200 – parser.status=true, иначе false.
   function checkParser(parser) {
@@ -32,7 +30,7 @@
     });
   }
 
-  // Функция проверки всех парсеров.
+  // Функция проверки всех стандартных парсеров.
   function checkAllParsers() {
     // Список стандартных парсеров.
     const parsers = [
@@ -52,20 +50,31 @@
   // --- Формирование меню выбора парсера ---
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
-      // Добавляем в начало список дополнительный пункт "Свой вариант"
+      // Добавляем в начало пункт "Свой вариант"
       results.unshift({
         title: "Свой вариант",
         url: "",
         apiKey: "",
-        status: true // по умолчанию считаем его рабочим
+        status: false // для "Свой вариант" не используем статус проверки
       });
 
+      // Получаем текущий выбранный парсер из настроек
+      const currentSelected = Lampa.Storage.get('selected_parser');
+
       // Формируем элементы меню с подсветкой:
-      // Если parser.status===true – зелёная галочка, иначе – красный крестик.
+      // Для "Свой вариант" маркер не отображается, если он не выбран;
+      // для остальных – зеленый, если parser.status===true, или красный, если false.
       const items = results.map(parser => {
-        const statusIcon = parser.status
-          ? '<span style="color: #64e364;">&#10004;</span>'
-          : '<span style="color: #ff2121;">&#10008;</span>';
+        let statusIcon = "";
+        if (parser.title === "Свой вариант") {
+          if (currentSelected === "Свой вариант") {
+            statusIcon = '<span style="color: #64e364;">&#10004;</span>';
+          }
+        } else {
+          statusIcon = parser.status
+            ? '<span style="color: #64e364;">&#10004;</span>'
+            : '<span style="color: #ff2121;">&#10008;</span>';
+        }
         return {
           title: statusIcon + " " + parser.title,
           parser: parser
@@ -79,7 +88,7 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
-          // Если выбран пункт "Свой вариант", сохраняем специальное значение "no_parser"
+          // Если выбран пункт "Свой вариант", сохраняем специальное значение
           if(item.parser.title === "Свой вариант") {
             Lampa.Storage.set('jackett_url', "");
             Lampa.Storage.set('jackett_key', "");
