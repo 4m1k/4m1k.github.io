@@ -55,21 +55,22 @@
         title: "Свой вариант",
         url: "",
         apiKey: "",
-        status: false // для "Свой вариант" не используем статус проверки
+        status: false // для "Свой вариант" статус проверки не используется
       });
 
       // Получаем текущий выбранный парсер из настроек
       const currentSelected = Lampa.Storage.get('selected_parser');
 
-      // Формируем элементы меню с подсветкой:
-      // Для "Свой вариант" маркер не отображается, если он не выбран;
-      // для остальных – зеленый, если parser.status===true, или красный, если false.
+      // Формируем элементы меню с подсветкой.
+      // Если текущий элемент совпадает с выбранным, отображаем синюю звезду (&#9733;)
+      // Для "Свой вариант": если он выбран, то синяя звезда, иначе – без маркера.
+      // Для остальных – используем результат проверки: рабочий – зелёная галочка, нерабочий – красный крестик.
       const items = results.map(parser => {
         let statusIcon = "";
-        if (parser.title === "Свой вариант") {
-          if (currentSelected === "Свой вариант") {
-            statusIcon = '<span style="color: #64e364;">&#10004;</span>';
-          }
+        if (parser.title === currentSelected) {
+          statusIcon = '<span style="color: #4285f4;">&#9733;</span>'; // Синяя звезда для активного варианта
+        } else if (parser.title === "Свой вариант") {
+          statusIcon = "";
         } else {
           statusIcon = parser.status
             ? '<span style="color: #64e364;">&#10004;</span>'
@@ -88,8 +89,7 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
-          // Если выбран пункт "Свой вариант", сохраняем специальное значение
-          if(item.parser.title === "Свой вариант") {
+          if (item.parser.title === "Свой вариант") {
             Lampa.Storage.set('jackett_url', "");
             Lampa.Storage.set('jackett_key', "");
             Lampa.Storage.set('selected_parser', "Свой вариант");
