@@ -55,29 +55,29 @@
         title: "Свой вариант",
         url: "",
         apiKey: "",
-        status: false // для "Свой вариант" статус проверки не используется
+        status: null // статус не проверяется для "Свой вариант"
       });
 
       // Получаем текущий выбранный парсер из настроек
       const currentSelected = Lampa.Storage.get('selected_parser');
 
-      // Формируем элементы меню с подсветкой.
-      // Если текущий элемент совпадает с выбранным, отображаем синюю звезду (&#9733;)
-      // Для "Свой вариант": если он выбран, то синяя звезда, иначе – без маркера.
-      // Для остальных – используем результат проверки: рабочий – зелёная галочка, нерабочий – красный крестик.
+      // Формируем элементы меню.
+      // Для каждого парсера:
+      // – Если он не "Свой вариант", его название окрашивается: зелёным, если рабочий, красным – если нет.
+      // – Если выбранный (currentSelected) совпадает с данным, к названию добавляется синяя галочка.
+      // – Для "Свой вариант", если не выбран, оставляем стандартный (наследуемый) цвет.
       const items = results.map(parser => {
-        let statusIcon = "";
-        if (parser.title === currentSelected) {
-          statusIcon = '<span style="color: #4285f4;">&#9733;</span>'; // Синяя звезда для активного варианта
-        } else if (parser.title === "Свой вариант") {
-          statusIcon = "";
-        } else {
-          statusIcon = parser.status
-            ? '<span style="color: #64e364;">&#10004;</span>'
-            : '<span style="color: #ff2121;">&#10008;</span>';
+        let color = "inherit"; // по умолчанию для "Свой вариант" или если не задано
+        if (parser.title !== "Свой вариант") {
+          color = parser.status ? "#64e364" : "#ff2121";
         }
+        let activeMark = "";
+        if (parser.title === currentSelected) {
+          activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
+        }
+        const titleHTML = activeMark + `<span style="color: ${color};">${parser.title}</span>`;
         return {
-          title: statusIcon + " " + parser.title,
+          title: titleHTML,
           parser: parser
         };
       });
