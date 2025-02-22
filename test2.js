@@ -6,7 +6,8 @@
   // --- Функции проверки парсера ---
 
   // Функция для проверки одного парсера.
-  // Отправляет запрос к URL: protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey
+  // Отправляет запрос к URL:
+  // protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey
   // Если сервер отвечает статусом 200 – parser.status=true, иначе false.
   function checkParser(parser) {
     return new Promise((resolve) => {
@@ -14,13 +15,9 @@
       const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
       const xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
-      xhr.timeout = 3000; // таймаут 3 секунды
+      xhr.timeout = 1000; // таймаут 3 секунды
       xhr.onload = function () {
-        if (xhr.status === 200) {
-          parser.status = true;
-        } else {
-          parser.status = false;
-        }
+        parser.status = (xhr.status === 200);
         resolve(parser);
       };
       xhr.onerror = function () {
@@ -37,7 +34,7 @@
 
   // Функция проверки всех парсеров.
   function checkAllParsers() {
-    // Список парсеров с настройками – при необходимости добавьте или измените параметры.
+    // Список стандартных парсеров.
     const parsers = [
       { title: "Lampa32",             url: "79.137.204.8:2601", apiKey: "" },
       { title: "ByLampa Jackett",      url: "79.137.204.8:9117", apiKey: "777" },
@@ -55,8 +52,16 @@
   // --- Формирование меню выбора парсера ---
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
-      // Для каждого парсера формируем элемент меню с подсветкой:
-      // если parser.status === true – зелёная галочка, иначе – красный крестик.
+      // Добавляем в начало список дополнительный пункт "Свой вариант"
+      results.unshift({
+        title: "Свой вариант",
+        url: "",
+        apiKey: "",
+        status: true // по умолчанию считаем его рабочим
+      });
+
+      // Формируем элементы меню с подсветкой:
+      // Если parser.status===true – зелёная галочка, иначе – красный крестик.
       const items = results.map(parser => {
         const statusIcon = parser.status
           ? '<span style="color: #64e364;">&#10004;</span>'
@@ -74,14 +79,17 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
-          // Сохраняем выбранный парсер
-          Lampa.Storage.set('jackett_url', item.parser.url);
-          Lampa.Storage.set('jackett_key', item.parser.apiKey);
-          // Сохраняем выбранный идентификатор или название парсера,
-          // чтобы при отрисовке пункта в настройках отображалось, какой парсер выбран
-          Lampa.Storage.set('selected_parser', item.parser.title);
+          // Если выбран пункт "Свой вариант", сохраняем специальное значение "no_parser"
+          if(item.parser.title === "Свой вариант") {
+            Lampa.Storage.set('jackett_url', "");
+            Lampa.Storage.set('jackett_key', "");
+            Lampa.Storage.set('selected_parser', "Свой вариант");
+          } else {
+            Lampa.Storage.set('jackett_url', item.parser.url);
+            Lampa.Storage.set('jackett_key', item.parser.apiKey);
+            Lampa.Storage.set('selected_parser', item.parser.title);
+          }
           console.log("Выбран парсер:", item.parser);
-          // Обновляем отображение пункта "Выбрать парсер" в настройках
           updateParserField(item.title);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
@@ -90,15 +98,12 @@
     });
   }
 
-  // Функция обновления отображения пункта "Выбрать парсер"
+  // Функция обновления отображения пункта "Выбрать парсер" в настройках
   function updateParserField(text) {
-    // Обновляем содержимое элемента, который отвечает за выбор парсера.
-    // Здесь мы полностью заменяем его внутреннюю разметку на новый текст,
-    // в котором уже отражено, какой парсер выбран (с иконкой и названием)
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" style="padding:0!important">
          <div style="width:1.3em;height:1.3em;padding-right:.1em">
-           <!-- Здесь может быть SVG-иконка -->
+           <!-- SVG-иконка при необходимости -->
          </div>
          <div style="font-size:1.0em">
            <div style="padding: 0.3em 0.3em; padding-top: 0;">
@@ -112,7 +117,6 @@
   }
 
   // --- Интеграция в настройки ---
-  // Добавляем параметр для выбора парсера.
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -135,7 +139,7 @@
     field: {
       name: `<div class="settings-folder" style="padding:0!important">
                 <div style="width:1.3em;height:1.3em;padding-right:.1em">
-                  <!-- Здесь может быть SVG-иконка -->
+                  <!-- SVG-иконка при необходимости -->
                 </div>
                 <div style="font-size:1.0em">
                   <div style="padding: 0.3em 0.3em; padding-top: 0;">
@@ -155,16 +159,13 @@
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-        // Если включён парсер (parser_use) и выбран тип "jackett"
         if (Lampa.Storage.field("parser_use") && Lampa.Storage.field("parser_torrent_type") === "jackett") {
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // При клике запускается функция показа меню выбора парсера
           elem.off("click").on("click", function () {
             showParserSelectionMenu();
           });
-          // Если уже выбран парсер, обновляем отображение пункта
           const current = Lampa.Storage.get('selected_parser');
           if (current) {
             updateParserField(current);
