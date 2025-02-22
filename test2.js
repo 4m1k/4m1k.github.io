@@ -20,7 +20,7 @@
       var menuOptions = [
         { title: 'Русские фильмы' },
         { title: 'Русские сериалы' },
-        { title: '<div class="settings-folder" style="padding:0!important"><div style="width:2.2em;height:1.7em;padding-right:.5em"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="M12.071 33V15h5.893c3.331 0 6.032 2.707 6.032 6.045s-2.7 6.045-6.032 6.045h-5.893m5.893 0l5.892 5.905m3.073-11.92V28.5a4.5 4.5 0 0 0 4.5 4.5h0a4.5 4.5 0 0 0 4.5-4.5v-7.425m0 7.425V33"/><rect width="37" height="37" x="5.5" y="5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" rx="4" ry="4"/></svg></div><div style="font-size:1.3em">Русские мультфильмы</div></div>' },
+        { title: 'Русские мультфильмы' },
         { title: 'Start' },
         { title: 'Premier' },
         { title: 'СТС' },
@@ -33,10 +33,12 @@
       ];
 
       menuItem.on('hover:enter', function () {
+        console.log('Открытие подменю "Русское"'); // Отладка
         Lampa.Select.show({
           title: Lampa.Lang.translate('settings_rest_source'),
           items: menuOptions,
           onSelect: function (item) {
+            console.log('Выбран пункт:', item.title); // Отладка
             var currentDate = new Date().toISOString().slice(0, 10);
             if (item.title === 'Русские фильмы') {
               Lampa.Activity.push({
@@ -57,7 +59,7 @@
                 page: 1,
                 sort_by: 'first_air_date.desc',
               });
-            } else if (item.title.includes('Русские мультфильмы')) {
+            } else if (item.title === 'Русские мультфильмы') {
               Lampa.Activity.push({
                 url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${currentDate}`,
                 title: 'Русские мультфильмы',
@@ -173,7 +175,13 @@
         });
       });
 
-      $('.menu .menu__list').eq(0).append(menuItem);
+      // Добавляем пункт меню
+      try {
+        $('.menu .menu__list').eq(0).append(menuItem);
+        console.log('Пункт "Русское" добавлен в меню'); // Отладка
+      } catch (e) {
+        console.error('Ошибка при добавлении пункта меню:', e);
+      }
     }
 
     if (window.appready) {
@@ -187,12 +195,11 @@
     }
   })();
 
-  // Модификация API Lampa для главной страницы
+  // Модификация API Lampa для главной страницы (оставлена как есть, но можно временно закомментировать для теста)
   (function () {
     function initializeApiModifications() {
       window.plugin_tmdb_mod_ready = true;
 
-      // Класс для кастомизации карточек
       function CardCustom(data) {
         var cardData = data.card || data;
         var nextEpisode = data.next_episode_to_air || data.episode || {};
@@ -302,7 +309,6 @@
         };
       }
 
-      // Добавление дополнительных категорий без перезаписи TMDB
       var originalTmdb = Lampa.Api.sources.tmdb;
       var extendedTmdb = Object.create(originalTmdb);
 
@@ -314,7 +320,6 @@
         var currentDate = new Date().toISOString().slice(0, 10);
 
         var sections = [
-          // Стандартные категории TMDB
           function (callback) {
             originalTmdb.get('trending/movie/day', args, function (data) {
               data.title = Lampa.Lang.translate('title_trend_day');
@@ -344,7 +349,6 @@
               callback(data);
             }, callback);
           },
-          // Добавленные русские категории
           function (callback) {
             originalTmdb.get(`discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${currentDate}`, args, function (data) {
               data.title = Lampa.Lang.translate('Русские фильмы');
@@ -399,7 +403,6 @@
       });
     }
 
-    // Добавление настройки в интерфейс
     Lampa.SettingsApi.addParam({
       component: 'interface',
       param: {
