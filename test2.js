@@ -13,7 +13,7 @@
       const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
       const xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
-      xhr.timeout = 2000; // таймаут 3 секунды
+      xhr.timeout = 3000; // таймаут 3 секунды
       xhr.onload = function () {
         parser.status = (xhr.status === 200);
         resolve(parser);
