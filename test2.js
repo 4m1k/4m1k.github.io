@@ -33,16 +33,14 @@
   // Функция проверки всех стандартных парсеров.
   function checkAllParsers() {
     // Список стандартных парсеров.
+    // Удалены: ByLampa Jackett, Jacred Maxvol Pro, Spawn Jackett
     const parsers = [
       { title: "Lampa32",             url: "79.137.204.8:2601", apiKey: "" },
-      { title: "ByLampa Jackett",      url: "79.137.204.8:9117", apiKey: "777" },
-      { title: "Jacred.xyz",           url: "jacred.xyz",        apiKey: "" },
-      { title: "Jacred Maxvol Pro",    url: "jr.maxvol.pro",       apiKey: "" },
-      { title: "Jacred Pro",           url: "jacred.pro",         apiKey: "" },
-      { title: "Viewbox",              url: "jacred.viewbox.dev", apiKey: "viewbox" },
-      { title: "JAOS My To Jacred",     url: "trs.my.to:9117",      apiKey: "" },
-      { title: "Spawn Jackett",        url: "spawn.pp.ua:59117",   apiKey: "2" },
-      { title: "Johnny Jacred",        url: "altjacred.duckdns.org", apiKey: "" }
+      { title: "Jacred.xyz",          url: "jacred.xyz",        apiKey: "" },
+      { title: "Jacred Pro",          url: "jacred.pro",         apiKey: "" },
+      { title: "Viewbox",             url: "jacred.viewbox.dev", apiKey: "viewbox" },
+      { title: "JAOS My To Jacred",    url: "trs.my.to:9117",      apiKey: "" },
+      { title: "Johnny Jacred",       url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
@@ -62,10 +60,10 @@
       const currentSelected = Lampa.Storage.get('selected_parser');
 
       // Формируем элементы меню.
-      // Для каждого парсера:
-      // – Если он не "Свой вариант", его название окрашивается: зелёным, если рабочий, красным – если нет.
-      // – Если выбранный (currentSelected) совпадает с данным, к названию добавляется синяя галочка.
-      // – Для "Свой вариант", если не выбран, оставляем стандартный (наследуемый) цвет.
+      // Если парсер не равен "Свой вариант":
+      //   - Если он рабочий – его название окрашивается зелёным, если нет – красным.
+      // Если элемент совпадает с текущим выбранным, перед названием добавляем синюю галочку.
+      // Для "Свой вариант", если он не выбран, маркер не выводится.
       const items = results.map(parser => {
         let color = "inherit"; // по умолчанию для "Свой вариант" или если не задано
         if (parser.title !== "Свой вариант") {
@@ -134,13 +132,10 @@
       values: {
         no_parser: "Свой вариант",
         jac_lampa32_ru: "Lampa32",
-        bylampa_jackett: "ByLampa Jackett",
         jacred_xyz: "Jacred.xyz",
-        jr_maxvol_pro: "Jacred Maxvol Pro",
         jacred_my_to: "Jacred Pro",
         jacred_viewbox_dev: "Viewbox",
         spawn_jacred: "JAOS My To Jacred",
-        spawn_jackett: "Spawn Jackett",
         altjacred_duckdns_org: "Johnny Jacred"
       },
       default: 'jacred_xyz'
