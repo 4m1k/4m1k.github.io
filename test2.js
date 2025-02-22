@@ -1578,7 +1578,6 @@
     function addButton(e) {
       if (e.render.find('.lampac--button').length) return;
       var btn = $(Lampa.Lang.translate(button));
-	  // console.log(btn.clone().removeClass('focus').prop('outerHTML'))
       btn.on('hover:enter', function() {
         resetTemplates();
         Lampa.Component.add('lampac', component);
@@ -1610,7 +1609,23 @@
                     render: e.object.activity.render().find('.button--play'),
                     movie: e.data.movie
                 });
- catch (e) {}
+         }
+         else {
+                addButton({
+                    render: e.object.activity.render().find('.view--torrent'),
+                    movie: e.data.movie
+                });
+         }
+      }
+    });
+    try {
+      if (Lampa.Activity.active().component == 'full') {
+        addButton({
+          render: Lampa.Activity.active().activity.render().find('.view--torrent'),
+          movie: Lampa.Activity.active().card
+        });
+      }
+    } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
       var balansers_sync = ["filmix", 'filmixtv',"fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/kinopub", "rc/rhs", "vcdn"];
       balansers_sync.forEach(function(name) {
