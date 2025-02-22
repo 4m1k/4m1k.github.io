@@ -3,17 +3,13 @@
 
   Lampa.Platform.tv();
 
-  // --- Функции проверки парсера ---
-  // Проверка одного парсера: отправляем запрос к URL:
-  // protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey
-  // Если сервер отвечает статусом 200 – parser.status=true, иначе false.
   function checkParser(parser) {
     return new Promise((resolve) => {
       const protocol = location.protocol === "https:" ? "https://" : "http://";
       const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
       const xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
-      xhr.timeout = 3000; // таймаут 3 секунды
+      xhr.timeout = 3000;
       xhr.onload = function () {
         parser.status = (xhr.status === 200);
         resolve(parser);
@@ -30,25 +26,22 @@
     });
   }
 
-  // Функция проверки всех стандартных парсеров.
+  
   function checkAllParsers() {
-    // Список стандартных парсеров.
-    // Удалены: ByLampa Jackett, Jacred Maxvol Pro, Spawn Jackett
     const parsers = [
       { title: "Lampa32",             url: "79.137.204.8:2601", apiKey: "" },
-      { title: "Jacred.xyz",          url: "jacred.xyz",        apiKey: "" },
+      { title: "Jacred xyz",          url: "jacred.xyz",        apiKey: "" },
       { title: "Jacred Pro",          url: "jacred.pro",         apiKey: "" },
       { title: "Viewbox",             url: "jacred.viewbox.dev", apiKey: "viewbox" },
-      { title: "JAOS My To Jacred",    url: "trs.my.to:9117",      apiKey: "" },
+      { title: "JAOS My.To",          url: "trs.my.to:9117",      apiKey: "" },
       { title: "Johnny Jacred",       url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
 
-  // --- Формирование меню выбора парсера ---
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
-      // Добавляем в начало пункт "Свой вариант"
+
       results.unshift({
         title: "Свой вариант",
         url: "",
@@ -56,16 +49,12 @@
         status: null // статус не проверяется для "Свой вариант"
       });
 
-      // Получаем текущий выбранный парсер из настроек
+
       const currentSelected = Lampa.Storage.get('selected_parser');
 
-      // Формируем элементы меню.
-      // Если парсер не равен "Свой вариант":
-      //   - Если он рабочий – его название окрашивается зелёным, если нет – красным.
-      // Если элемент совпадает с текущим выбранным, перед названием добавляем синюю галочку.
-      // Для "Свой вариант", если он не выбран, маркер не выводится.
+
       const items = results.map(parser => {
-        let color = "inherit"; // по умолчанию для "Свой вариант" или если не задано
+        let color = "inherit"; 
         if (parser.title !== "Свой вариант") {
           color = parser.status ? "#64e364" : "#ff2121";
         }
@@ -105,7 +94,6 @@
     });
   }
 
-  // Функция обновления отображения пункта "Выбрать парсер" в настройках
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" style="padding:0!important">
@@ -123,7 +111,6 @@
     );
   }
 
-  // --- Интеграция в настройки ---
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -132,10 +119,10 @@
       values: {
         no_parser: "Свой вариант",
         jac_lampa32_ru: "Lampa32",
-        jacred_xyz: "Jacred.xyz",
+        jacred_xyz: "Jacred xyz",
         jacred_my_to: "Jacred Pro",
         jacred_viewbox_dev: "Viewbox",
-        spawn_jacred: "JAOS My To Jacred",
+        spawn_jacred: "JAOS My.To",
         altjacred_duckdns_org: "Johnny Jacred"
       },
       default: 'jacred_xyz'
