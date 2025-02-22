@@ -1610,15 +1610,6 @@
                     render: e.object.activity.render().find('.button--play'),
                     movie: e.data.movie
                 });
-         }
-         else {
-                addButton({
-                    render: e.object.activity.render().find('.view--torrent'),
-                    movie: e.data.movie
-                });
-         }
-      }
-    });
     try {
       if (Lampa.Activity.active().component == 'full') {
         addButton({
