@@ -36,11 +36,11 @@
     // Список стандартных парсеров (без ByLampa Jackett, Jacred Maxvol Pro, Spawn Jackett)
     const parsers = [
       { title: "Lampa32",           url: "79.137.204.8:2601",        apiKey: "" },
-      { title: "Jacred.xyz",        url: "jacred.xyz",               apiKey: "" },
-      { title: "Jacred Pro",        url: "jacred.pro",               apiKey: "" },
-      { title: "Viewbox",           url: "jacred.viewbox.dev",       apiKey: "viewbox" },
-      { title: "JAOS My To Jacred",  url: "trs.my.to:9117",            apiKey: "" },
-      { title: "Johnny Jacred",     url: "altjacred.duckdns.org",     apiKey: "" }
+      { title: "jacred.xyz",        url: "jacred.xyz",               apiKey: "" },
+      { title: "jacred.pro",        url: "jacred.pro",               apiKey: "" },
+      { title: "jacred.viewbox.dev",           url: "jacred.viewbox.dev",       apiKey: "viewbox" },
+      { title: "trs.my.to:9117",  url: "trs.my.to:9117",            apiKey: "" },
+      { title: "altjacred.duckdns.org",     url: "altjacred.duckdns.org",     apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
@@ -135,11 +135,11 @@
       values: {
         no_parser: "Свой вариант",
         jac_lampa32_ru: "Lampa32",
-        jacred_xyz: "Jacred.xyz",
-        jacred_my_to: "Jacred Pro",
-        jacred_viewbox_dev: "Viewbox",
-        spawn_jacred: "JAOS My To Jacred",
-        altjacred_duckdns_org: "Johnny Jacred"
+        jacred_xyz: "jacred.xyz",
+        jacred_my_to: "jacred.pro",
+        jacred_viewbox_dev: "jacred.viewbox.dev",
+        spawn_jacred: "trs.my.to:9117",
+        altjacred_duckdns_org: "altjacred.duckdns.org"
       },
       default: 'jacred_xyz'
     },
