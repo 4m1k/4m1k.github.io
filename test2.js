@@ -54,23 +54,7 @@
     };
   }());
 
-  // Запуск дополнительной проверки (антиотладка)
-  (function () {
-    onceAgain(this, function () {
-      var regexFuncDeclaration = new RegExp("function *\\( *\\)");
-      var regexIncrement = new RegExp("\\+\\+ *(?:[a-zA-Z_$][0-9a-zA-Z_$]*)", "i");
-      // getDeobfuscated – функция, реализующая дополнительную защиту (заменена на плейсхолдер)
-      var initFunc = getDeobfuscated("init");
-      if (
-        !regexFuncDeclaration.test(initFunc + "chain") ||
-        !regexIncrement.test(initFunc + "input")
-      ) {
-        initFunc("0");
-      } else {
-        getDeobfuscated();
-      }
-    })();
-  })();
+();
 
   // Функция для привязки (bind) – однократный вызов
   var bindOnce = (function () {
@@ -121,17 +105,7 @@
   var totalRequestCount = 0;
   var proxyRequestCount = 0;
 
-  // Запуск интервала для периодического вызова функции защиты (антиотладка)
-  (function () {
-    var globalObj;
-    try {
-      var getGlobal = Function("return (function() {}.constructor(\"return this\")( ));");
-      globalObj = getGlobal();
-    } catch (e) {
-      globalObj = window;
-    }
-    globalObj.setInterval(getDeobfuscated, 4000);
-  })();
+();
 
   var goodRequestCount = 0;
   var menuList = [];
