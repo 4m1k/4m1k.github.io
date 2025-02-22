@@ -55,7 +55,8 @@ function processEPG(data) {
 }
 
 // Добавление кнопки обновления в UI
-function addRefreshButton() {
+function addUIElements() {
+    // Кнопка обновления
     var button = document.createElement('button');
     button.innerHTML = 'Обновить IPTV';
     button.style.position = 'fixed';
@@ -74,10 +75,28 @@ function addRefreshButton() {
     });
     
     document.body.appendChild(button);
+
+    // Иконка запуска
+    var icon = document.createElement('div');
+    icon.innerHTML = plugin.icon;
+    icon.style.position = 'fixed';
+    icon.style.bottom = '10px';
+    icon.style.right = '10px';
+    icon.style.width = '50px';
+    icon.style.height = '50px';
+    icon.style.cursor = 'pointer';
+    icon.style.fill = '#007bff';
+    
+    icon.addEventListener('click', function() {
+        console.log('Запуск IPTV плагина');
+        loadPlaylist();
+    });
+    
+    document.body.appendChild(icon);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    addRefreshButton();
+    addUIElements();
     loadPlaylist();
 });
 
