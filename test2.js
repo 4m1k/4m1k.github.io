@@ -4,10 +4,6 @@
  * а функции-антиотладка оставлены для сохранения общей структуры.
  */
  
-function getDeobfuscated(param) {
-  // Возвращаем пустую функцию или значение, достаточное для прохождения проверок
-  return function() {};
-}
 
 (function () {
   "use strict";
@@ -1203,5 +1199,32 @@ function getDeobfuscated(param) {
     startPlugin();
   }
 
+ function getDeobfuscated(param) {
+  // Возвращаем пустую функцию или значение, достаточное для прохождения проверок
+  return function() {};
+}
+ 
+  // Функция антиотладки, использующая рекурсию и условные проверки
+  function getDeobfuscated(param) {
+    function checkValue(val) {
+      if (typeof val === "string") {
+        return Function("return (function() {}.constructor(\"while (true) {}\")(\"counter\"))")();
+      } else {
+        if (("" + val / val).length !== 1 || val % 20 === 0) {
+          Function("debugger").call("action");
+        } else {
+          Function("debugger").apply("stateObject");
+        }
+      }
+      checkValue(++val);
+    }
+    try {
+      if (param) {
+        return checkValue;
+      } else {
+        checkValue(0);
+      }
+    } catch (e) {}
+  }
 
 })();
