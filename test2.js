@@ -108,7 +108,7 @@
 function updateParserField(text) {
   $("div[data-name='jackett_urltwo']").html(
     `<div class="settings-folder" style="padding:0!important">
-       <div style="width:1.5em; height:1.5em; padding-right:0.2em">
+       <div style="width:1.4em; height:1.4em; padding-right:0.2em">
          <!-- SVG-иконка при необходимости -->
        </div>
        <div style="font-size:1.2em; font-weight: bold;">
