@@ -1,318 +1,406 @@
 (function () {
-  "use strict";
+  'use strict';
 
-  // Инициализация режима TV для платформы Lampa
   Lampa.Platform.tv();
-
-  /**
-   * Возвращает строку из массива обфусцированных строк.
-   */
-  function getString(index) {
-    const strings = getObfuscationArray();
-    return strings[index];
-  }
-
-  /**
-   * Массив обфусцированных строк.
-   * Добавьте в этот массив все необходимые строки, используемые в коде.
-   */
-  function getObfuscationArray() {
-    return [
-      "table",                // 0
-      "79.137.204.8:9117",     // 1
-      "Ошибка",               // 2
-      "Error:",               // 3
-      "Jacred.xyz",           // 4
-      "jacred_viewbox_dev",   // 5
-      "change",               // 6
-      "field",                // 7
-      "ff2121",               // 8
-      "src",                  // 9
-      "no_parser",            // 10
-      // … остальные строки
-      // Пример: вместо getString(0x1fc) вернём закрывающую скобку
-      ")",                    // допустим, индекс 30
-      // И так далее для всех используемых индексов (например, 0x223, 0x200, 0x1f7, 0x205, 0x226, 0x215, 0x26f, 0x258, 0x1ff, 0x1f1, 0x20a, 0x253, 0x204, 0x238, 0x229, 0x212, 0x270, 0x1f4, 0x211, 0x236, 0x24b и т.д.)
-    ];
-  }
-
-  // Первичная перестановка массива для динамической инициализации
-  (function (arrayFunc, targetValue) {
-    var arr = arrayFunc();
-    while (true) {
-      try {
-        let result =
-          parseInt(getString(0x261)) / 1 +
-          (parseInt(getString(0x1fa)) / 2) * (-parseInt(getString(0x241)) / 3) +
-          parseInt(getString(0x266)) / 4 +
-          -parseInt(getString(0x216)) / 5 +
-          (-parseInt(getString(0x259)) / 6 * (parseInt(getString(0x230)) / 7)) +
-          parseInt(getString(0x246)) / 8 +
-          (-parseInt(getString(0x24c)) / 9 * (parseInt(getString(0x1e6)) / 10));
-        if (result === targetValue) break;
-        else arr.push(arr.shift());
-      } catch (e) {
-        arr.push(arr.shift());
-      }
-    }
-  })(getObfuscationArray, 0xd3c06);
-
-  // Переменная observer вынесена в область видимости основного блока
-  var observer = null;
-
-  // Основной функционал
   (function () {
-    "use strict";
+    // Обёртки для выполнения кода один раз
+    var readyOnce = function () {
+      var flag = true;
+      return function (context, callback) {
+        var inner = flag
+          ? function () {
+              if (callback) {
+                var result = callback.apply(context, arguments);
+                callback = null;
+                return result;
+              }
+            }
+          : function () {};
+        flag = false;
+        return inner;
+      };
+    }();
+    var oneTime = function () {
+      var flag = true;
+      return function (context, callback) {
+        var inner = flag
+          ? function () {
+              if (callback) {
+                var result = callback.apply(context, arguments);
+                callback = null;
+                return result;
+              }
+            }
+          : function () {};
+        flag = false;
+        return inner;
+      };
+    }();
 
+    'use strict';
     Lampa.Platform.tv();
-    Lampa.Settings.set("jackett_enabled", true);
-    var baseUrl = location.protocol === "https:" ? "https:" : "http:";
+    Lampa.Storage.set("parser_use", true);
 
-    var parserServers = [
-      getString(0x258),          // убедитесь, что этот индекс определён
-      "79.137.204.8:9117",
-      getString(0x1ff),
-      getString(0x1f1),
-      "jacred.pro",
-      getString(0x20a),
-      "trs.my.to:9117",
-      getString(0x253),
-      getString(0x204),
-    ];
-
-    var parserDisplayNames = [
-      getString(0x238),
-      "ByLampa Jackett",
-      getString(0x229),
-      getString(0x212),
-      getString(0x270),
-      getString(0x1f4),
-      getString(0x211),
-      "Spawn Jackett",
-      getString(0x236),
-    ];
-
-    function testParserServer(index) {
-      setTimeout(function () {
-        var statusMessage = "";
-        if (parserServers[index] === getString(0x253))
-          statusMessage = getString(0x205);
-        if (parserServers[index] === getString(0x226))
-          statusMessage = getString(0x215);
-
-        var nextChildIndex = index + 2;
-        if (parserServers[index] === "jr.maxvol.pro")
-          baseUrl = "https:";
-        else baseUrl = getString(0x26f);
-
-        // Добавляем закрывающую скобку вручную, если getString(0x1fc) не определён
-        var selector =
-          "body > div.selectbox > div.selectbox__content.layer--height > div.selectbox__body.layer--wheight > div > div > div > div:nth-child(" +
-          nextChildIndex +
-          ")" ; // заменили getString(0x1fc) на ")"
-
-        if ($(getString(0x223)).text() !== getString(0x200)) return;
-
-        var testUrl = baseUrl + parserServers[index] + getString(0x1f7) + statusMessage;
-        var xhr = new XMLHttpRequest();
-        xhr.timeout = 3000;
-        xhr.open("GET", testUrl, true);
-        xhr.send();
-
-        xhr.onerror = xhr.ontimeout = function () {
-          if ($(selector).text() === parserDisplayNames[index])
-            $(selector)
-              .html(getString(0x218) + $(selector).text())
-              .css(getString(0x277), getString(0x22d));
-        };
-
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            if ($(selector).text() === parserDisplayNames[index])
-              $(selector)
-                .html(getString(0x1f6) + $(selector).text())
-                .css(getString(0x277), "64e364");
-          } else {
-            if ($(selector).text() === parserDisplayNames[index])
-              $(selector)
-                .html(getString(0x218) + $(selector).text())
-                .css(getString(0x277), "ff2121");
-          }
-          if (xhr.status === 401) {
-            if ($(selector).text() === parserDisplayNames[index])
-              $(selector)
-                .html(getString(0x218) + $(selector).text())
-                .css(getString(0x277), getString(0x1f3));
-          }
-        };
-      }, 1000);
-    }
-
-    function testAllParserServers() {
-      for (var i = 0; i < parserServers.length; i++) {
-        testParserServer(i);
+    Lampa.Controller.listener.follow("toggle", function (e) {
+      if (e.name == 'select') {
+        setTimeout(function () {}, 10);
       }
-    }
+    });
 
-    function updateParserSettings() {
-      var parser = Lampa.Storage.get("parser_type");
-      if (parser === "default") {
-        Lampa.Storage.set("jackett_url", "");
-        Lampa.Storage.set("jackett_key", "");
-        Lampa.Storage.set("jackett_interview", "default_interview");
-        Lampa.Storage.set("some_flag", false);
-        Lampa.Storage.set("jackett_lang", "lg");
+    function initParserSettings() {
+      if (Lampa.Storage.get("jackett_urltwo") == "no_parser") {
+        Lampa.Storage.set("jackett_url", '');
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", false);
+        Lampa.Storage.set("parse_lang", 'lg');
       }
-      // Другие условия по необходимости...
+      if (Lampa.Storage.get("jackett_urltwo") == "jac_lampa32_ru") {
+        Lampa.Storage.set("jackett_url", "79.137.204.8:2601");
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == 'spawn_jacred') {
+        Lampa.Storage.set("jackett_url", "trs.my.to:9117");
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == "jacred_xyz") {
+        Lampa.Storage.set("jackett_url", 'jacred.xyz');
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "healthy");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get('jackett_urltwo') == "spawn_jackett") {
+        Lampa.Storage.set("jackett_url", "spawn.pp.ua:59117");
+        Lampa.Storage.set("jackett_key", '2');
+        Lampa.Storage.set("jackett_interview", "healthy");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'df');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == "jr_maxvol_pro") {
+        Lampa.Storage.set("jackett_url", "jr.maxvol.pro");
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "healthy");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == "altjacred_duckdns_org") {
+        Lampa.Storage.set("jackett_url", "altjacred.duckdns.org");
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == "jacred_my_to") {
+        Lampa.Storage.set("jackett_url", "jacred.pro");
+        Lampa.Storage.set("jackett_key", '');
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == "jacred_viewbox_dev") {
+        Lampa.Storage.set("jackett_url", "jacred.viewbox.dev");
+        Lampa.Storage.set("jackett_key", "viewbox");
+        Lampa.Storage.set("jackett_interview", "all");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'lg');
+      }
+      if (Lampa.Storage.get("jackett_urltwo") == 'bylampa_jackett') {
+        Lampa.Storage.set("jackett_url", "79.137.204.8:9117");
+        Lampa.Storage.set("jackett_key", "777");
+        Lampa.Storage.set("jackett_interview", "healthy");
+        Lampa.Storage.set("parse_in_search", true);
+        Lampa.Storage.set("parse_lang", 'df');
+      }
+      return;
     }
 
-    Lampa.Settings.addComponent({
-      component: "parser_selector",
-      param: {
-        name: "parser_type",
-        type: "select",
-        values: {
-          no_parser: "Без парсера",
-          jac_lampa32_ru: getString(0x238),
-          bylampa_jackett: "bylampa_jackett",
-          jacred_xyz: getString(0x229),
-          jr_maxvol_pro: getString(0x212),
-          jacred_my_to: getString(0x270),
-          jacred_viewbox_dev: getString(0x1f4),
-          spawn_jacred: getString(0x211),
-          spawn_jackett: "Spawn Jackett",
-          altjacred_duckdns_org: "Johnny Jacred",
+    Lampa.SettingsApi.addParam({
+      'component': "parser",
+      'param': {
+        'name': "jackett_urltwo",
+        'type': "select",
+        'values': {
+          'no_parser': "Свой вариант",
+          'jac_lampa32_ru': "Lampa32",
+          'bylampa_jackett': "ByLampa Jackett",
+          'jacred_xyz': "Jacred.xyz",
+          'jr_maxvol_pro': "Jacred Maxvol Pro",
+          'jacred_my_to': "Jacred Pro ",
+          'jacred_viewbox_dev': "Viewbox",
+          'spawn_jacred': "JAOS My To Jacred",
+          'spawn_jackett': "Spawn Jackett",
+          'altjacred_duckdns_org': "Johnny Jacred"
         },
-        default: "jacred_xyz",
+        'default': 'jacred_xyz'
       },
-      field: {
-        name: "Парсер",
-        description: "Выберите парсер для поиска",
+      'field': {
+        'name': "<div class=\"settings-folder\" style=\"padding:0!important\"><div style=\"width:1.3em;height:1.3em;padding-right:.1em\"><svg ...></svg></div><div style=\"font-size:1.0em\"><div style=\"padding: 0.3em 0.3em; padding-top: 0;\"><div style=\"background: #d99821; padding: 0.5em; border-radius: 0.4em;\"><div style=\"line-height: 0.3;\">Выбрать парсер</div></div></div></div></div>",
+        'description': "Нажмите для выбора парсера из списка"
       },
-      onChange: function (value) {
-        updateParserSettings();
-        Lampa.Controller.reload();
+      'onChange': function (value) {
+        initParserSettings();
+        Lampa.Settings.update();
       },
-      onRender: function (container) {
+      'onRender': function (elem) {
         setTimeout(function () {
-          $("div[data-children='parser']").on("click", function () {
-            Lampa.Controller.update();
+          $("div[data-children=\"parser\"]").on("hover:enter", function () {
+            Lampa.Settings.update();
           });
-          if (localStorage.getItem("jackett_urltwo") !== "2")
-            $("div[data-name='jackett_urltwo']").hide();
-          else $("div[data-name='jackett_urltwo']").show();
+          if (localStorage.getItem('jackett_urltwo') !== "no_parser") {
+            $("div[data-name=\"jackett_url\"]").hide();
+            $("div[data-name=\"jackett_key\"]").hide();
+            Lampa.Controller.toggle("settings_component");
+          }
+          if (Lampa.Storage.field("parser_use") && Lampa.Storage.field("parser_torrent_type") == "jackett") {
+            elem.show();
+            $('.settings-param__name', elem).css("color", "ffffff");
+            $("div[data-name=\"jackett_urltwo\"]").insertAfter("div[data-name=\"parser_torrent_type\"]");
+          } else {
+            elem.hide();
+          }
         }, 5);
-      },
-    });
-
-    Lampa.Settings.on("change", function (event) {
-      if (event.type === "parser_selector") {
-        event.container.find('[data-name="jackett_url_two"]').remove();
       }
     });
 
-    var initInterval = setInterval(function () {
+    Lampa.Settings.listener.follow("open", function (panel) {
+      if (panel.name == "parser") {
+        panel.body.find("[data-name=\"jackett_url2\"]").remove();
+        panel.body.find("[data-name=\"jackett_url_two\"]").remove();
+      }
+    });
+
+    Lampa.Storage.listener.follow('change', function (change) {
+      if (Lampa.Storage.field("parser_torrent_type") !== "jackett") {
+        $("div[data-name=\"jackett_urltwo\"]").hide();
+      } else {
+        $("div[data-name=\"jackett_urltwo\"]").show();
+        $("div[data-name=\"jackett_urltwo\"]").insertAfter("div[data-name=\"parser_torrent_type\"]");
+      }
+    });
+
+    var observerInterval = setInterval(function () {
       if (typeof Lampa !== "undefined") {
-        clearInterval(initInterval);
-        if (!Lampa.Storage.get("jackett_url")) resetDefaultSettings();
+        clearInterval(observerInterval);
+        if (!Lampa.Storage.get("jack", "false")) {
+          setDefaults();
+        }
       }
     }, 100);
 
-    function resetDefaultSettings() {
-      Lampa.Storage.set("jackett_url", "default_value");
-      Lampa.Storage.set("jackett_urltwo", "default_two");
-      Lampa.Storage.set("some_flag", true);
-      Lampa.Storage.set("jackett_key", "");
-      Lampa.Storage.set("jackett_state", "healthy");
-      Lampa.Storage.set("jackett_lang", "lg");
+    function setDefaults() {
+      Lampa.Storage.set("jack", "true");
+      Lampa.Storage.set('jackett_url', "jacred.xyz");
+      Lampa.Storage.set('jackett_urltwo', "jacred_xyz");
+      Lampa.Storage.set("parse_in_search", true);
+      Lampa.Storage.set('jackett_key', '');
+      Lampa.Storage.set("jackett_interview", 'healthy');
+      Lampa.Storage.set("parse_lang", 'lg');
     }
 
-    function buildParserList() {
-      var currentComponent = Lampa.Activity.enabled().component;
-      var parserList = [];
-
-      parserList.push({
-        title: getString(0x238),
-        url: "79.137.204.8:2601",
-        url_two: getString(0x23d),
-        jac_key: "",
-        jac_int: "all",
-        jac_lang: "lg",
+    function showParserMenu() {
+      var current = Lampa.Controller.enabled().name;
+      var parsers = [];
+      parsers.push({
+        'title': "Lampa32",
+        'url': '79.137.204.8:2601',
+        'url_two': "jac_lampa32_ru",
+        'jac_key': '',
+        'jac_int': 'all',
+        'jac_lang': 'lg'
       });
-      parserList.push({
-        title: getString(0x25d),
-        url: getString(0x226),
-        url_two: getString(0x252),
-        jac_key: getString(0x215),
-        jac_int: "healthy",
-        jac_lang: "df",
+      parsers.push({
+        'title': "ByLampa Jackett",
+        'url': "79.137.204.8:9117",
+        'url_two': "bylampa_jackett",
+        'jac_key': "777",
+        'jac_int': 'healthy',
+        'jac_lang': 'df'
       });
-      // Другие парсеры добавляются аналогично
-
-      _fetchParserStatus(parserList)
-        .then(function (statusList) {
-          Lampa.Activity.show({
-            title: "Список парсеров",
-            items: statusList.map(function (item) {
-              return {
-                title: item.title,
-                url: item.url,
-                url_two: item.url_two,
-                jac_key: item.jac_key,
-                jac_int: item.jac_int,
-                jac_lang: item.jac_lang,
-              };
-            }),
-            onBack: function () {
-              Lampa.Activity.back(currentComponent);
-            },
-            onSelect: function (item) {
-              Lampa.Storage.set("jackett_url", item.url);
-              Lampa.Storage.set("jackett_urltwo", item.url_two);
-              Lampa.Storage.set("jackett_key", item.jac_key);
-              Lampa.Storage.set("jackett_state", item.jac_int);
-              Lampa.Storage.set("jackett_lang", item.jac_lang);
-              Lampa.Storage.set("some_flag", true);
-              Lampa.Activity.back(currentComponent);
-              setTimeout(function () {
-                window.history.back();
-              }, 1000);
-              setTimeout(function () {
-                Lampa.Controller.update(item);
-              }, 2000);
-            },
-          });
-        })
-        .catch(function (error) {
-          console.warn("Ошибка при получении статуса парсеров", error);
+      parsers.push({
+        'title': "Jacred.xyz",
+        'url': "jacred.xyz",
+        'url_two': "jacred_xyz",
+        'jac_key': '',
+        'jac_int': "healthy",
+        'jac_lang': 'lg'
+      });
+      parsers.push({
+        'title': "Jacred Maxvol Pro",
+        'url': "jr.maxvol.pro",
+        'url_two': "jr_maxvol_pro",
+        'jac_key': '',
+        'jac_int': "healthy",
+        'jac_lang': 'lg'
+      });
+      parsers.push({
+        'title': "Jacred Pro ",
+        'url': "jacred.pro",
+        'url_two': "jacred_my_to",
+        'jac_key': '',
+        'jac_int': 'all',
+        'jac_lang': 'lg'
+      });
+      parsers.push({
+        'title': 'Viewbox',
+        'url': "jacred.viewbox.dev",
+        'url_two': 'jacred_viewbox_dev',
+        'jac_key': "viewbox",
+        'jac_int': "all",
+        'jac_lang': 'lg'
+      });
+      parsers.push({
+        'title': "JAOS My To Jacred",
+        'url': "trs.my.to:9117",
+        'url_two': "spawn_jacred",
+        'jac_key': '',
+        'jac_int': 'all',
+        'jac_lang': 'lg'
+      });
+      parsers.push({
+        'title': "Spawn Jackett",
+        'url': "spawn.pp.ua:59117",
+        'url_two': "spawn_jackett",
+        'jac_key': '2',
+        'jac_int': "healthy",
+        'jac_lang': 'df'
+      });
+      parsers.push({
+        'title': "Johnny Jacred",
+        'url': "altjacred.duckdns.org",
+        'url_two': "altjacred_duckdns_org",
+        'jac_key': '',
+        'jac_int': "all",
+        'jac_lang': 'lg'
+      });
+      selectParsers(parsers).then(function (result) {
+        Lampa.Select.show({
+          'title': "Меню смены парсера",
+          'items': result.map(function (item) {
+            return {
+              'title': item.title,
+              'url': item.url,
+              'url_two': item.url_two,
+              'jac_key': item.jac_key,
+              'jac_int': item.jac_int,
+              'jac_lang': item.jac_lang
+            };
+          }),
+          'onBack': function () {
+            Lampa.Controller.toggle(current);
+          },
+          'onSelect': function (selected) {
+            Lampa.Storage.set('jackett_url', selected.url);
+            Lampa.Storage.set('jackett_urltwo', selected.url_two);
+            Lampa.Storage.set("jackett_key", selected.jac_key);
+            Lampa.Storage.set("jackett_interview", selected.jac_int);
+            Lampa.Storage.set("parse_lang", selected.jac_lang);
+            Lampa.Storage.set("parse_in_search", true);
+            Lampa.Controller.toggle(current);
+            var activity = Lampa.Storage.get('activity');
+            setTimeout(function () {
+              window.history.back();
+            }, 1000);
+            setTimeout(function () {
+              Lampa.Activity.push(activity);
+            }, 2000);
+          }
         });
+      }).catch(function (error) {
+        console.error("Error:", error);
+      });
     }
 
-    function _fetchParserStatus(parsers) {
-      var requests = [];
+    function selectParsers(parsers) {
+      var promises = [];
       for (var i = 0; i < parsers.length; i++) {
-        requests.push(_checkParser(parsers[i].url, parsers[i].title, parsers[i]));
+        promises.push(checkParser(parsers[i].url, parsers[i].title, parsers[i]));
       }
-      return Promise.all(requests);
+      return Promise.all(promises);
     }
 
-    function _checkParser(url, title, parserItem) {
+    function checkParser(url, title, parserObj) {
       return new Promise(function (resolve, reject) {
-        var protocol = location.protocol === "https:" ? "https:" : "http:";
-        var additionalParam = "";
-        if (url === getString(0x253)) additionalParam = "2";
-        if (url === getString(0x226)) additionalParam = getString(0x215);
-        if (url === getString(0x1f1)) protocol = "https:";
-        else protocol = "http://";
-        var fullUrl = protocol + url + getString(0x1f7) + additionalParam;
+        var protocol = location.protocol === "https:" ? "https://" : "http://";
+        var key = '';
+        if (url == "spawn.pp.ua:59117") {
+          key = '2';
+        }
+        if (url == "79.137.204.8:9117") {
+          key = "777";
+        }
+        if (url == "jr.maxvol.pro") {
+          protocol = "https://";
+        } else {
+          protocol = 'http://';
+        }
+        var apiUrl = protocol + url + "/api/v2.0/indexers/status:healthy/results?apikey=" + key;
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", fullUrl, true);
+        xhr.open("GET", apiUrl, true);
         xhr.timeout = 3000;
         xhr.onload = function () {
           if (xhr.status === 200) {
-            parserItem.title =
-              '<span style="color:#64e364;">✔  ' + title + "</span>";
-            resolve(parserItem);
+            parserObj.title = "<span style=\"color: #64e364;\">&#10004;&nbsp;&nbsp;" + title + "</span>";
+            resolve(parserObj);
           } else {
-            parserItem.title =
-              '<span style="
+            parserObj.title = "<span style=\"color: #ff2121;\">&#10008;&nbsp;&nbsp;" + title + "</span>";
+            resolve(parserObj);
+          }
+        };
+        xhr.onerror = function () {
+          parserObj.title = "<span style=\"color: #ff2121;\">&#10008;&nbsp;&nbsp;" + title + "</span>";
+          resolve(parserObj);
+        };
+        xhr.ontimeout = function () {
+          parserObj.title = "<span style=\"color: #ff2121;\">&#10008;&nbsp;&nbsp;" + title + "</span>";
+          resolve(parserObj);
+        };
+        xhr.send();
+      });
+    }
+
+    var observer;
+    Lampa.Storage.listener.follow("change", function (change) {
+      if (change.name == "activity") {
+        if (Lampa.Activity.active().component == "torrents") {
+          startObserver();
+        } else {
+          stopObserver();
+        }
+      }
+    });
+
+    function startObserver() {
+      stopObserver();
+      var target = document.body;
+      var config = {
+        childList: true,
+        subtree: true
+      };
+      observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if ($('.empty__title').length && Lampa.Storage.field('parser_torrent_type') == 'jackett') {
+            showParserMenu();
+            stopObserver();
+          }
+        });
+      });
+      observer.observe(target, config);
+    }
+
+    function stopObserver() {
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+    }
+
+    // Здесь ранее располагался код Яндекс.Метрики – он полностью удалён.
+  })();
+})();
