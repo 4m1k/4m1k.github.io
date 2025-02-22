@@ -4012,4 +4012,3 @@ Lampa.SettingsApi.addComponent({
 if (!!window.appready) addonStart();
 else Lampa.Listener.follow('app', function(e){if (e.type === 'ready') addonStart()});	
 	
-})();
