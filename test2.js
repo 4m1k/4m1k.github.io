@@ -112,7 +112,7 @@ function updateParserField(text) {
          <!-- SVG-иконка при необходимости -->
        </div>
        <div style="font-size:1.2em; font-weight: bold;">
-         <div style="padding: 0.5em 0.5em 0 0.5em;">
+         <div style="padding: 0.3em 0.3em 0 0.3em;">
            <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 5px solid #d99821;">
              <div style="line-height: 1.2; color: black;">${text}</div>
            </div>
