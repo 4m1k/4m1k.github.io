@@ -4,46 +4,8 @@
   Lampa.Platform.tv();
 
   (function () {
-    // Функция создания одноразового исполнителя
-    var createExecutor = function () {
-      var isFirstRun = true;
-      return function (context, callback) {
-        var executor = isFirstRun
-          ? function () {
-              if (callback) {
-                var result = callback.apply(context, arguments);
-                callback = null;
-                return result;
-              }
-            }
-          : function () {};
-        isFirstRun = false;
-        return executor;
-      };
-    }();
-
-    // Функция переопределения консоли
-    var createConsoleOverride = function () {
-      var isFirstRun = true;
-      return function (context, callback) {
-        var executor = isFirstRun
-          ? function () {
-              if (callback) {
-                var result = callback.apply(context, arguments);
-                callback = null;
-                return result;
-              }
-            }
-          : function () {};
-        isFirstRun = false;
-        return executor;
-      };
-    }();
-
-    'use strict';
     var isCardProcessed = 0;
 
-    // Удаление рекламы при переключении
     function removeAdsOnToggle() {
       Lampa.Controller.listener.follow('toggle', function (event) {
         if (event.name === 'select') {
@@ -56,22 +18,20 @@
             if (Lampa.Activity.active().component === 'modss_online') {
               $('.selectbox-item--icon').remove();
             }
-          }, 20);
+          }, 100);
         }
       });
     }
 
-    // Скрытие заблокированных элементов
     function hideLockedItems() {
       setTimeout(function () {
         $('.selectbox-item__lock').parent().css('display', 'none');
         if (!$('[data-name="account_use"]').length) {
           $('div > span:contains("Статус")').parent().remove();
         }
-      }, 10);
+      }, 100);
     }
 
-    // Наблюдение за изменениями DOM
     function observeDomChanges() {
       var observer = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
@@ -86,47 +46,19 @@
                   isCardProcessed = 0;
                 }, 500);
               }
+              observer.disconnect();
+              break;
             }
           }
         }
       });
-      var config = { childList: true, subtree: true };
-      observer.observe(document.body, config);
+      observer.observe(document.body, { childList: true, subtree: true });
+      setTimeout(function () {
+        observer.disconnect();
+      }, 10000);
     }
 
-    // Основная функция инициализации
     function initializeApp() {
-      var checkLoop = createExecutor(this, function () {
-        return checkLoop
-          .toString()
-          .search('(((.+)+)+)+$')
-          .toString()
-          .constructor(checkLoop)
-          .search('(((.+)+)+)+$');
-      });
-      checkLoop();
-
-      var overrideConsole = createConsoleOverride(this, function () {
-        var globalObject;
-        try {
-          var getGlobal = Function('return (function() {}.constructor("return this")( ));');
-          globalObject = getGlobal();
-        } catch (e) {
-          globalObject = window;
-        }
-        var console = (globalObject.console = globalObject.console || {});
-        var methods = ['log', 'warn', 'info', 'error', 'exception', 'table', 'trace'];
-        for (var i = 0; i < methods.length; i++) {
-          var method = createConsoleOverride.constructor.prototype.bind(createConsoleOverride);
-          var methodName = methods[i];
-          var originalMethod = console[methodName] || method;
-          method.__proto__ = createConsoleOverride.bind(createConsoleOverride);
-          method.toString = originalMethod.toString.bind(originalMethod);
-          console[methodName] = method;
-        }
-      });
-      overrideConsole();
-
       var style = document.createElement('style');
       style.innerHTML = '.button--subscribe { display: none; }';
       document.body.appendChild(style);
@@ -152,15 +84,22 @@
             clearInterval(adBotInterval);
             setTimeout(function () {
               Lampa.Controller.toggle('content');
-            }, 0);
+            }, 100);
           }
-        }, 50);
+        }, 500);
+        setTimeout(function () {
+          clearInterval(adBotInterval);
+        }, 10000);
+
         var cardTextInterval = setInterval(function () {
           if (document.querySelector('.card__textbox') !== null) {
             $('.card__textbox').parent().parent().remove();
             clearInterval(cardTextInterval);
           }
-        }, 50);
+        }, 500);
+        setTimeout(function () {
+          clearInterval(cardTextInterval);
+        }, 10000);
       });
 
       setTimeout(function () {
@@ -183,7 +122,7 @@
           setTimeout(function () {
             $('.settings--account-premium').remove();
             $('div > span:contains("CUB Premium")').remove();
-          }, 0);
+          }, 100);
         }
         if (event.name === 'server') {
           if (document.querySelector('.ad-server') !== null) {
