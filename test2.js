@@ -1,5 +1,6 @@
 function checkParser(url, title, parserObj) {
   return new Promise(function (resolve, reject) {
+    console.log('Начало проверки парсера:', url);
     let protocol = location.protocol === "https:" ? "https://" : "http://";
     let apiKey = '';
     if (url === "spawn.pp.ua:59117") {
@@ -14,6 +15,7 @@ function checkParser(url, title, parserObj) {
       protocol = "http://";
     }
     let apiUrl = protocol + url + "/api/v2.0/indexers/status:healthy/results?apikey=" + apiKey;
+    console.log('Формируется запрос к:', apiUrl);
     let xhr = new XMLHttpRequest();
     xhr.open("GET", apiUrl, true);
     xhr.timeout = 3000;
@@ -23,14 +25,17 @@ function checkParser(url, title, parserObj) {
       } else {
         parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
       }
+      console.log('Результат проверки для', url, ':', parserObj.title);
       resolve(parserObj);
     };
     xhr.onerror = function () {
       parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
+      console.error('Ошибка при запросе к', url);
       resolve(parserObj);
     };
     xhr.ontimeout = function () {
       parserObj.title = `<span style="color: #ff2121;">&#10008;&nbsp;&nbsp;${title}</span>`;
+      console.error('Таймаут запроса к', url);
       resolve(parserObj);
     };
     xhr.send();
@@ -46,6 +51,7 @@ function selectParsers(parsers) {
 }
 
 function showParserMenu() {
+  console.log('Вызов функции showParserMenu');
   let current = Lampa.Controller.enabled().name;
   let parsers = [];
   parsers.push({
@@ -122,6 +128,7 @@ function showParserMenu() {
   });
   
   selectParsers(parsers).then(function (result) {
+    console.log('Все проверки завершены. Результаты:', result);
     Lampa.Select.show({
       'title': "Меню смены парсера",
       'items': result.map(function (item) {
@@ -155,6 +162,6 @@ function showParserMenu() {
       }
     });
   }).catch(function (error) {
-    console.error("Error:", error);
+    console.error("Ошибка при формировании меню парсеров:", error);
   });
 }
