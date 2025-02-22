@@ -138,7 +138,7 @@
       values: {
         no_parser: "Свой вариант",
         jac_lampa32_ru: "Lampa32",
-        jacred_xyz: "Jacred.xyz",
+        jacred_xyz: "Jacred xyz",
         jacred_my_to: "Jacred Pro",
         jacred_viewbox_dev: "Viewbox",
         spawn_jacred: "JAOS My To Jacred",
