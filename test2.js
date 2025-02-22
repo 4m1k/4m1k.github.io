@@ -35,12 +35,12 @@
   function checkAllParsers() {
     // Список стандартных парсеров (без ByLampa Jackett, Jacred Maxvol Pro, Spawn Jackett)
     const parsers = [
-      { title: "Lampa32",           url: "79.137.204.8:2601",        apiKey: "" },
-      { title: "jacred.xyz",        url: "jacred.xyz",               apiKey: "" },
-      { title: "jacred.pro",        url: "jacred.pro",               apiKey: "" },
-      { title: "jacred.viewbox.dev",           url: "jacred.viewbox.dev",       apiKey: "viewbox" },
-      { title: "trs.my.to:9117",  url: "trs.my.to:9117",            apiKey: "" },
-      { title: "altjacred.duckdns.org",     url: "altjacred.duckdns.org",     apiKey: "" }
+      { title: "Lampa32",           url: "79.137.204.8:2601",  apiKey: "" },
+      { title: "Jacred.xyz",        url: "jacred.xyz",         apiKey: "" },
+      { title: "Jacred Pro",        url: "jacred.pro",         apiKey: "" },
+      { title: "Viewbox",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
+      { title: "JAOS My To Jacred",  url: "trs.my.to:9117",      apiKey: "" },
+      { title: "Johnny Jacred",     url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
@@ -58,9 +58,8 @@
 
       const currentSelected = Lampa.Storage.get('selected_parser');
 
-      // Формируем элементы меню.
       const items = results.map(parser => {
-        let color = "inherit"; // по умолчанию
+        let color = "inherit";
         if (parser.title !== "Свой вариант") {
           color = parser.status ? "#64e364" : "#ff2121";
         }
@@ -90,12 +89,14 @@
             Lampa.Storage.set('jackett_url', item.parser.url);
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
+            // При выборе стандартного парсера устанавливаем тип парсера для торрентов в "jackett"
+            Lampa.Storage.set("parser_torrent_type", "jackett");
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
-          // Скрываем поля "ссылка" и "API-ключ", если выбран не "Свой вариант"
+          // Скрываем или показываем поля "ссылка" и "API-ключ"
           if (item.parser.title !== "Свой вариант") {
             $("div[data-name='jackett_url']").hide();
             $("div[data-name='jackett_key']").hide();
@@ -108,23 +109,23 @@
     });
   }
 
-  // Обновление отображения выбранного парсера в настройках
-function updateParserField(text) {
-  $("div[data-name='jackett_urltwo']").html(
-    `<div class="settings-folder" style="padding:0!important">
-       <div style="width:1.3em;height:1.3em;padding-right:.1em">
-         <!-- SVG-иконка при необходимости -->
-       </div>
-       <div style="font-size:1.0em">
-         <div style="padding: 0.3em 0.3em; padding-top: 0;">
-           <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
-             <div style="line-height: 0.3;">${text}</div>
+  // Функция обновления отображения выбранного парсера в настройках
+  function updateParserField(text) {
+    $("div[data-name='jackett_urltwo']").html(
+      `<div class="settings-folder" style="padding:0!important">
+         <div style="width:1.3em;height:1.3em;padding-right:.1em">
+           <!-- SVG-иконка при необходимости -->
+         </div>
+         <div style="font-size:1.0em">
+           <div style="padding: 0.3em 0.3em; padding-top: 0;">
+             <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
+               <div style="line-height: 0.3;">${text}</div>
+             </div>
            </div>
          </div>
-       </div>
-     </div>`
-  );
-}
+       </div>`
+    );
+  }
 
   // --- Интеграция в настройки ---
   Lampa.SettingsApi.addParam({
@@ -135,11 +136,11 @@ function updateParserField(text) {
       values: {
         no_parser: "Свой вариант",
         jac_lampa32_ru: "Lampa32",
-        jacred_xyz: "jacred.xyz",
-        jacred_my_to: "jacred.pro",
-        jacred_viewbox_dev: "jacred.viewbox.dev",
-        spawn_jacred: "trs.my.to:9117",
-        altjacred_duckdns_org: "altjacred.duckdns.org"
+        jacred_xyz: "Jacred.xyz",
+        jacred_my_to: "Jacred Pro",
+        jacred_viewbox_dev: "Viewbox",
+        spawn_jacred: "JAOS My To Jacred",
+        altjacred_duckdns_org: "Johnny Jacred"
       },
       default: 'jacred_xyz'
     },
@@ -150,7 +151,7 @@ function updateParserField(text) {
                 </div>
                 <div style="font-size:1.0em">
                   <div style="padding: 0.3em 0.3em; padding-top: 0;">
-                    <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em;">
+                    <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
                       <div style="line-height: 0.3;">Выбрать парсер</div>
                     </div>
                   </div>
@@ -166,7 +167,7 @@ function updateParserField(text) {
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-        // Показываем меню выбора парсера, если включён режим использования парсера
+        // Показываем пункт, если включён режим использования парсера
         if (Lampa.Storage.field("parser_use")) {
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
@@ -181,7 +182,7 @@ function updateParserField(text) {
         } else {
           elem.hide();
         }
-        // Если выбран пункт не "Свой вариант", скрываем поля "ссылка" и "Api-ключ"
+        // Показываем/скрываем поля "ссылка" и "API-ключ" в зависимости от выбранного варианта
         if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
           $("div[data-name='jackett_url']").hide();
           $("div[data-name='jackett_key']").hide();
