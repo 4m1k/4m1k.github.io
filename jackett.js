@@ -1,6 +1,13 @@
 (function () {
   'use strict';
 
+  elem.off("click hover:enter").on("click hover:enter", function(e) {
+    // Если событие keydown, проверяем, что нажата клавиша Enter
+    if (e.type === "click" || (e.type === "hover:enter") || (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))) {
+        showParserSelectionMenu();
+    }
+});
+
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
