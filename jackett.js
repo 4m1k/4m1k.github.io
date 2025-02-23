@@ -1,13 +1,12 @@
 (function () {
   'use strict';
 
-  // Инициализация настроек по умолчанию
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
   Lampa.Platform.tv();
 
-  // Функция для проверки отдельного парсера с выводом отладочной информации
+  // Обновлённая функция проверки парсера с использованием onreadystatechange
   function checkParser(parser) {
     return new Promise((resolve) => {
       const protocol = location.protocol === "https:" ? "https://" : "http://";
@@ -15,15 +14,16 @@
       const xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
       xhr.timeout = 3000;
-      xhr.onload = function () {
-        console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
-        // Если статус 200 или для jacred.viewbox.dev возвращается 403, считаем, что парсер работает
-        if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
-          parser.status = true;
-        } else {
-          parser.status = false;
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
+          if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
+            parser.status = true;
+          } else {
+            parser.status = false;
+          }
+          resolve(parser);
         }
-        resolve(parser);
       };
       xhr.onerror = function () {
         console.log(`Ошибка при проверке ${parser.title}`);
@@ -39,7 +39,6 @@
     });
   }
 
-  // Функция для проверки всех парсеров
   function checkAllParsers() {
     const parsersToCheck = [
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -49,12 +48,10 @@
       { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
       { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
     ];
-    return Promise.all(parsersToCheck.map(parser => checkParser(parser))).then(results => results);
+    return Promise.all(parsersToCheck.map(parser => checkParser(parser)));
   }
 
-  // Функция для отображения меню выбора парсера
   function showParserSelectionMenu() {
-    // Формируем массив с начальными значениями статуса (null) и добавляем вариант "Свой вариант"
     let parsers = [
       { title: "Свой вариант", url: "", apiKey: "", status: null },
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -67,25 +64,23 @@
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция построения списка элементов меню с индикатором статуса
     function buildItems() {
       return parsers.map(parser => {
         let color, statusText;
         if (parser.status === null) {
-          color = "#cccccc"; // проверка ещё не завершена
+          color = "#cccccc"; // ещё не проверено
           statusText = " (Проверяется)";
         } else if (parser.status === true) {
-          color = "#64e364"; // рабочий
+          color = "#64e364"; // работает
           statusText = " (Работает)";
-        } else if (parser.status === false) {
-          color = "#ff2121"; // нерабочий
+        } else {
+          color = "#ff2121"; // не работает
           statusText = " (Не работает)";
         }
         let activeMark = "";
         if (parser.title === currentSelected) {
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
-        // Добавляем !important, чтобы гарантированно применялся нужный цвет
         const titleHTML = activeMark + `<span style="color: ${color} !important;">${parser.title}</span>${statusText}`;
         return {
           title: titleHTML,
@@ -94,7 +89,6 @@
       });
     }
 
-    // Открываем меню сразу с первоначальным списком
     let selectInstance = Lampa.Select.show({
       title: "Меню смены парсера",
       items: buildItems(),
@@ -129,28 +123,24 @@
       }
     });
 
-    // Запускаем асинхронную проверку парсеров после открытия меню
+    // Запускаем проверку после открытия меню
     checkAllParsers().then(results => {
-      // Обновляем статус каждого парсера в локальном массиве
       results.forEach(checkedParser => {
         let parserItem = parsers.find(p => p.title === checkedParser.title);
         if (parserItem) {
           parserItem.status = checkedParser.status;
         }
       });
-      // Обновляем меню, если оно ещё открыто
       if (selectInstance && selectInstance.update) {
         selectInstance.update({ items: buildItems() });
       }
     });
   }
 
-  // Функция обновления отображаемого выбранного парсера
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" tabindex="0" style="padding:0!important">
          <div style="width:1.3em;height:1.3em;padding-right:.1em">
-           <!-- SVG-иконка при необходимости -->
          </div>
          <div style="font-size:1.2em; font-weight: bold;">
            <div style="padding: 0.5em 0.5em; padding-top: 0;">
@@ -163,7 +153,6 @@
     );
   }
 
-  // Добавляем параметр в настройки с обработчиками для выбора парсера
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -183,7 +172,6 @@
     field: {
       name: `<div class="settings-folder" style="padding:0!important">
                 <div style="width:1.3em;height:1.3em;padding-right:.1em">
-                  <!-- SVG-иконка -->
                 </div>
                 <div style="font-size:1.0em">
                   <div style="padding: 0.3em 0.3em; padding-top: 0;">
@@ -207,7 +195,6 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Обработчик для пульта: объединяем события "click", "hover:enter" и "keydown"
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
