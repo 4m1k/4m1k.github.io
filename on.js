@@ -334,10 +334,12 @@
             if (!sources[balanser]) balanser = filter_sources[0];
             if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
             source = sources[balanser].url;
-            resolve(json);
+          resolve(json);
+        } else {
+          reject();
         }
-    });
-};
+      });
+    };
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
