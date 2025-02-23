@@ -14,15 +14,26 @@
     { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
   ];
 
+  var cache = {};
+
   function checkParser(parser) {
     return new Promise((resolve) => {
-      const protocol = location.protocol === "https:" ? "https://" : "http://";
-      const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
-      const xhr = new XMLHttpRequest();
+      var protocol = location.protocol === "https:" ? "https://" : "http://";
+      var apiUrl = `${protocol}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.apiKey}`;
+
+      if (cache[apiUrl]) {
+        parser.status = cache[apiUrl];
+        resolve(parser);
+        return;
+      }
+
+      var xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
       xhr.timeout = 3000;
+
       xhr.onload = function () {
-        parser.status = (xhr.status === 200);
+        parser.status = xhr.status === 200;
+        cache[apiUrl] = parser.status;
         resolve(parser);
       };
       xhr.onerror = function () {
