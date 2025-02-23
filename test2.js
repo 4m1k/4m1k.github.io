@@ -1,112 +1,309 @@
-(function () {
+(function() {
   'use strict';
 
-  // Устанавливаем платформу для ТВ
-  Lampa.Platform.tv();
+  // Общие переменные и настройки кэша
+  var network = new Lampa.Reguest();
+  var cache = {};
+  var CACHE_SIZE = 100;
+  var CACHE_TIME = 1000 * 60 * 60; // 1 час
 
-  // Константы: селектор для кнопки TV и таймаут перемещения
-  var ITEM_TV_SELECTOR = '[data-action="tv"]';
-  var ITEM_MOVE_TIMEOUT = 2000;
+  // Функция для выполнения HTTP-запроса с выбором источника
+  function getRequest(source, method, onComplete, onError) {
+    var baseUrl, headers = {};
+    // Настраиваем URL и заголовки в зависимости от источника
+    if (source === 'KP') {
+      baseUrl = 'https://kinopoiskapiunofficial.tech/';
+      headers['X-API-KEY'] = '2a4a0808-81a3-40ae-b0d3-e11335ede616';
+    } else if (source === 'FILMIX') {
+      // Пример – нужно указать настоящий базовый URL и, если требуется, ключ API для Filmix
+      baseUrl = 'https://api.filmix.ac/';
+    }
+    var url = baseUrl + method;
+    network.timeout(15000);
+    network.silent(url, function(json) {
+      onComplete(json);
+    }, function(a, c) {
+      onError(a, c);
+    }, false, {
+      headers: headers
+    });
+  }
 
-  // Функция для перемещения элемента
-  var moveItemAfter = function (item, after) {
-    return setTimeout(function () {
-      $(item).insertAfter($(after));
-    }, ITEM_MOVE_TIMEOUT);
-  };
+  // Простая реализация кэширования
+  function getCache(key) {
+    var res = cache[key];
+    if (res) {
+      if (new Date().getTime() - res.timestamp < CACHE_TIME) return res.value;
+      else delete cache[key];
+    }
+    return null;
+  }
+  function setCache(key, value) {
+    cache[key] = {
+      timestamp: new Date().getTime(),
+      value: value
+    };
+  }
 
-  // Функция для добавления отдельной кнопки в меню
-  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
-    var NEW_ITEM_ATTR = newItemAttr;
-    var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
-    var field = $(`
-      <li class="menu__item selector" ${NEW_ITEM_ATTR}>
-        <div class="menu__ico">${iconHTML}</div>
-        <div class="menu__text">${newItemText}</div>
-      </li>
-    `);
-    field.on('hover:enter', onEnterHandler);
-    if (window.appready) {
-      Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-      moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
+  // Общая функция, сначала проверяющая кэш, затем выполняющая запрос
+  function getFromCache(source, method, onComplete, onError) {
+    var cacheKey = method + '_' + source;
+    var json = getCache(cacheKey);
+    if (json) {
+      setTimeout(function() {
+        onComplete(json, true);
+      }, 10);
     } else {
-      Lampa.Listener.follow('app', function (event) {
-        if (event.type === 'ready') {
-          Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-          moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
-        }
-      });
+      getRequest(source, method, function(json) {
+        if (json) setCache(cacheKey, json);
+        onComplete(json);
+      }, onError);
     }
   }
 
-  // Иконки, как были раньше для [RU]
+  // Универсальная функция для преобразования полученного элемента в нужный формат
+  function convertElem(elem, source) {
+    // Определяем тип: если отсутствует или равен FILM/VIDEO – это фильм, иначе tv-сериал
+    var type = !elem.type || elem.type === 'FILM' || elem.type === 'VIDEO' ? 'movie' : 'tv';
+    // Идентификатор – для KP это может быть kinopoiskId или filmId, для Filmix может быть другое поле
+    var id = elem.kinopoiskId || elem.filmId || elem.id || 0;
+    var title = elem.nameRu || elem.nameEn || elem.title || '';
+    var original_title = elem.nameOriginal || elem.nameEn || elem.nameRu || '';
+    var img = elem.posterUrlPreview || elem.posterUrl || elem.image || '';
+    return {
+      source: source,
+      type: type,
+      adult: false,
+      id: source + '_' + id,
+      title: title,
+      original_title: original_title,
+      overview: elem.description || elem.shortDescription || '',
+      img: img,
+      background_image: elem.coverUrl || img,
+      // Дополнительно можно добавить поля рейтингов, даты выхода и т.д.
+      vote_average: +elem.rating || 0,
+      kinopoisk_id: id
+    };
+  }
 
-  // Иконка для "Русские фильмы" (пример — clapperboard)
-  var iconFilms = `
-    <svg id="Capa_1" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m387.75 228.107c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v66.721c0 25.838-21.021 46.859-46.859 46.859s-46.859-21.021-46.859-46.859v-124.516h8.562c4.136 0 7.5 3.364 7.5 7.5v117.016c0 16.981 13.815 30.797 30.797 30.797s30.797-13.815 30.797-30.797v-117.016c0-4.136 3.364-7.5 7.5-7.5h8.562v22.794c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-30.294c0-4.142-3.358-7.5-7.5-7.5h-16.062c-12.407 0-22.5 10.093-22.5 22.5v117.016c0 8.71-7.086 15.797-15.797 15.797s-15.797-7.086-15.797-15.797v-117.016c0-12.407-10.093-22.5-22.5-22.5h-16.062c-4.142 0-7.5 3.358-7.5 7.5v132.016c0 34.109 27.75 61.859 61.859 61.859s61.859-27.75 61.859-61.859z"></path><path fill="currentColor" d="m162.812 247.966c15.045 0 23.429.001 23.556.001h.082c16.793-.183 30.456-13.998 30.456-30.795 0-16.981-13.815-30.797-30.797-30.797h-23.297c-4.142 0-7.5 3.358-7.5 7.5v46.591c0 4.142 3.358 7.5 7.5 7.5zm7.5-46.591h15.797c8.71 0 15.797 7.086 15.797 15.797 0 8.605-6.989 15.685-15.587 15.795-.977 0-9.501 0-16.006-.001v-31.591z"></path><path fill="currentColor" d="m186.109 155.312h-7.226c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5h7.226c25.838 0 46.859 21.021 46.859 46.859 0 12.696-4.995 24.583-14.064 33.47-1.439 1.411-2.25 3.341-2.25 5.357s.811 3.946 2.25 5.356c9.07 8.888 14.064 20.774 14.064 33.47v46.862h-8.562c-4.136 0-7.5-3.364-7.5-7.5v-39.362c0-16.797-13.663-30.611-30.538-30.795h-23.556c-4.142 0-7.5 3.358-7.5 7.5v62.656c0 4.136-3.364 7.5-7.5 7.5h-8.562v-171.373h4.634c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-12.134c-4.142 0-7.5 3.358-7.5 7.5v186.375c0 4.142 3.358 7.5 7.5 7.5h16.062c12.407 0 22.5-10.093 22.5-22.5v-55.157h15.974c8.613.094 15.62 7.18 15.62 15.795v39.362c0 12.407 10.093 22.5 22.5 22.5h16.062c4.142 0 7.5-3.358 7.5-7.5v-54.362c0-14.324-4.816-27.868-13.691-38.827 8.875-10.958 13.691-24.503 13.691-38.827.001-34.109-27.749-61.859-61.859-61.859z"></path><path fill="currentColor" d="m256 77.656c-145.514 0-256 82.509-256 178.344 0 100.767 117.365 178.344 256 178.344 143.333 0 256-81 256-178.344 0-101.847-118.906-178.344-256-178.344zm-241 178.344c0-45.176 27.845-87.865 75.178-118.384-7.831 9.381-14.737 19.41-20.569 29.925-15.272 27.533-23.015 57.295-23.015 88.459s7.744 60.926 23.016 88.459c5.833 10.516 12.739 20.545 20.569 29.926-47.333-30.519-75.179-73.209-75.179-118.385zm123.672 142.632c-49-34.169-77.079-86.104-77.079-142.632s28.078-108.463 77.078-142.632c35.688-13.552 76.236-20.712 117.329-20.712s81.641 7.16 117.328 20.711c49 34.169 77.078 86.104 77.078 142.632s-28.079 108.463-77.079 142.632c-35.687 13.551-76.235 20.711-117.328 20.711s-81.64-7.158-117.327-20.71zm283.149-24.247c7.831-9.381 14.737-19.41 20.569-29.926 15.272-27.533 23.016-57.295 23.016-88.459s-7.744-60.926-23.015-88.459c-5.833-10.515-12.738-20.544-20.569-29.925 47.333 30.519 75.178 73.208 75.178 118.384s-27.846 87.866-75.179 118.385z"></path></g></svg>
-  `;
-
-  // Иконка для "Русские сериалы" (пример — телевизор)
-  var iconSeries = `
-<svg id="Capa_1" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m387.75 228.107c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v66.721c0 25.838-21.021 46.859-46.859 46.859s-46.859-21.021-46.859-46.859v-124.516h8.562c4.136 0 7.5 3.364 7.5 7.5v117.016c0 16.981 13.815 30.797 30.797 30.797s30.797-13.815 30.797-30.797v-117.016c0-4.136 3.364-7.5 7.5-7.5h8.562v22.794c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-30.294c0-4.142-3.358-7.5-7.5-7.5h-16.062c-12.407 0-22.5 10.093-22.5 22.5v117.016c0 8.71-7.086 15.797-15.797 15.797s-15.797-7.086-15.797-15.797v-117.016c0-12.407-10.093-22.5-22.5-22.5h-16.062c-4.142 0-7.5 3.358-7.5 7.5v132.016c0 34.109 27.75 61.859 61.859 61.859s61.859-27.75 61.859-61.859z"></path><path fill="currentColor" d="m162.812 247.966c15.045 0 23.429.001 23.556.001h.082c16.793-.183 30.456-13.998 30.456-30.795 0-16.981-13.815-30.797-30.797-30.797h-23.297c-4.142 0-7.5 3.358-7.5 7.5v46.591c0 4.142 3.358 7.5 7.5 7.5zm7.5-46.591h15.797c8.71 0 15.797 7.086 15.797 15.797 0 8.605-6.989 15.685-15.587 15.795-.977 0-9.501 0-16.006-.001v-31.591z"></path><path fill="currentColor" d="m186.109 155.312h-7.226c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5h7.226c25.838 0 46.859 21.021 46.859 46.859 0 12.696-4.995 24.583-14.064 33.47-1.439 1.411-2.25 3.341-2.25 5.357s.811 3.946 2.25 5.356c9.07 8.888 14.064 20.774 14.064 33.47v46.862h-8.562c-4.136 0-7.5-3.364-7.5-7.5v-39.362c0-16.797-13.663-30.611-30.538-30.795h-23.556c-4.142 0-7.5 3.358-7.5 7.5v62.656c0 4.136-3.364 7.5-7.5 7.5h-8.562v-171.373h4.634c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-12.134c-4.142 0-7.5 3.358-7.5 7.5v186.375c0 4.142 3.358 7.5 7.5 7.5h16.062c12.407 0 22.5-10.093 22.5-22.5v-55.157h15.974c8.613.094 15.62 7.18 15.62 15.795v39.362c0 12.407 10.093 22.5 22.5 22.5h16.062c4.142 0 7.5-3.358 7.5-7.5v-54.362c0-14.324-4.816-27.868-13.691-38.827 8.875-10.958 13.691-24.503 13.691-38.827.001-34.109-27.749-61.859-61.859-61.859z"></path><path fill="currentColor" d="m256 77.656c-145.514 0-256 82.509-256 178.344 0 100.767 117.365 178.344 256 178.344 143.333 0 256-81 256-178.344 0-101.847-118.906-178.344-256-178.344zm-241 178.344c0-45.176 27.845-87.865 75.178-118.384-7.831 9.381-14.737 19.41-20.569 29.925-15.272 27.533-23.015 57.295-23.015 88.459s7.744 60.926 23.016 88.459c5.833 10.516 12.739 20.545 20.569 29.926-47.333-30.519-75.179-73.209-75.179-118.385zm123.672 142.632c-49-34.169-77.079-86.104-77.079-142.632s28.078-108.463 77.078-142.632c35.688-13.552 76.236-20.712 117.329-20.712s81.641 7.16 117.328 20.711c49 34.169 77.078 86.104 77.078 142.632s-28.079 108.463-77.079 142.632c-35.687 13.551-76.235 20.711-117.328 20.711s-81.64-7.158-117.327-20.71zm283.149-24.247c7.831-9.381 14.737-19.41 20.569-29.926 15.272-27.533 23.016-57.295 23.016-88.459s-7.744-60.926-23.015-88.459c-5.833-10.515-12.738-20.544-20.569-29.925 47.333 30.519 75.178 73.208 75.178 118.384s-27.846 87.866-75.179 118.385z"></path></g></svg>
-  `;
-
-  // Иконка для "Русские мультфильмы" (пример — оригинальный вид, как был в плагине)
-  var iconCartoons = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-<svg id="Capa_1" enable-background="new 0 0 512 512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m387.75 228.107c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v66.721c0 25.838-21.021 46.859-46.859 46.859s-46.859-21.021-46.859-46.859v-124.516h8.562c4.136 0 7.5 3.364 7.5 7.5v117.016c0 16.981 13.815 30.797 30.797 30.797s30.797-13.815 30.797-30.797v-117.016c0-4.136 3.364-7.5 7.5-7.5h8.562v22.794c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-30.294c0-4.142-3.358-7.5-7.5-7.5h-16.062c-12.407 0-22.5 10.093-22.5 22.5v117.016c0 8.71-7.086 15.797-15.797 15.797s-15.797-7.086-15.797-15.797v-117.016c0-12.407-10.093-22.5-22.5-22.5h-16.062c-4.142 0-7.5 3.358-7.5 7.5v132.016c0 34.109 27.75 61.859 61.859 61.859s61.859-27.75 61.859-61.859z"></path><path fill="currentColor" d="m162.812 247.966c15.045 0 23.429.001 23.556.001h.082c16.793-.183 30.456-13.998 30.456-30.795 0-16.981-13.815-30.797-30.797-30.797h-23.297c-4.142 0-7.5 3.358-7.5 7.5v46.591c0 4.142 3.358 7.5 7.5 7.5zm7.5-46.591h15.797c8.71 0 15.797 7.086 15.797 15.797 0 8.605-6.989 15.685-15.587 15.795-.977 0-9.501 0-16.006-.001v-31.591z"></path><path fill="currentColor" d="m186.109 155.312h-7.226c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5h7.226c25.838 0 46.859 21.021 46.859 46.859 0 12.696-4.995 24.583-14.064 33.47-1.439 1.411-2.25 3.341-2.25 5.357s.811 3.946 2.25 5.356c9.07 8.888 14.064 20.774 14.064 33.47v46.862h-8.562c-4.136 0-7.5-3.364-7.5-7.5v-39.362c0-16.797-13.663-30.611-30.538-30.795h-23.556c-4.142 0-7.5 3.358-7.5 7.5v62.656c0 4.136-3.364 7.5-7.5 7.5h-8.562v-171.373h4.634c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-12.134c-4.142 0-7.5 3.358-7.5 7.5v186.375c0 4.142 3.358 7.5 7.5 7.5h16.062c12.407 0 22.5-10.093 22.5-22.5v-55.157h15.974c8.613.094 15.62 7.18 15.62 15.795v39.362c0 12.407 10.093 22.5 22.5 22.5h16.062c4.142 0 7.5-3.358 7.5-7.5v-54.362c0-14.324-4.816-27.868-13.691-38.827 8.875-10.958 13.691-24.503 13.691-38.827.001-34.109-27.749-61.859-61.859-61.859z"></path><path fill="currentColor" d="m256 77.656c-145.514 0-256 82.509-256 178.344 0 100.767 117.365 178.344 256 178.344 143.333 0 256-81 256-178.344 0-101.847-118.906-178.344-256-178.344zm-241 178.344c0-45.176 27.845-87.865 75.178-118.384-7.831 9.381-14.737 19.41-20.569 29.925-15.272 27.533-23.015 57.295-23.015 88.459s7.744 60.926 23.016 88.459c5.833 10.516 12.739 20.545 20.569 29.926-47.333-30.519-75.179-73.209-75.179-118.385zm123.672 142.632c-49-34.169-77.079-86.104-77.079-142.632s28.078-108.463 77.078-142.632c35.688-13.552 76.236-20.712 117.329-20.712s81.641 7.16 117.328 20.711c49 34.169 77.078 86.104 77.078 142.632s-28.079 108.463-77.079 142.632c-35.687 13.551-76.235 20.711-117.328 20.711s-81.64-7.158-117.327-20.71zm283.149-24.247c7.831-9.381 14.737-19.41 20.569-29.926 15.272-27.533 23.016-57.295 23.016-88.459s-7.744-60.926-23.015-88.459c-5.833-10.515-12.738-20.544-20.569-29.925 47.333 30.519 75.178 73.208 75.178 118.384s-27.846 87.866-75.179 118.385z"></path></g></svg>
-  `;
-
-  // Добавляем кнопку "Русские фильмы"
-  addMenuButton(
-    'data-action="ru_movie_films"',
-    'Русские фильмы',
-    iconFilms,
-    function () {
-      Lampa.Activity.push({
-        url: `discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-        title: 'Русские фильмы',
-        component: 'category_full',
-        source: 'tmdb',
-        card_type: true,
-        page: 1,
-      });
+  // Функция для получения "топ" фильмов – используется в методе main
+  function main(source, params, onComplete, onError) {
+    var method;
+    if (source === 'KP') {
+      method = 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS';
+    } else if (source === 'FILMIX') {
+      // Пример: условный эндпоинт для Filmix – замените на реальный
+      method = 'films/top/popular';
     }
-  );
-
-  // Добавляем кнопку "Русские сериалы"
-  addMenuButton(
-    'data-action="ru_movie_series"',
-    'Русские сериалы',
-    iconSeries,
-    function () {
-      Lampa.Activity.push({
-        url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
-        title: 'Русские сериалы',
-        component: 'category_full',
-        source: 'tmdb',
-        card_type: true,
-        page: 1,
+    getFromCache(source, method, function(json, cached) {
+      var items = [];
+      if (json) {
+        if (json.items && json.items.length) items = json.items;
+        else if (json.films && json.films.length) items = json.films;
+      }
+      var results = items.map(function(elem) {
+        return convertElem(elem, source);
       });
-    }
-  );
-
-  // Добавляем кнопку "Русские мультфильмы"
-  addMenuButton(
-    'data-action="ru_movie_cartoons"',
-    'Русские мультфильмы',
-    iconCartoons,
-    function () {
-      Lampa.Activity.push({
-        url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-        title: 'Русские мультфильмы',
-        component: 'category_full',
-        source: 'tmdb',
-        card_type: true,
-        page: 1,
+      onComplete({
+        results: results,
+        source: source
       });
-    }
-  );
+    }, onError);
+  }
 
-  // Если раньше была кнопка "Русское", её можно не добавлять.
+  // Функция получения детальной информации о фильме/сериале
+  function full(source, id, params, onComplete, onError) {
+    var method;
+    if (source === 'KP') {
+      method = 'api/v2.2/films/' + id;
+    } else if (source === 'FILMIX') {
+      // Пример: условный эндпоинт для деталей Filmix
+      method = 'film/' + id;
+    }
+    getFromCache(source, method, function(json) {
+      if (json) onComplete(convertElem(json, source));
+      else onError();
+    }, onError);
+  }
+
+  // Функция для получения списка фильмов/сериалов (категории)
+  function list(source, params, onComplete, onError) {
+    var method;
+    if (source === 'KP') {
+      method = params.url || 'api/v2.2/films?order=NUM_VOTE&type=FILM';
+    } else if (source === 'FILMIX') {
+      // Пример: условный эндпоинт для списка в Filmix
+      method = params.url || 'films/list?sort=rating';
+    }
+    getFromCache(source, method, function(json) {
+      var items = [];
+      if (json && json.items && json.items.length) items = json.items;
+      var results = items.map(function(elem) {
+        return convertElem(elem, source);
+      });
+      onComplete({
+        results: results,
+        source: source
+      });
+    }, onError);
+  }
+
+  // Функция поиска по ключевому слову
+  function search(source, params, onComplete, onError) {
+    var query = encodeURIComponent(params.query || '');
+    var method;
+    if (source === 'KP') {
+      method = 'api/v2.1/films/search-by-keyword?keyword=' + query;
+    } else if (source === 'FILMIX') {
+      // Пример: условный эндпоинт поиска для Filmix
+      method = 'films/search?query=' + query;
+    }
+    getFromCache(source, method, function(json) {
+      var items = [];
+      if (json && json.items && json.items.length) items = json.items;
+      var results = items.map(function(elem) {
+        return convertElem(elem, source);
+      });
+      onComplete({
+        results: results,
+        source: source
+      });
+    }, onError);
+  }
+
+  // Функция получения информации о персоне (актере/режиссёре)
+  function person(source, params, onComplete, onError) {
+    var id = params.id;
+    var method;
+    if (source === 'KP') {
+      method = 'api/v1/staff/' + id;
+    } else if (source === 'FILMIX') {
+      // Пример: условный эндпоинт для персоны Filmix
+      method = 'person/' + id;
+    }
+    getFromCache(source, method, function(json) {
+      onComplete(json); // можно добавить преобразование
+    }, onError);
+  }
+
+  // Если для ТВ-сериалов требуются сезоны – можно оставить общую реализацию
+  function seasons(source, tv, from, onComplete) {
+    // Предполагаем, что данные о сезонах уже находятся в объекте tv
+    onComplete(tv.seasons || []);
+  }
+
+  // Определяем объект для источника Кинопоиска (KP)
+  var KP = {
+    SOURCE_NAME: 'KP',
+    SOURCE_TITLE: 'Кинопоиск',
+    main: function(params, onComplete, onError) {
+      main('KP', params, onComplete, onError);
+    },
+    full: function(id, params, onComplete, onError) {
+      full('KP', id, params, onComplete, onError);
+    },
+    list: function(params, onComplete, onError) {
+      list('KP', params, onComplete, onError);
+    },
+    search: function(params, onComplete, onError) {
+      search('KP', params, onComplete, onError);
+    },
+    person: function(params, onComplete, onError) {
+      person('KP', params, onComplete, onError);
+    },
+    seasons: seasons,
+    clear: function() {
+      network.clear();
+    },
+    discovery: function() {
+      return {
+        title: this.SOURCE_TITLE,
+        search: this.search,
+        onMore: function(params) {
+          Lampa.Activity.push({
+            url: 'api/v2.1/films/search-by-keyword',
+            title: 'Поиск - ' + params.query,
+            component: 'category_full',
+            page: 1,
+            query: encodeURIComponent(params.query),
+            source: 'KP'
+          });
+        },
+        onCancel: network.clear.bind(network)
+      };
+    }
+  };
+
+  // Определяем объект для источника Filmix
+  var FILMIX = {
+    SOURCE_NAME: 'FILMIX',
+    SOURCE_TITLE: 'Filmix',
+    main: function(params, onComplete, onError) {
+      main('FILMIX', params, onComplete, onError);
+    },
+    full: function(id, params, onComplete, onError) {
+      full('FILMIX', id, params, onComplete, onError);
+    },
+    list: function(params, onComplete, onError) {
+      list('FILMIX', params, onComplete, onError);
+    },
+    search: function(params, onComplete, onError) {
+      search('FILMIX', params, onComplete, onError);
+    },
+    person: function(params, onComplete, onError) {
+      person('FILMIX', params, onComplete, onError);
+    },
+    seasons: seasons,
+    clear: function() {
+      network.clear();
+    },
+    discovery: function() {
+      return {
+        title: this.SOURCE_TITLE,
+        search: this.search,
+        onMore: function(params) {
+          Lampa.Activity.push({
+            url: 'films/search',
+            title: 'Поиск - ' + params.query,
+            component: 'category_full',
+            page: 1,
+            query: encodeURIComponent(params.query),
+            source: 'FILMIX'
+          });
+        },
+        onCancel: network.clear.bind(network)
+      };
+    }
+  };
+
+  // Регистрация обоих источников в Lampa.Api.sources
+  if (!window.Lampa) window.Lampa = {};
+  if (!Lampa.Api) Lampa.Api = {};
+  if (!Lampa.Api.sources) Lampa.Api.sources = {};
+
+  Lampa.Api.sources[KP.SOURCE_NAME] = KP;
+  Lampa.Api.sources[FILMIX.SOURCE_NAME] = FILMIX;
+
+  // Обновляем список источников для настроек (если используется Lampa.Params.select)
+  var ALL_SOURCES = [
+    { name: 'tmdb', title: 'TMDB' },
+    { name: 'cub', title: 'CUB' },
+    { name: 'pub', title: 'PUB' },
+    { name: 'FILMIX', title: 'Filmix' },
+    { name: 'KP', title: 'Кинопоиск' }
+  ];
+  if (Lampa.Params && Lampa.Params.select) {
+    var sources = {};
+    ALL_SOURCES.forEach(function(s) {
+      if (Lampa.Api.sources[s.name]) sources[s.name] = s.title;
+    });
+    Lampa.Params.select('source', sources, 'tmdb');
+  }
+
+  // Автоподключение плагина, если он еще не зарегистрирован
+  if (!window.kp_source_plugin) {
+    window.kp_source_plugin = true;
+    Lampa.Noty.show('Плагин источников (Кинопоиск и Filmix) успешно загружен');
+  }
+  
 })();
