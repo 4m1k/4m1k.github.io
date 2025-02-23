@@ -25,7 +25,7 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
-          // Если статус 200 или (для jacred.viewbox.dev – статус 403) считаем парсер рабочим
+          // Для jacred.viewbox.dev считаем рабочим при статусе 403
           if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
             parser.status = true;
           } else {
@@ -69,25 +69,32 @@
     return Promise.all(parsersToCheck.map(parser => checkParser(parser)));
   }
 
-  // Функция, открывающая меню выбора парсера с готовыми результатами проверки
-  function openParserSelectionMenu(parsersResults) {
-    // Добавляем опцию "Свой вариант" в начало списка
+  // Функция, открывающая меню выбора парсера и обновляющая его в реальном времени
+  function openParserSelectionMenu() {
+    // Начальный массив с вариантами: все статусы = null (нейтральный цвет)
     let parsers = [
-      { title: "Свой вариант", url: "", apiKey: "", status: null }
-    ].concat(parsersResults);
+      { title: "Свой вариант", url: "", apiKey: "", status: null },
+      { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
+      { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "", status: null },
+      { title: "jacred.pro",         url: "jacred.pro",         apiKey: "", status: null },
+      { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox", status: null },
+      { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
+      { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
+    ];
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция построения списка элементов меню (только названия с цветом)
+    // Функция для построения элементов меню, где цвет названия зависит от parser.status:
+    // - null: серый (#cccccc)
+    // - true: зелёный (#64e364)
+    // - false: красный (#ff2121)
     function buildItems() {
       return parsers.map(parser => {
-        let color;
-        if (parser.status === null) {
-          color = "#cccccc"; // проверка ещё не завершена
-        } else if (parser.status === true) {
-          color = "#64e364"; // рабочий
-        } else {
-          color = "#ff2121"; // нерабочий
+        let color = "#cccccc"; // по умолчанию нейтрально
+        if (parser.status === true) {
+          color = "#64e364";
+        } else if (parser.status === false) {
+          color = "#ff2121";
         }
         let activeMark = "";
         if (parser.title === currentSelected) {
@@ -101,7 +108,8 @@
       });
     }
 
-    Lampa.Select.show({
+    // Открываем меню сразу с начальными данными
+    let selectInstance = Lampa.Select.show({
       title: "Меню смены парсера",
       items: buildItems(),
       onBack: function () {
@@ -134,9 +142,24 @@
         }
       }
     });
+
+    // Запускаем асинхронную проверку парсеров после открытия меню
+    checkAllParsers().then(function (results) {
+      // Обновляем статусы в локальном массиве
+      results.forEach(checkedParser => {
+        let parserItem = parsers.find(p => p.title === checkedParser.title);
+        if (parserItem) {
+          parserItem.status = checkedParser.status;
+        }
+      });
+      // Обновляем меню с новыми данными
+      if (selectInstance && selectInstance.update) {
+        selectInstance.update({ items: buildItems() });
+      }
+    });
   }
 
-  // Обработчик нажатия на кнопку "Выбрать парсер"
+  // Добавляем параметр в настройки с обработчиком кнопки "Выбрать парсер"
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -178,16 +201,14 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // При нажатии кнопки запускается проверка парсеров, а затем открывается меню
+          // Обработчик для пульта: при нажатии сразу открывается меню, а затем проверка парсеров запускается в фоне
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
               e.type === "hover:enter" ||
               (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))
             ) {
-              checkAllParsers().then(function (results) {
-                openParserSelectionMenu(results);
-              });
+              openParserSelectionMenu();
             }
           });
           const current = Lampa.Storage.get('selected_parser');
