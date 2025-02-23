@@ -14,14 +14,17 @@
       xhr.timeout = 3000;
       xhr.onload = function () {
         parser.status = (xhr.status === 200);
+        console.log("Проверка парсера:", parser.url, "Статус:", parser.status);
         resolve(parser);
       };
       xhr.onerror = function () {
         parser.status = false;
+        console.log("Ошибка проверки парсера:", parser.url);
         resolve(parser);
       };
       xhr.ontimeout = function () {
         parser.status = false;
+        console.log("Таймаут проверки парсера:", parser.url);
         resolve(parser);
       };
       xhr.send();
@@ -74,12 +77,13 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
+          console.log("Выбор парсера:", item.parser);
           Lampa.Storage.set('jackett_url', item.parser.url);
           Lampa.Storage.set('jackett_key', item.parser.apiKey);
           Lampa.Storage.set('selected_parser', item.parser.title);
           Lampa.Storage.set("parser_torrent_type", "jackett");
-          console.log("Выбран парсер:", item.parser);
-          updateParserField(item.title);
+          
+          updateParserField(item.parser.url);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
         }
@@ -87,19 +91,9 @@
     });
   }
 
-  function updateParserField(text) {
-    $("div[data-name='jackett_urltwo']").html(
-      `<div class="settings-folder" style="padding:0!important">
-         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
-         <div style="font-size:1.2em; font-weight: bold;">
-           <div style="padding: 0.5em 0.5em; padding-top: 0;">
-             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
-               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
-             </div>
-           </div>
-         </div>
-       </div>`
-    );
+  function updateParserField(url) {
+    document.querySelector("div[data-name='jackett_url'] input").value = url;
+    console.log("Обновлено поле ссылки:", url);
   }
 
   Lampa.SettingsApi.addParam({
@@ -132,14 +126,14 @@
         });
         if (Lampa.Storage.field("parser_use")) {
           elem.show();
-          $('.settings-param__name', elem).css("color", "ffffff");
+          $(".settings-param__name", elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
           elem.off("click").on("click", function () {
             showParserSelectionMenu();
           });
           const current = Lampa.Storage.get('selected_parser');
           if (current) {
-            updateParserField(current);
+            updateParserField(Lampa.Storage.get('jackett_url'));
           }
         } else {
           elem.hide();
