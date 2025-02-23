@@ -85,14 +85,17 @@
             Lampa.Storage.set('jackett_url', item.parser.url);
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
-
             Lampa.Storage.set("parser_torrent_type", "jackett");
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
-          Lampa.Controller.toggle("settings_component");
-          Lampa.Settings.update();
-
+          // Задержка для обновления интерфейса и навигации
+          setTimeout(function(){
+            Lampa.Controller.toggle("settings_component");
+            Lampa.Settings.update();
+            // Устанавливаем фокус на элемент, чтобы пульт корректно перемещался по меню
+            $("div[data-name='jackett_urltwo']").focus();
+          }, 100);
           if (item.parser.title !== "Свой вариант") {
             $("div[data-name='jackett_url']").hide();
             $("div[data-name='jackett_key']").hide();
@@ -107,7 +110,7 @@
 
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
-      `<div class="settings-folder" style="padding:0!important">
+      `<div class="settings-folder" tabindex="0" style="padding:0!important">
          <div style="width:1.3em;height:1.3em;padding-right:.1em">
            <!-- SVG-иконка при необходимости -->
          </div>
@@ -165,7 +168,7 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Изменённый обработчик для поддержки пульта:
+          // Обработчик для поддержки пульта
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function(e) {
             if (
               e.type === "click" ||
