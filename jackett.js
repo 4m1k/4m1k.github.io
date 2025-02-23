@@ -5,33 +5,22 @@
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
 
-  function checkParser(parser) {
-    return new Promise((resolve) => {
-      const protocol = location.protocol === "https:" ? "https://" : "http://";
-      const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", apiUrl, true);
-      xhr.timeout = 3000;
-      xhr.onload = function () {
-        parser.status = (xhr.status === 200);
-        console.log("Проверка парсера:", parser.url, "Статус:", parser.status);
-        resolve(parser);
-      };
-      xhr.onerror = function () {
-        parser.status = false;
-        console.log("Ошибка проверки парсера:", parser.url);
-        resolve(parser);
-      };
-      xhr.ontimeout = function () {
-        parser.status = false;
-        console.log("Таймаут проверки парсера:", parser.url);
-        resolve(parser);
-      };
-      xhr.send();
-    });
+  async function checkParser(parser) {
+    const protocol = location.protocol === "https:" ? "https://" : "http://";
+    const apiUrl = `${protocol}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.apiKey}`;
+    
+    try {
+      const response = await fetch(apiUrl, { method: "GET" });
+      parser.status = response.ok;
+      console.log("Проверка парсера:", parser.url, "Статус:", parser.status);
+    } catch (error) {
+      parser.status = false;
+      console.log("Ошибка проверки парсера:", parser.url, error);
+    }
+    return parser;
   }
 
-  function checkAllParsers() {
+  async function checkAllParsers() {
     const parsers = [
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
       { title: "jacred.xyz", url: "jacred.xyz", apiKey: "" },
@@ -45,38 +34,21 @@
 
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
-      results.unshift({
-        title: "Свой вариант",
-        url: "",
-        apiKey: "",
-        status: null 
-      });
+      results.unshift({ title: "Свой вариант", url: "", apiKey: "", status: null });
 
       const currentSelected = Lampa.Storage.get('selected_parser');
-
       const items = results.map(parser => {
-        let color = "inherit";
-        if (parser.title !== "Свой вариант") {
-          color = parser.status ? "#64e364" : "#ff2121";
-        }
-        let activeMark = "";
-        if (parser.title === currentSelected) {
-          activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
-        }
-        const titleHTML = activeMark + `<span style="color: ${color};">${parser.title}</span>`;
-        return {
-          title: titleHTML,
-          parser: parser
-        };
+        let color = parser.status ? "#64e364" : "#ff2121";
+        let activeMark = parser.title === currentSelected ? '<span style="color: #4285f4; margin-right: 5px;">✔</span>' : "";
+        const titleHTML = `${activeMark}<span style="color: ${color};">${parser.title}</span>`;
+        return { title: titleHTML, parser: parser };
       });
 
       Lampa.Select.show({
         title: "Меню смены парсера",
         items: items,
-        onBack: function () {
-          Lampa.Controller.toggle("settings_component");
-        },
-        onSelect: function (item) {
+        onBack: () => Lampa.Controller.toggle("settings_component"),
+        onSelect: (item) => {
           console.log("Выбор парсера:", item.parser);
           Lampa.Storage.set('jackett_url', item.parser.url);
           Lampa.Storage.set('jackett_key', item.parser.apiKey);
@@ -94,7 +66,7 @@
   }
 
   function updateParserField(url) {
-    let inputField = document.querySelector("div[data-name='jackett_url'] input");
+    const inputField = document.querySelector("div[data-name='jackett_url'] input");
     if (inputField) {
       inputField.value = url;
       inputField.dispatchEvent(new Event('input', { bubbles: true }));
@@ -124,27 +96,20 @@
       name: "Выбрать парсер",
       description: "Нажмите для выбора парсера из списка"
     },
-    onChange: function (value) {
-      Lampa.Settings.update();
-    },
-    onRender: function (elem) {
-      setTimeout(function () {
-        $("div[data-children='parser']").on("hover:enter", function () {
-          Lampa.Settings.update();
-        });
+    onChange: () => Lampa.Settings.update(),
+    onRender: (elem) => {
+      setTimeout(() => {
+        document.querySelector("div[data-children='parser']").addEventListener("mouseenter", () => Lampa.Settings.update());
         if (Lampa.Storage.field("parser_use")) {
-          elem.show();
-          $(".settings-param__name", elem).css("color", "ffffff");
-          $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          elem.off("click").on("click", function () {
-            showParserSelectionMenu();
-          });
+          elem.style.display = "block";
+          document.querySelector("div[data-name='jackett_urltwo']").insertAdjacentElement("afterend", document.querySelector("div[data-name='parser_torrent_type']"));
+          elem.addEventListener("click", () => showParserSelectionMenu());
           const current = Lampa.Storage.get('selected_parser');
           if (current) {
             updateParserField(Lampa.Storage.get('jackett_url'));
           }
         } else {
-          elem.hide();
+          elem.style.display = "none";
         }
       }, 5);
     }
