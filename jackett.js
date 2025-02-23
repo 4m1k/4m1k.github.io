@@ -90,6 +90,39 @@
         }
     ];
 
+    function checkAlive(type) {
+        if (type === 'parser') {
+            var requests = parsersInfo.map(function (parser) {
+                var myLink = parser.settings.url;
+                var mySelector = $('div.selectbox-item__title').filter(function () {
+                    return $(this).text().trim() === parser.name;
+                });
+
+                return new Promise(function (resolve) {
+                    $.ajax({
+                        url: myLink,
+                        method: 'GET',
+                        success: function (response, textStatus, xhr) {
+                            var color = xhr.status === 200 ? '1aff00' : 'ff2e36';
+                            $(mySelector).css('color', color);
+                        },
+                        error: function () {
+                            $(mySelector).css('color', 'ff2e36');
+                        },
+                        complete: resolve
+                    });
+                });
+            });
+            return Promise.all(requests).then(() => console.log('All requests completed'));
+        }
+    }
+
+    Lampa.Controller.listener.follow('toggle', function (e) {
+        if (e.name === 'select') {
+            checkAlive("parser");
+        }
+    });
+
     function changeParser() {
         var jackettUrlTwo = Lampa.Storage.get("lme_url_two");
         var selectedParser = parsersInfo.find(function (parser) {
@@ -97,9 +130,8 @@
         });
         if (selectedParser) {
             var settings = selectedParser.settings;
-            Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_url" : "jackett_url", settings.url);
-            Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_key" : "jackett_key", settings.key);
-            Lampa.Storage.set("parser_torrent_type", settings.parser_torrent_type);
+            Lampa.Storage.set("jackett_url", settings.url);
+            Lampa.Storage.set("jackett_key", settings.key);
         } else {
             console.warn("Jackett URL not found in parsersInfo");
         }
