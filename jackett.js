@@ -89,13 +89,14 @@
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
-          // Задержка для обновления интерфейса и навигации
+          // Закрываем меню выбора
+          Lampa.Select.hide();
+          // Задержка увеличена до 300 мс для корректного обновления интерфейса и навигации
           setTimeout(function(){
-            Lampa.Controller.toggle("settings_component");
             Lampa.Settings.update();
-            // Устанавливаем фокус на элемент, чтобы пульт корректно перемещался по меню
-            $("div[data-name='jackett_urltwo']").focus();
-          }, 100);
+            // Устанавливаем фокус на элементе, чтобы пульт мог корректно перемещаться
+            $("div[data-name='jackett_urltwo']").attr("tabindex", "0").focus();
+          }, 300);
           if (item.parser.title !== "Свой вариант") {
             $("div[data-name='jackett_url']").hide();
             $("div[data-name='jackett_key']").hide();
@@ -168,7 +169,7 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Обработчик для поддержки пульта
+          // Обработчик для поддержки пульта: объединяем события "click", "hover:enter" и "keydown"
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function(e) {
             if (
               e.type === "click" ||
