@@ -1319,7 +1319,7 @@
       this.loading(false);
     };
     this.noConnectToServer = function(er) {
-      if (er && er.msg && er.msg.indexOf('@Abcinema_bot') !== -1) {
+      if (er && er.msg && er.msg.indexOf('Вы не авторизовались в telegram: @Abcinema_bot') !== -1) {
         er.msg = 'Поиск не дал результатов';
 		}
     var html = Lampa.Template.get('lampac_does_not_answer', {});
