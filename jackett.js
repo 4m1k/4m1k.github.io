@@ -34,67 +34,85 @@
     };
 
     var parsersInfo = [
-        { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
-        { title: "jacred.xyz", url: "jacred.xyz", apiKey: "" },
-        { title: "jacred.pro", url: "jacred.pro", apiKey: "" },
-        { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
-        { title: "trs.my.to:9117", url: "trs.my.to:9117", apiKey: "" },
-        { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
+        {
+            base: 'custom_1',
+            name: '79.137.204.8:2601',
+            settings: {
+                url: '79.137.204.8:2601',
+                key: '',
+                parser_torrent_type: 'jackett'
+            }
+        },
+        {
+            base: 'custom_2',
+            name: 'jacred.xyz',
+            settings: {
+                url: 'jacred.xyz',
+                key: '',
+                parser_torrent_type: 'jackett'
+            }
+        },
+        {
+            base: 'custom_3',
+            name: 'jacred.pro',
+            settings: {
+                url: 'jacred.pro',
+                key: '',
+                parser_torrent_type: 'jackett'
+            }
+        },
+        {
+            base: 'custom_4',
+            name: 'jacred.viewbox.dev',
+            settings: {
+                url: 'jacred.viewbox.dev',
+                key: 'viewbox',
+                parser_torrent_type: 'jackett'
+            }
+        },
+        {
+            base: 'custom_5',
+            name: 'trs.my.to:9117',
+            settings: {
+                url: 'trs.my.to:9117',
+                key: '',
+                parser_torrent_type: 'jackett'
+            }
+        },
+        {
+            base: 'custom_6',
+            name: 'altjacred.duckdns.org',
+            settings: {
+                url: 'altjacred.duckdns.org',
+                key: '',
+                parser_torrent_type: 'jackett'
+            }
+        }
     ];
 
-    var proto = location.protocol === "https:" ? 'https://' : 'http://';
-    var cache = {};
-
-    function checkAlive(type) {
-        if (type === 'parser') {
-            var requests = parsersInfo.map(function (parser) {
-                var myLink = proto + parser.url;
-                var mySelector = $('div.selectbox-item__title').filter(function () {
-                    return $(this).text().trim() === parser.title;
-                });
-
-                if (cache[myLink]) {
-                    $(mySelector).css('color', cache[myLink].color);
-                    return Promise.resolve();
-                }
-                return new Promise(function (resolve) {
-                    $.ajax({
-                        url: myLink,
-                        method: 'GET',
-                        success: function (response, textStatus, xhr) {
-                            var color = xhr.status === 200 ? '1aff00' : 'ff2e36';
-                            $(mySelector).css('color', color);
-                            cache[myLink] = { color: color };
-                        },
-                        error: function () {
-                            $(mySelector).css('color', 'ff2e36');
-                        },
-                        complete: resolve
-                    });
-                });
-            });
-            return Promise.all(requests).then(() => console.log('All requests completed'));
-        }
-    }
-
-    Lampa.Controller.listener.follow('toggle', function (e) {
-        if (e.name === 'select') {
-            checkAlive("parser");
-        }
-    });
-
     function changeParser() {
-        var selectedParser = parsersInfo.find(p => p.url === Lampa.Storage.get("lme_url_two"));
+        var jackettUrlTwo = Lampa.Storage.get("lme_url_two");
+        var selectedParser = parsersInfo.find(function (parser) {
+            return parser.base === jackettUrlTwo;
+        });
         if (selectedParser) {
-            Lampa.Storage.set("jackett_url", selectedParser.url);
-            Lampa.Storage.set("jackett_key", selectedParser.apiKey);
+            var settings = selectedParser.settings;
+            Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_url" : "jackett_url", settings.url);
+            Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_key" : "jackett_key", settings.key);
+            Lampa.Storage.set("parser_torrent_type", settings.parser_torrent_type);
+        } else {
+            console.warn("Jackett URL not found in parsersInfo");
         }
     }
 
-    var s_values = parsersInfo.reduce((prev, p) => {
-        prev[p.url] = p.title;
+    var s_values = parsersInfo.reduce(function (prev, _ref) {
+        var base = _ref.base,
+            name = _ref.name;
+        prev[base] = name;
         return prev;
-    }, { no_parser: 'Не выбран' });
+    }, {
+        no_parser: 'Не выбран'
+    });
 
     function parserSetting() {
         Lampa.SettingsApi.addParam({
