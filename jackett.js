@@ -1,6 +1,12 @@
 (function () {
   'use strict';
-  
+
+  if (!Lampa.Storage.get("parser_torrent_type")) {
+    Lampa.Storage.set("parser_torrent_type", "jackett");
+  }
+
+  Lampa.Platform.tv();
+
   function checkParser(parser) {
     return new Promise((resolve) => {
       const protocol = location.protocol === "https:" ? "https://" : "http://";
@@ -27,11 +33,11 @@
   function checkAllParsers() {
     const parsers = [
       { title: "79.137.204.8:2601",           url: "79.137.204.8:2601",  apiKey: "" },
-      { title: "Jacred XYZ",        url: "jacred.xyz",         apiKey: "" },
-      { title: "Jacred PRO",        url: "jacred.pro",         apiKey: "" },
-      { title: "Viewbox",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
-      { title: "Trs my to",  url: "trs.my.to:9117",      apiKey: "" },
-      { title: "Duckdns",     url: "altjacred.duckdns.org", apiKey: "" }
+      { title: "jacred.xyz",        url: "jacred.xyz",         apiKey: "" },
+      { title: "jacred.pro",        url: "jacred.pro",         apiKey: "" },
+      { title: "jacred.viewbox.dev",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
+      { title: "trs.my.to:9117",  url: "trs.my.to:9117",      apiKey: "" },
+      { title: "altjacred.duckdns.org",     url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
@@ -39,13 +45,21 @@
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
 
-
+      results.unshift({
+        title: "Свой вариант",
+        url: "",
+        apiKey: "",
+        status: null 
+      });
 
       const currentSelected = Lampa.Storage.get('selected_parser');
 
       const items = results.map(parser => {
         let color = "inherit";
-
+        if (parser.title !== "Свой вариант") {
+          color = parser.status ? "#64e364" : "#ff2121";
+        }
+        let activeMark = "";
         if (parser.title === currentSelected) {
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
@@ -63,17 +77,29 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
-{
+          if (item.parser.title === "Свой вариант") {
+            Lampa.Storage.set('jackett_url', "");
+            Lampa.Storage.set('jackett_key', "");
+            Lampa.Storage.set('selected_parser', "Свой вариант");
+          } else {
             Lampa.Storage.set('jackett_url', item.parser.url);
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
 
+            Lampa.Storage.set("parser_torrent_type", "jackett");
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
 
+          if (item.parser.title !== "Свой вариант") {
+            $("div[data-name='jackett_url']").hide();
+            $("div[data-name='jackett_key']").hide();
+          } else {
+            $("div[data-name='jackett_url']").show();
+            $("div[data-name='jackett_key']").show();
+          }
         }
       });
     });
@@ -151,7 +177,13 @@ function updateParserField(text) {
         } else {
           elem.hide();
         }
-
+        if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
+          $("div[data-name='jackett_url']").hide();
+          $("div[data-name='jackett_key']").hide();
+        } else {
+          $("div[data-name='jackett_url']").show();
+          $("div[data-name='jackett_key']").show();
+        }
       }, 5);
     }
   });
