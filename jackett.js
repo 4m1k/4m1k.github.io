@@ -78,24 +78,22 @@
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
+    // Функция построения списка элементов меню (только названия с цветом)
     function buildItems() {
       return parsers.map(parser => {
-        let color, statusText;
+        let color;
         if (parser.status === null) {
-          color = "#cccccc";
-          statusText = " (Проверяется)";
+          color = "#cccccc"; // проверка ещё не завершена
         } else if (parser.status === true) {
-          color = "#64e364";
-          statusText = " (Работает)";
+          color = "#64e364"; // рабочий
         } else {
-          color = "#ff2121";
-          statusText = " (Не работает)";
+          color = "#ff2121"; // нерабочий
         }
         let activeMark = "";
         if (parser.title === currentSelected) {
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
-        const titleHTML = activeMark + `<span style="color: ${color} !important;">${parser.title}</span>${statusText}`;
+        const titleHTML = activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`;
         return {
           title: titleHTML,
           parser: parser
@@ -187,7 +185,6 @@
               e.type === "hover:enter" ||
               (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))
             ) {
-              // Запускаем проверку только после нажатия
               checkAllParsers().then(function (results) {
                 openParserSelectionMenu(results);
               });
