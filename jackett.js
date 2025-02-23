@@ -152,19 +152,7 @@ function updateParserField(text) {
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-        if (Lampa.Storage.field("parser_use")) {
-          elem.show();
-          $('.settings-param__name', elem).css("color", "ffffff");
-          $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          elem.off("click").on("click", function () {
-            showParserSelectionMenu();
-          });
-          const current = Lampa.Storage.get('selected_parser');
-          if (current) {
-            updateParserField(current);
-          }
-        } else {
-          elem.hide();
+
         }
         if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
           $("div[data-name='jackett_url']").hide();
