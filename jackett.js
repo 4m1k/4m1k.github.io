@@ -6,9 +6,16 @@
   }
   Lampa.Platform.tv();
 
-  // Обновлённая функция проверки парсера с использованием onreadystatechange
+  // Обновлённая функция проверки парсера с фолбэком
   function checkParser(parser) {
     return new Promise((resolve) => {
+      let resolved = false;
+      function resolveOnce() {
+        if (!resolved) {
+          resolved = true;
+          resolve(parser);
+        }
+      }
       const protocol = location.protocol === "https:" ? "https://" : "http://";
       const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
       const xhr = new XMLHttpRequest();
@@ -22,20 +29,28 @@
           } else {
             parser.status = false;
           }
-          resolve(parser);
+          resolveOnce();
         }
       };
       xhr.onerror = function () {
         console.log(`Ошибка при проверке ${parser.title}`);
         parser.status = false;
-        resolve(parser);
+        resolveOnce();
       };
       xhr.ontimeout = function () {
         console.log(`Таймаут проверки ${parser.title}`);
         parser.status = false;
-        resolve(parser);
+        resolveOnce();
       };
       xhr.send();
+      // Фолбэк: если ни одно событие не сработает, разрешаем промис через 3500 мс
+      setTimeout(() => {
+        if (!resolved) {
+          console.log(`Фолбэк срабатывает для ${parser.title}`);
+          parser.status = false;
+          resolveOnce();
+        }
+      }, 3500);
     });
   }
 
@@ -123,7 +138,7 @@
       }
     });
 
-    // Запускаем проверку после открытия меню
+    // Запускаем асинхронную проверку парсеров
     checkAllParsers().then(results => {
       results.forEach(checkedParser => {
         let parserItem = parsers.find(p => p.title === checkedParser.title);
@@ -140,8 +155,7 @@
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" tabindex="0" style="padding:0!important">
-         <div style="width:1.3em;height:1.3em;padding-right:.1em">
-         </div>
+         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
          <div style="font-size:1.2em; font-weight: bold;">
            <div style="padding: 0.5em 0.5em; padding-top: 0;">
              <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
@@ -171,8 +185,7 @@
     },
     field: {
       name: `<div class="settings-folder" style="padding:0!important">
-                <div style="width:1.3em;height:1.3em;padding-right:.1em">
-                </div>
+                <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
                 <div style="font-size:1.0em">
                   <div style="padding: 0.3em 0.3em; padding-top: 0;">
                     <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
