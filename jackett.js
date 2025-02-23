@@ -73,11 +73,7 @@
           Lampa.Controller.toggle("settings_component");
         },
         onSelect: function (item) {
-          if (item.parser.title === "Свой вариант") {
-            Lampa.Storage.set('jackett_url', "");
-            Lampa.Storage.set('jackett_key', "");
-            Lampa.Storage.set('selected_parser', "Свой вариант");
-          } else {
+{
             Lampa.Storage.set('jackett_url', item.parser.url);
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
