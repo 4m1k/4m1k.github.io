@@ -629,12 +629,23 @@
         })
       }, this.getChoice());
     };
-    this.parse = function(str) {
-      var json = Lampa.Arrays.decodeJson(str, {});
-      if (Lampa.Arrays.isObject(str) && str.rch) json = str;
-      if (json.rch) return this.rch(json);
-      try {
+this.parse = function(str) {
+    var json = Lampa.Arrays.decodeJson(str, {});
+    // Если обнаружена ошибка авторизации, меняем сообщение и сбрасываем флаг
+    if (json && json.accsdb && json.msg && json.msg.indexOf('@Abcinema_bot') !== -1) {
+        json.msg = 'Войдите в систему, используя ваш аккаунт'; // новый текст
+        json.accsdb = false; // сброс флага ошибки, чтобы дальше не обрабатывать как ошибку
+    }
+    if (Lampa.Arrays.isObject(str) && str.rch) json = str;
+    if (json.rch) return this.rch(json);
+    try {
+        // далее идет разбор полученного HTML/JSON
         var items = this.parseJsonDate(str, '.videos__item');
+        // … остальной код обработки ответа
+    } catch (e) {
+        this.doesNotAnswer(e);
+    }
+};
         var buttons = this.parseJsonDate(str, '.videos__button');
         if (items.length == 1 && items[0].method == 'link' && !items[0].similar) {
           filter_find.season = items.map(function(s) {
