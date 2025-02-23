@@ -65,6 +65,20 @@
       return Promise.all(requests);
     }
 
+    function changeParser(value) {
+      var selectedParser = parsersInfo.find(function (parser) {
+        return parser.base === value;
+      });
+      if (selectedParser) {
+        Lampa.Storage.set("jackett_url", selectedParser.settings.url);
+        Lampa.Storage.set("jackett_key", selectedParser.settings.key);
+        Lampa.Storage.set("parser_torrent_type", selectedParser.settings.parser_torrent_type);
+        console.log("Выбранный парсер:", selectedParser);
+      } else {
+        console.warn("Парсер не найден");
+      }
+    }
+
     Lampa.Controller.listener.follow('toggle', function (e) {
       if (e.name === 'select') {
         checkAlive();
@@ -91,6 +105,7 @@
           description: "".concat(Lampa.Lang.translate('lme_parser_description'), " ").concat(parsersInfo.length)
         },
         onChange: function onChange(value) {
+          changeParser(value);
           Lampa.Settings.update();
         },
         onRender: function onRender(item) {
