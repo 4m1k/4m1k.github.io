@@ -14,6 +14,18 @@
                 en: 'Click to select a parser from the ',
                 uk: 'Натисніть для вибору парсера з ',
                 zh: '单击以从可用的 '
+            },
+            lme_pubtorr: {
+                ru: 'Каталог TorrServer',
+                en: 'TorrServer catalog',
+                uk: 'Каталог TorrServer',
+                zh: '解析器目录'
+            },
+            lme_pubtorr_description: {
+                ru: 'Бесплатные серверы от проекта LME',
+                en: 'Free servers from the LME project',
+                uk: 'Безкоштовні сервери від проєкту LME',
+                zh: '来自 LME 项目的免费服务器'
             }
         });
     }
