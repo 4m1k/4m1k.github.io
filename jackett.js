@@ -1,10 +1,6 @@
 (function () {
   'use strict';
 
-  if (!Lampa.Storage.get("parser_torrent_type")) {
-    Lampa.Storage.set("parser_torrent_type", "jackett");
-  }
-
   Lampa.Platform.tv();
 
   function checkParser(parser) {
