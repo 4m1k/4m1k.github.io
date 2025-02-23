@@ -4,24 +4,22 @@
   // Устанавливаем платформу для ТВ
   Lampa.Platform.tv();
 
-  // Константы
+  // Константы: селектор для кнопки TV и таймаут перемещения
   var ITEM_TV_SELECTOR = '[data-action="tv"]';
   var ITEM_MOVE_TIMEOUT = 2000;
 
-  // Функция перемещения элемента
+  // Функция для перемещения элемента
   var moveItemAfter = function (item, after) {
     return setTimeout(function () {
       $(item).insertAfter($(after));
     }, ITEM_MOVE_TIMEOUT);
   };
 
-  // Добавляем новый пункт меню "Русское" с подменю для выбора нужного раздела
-  (function () {
-    var NEW_ITEM_ATTR = 'data-action="ru_movie"';
+  // Функция для добавления кнопки в меню (повторяемая логика)
+  function addMenuButton(newItemAttr, newItemText, onEnterHandler) {
+    var NEW_ITEM_ATTR = newItemAttr;
     var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
-    var NEW_ITEM_TEXT = 'Русское';
-
-    // Иконка для главного пункта меню
+    // Пример иконки – можно заменить на другую при необходимости
     var menuIcon = `
       <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 48 48">
         <g fill="none" stroke="currentColor" stroke-width="4">
@@ -31,99 +29,13 @@
         </g>
       </svg>
     `;
-
-    // Создаем элемент пункта меню
     var field = $(`
       <li class="menu__item selector" ${NEW_ITEM_ATTR}>
         <div class="menu__ico">${menuIcon}</div>
-        <div class="menu__text">${NEW_ITEM_TEXT}</div>
+        <div class="menu__text">${newItemText}</div>
       </li>
     `);
-
-    // Определяем опции подменю – только нужные разделы
-    var menuOptions = [
-      {
-        title: `<div class="settings-folder" style="padding:0!important">
-                    <div style="width:2.2em;height:1.7em;padding-right:.5em">
-                      <!-- Иконка для "Русские фильмы" (пример) -->
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-                              d="M12.071 33V15h5.893c3.331 0 6.032 2.707 6.032 6.045s-2.7 6.045-6.032 6.045h-5.893m5.893 0l5.892 5.905m3.073-11.92V28.5a4.5 4.5 0 0 0 4.5 4.5h0a4.5 4.5 0 0 0 4.5-4.5v-7.425"/>
-                      </svg>
-                    </div>
-                    <div style="font-size:1.3em">Русские фильмы</div>
-                 </div>`
-      },
-      {
-        title: `<div class="settings-folder" style="padding:0!important">
-                    <div style="width:2.2em;height:1.7em;padding-right:.5em">
-                      <!-- Иконка для "Русские сериалы" (пример) -->
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-                              d="M12.071 33V15h5.893c3.331 0 6.032 2.707 6.032 6.045s-2.7 6.045-6.032 6.045h-5.893m5.893 0l5.892 5.905m3.073-11.92V28.5a4.5 4.5 0 0 0 4.5 4.5h0a4.5 4.5 0 0 0 4.5-4.5v-7.425"/>
-                      </svg>
-                    </div>
-                    <div style="font-size:1.3em">Русские сериалы</div>
-                 </div>`
-      },
-      {
-        title: `<div class="settings-folder" style="padding:0!important">
-                    <div style="width:2.2em;height:1.7em;padding-right:.5em">
-                      <!-- Иконка для "Русские мультфильмы" (пример) -->
-                      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-                        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-                              d="M12.071 33V15h5.893c3.331 0 6.032 2.707 6.032 6.045s-2.7 6.045-6.032 6.045h-5.893m5.893 0l5.892 5.905m3.073-11.92V28.5a4.5 4.5 0 0 0 4.5 4.5h0a4.5 4.5 0 0 0 4.5-4.5v-7.425"/>
-                      </svg>
-                    </div>
-                    <div style="font-size:1.3em">Русские мультфильмы</div>
-                 </div>`
-      }
-    ];
-
-    // Обработчик события открытия подменю
-    field.on('hover:enter', function () {
-      Lampa.Select.show({
-        title: NEW_ITEM_TEXT,
-        items: menuOptions,
-        onSelect: function (item) {
-          // Очищаем HTML из заголовка, чтобы получить чистое название
-          var cleanTitle = item.title.replace(/<[^>]+>/g, '').trim();
-          if (cleanTitle === 'Русские фильмы') {
-            Lampa.Activity.push({
-              url: `discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-              title: 'Русские фильмы',
-              component: 'category_full',
-              source: 'tmdb',
-              card_type: true,
-              page: 1,
-            });
-          } else if (cleanTitle === 'Русские сериалы') {
-            Lampa.Activity.push({
-              url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
-              title: 'Русские сериалы',
-              component: 'category_full',
-              source: 'tmdb',
-              card_type: true,
-              page: 1,
-            });
-          } else if (cleanTitle === 'Русские мультфильмы') {
-            Lampa.Activity.push({
-              url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-              title: 'Русские мультфильмы',
-              component: 'category_full',
-              source: 'tmdb',
-              card_type: true,
-              page: 1,
-            });
-          }
-        },
-        onBack: function () {
-          Lampa.Controller.toggle('menu');
-        },
-      });
-    });
-
-    // Добавляем новый пункт меню после пункта TV
+    field.on('hover:enter', onEnterHandler);
     if (window.appready) {
       Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
       moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
@@ -135,5 +47,55 @@
         }
       });
     }
-  })();
+  }
+
+  // Кнопка "Русские фильмы"
+  addMenuButton(
+    'data-action="ru_movie_films"',
+    'Русские фильмы',
+    function () {
+      Lampa.Activity.push({
+        url: `discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
+        title: 'Русские фильмы',
+        component: 'category_full',
+        source: 'tmdb',
+        card_type: true,
+        page: 1,
+      });
+    }
+  );
+
+  // Кнопка "Русские сериалы"
+  addMenuButton(
+    'data-action="ru_movie_series"',
+    'Русские сериалы',
+    function () {
+      Lampa.Activity.push({
+        url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
+        title: 'Русские сериалы',
+        component: 'category_full',
+        source: 'tmdb',
+        card_type: true,
+        page: 1,
+      });
+    }
+  );
+
+  // Кнопка "Русские мультфильмы"
+  addMenuButton(
+    'data-action="ru_movie_cartoons"',
+    'Русские мультфильмы',
+    function () {
+      Lampa.Activity.push({
+        url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
+        title: 'Русские мультфильмы',
+        component: 'category_full',
+        source: 'tmdb',
+        card_type: true,
+        page: 1,
+      });
+    }
+  );
+  
+  // Если раньше была кнопка "Русское", её можно не добавлять (удаляем)
 })();
