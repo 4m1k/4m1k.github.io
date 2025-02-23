@@ -5,7 +5,7 @@
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
 
-  Lampa.Platform.tv();
+ // Lampa.Platform.tv();
 
   function checkParser(parser) {
     return new Promise((resolve) => {
