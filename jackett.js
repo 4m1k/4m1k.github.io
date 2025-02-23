@@ -45,10 +45,7 @@
 
       const items = results.map(parser => {
         let color = "inherit";
-        if (parser.title !== "Свой вариант") {
-          color = parser.status ? "#64e364" : "#ff2121";
-        }
-        let activeMark = "";
+
         if (parser.title === currentSelected) {
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
