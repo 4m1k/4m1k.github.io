@@ -122,15 +122,8 @@
               page: 1,
             });
 } else if (cleanTitle === 'Start') {
-  // Определяем базовый URL с учетом прокси
-  var apiUrlTMDB = 'https://api.themoviedb.org/3/';
-  var apiUrlProxy = 'apitmdb.' + (Lampa.Manifest && Lampa.Manifest.cub_domain ? Lampa.Manifest.cub_domain : 'cub.red') + '/3/';
-  var baseUrl = Lampa.Storage.field('proxy_tmdb') 
-      ? Lampa.Utils.protocol() + apiUrlProxy 
-      : apiUrlTMDB;
-      
   Lampa.Activity.push({
-    url: baseUrl + 'discover/tv?with_networks=1191&with_type=0&with_original_language=ru&sort_by=first_air_date.desc',
+    url: 'discover/tv?with_networks=1191&with_type=0&with_original_language=ru&sort_by=first_air_date.desc',
     title: 'Start',
     networks: '1191',
     sort_by: 'first_air_date.desc',
