@@ -7,7 +7,7 @@
   }
   Lampa.Platform.tv();
 
-  // Функция для проверки отдельного парсера
+  // Функция для проверки отдельного парсера с выводом отладочной информации
   function checkParser(parser) {
     return new Promise((resolve) => {
       const protocol = location.protocol === "https:" ? "https://" : "http://";
@@ -16,7 +16,8 @@
       xhr.open("GET", apiUrl, true);
       xhr.timeout = 3000;
       xhr.onload = function () {
-        // Если статус 200 или для jacred.viewbox.dev возвращается 403 (но сервис работает)
+        console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
+        // Если статус 200 или для jacred.viewbox.dev возвращается 403, считаем, что парсер работает
         if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
           parser.status = true;
         } else {
@@ -25,10 +26,12 @@
         resolve(parser);
       };
       xhr.onerror = function () {
+        console.log(`Ошибка при проверке ${parser.title}`);
         parser.status = false;
         resolve(parser);
       };
       xhr.ontimeout = function () {
+        console.log(`Таймаут проверки ${parser.title}`);
         parser.status = false;
         resolve(parser);
       };
@@ -36,10 +39,9 @@
     });
   }
 
-  // Функция для одновременной проверки всех парсеров
+  // Функция для проверки всех парсеров
   function checkAllParsers() {
-    // Здесь формируется массив без "Свой вариант", т.к. он не требует проверки
-    const parsers = [
+    const parsersToCheck = [
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
       { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "", status: null },
       { title: "jacred.pro",         url: "jacred.pro",         apiKey: "", status: null },
@@ -47,12 +49,12 @@
       { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
       { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
     ];
-    return Promise.all(parsers.map(parser => checkParser(parser))).then(results => results);
+    return Promise.all(parsersToCheck.map(parser => checkParser(parser))).then(results => results);
   }
 
   // Функция для отображения меню выбора парсера
   function showParserSelectionMenu() {
-    // Формируем массив с начальными значениями статуса (null) и добавляем "Свой вариант"
+    // Формируем массив с начальными значениями статуса (null) и добавляем вариант "Свой вариант"
     let parsers = [
       { title: "Свой вариант", url: "", apiKey: "", status: null },
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -65,22 +67,26 @@
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция для построения списка элементов меню
+    // Функция построения списка элементов меню с индикатором статуса
     function buildItems() {
       return parsers.map(parser => {
-        let color = "inherit";
+        let color, statusText;
         if (parser.status === null) {
-          color = "#cccccc"; // статус "проверяется"
+          color = "#cccccc"; // проверка ещё не завершена
+          statusText = " (Проверяется)";
         } else if (parser.status === true) {
-          color = "#64e364"; // рабочий (зелёный)
+          color = "#64e364"; // рабочий
+          statusText = " (Работает)";
         } else if (parser.status === false) {
-          color = "#ff2121"; // нерабочий (красный)
+          color = "#ff2121"; // нерабочий
+          statusText = " (Не работает)";
         }
         let activeMark = "";
         if (parser.title === currentSelected) {
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
-        const titleHTML = activeMark + `<span style="color: ${color};">${parser.title}</span>`;
+        // Добавляем !important, чтобы гарантированно применялся нужный цвет
+        const titleHTML = activeMark + `<span style="color: ${color} !important;">${parser.title}</span>${statusText}`;
         return {
           title: titleHTML,
           parser: parser
@@ -123,9 +129,9 @@
       }
     });
 
-    // После открытия меню запускаем асинхронную проверку парсеров
+    // Запускаем асинхронную проверку парсеров после открытия меню
     checkAllParsers().then(results => {
-      // Обновляем статус для каждого парсера в локальном массиве
+      // Обновляем статус каждого парсера в локальном массиве
       results.forEach(checkedParser => {
         let parserItem = parsers.find(p => p.title === checkedParser.title);
         if (parserItem) {
@@ -201,7 +207,7 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Обработчик для пульта – объединяем события "click", "hover:enter" и "keydown"
+          // Обработчик для пульта: объединяем события "click", "hover:enter" и "keydown"
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
