@@ -1319,24 +1319,19 @@
       this.loading(false);
     };
 this.noConnectToServer = function(er) {
-    var customMsg = 'Поиск не дал результатов'; // Ваш новый текст
-    var errorText = '';
-
-    // Если пришёл объект ошибки с сообщением, проверяем его
-    if (er && er.msg) {
-        // Если в сообщении содержится оригинальная надпись, заменяем её
-        errorText = er.msg.indexOf('Вы не авторизовались в telegram: @Abcinema_bot') !== -1 ? customMsg : er.msg;
-    } else {
-        // Если нет объекта ошибки, получаем текст из языкового пакета
-        errorText = Lampa.Lang.translate('lampac_does_not_answer_text')
-            .replace('{balanser}', sources[balanser].name);
-        // Если и там встречается оригинальный текст — заменяем его
-        errorText = errorText.indexOf('Вы не авторизовались в telegram: @Abcinema_bot') !== -1 ? customMsg : errorText;
+    var customMsg = 'Войдите в систему, используя ваш аккаунт';
+    if(er && er.accsdb) {
+        if(er.msg && er.msg.indexOf('@Abcinema_bot') !== -1) {
+            er.msg = customMsg;
+        }
+        // Сбросим флаг, чтобы ошибка не обрабатывалась дальше
+        er.accsdb = false;
     }
-
     var html = Lampa.Template.get('lampac_does_not_answer', {});
-    html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
-    html.find('.online-empty__time').text(errorText);
+    html.find('.online-empty__time').text(er && er.accsdb 
+        ? er.msg 
+        : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', sources[balanser].name)
+    );
     scroll.clear();
     scroll.append(html);
     this.loading(false);
