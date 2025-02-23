@@ -1322,13 +1322,14 @@
       if (er && er.msg && er.msg.indexOf('@Abcinema_bot') !== -1) {
         er.msg = 'Поиск не дал результатов';
 		}
-      var html = Lampa.Template.get('lampac_does_not_answer', {});
-      html.find('.online-empty__buttons').remove();
-      html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
-      html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
-      scroll.clear();
-      scroll.append(html);
-      this.loading(false);
+    var html = Lampa.Template.get('lampac_does_not_answer', {});
+    html.find('.online-empty__time').text(er && er.accsdb 
+        ? er.msg 
+        : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', sources[balanser].name)
+    );
+    scroll.clear();
+    scroll.append(html);
+    this.loading(false);
     };
     this.doesNotAnswer = function(er) {
       var _this9 = this;
