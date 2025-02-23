@@ -298,6 +298,7 @@
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
           var name = balanserName(j);
+		  if (name === 'filmix' || name === 'kinopub') { j.show = true; }
           sources[name] = {
             url: j.url,
             name: j.name,
