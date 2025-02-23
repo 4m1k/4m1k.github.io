@@ -1,7 +1,11 @@
-
 (function () {
   'use strict';
 
+  if (!Lampa.Storage.get("parser_torrent_type")) {
+    Lampa.Storage.set("parser_torrent_type", "jackett");
+  }
+
+  Lampa.Platform.tv();
 
   function checkParser(parser) {
     return new Promise((resolve) => {
@@ -89,13 +93,6 @@
           Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
 
-          if (item.parser.title !== "Свой вариант") {
-            $("div[data-name='jackett_url']").hide();
-            $("div[data-name='jackett_key']").hide();
-          } else {
-            $("div[data-name='jackett_url']").show();
-            $("div[data-name='jackett_key']").show();
-          }
         }
       });
     });
