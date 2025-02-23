@@ -83,16 +83,24 @@
           Lampa.Storage.set('selected_parser', item.parser.title);
           Lampa.Storage.set("parser_torrent_type", "jackett");
           
-          updateParserField(item.parser.url);
-          Lampa.Controller.toggle("settings_component");
-          Lampa.Settings.update();
+          setTimeout(() => {
+            updateParserField(item.parser.url);
+            Lampa.Controller.toggle("settings_component");
+            Lampa.Settings.update();
+          }, 300);
         }
       });
     });
   }
 
   function updateParserField(url) {
-    document.querySelector("div[data-name='jackett_url'] input").value = url;
+    let inputField = document.querySelector("div[data-name='jackett_url'] input");
+    if (inputField) {
+      inputField.value = url;
+      inputField.dispatchEvent(new Event('input', { bubbles: true }));
+    } else {
+      console.warn("Поле jackett_url не найдено");
+    }
     console.log("Обновлено поле ссылки:", url);
   }
 
