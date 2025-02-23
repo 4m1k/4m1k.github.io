@@ -123,10 +123,10 @@
             });
 } else if (cleanTitle === 'Start') {
   Lampa.Activity.push({
-    url: 'discover/tv?with_networks=2000&with_type=0&with_original_language=ru&sort_by=popularity.desc', // Новый URL для сериалов Start
+    url: 'discover/tv?with_networks=1191&with_type=0&with_original_language=ru&sort_by=first_air_date.desc', // Уточненный URL для сериалов Start
     title: 'Start',
-    networks: '2000',
-    sort_by: 'popularity.desc',
+    networks: '1191',
+    sort_by: 'first_air_date.desc',
     component: 'category_full',
     source: 'tmdb',
     card_type: 'true',
