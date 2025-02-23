@@ -5,22 +5,40 @@
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
 
-  async function checkParser(parser) {
-    const protocol = location.protocol === "https:" ? "https://" : "http://";
-    const apiUrl = `${protocol}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.apiKey}`;
-    
-    try {
-      const response = await fetch(apiUrl, { method: "GET" });
-      parser.status = response.ok;
-      console.log("Проверка парсера:", parser.url, "Статус:", parser.status);
-    } catch (error) {
-      parser.status = false;
-      console.log("Ошибка проверки парсера:", parser.url, error);
-    }
-    return parser;
+  function checkParser(parser) {
+    return new Promise((resolve) => {
+      const protocol = location.protocol === "https:" ? "https://" : "http://";
+      const apiUrl = `${protocol}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.apiKey}`;
+      
+      console.log("Запрос к парсеру:", apiUrl);
+      
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", apiUrl, true);
+      xhr.timeout = 5000;
+      
+      xhr.onload = function () {
+        parser.status = xhr.status === 200;
+        console.log("Ответ от парсера:", parser.url, "Статус:", parser.status);
+        resolve(parser);
+      };
+      
+      xhr.onerror = function () {
+        parser.status = false;
+        console.error("Ошибка проверки парсера:", parser.url);
+        resolve(parser);
+      };
+      
+      xhr.ontimeout = function () {
+        parser.status = false;
+        console.error("Таймаут проверки парсера:", parser.url);
+        resolve(parser);
+      };
+      
+      xhr.send();
+    });
   }
 
-  async function checkAllParsers() {
+  function checkAllParsers() {
     const parsers = [
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
       { title: "jacred.xyz", url: "jacred.xyz", apiKey: "" },
