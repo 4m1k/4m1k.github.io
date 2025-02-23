@@ -1,10 +1,21 @@
 (function () {
   'use strict';
 
+  // Если параметр parser_torrent_type ещё не установлен – задаём значение по умолчанию
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
   Lampa.Platform.tv();
+
+  // Массив парсеров, который будем проверять
+  var parsersToCheck = [
+    { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
+    { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "" },
+    { title: "jacred.pro",         url: "jacred.pro",         apiKey: "" },
+    { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
+    { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "" },
+    { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
+  ];
 
   // Функция проверки одного парсера (с фолбэком)
   function checkParser(parser) {
@@ -23,7 +34,7 @@
       xhr.timeout = 3000;
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-          // Для jacred.viewbox.dev считаем рабочим при статусе 403
+          // Если статус 200 или (для jacred.viewbox.dev – 403) – считаем парсер рабочим
           if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
             parser.status = true;
           } else {
@@ -41,7 +52,6 @@
         resolveOnce();
       };
       xhr.send();
-      // Фолбэк: через 3500 мс
       setTimeout(() => {
         if (!resolved) {
           parser.status = false;
@@ -51,54 +61,56 @@
     });
   }
 
-  // Функция для формирования массива пунктов меню по данным parsers и выбранному значению
-  function buildItems(parsers, currentSelected) {
-    return parsers.map(parser => {
-      let color = "#cccccc"; // нейтральный (status === null)
-      if (parser.status === true) {
-        color = "#64e364";
-      } else if (parser.status === false) {
-        color = "#ff2121";
-      }
-      let activeMark = "";
-      if (parser.title === currentSelected) {
-        activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
-      }
-      return {
-        title: activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`,
-        parser: parser
-      };
+  // Функция одновременной проверки всех парсеров
+  function checkAllParsers() {
+    return Promise.all(parsersToCheck.map(parser => checkParser(parser)));
+  }
+
+  // Функция обновления кеша парсеров – вызывается при запуске Лампы
+  function updateParserCache() {
+    checkAllParsers().then((results) => {
+      // Сохраняем результаты в кеш (например, в Lampa.Storage под ключом "parser_statuses")
+      Lampa.Storage.set("parser_statuses", results);
+      console.log("Статусы парсеров обновлены и сохранены в кеше:", results);
     });
   }
 
-  // Функция для ручного обновления DOM пунктов меню через jQuery
-  function updateMenuDOM(selectInstance, parsers, currentSelected) {
-    var items = buildItems(parsers, currentSelected);
-    // Попытка найти пункты меню – скорректируйте селектор при необходимости
-    selectInstance.$el.find('.select__list .select__item').each(function (index) {
-      $(this).html(items[index].title);
-    });
-  }
+  // Запускаем проверку парсеров при инициализации Лампы
+  updateParserCache();
 
-  // Функция открытия меню выбора парсера с обновлением в реальном времени
+  // При открытии меню выбора парсера считываем статусы из кеша
   function openParserSelectionMenu() {
-    // Начальный массив: все пункты с status = null
-    let parsers = [
-      { title: "Свой вариант", url: "", apiKey: "", status: null },
-      { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
-      { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "", status: null },
-      { title: "jacred.pro",         url: "jacred.pro",         apiKey: "", status: null },
-      { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox", status: null },
-      { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
-      { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
-    ];
+    // Получаем кешированные данные (если кеш пустой, используем пустой массив)
+    var cachedParsers = Lampa.Storage.get("parser_statuses") || [];
+    // Добавляем вариант "Свой вариант"
+    var parsers = [{ title: "Свой вариант", url: "", apiKey: "", status: null }].concat(cachedParsers);
 
-    const currentSelected = Lampa.Storage.get('selected_parser');
+    var currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Открываем меню сразу с начальными данными
-    var selectInstance = Lampa.Select.show({
+    // Функция формирования пунктов меню
+    function buildItems() {
+      return parsers.map(parser => {
+        let color = "#cccccc"; // по умолчанию – нейтральный цвет
+        if (parser.status === true) {
+          color = "#64e364";
+        } else if (parser.status === false) {
+          color = "#ff2121";
+        }
+        let activeMark = "";
+        if (parser.title === currentSelected) {
+          activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
+        }
+        return {
+          title: activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`,
+          parser: parser
+        };
+      });
+    }
+
+    // Открываем меню выбора парсера
+    Lampa.Select.show({
       title: "Меню смены парсера",
-      items: buildItems(parsers, currentSelected),
+      items: buildItems(),
       onBack: function () {
         Lampa.Controller.toggle("settings_component");
       },
@@ -113,6 +125,7 @@
           Lampa.Storage.set('selected_parser', item.parser.title);
           Lampa.Storage.set("parser_torrent_type", "jackett");
         }
+        console.log("Выбран парсер:", item.parser);
         updateParserField(item.title);
         Lampa.Select.hide();
         setTimeout(function () {
@@ -128,27 +141,9 @@
         }
       }
     });
-
-    // Запускаем проверки для каждого пункта (кроме "Свой вариант") и обновляем меню по мере завершения
-    parsers.forEach(function (parser) {
-      if (parser.title !== "Свой вариант") {
-        checkParser(parser).then(function () {
-          updateMenuDOM(selectInstance, parsers, currentSelected);
-        });
-      }
-    });
-
-    // Если проверки выполняются не одновременно, можно запустить периодическое обновление
-    var updateInterval = setInterval(function () {
-      updateMenuDOM(selectInstance, parsers, currentSelected);
-      // Если все пункты (кроме "Свой вариант") проверены, останавливаем обновление
-      if (parsers.filter(p => p.title !== "Свой вариант").every(p => p.status !== null)) {
-        clearInterval(updateInterval);
-      }
-    }, 500);
   }
 
-  // Функция обновления заголовка выбранного парсера
+  // Функция обновления отображаемого выбранного парсера
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" tabindex="0" style="padding:0!important">
