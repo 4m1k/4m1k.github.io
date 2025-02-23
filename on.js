@@ -317,6 +317,11 @@
           } else {
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
+		              if (balanser === 'filmix' && filter_sources.length > 1) {
+                balanser = filter_sources.find(function(item) {
+                    return item !== 'filmixtv';
+                });
+            }
           if (!sources[balanser]) balanser = filter_sources[0];
           if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
           source = sources[balanser].url;
