@@ -1,13 +1,11 @@
 (function () {
   'use strict';
 
-  // Инициализация настроек по умолчанию
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
   Lampa.Platform.tv();
 
-  // Функция проверки отдельного парсера с фолбэком
   function checkParser(parser) {
     return new Promise((resolve) => {
       let resolved = false;
@@ -25,7 +23,6 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
-          // Для jacred.viewbox.dev считаем рабочим при статусе 403
           if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
             parser.status = true;
           } else {
@@ -45,7 +42,6 @@
         resolveOnce();
       };
       xhr.send();
-      // Фолбэк: через 3500 мс, если ничего не сработало
       setTimeout(() => {
         if (!resolved) {
           console.log(`Фолбэк срабатывает для ${parser.title}`);
@@ -56,9 +52,7 @@
     });
   }
 
-  // Функция, открывающая меню выбора парсера и обновляющая его в реальном времени
   function openParserSelectionMenu() {
-    // Начальный массив – все пункты с status = null (отображаются нейтрально)
     let parsers = [
       { title: "Свой вариант", url: "", apiKey: "", status: null },
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -71,11 +65,9 @@
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция для построения элементов меню – цвет зависит от parser.status:
-    // null: нейтральный (#cccccc), true: зелёный (#64e364), false: красный (#ff2121)
     function buildItems() {
       return parsers.map(parser => {
-        let color = "#cccccc";
+        let color = "#cccccc"; // по умолчанию нейтральный
         if (parser.status === true) {
           color = "#64e364";
         } else if (parser.status === false) {
@@ -86,14 +78,10 @@
           activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
         }
         const titleHTML = activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`;
-        return {
-          title: titleHTML,
-          parser: parser
-        };
+        return { title: titleHTML, parser: parser };
       });
     }
 
-    // Открываем меню сразу с начальными данными
     let selectInstance = Lampa.Select.show({
       title: "Меню смены парсера",
       items: buildItems(),
@@ -128,19 +116,23 @@
       }
     });
 
-    // Для каждого пункта (кроме "Свой вариант") запускаем проверку и обновляем меню по завершении
+    // Для каждого пункта (кроме "Свой вариант") запускаем проверку и обновляем меню
     parsers.forEach(parser => {
       if (parser.title !== "Свой вариант") {
         checkParser(parser).then(() => {
-          if (selectInstance && selectInstance.update) {
-            selectInstance.update({ items: buildItems() });
+          if (selectInstance) {
+            if (typeof selectInstance.update === 'function') {
+              selectInstance.update({ items: buildItems() });
+            } else if (typeof selectInstance.render === 'function') {
+              selectInstance.items = buildItems();
+              selectInstance.render();
+            }
           }
         });
       }
     });
   }
 
-  // Добавляем параметр в настройки – кнопка "Выбрать парсер"
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -182,8 +174,6 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Обработчик для пульта: по нажатию сразу открывается меню,
-          // а проверка парсеров начинается в фоне с реальным обновлением списка
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
@@ -211,7 +201,6 @@
     }
   });
 
-  // Функция обновления отображаемого выбранного парсера
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" tabindex="0" style="padding:0!important">
