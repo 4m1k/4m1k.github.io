@@ -187,12 +187,12 @@
               card_type: 'true',
               page: 1,
             });
-} else if (cleanTitle === 'Wink') {
+ } else if (cleanTitle === 'Wink') {
   Lampa.Activity.push({
-    url: 'discover/tv?with_networks=6000&sort_by=popularity.desc',
+    url: 'discover/tv?with_networks=5806&sort_by=first_air_date.desc',
     title: 'Wink',
-    networks: '6000',
-    sort_by: 'popularity.desc',
+    networks: '5806',
+    sort_by: 'first_air_date.desc',
     component: 'category_full',
     source: 'tmdb',
     card_type: 'true',
