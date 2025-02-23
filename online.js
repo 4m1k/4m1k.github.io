@@ -71,7 +71,7 @@
       season: [],
       voice: []
     };
-    var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr',, 'rc/kinopub', 'rc/rhs', 'vcdn'];
+    var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
 
     function account(url) {
       url = url + '';
@@ -298,7 +298,7 @@
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
           var name = balanserName(j);
-		  if(name === 'filmix' || name === 'rc/filmix'  || name === 'filmixtv'  || name === 'rc/fxapi' ) return; // пропускаем эти источники
+		  if(name === 'filmix' || name === 'rc/filmix'  || name === 'filmixtv' ) return; // пропускаем эти источники
           sources[name] = {
             url: j.url,
             name: j.name,
@@ -1629,7 +1629,7 @@
       }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
-      var balansers_sync = ["rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/kinopub", "rc/rhs", "vcdn"];
+      var balansers_sync = ["filmix", 'filmixtv',"fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/kinopub", "rc/rhs", "vcdn"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
