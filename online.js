@@ -298,7 +298,7 @@
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
           var name = balanserName(j);
-		  if (name === 'filmix' || name === 'kinopub') { j.show = true; }
+		  if(name === 'filmix' || name === 'kinopub' || name === 'filmixtv') return; // пропускаем эти источники
           sources[name] = {
             url: j.url,
             name: j.name,
@@ -314,7 +314,7 @@
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
           if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show && !object.lampac_custom_select && balanser !== 'filmix' && balanser !== 'kinopub') balanser = filter_sources[0];
+          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
           source = sources[balanser].url;
           resolve(json);
         } else {
