@@ -152,15 +152,21 @@ function updateParserField(text) {
         $("div[data-children='parser']").on("hover:enter", function () {
           Lampa.Settings.update();
         });
-
-        }
-        if (Lampa.Storage.get('selected_parser') !== "Свой вариант") {
-          $("div[data-name='jackett_url']").hide();
-          $("div[data-name='jackett_key']").hide();
+        if (Lampa.Storage.field("parser_use")) {
+          elem.show();
+          $('.settings-param__name', elem).css("color", "ffffff");
+          $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
+          elem.off("click").on("click", function () {
+            showParserSelectionMenu();
+          });
+          const current = Lampa.Storage.get('selected_parser');
+          if (current) {
+            updateParserField(current);
+          }
         } else {
-          $("div[data-name='jackett_url']").show();
-          $("div[data-name='jackett_key']").show();
+          elem.hide();
         }
+
       }, 5);
     }
   });
