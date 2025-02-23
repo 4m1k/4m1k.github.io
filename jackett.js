@@ -1,13 +1,12 @@
 (function () {
   'use strict';
 
-  // Инициализация настроек по умолчанию
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
   Lampa.Platform.tv();
 
-  // Функция проверки отдельного парсера с фолбэком
+  // Функция проверки одного парсера с гарантией разрешения промиса (включая фолбэк)
   function checkParser(parser) {
     return new Promise((resolve) => {
       let resolved = false;
@@ -42,7 +41,6 @@
         resolveOnce();
       };
       xhr.send();
-      // Фолбэк: через 3500 мс, если ничего не сработало
       setTimeout(() => {
         if (!resolved) {
           parser.status = false;
@@ -52,9 +50,29 @@
     });
   }
 
-  // Функция, открывающая меню выбора парсера и обновляющая его DOM-элементы вручную
+  // Функция для генерации массива пунктов меню (buildItems)
+  function buildItems(parsers, currentSelected) {
+    return parsers.map(parser => {
+      let color = "#cccccc"; // нейтральный (пока не проверен)
+      if (parser.status === true) {
+        color = "#64e364";
+      } else if (parser.status === false) {
+        color = "#ff2121";
+      }
+      let activeMark = "";
+      if (parser.title === currentSelected) {
+        activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
+      }
+      return { 
+        title: activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`,
+        parser: parser 
+      };
+    });
+  }
+
+  // Функция, которая открывает меню сразу и затем запускает асинхронную проверку
   function openParserSelectionMenu() {
-    // Начальный массив – все пункты с status = null (отображаются нейтрально)
+    // Начальный массив – все пункты с status = null
     let parsers = [
       { title: "Свой вариант", url: "", apiKey: "", status: null },
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -64,30 +82,22 @@
       { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
       { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
     ];
-
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция для построения элементов меню (просто формирует строку, которая вставляется внутрь каждого пункта)
-    function buildItems() {
-      return parsers.map(parser => {
-        let color = "#cccccc"; // нейтральный цвет по умолчанию
-        if (parser.status === true) {
-          color = "#64e364"; // рабочий — зелёный
-        } else if (parser.status === false) {
-          color = "#ff2121"; // нерабочий — красный
-        }
-        let activeMark = "";
-        if (parser.title === currentSelected) {
-          activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
-        }
-        return { title: activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`, parser: parser };
+    // Функция обновления DOM элементов меню, используя $el внутри selectInstance
+    function updateMenuDOM(selectInstance) {
+      var newItems = buildItems(parsers, currentSelected);
+      // Если ваш список пунктов имеет другой селектор, измените '.select__item'
+      selectInstance.$el.find('.select__item').each(function (index) {
+        // Обновляем HTML пункта
+        $(this).html(newItems[index].title);
       });
     }
 
-    // Открываем меню сразу
-    let selectInstance = Lampa.Select.show({
+    // Открываем меню сразу с исходными данными
+    var selectInstance = Lampa.Select.show({
       title: "Меню смены парсера",
-      items: buildItems(),
+      items: buildItems(parsers, currentSelected),
       onBack: function () {
         Lampa.Controller.toggle("settings_component");
       },
@@ -118,24 +128,31 @@
       }
     });
 
-    // Функция для ручного обновления DOM элементов меню
-    function updateMenuDOM() {
-      // Предполагаем, что пункты меню имеют класс .select__item и располагаются в порядке, соответствующем buildItems()
-      var items = buildItems();
-      $(".select__item").each(function(index, el) {
-         // Обновляем HTML пункта
-         $(el).html(items[index].title);
-      });
-    }
-
-    // Для каждого пункта (кроме "Свой вариант") запускаем проверку и по завершении обновляем меню
-    parsers.forEach(parser => {
+    // Для каждого пункта (кроме "Свой вариант") запускаем проверку
+    parsers.forEach(function (parser) {
       if (parser.title !== "Свой вариант") {
-        checkParser(parser).then(() => {
-          updateMenuDOM();
+        checkParser(parser).then(function () {
+          // После завершения обновляем меню вручную
+          updateMenuDOM(selectInstance);
         });
       }
     });
+  }
+
+  // Функция обновления отображаемого выбранного парсера (для заголовка)
+  function updateParserField(text) {
+    $("div[data-name='jackett_urltwo']").html(
+      `<div class="settings-folder" tabindex="0" style="padding:0!important">
+         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
+         <div style="font-size:1.2em; font-weight: bold;">
+           <div style="padding: 0.5em 0.5em; padding-top: 0;">
+             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
+               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
+             </div>
+           </div>
+         </div>
+       </div>`
+    );
   }
 
   // Добавляем параметр в настройки – кнопку "Выбрать парсер"
@@ -180,7 +197,6 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          // Обработчик для пульта – по нажатию сразу открывается меню, а проверка запускается в фоне
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
@@ -208,18 +224,4 @@
     }
   });
 
-  function updateParserField(text) {
-    $("div[data-name='jackett_urltwo']").html(
-      `<div class="settings-folder" tabindex="0" style="padding:0!important">
-         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
-         <div style="font-size:1.2em; font-weight: bold;">
-           <div style="padding: 0.5em 0.5em; padding-top: 0;">
-             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
-               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
-             </div>
-           </div>
-         </div>
-       </div>`
-    );
-  }
 })();
