@@ -1,12 +1,13 @@
 (function () {
   'use strict';
 
+  // Инициализация настроек по умолчанию
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
   Lampa.Platform.tv();
 
-  // Обновлённая функция проверки парсера с фолбэком
+  // Функция проверки отдельного парсера с гарантированным завершением (фолбэк)
   function checkParser(parser) {
     return new Promise((resolve) => {
       let resolved = false;
@@ -21,9 +22,10 @@
       const xhr = new XMLHttpRequest();
       xhr.open("GET", apiUrl, true);
       xhr.timeout = 3000;
-      xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           console.log(`Проверка ${parser.title}: статус ${xhr.status}`);
+          // Если статус 200 или (для jacred.viewbox.dev – статус 403) считаем парсер рабочим
           if (xhr.status === 200 || (parser.url === "jacred.viewbox.dev" && xhr.status === 403)) {
             parser.status = true;
           } else {
@@ -43,7 +45,7 @@
         resolveOnce();
       };
       xhr.send();
-      // Фолбэк: если ни одно событие не сработает, разрешаем промис через 3500 мс
+      // Фолбэк: если ни одно событие не сработало, через 3500 мс обновляем статус
       setTimeout(() => {
         if (!resolved) {
           console.log(`Фолбэк срабатывает для ${parser.title}`);
@@ -54,6 +56,7 @@
     });
   }
 
+  // Функция одновременной проверки всех парсеров
   function checkAllParsers() {
     const parsersToCheck = [
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -66,16 +69,12 @@
     return Promise.all(parsersToCheck.map(parser => checkParser(parser)));
   }
 
-  function showParserSelectionMenu() {
+  // Функция, открывающая меню выбора парсера с готовыми результатами проверки
+  function openParserSelectionMenu(parsersResults) {
+    // Добавляем опцию "Свой вариант" в начало списка
     let parsers = [
-      { title: "Свой вариант", url: "", apiKey: "", status: null },
-      { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
-      { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "", status: null },
-      { title: "jacred.pro",         url: "jacred.pro",         apiKey: "", status: null },
-      { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox", status: null },
-      { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
-      { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
-    ];
+      { title: "Свой вариант", url: "", apiKey: "", status: null }
+    ].concat(parsersResults);
 
     const currentSelected = Lampa.Storage.get('selected_parser');
 
@@ -83,13 +82,13 @@
       return parsers.map(parser => {
         let color, statusText;
         if (parser.status === null) {
-          color = "#cccccc"; // ещё не проверено
+          color = "#cccccc";
           statusText = " (Проверяется)";
         } else if (parser.status === true) {
-          color = "#64e364"; // работает
+          color = "#64e364";
           statusText = " (Работает)";
         } else {
-          color = "#ff2121"; // не работает
+          color = "#ff2121";
           statusText = " (Не работает)";
         }
         let activeMark = "";
@@ -104,7 +103,7 @@
       });
     }
 
-    let selectInstance = Lampa.Select.show({
+    Lampa.Select.show({
       title: "Меню смены парсера",
       items: buildItems(),
       onBack: function () {
@@ -124,7 +123,7 @@
         console.log("Выбран парсер:", item.parser);
         updateParserField(item.title);
         Lampa.Select.hide();
-        setTimeout(function(){
+        setTimeout(function () {
           Lampa.Settings.update();
           $("div[data-name='jackett_urltwo']").attr("tabindex", "0").focus();
         }, 300);
@@ -137,36 +136,9 @@
         }
       }
     });
-
-    // Запускаем асинхронную проверку парсеров
-    checkAllParsers().then(results => {
-      results.forEach(checkedParser => {
-        let parserItem = parsers.find(p => p.title === checkedParser.title);
-        if (parserItem) {
-          parserItem.status = checkedParser.status;
-        }
-      });
-      if (selectInstance && selectInstance.update) {
-        selectInstance.update({ items: buildItems() });
-      }
-    });
   }
 
-  function updateParserField(text) {
-    $("div[data-name='jackett_urltwo']").html(
-      `<div class="settings-folder" tabindex="0" style="padding:0!important">
-         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
-         <div style="font-size:1.2em; font-weight: bold;">
-           <div style="padding: 0.5em 0.5em; padding-top: 0;">
-             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
-               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
-             </div>
-           </div>
-         </div>
-       </div>`
-    );
-  }
-
+  // Обработчик нажатия на кнопку "Выбрать парсер"
   Lampa.SettingsApi.addParam({
     component: "parser",
     param: {
@@ -185,15 +157,15 @@
     },
     field: {
       name: `<div class="settings-folder" style="padding:0!important">
-                <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
-                <div style="font-size:1.0em">
-                  <div style="padding: 0.3em 0.3em; padding-top: 0;">
-                    <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
-                      <div style="line-height: 0.3;">Выбрать парсер</div>
-                    </div>
-                  </div>
-                </div>
-              </div>`,
+                 <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
+                 <div style="font-size:1.0em">
+                   <div style="padding: 0.3em 0.3em; padding-top: 0;">
+                     <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
+                       <div style="line-height: 0.3;">Выбрать парсер</div>
+                     </div>
+                   </div>
+                 </div>
+               </div>`,
       description: "Нажмите для выбора парсера из списка"
     },
     onChange: function (value) {
@@ -208,13 +180,17 @@
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
+          // При нажатии кнопки запускается проверка парсеров, а затем открывается меню
           elem.off("click hover:enter keydown").on("click hover:enter keydown", function (e) {
             if (
               e.type === "click" ||
               e.type === "hover:enter" ||
               (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))
             ) {
-              showParserSelectionMenu();
+              // Запускаем проверку только после нажатия
+              checkAllParsers().then(function (results) {
+                openParserSelectionMenu(results);
+              });
             }
           });
           const current = Lampa.Storage.get('selected_parser');
@@ -234,5 +210,21 @@
       }, 5);
     }
   });
+
+  // Функция обновления отображаемого выбранного парсера
+  function updateParserField(text) {
+    $("div[data-name='jackett_urltwo']").html(
+      `<div class="settings-folder" tabindex="0" style="padding:0!important">
+         <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
+         <div style="font-size:1.2em; font-weight: bold;">
+           <div style="padding: 0.5em 0.5em; padding-top: 0;">
+             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
+               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
+             </div>
+           </div>
+         </div>
+       </div>`
+    );
+  }
 
 })();
