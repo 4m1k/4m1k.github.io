@@ -305,9 +305,17 @@
           };
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
-		        filter_sources.sort(function(a, b) {
-            if (a === 'filmixtv') return 1;  // a - filmix, ставим его позже
-            if (b === 'filmixtv') return -1; // b - filmix, ставим его позже
+        var lowPriorityBalancers = ['filmix', 'filmixtv', 'kinopub'];
+
+        filter_sources.sort(function(a, b) {
+
+            if (a === 'zetflix') return -1;
+            if (b === 'zetflix') return 1;
+
+            var aLow = lowPriorityBalancers.indexOf(a) !== -1;
+            var bLow = lowPriorityBalancers.indexOf(b) !== -1;
+            if (aLow && !bLow) return 1;
+            if (bLow && !aLow) return -1;
             return 0;
         });
         if (filter_sources.length) {
@@ -317,20 +325,22 @@
           } else {
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
-		              if (balanser === 'filmix' && filter_sources.length > 1) {
+            if (lowPriorityBalancers.indexOf(balanser) !== -1 && filter_sources.some(function(item) {
+                return lowPriorityBalancers.indexOf(item) === -1;
+            })) {
                 balanser = filter_sources.find(function(item) {
-                    return item !== 'filmixtv';
+                    return lowPriorityBalancers.indexOf(item) === -1;
                 });
             }
-          if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
-          source = sources[balanser].url;
-          resolve(json);
+            if (!sources[balanser]) balanser = filter_sources[0];
+            if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
+            source = sources[balanser].url;
+            resolve(json);
         } else {
-          reject();
+            reject();
         }
-      });
-    };
+    });
+};
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
