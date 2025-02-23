@@ -60,12 +60,12 @@
       name: 'jacred.xyz',
       settings: {
         url: 'jacred.xyz',
-        key: '1',
+        key: '',
         parser_torrent_type: 'jackett'
       }
     }, {
-      base: 'trs_my_to',
-      name: 'Trs.my.to',
+      base: 'trs.my.to:9117',
+      name: 'trs.my.to:9117',
       settings: {
         url: 'trs.my.to:9117',
         key: '',
