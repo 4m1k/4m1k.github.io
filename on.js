@@ -311,7 +311,6 @@
 
             if (a === 'zetflix') return -1;
             if (b === 'zetflix') return 1;
-
             var aLow = lowPriorityBalancers.indexOf(a) !== -1;
             var bLow = lowPriorityBalancers.indexOf(b) !== -1;
             if (aLow && !bLow) return 1;
@@ -336,8 +335,6 @@
             if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
             source = sources[balanser].url;
             resolve(json);
-        } else {
-            reject();
         }
     });
 };
