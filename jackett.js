@@ -39,12 +39,7 @@
   function showParserSelectionMenu() {
     checkAllParsers().then(results => {
 
-      results.unshift({
-        title: "Свой вариант",
-        url: "",
-        apiKey: "",
-        status: null 
-      });
+
 
       const currentSelected = Lampa.Storage.get('selected_parser');
 
