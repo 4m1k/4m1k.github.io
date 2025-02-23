@@ -1,8 +1,6 @@
 (function () {
   'use strict';
-
-  Lampa.Platform.tv();
-
+  
   function checkParser(parser) {
     return new Promise((resolve) => {
       const protocol = location.protocol === "https:" ? "https://" : "http://";
