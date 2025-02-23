@@ -1319,9 +1319,9 @@
       this.loading(false);
     };
     this.noConnectToServer = function(er) {
-	     // Если сообщение содержит оригинальный текст, заменяем его на новый
       if (er && er.msg && er.msg.indexOf('@Abcinema_bot') !== -1) {
-        er.msg = 'Поиск не дал результатов'; // Ваш новый текст
+        er.msg = 'Поиск не дал результатов';
+		}
       var html = Lampa.Template.get('lampac_does_not_answer', {});
       html.find('.online-empty__buttons').remove();
       html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
