@@ -992,12 +992,12 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
 						},
 					field: {
-						name: 'Дополнительные источники',
-						description: 'Плагин добавляет дополнительные источники для получения информации о фильмах'
+				name: 'Дополнительный источник Кинопоиск (KP)',
+						description: 'Плагин добавляет источник Кинопоиск (KP) для получения информации о фильмах'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://4m1k.github.io/source.js', 'Дополнительные Источники', '@lampa', 'New_source');
+						       itemON('https://4m1k.github.io/source.js', 'Источник Кинопоиск (KP)', '@lampa', 'New_source');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://4m1k.github.io/source.js";
@@ -1052,7 +1052,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-						       itemON('https://4m1k.github.io/start.js', 'Start', '@scabrum', 'Start');
+						       itemON('https://4m1k.github.io/start.js', 'Start', '@lampa', 'Start');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://4m1k.github.io/start.js";
