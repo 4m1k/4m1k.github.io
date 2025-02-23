@@ -3,8 +3,8 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://akter-black.com/',
-    apn: ''
+    localhost: 'https://lam.akter-black.com/',
+    apn: '10'
   };
 
   function BlazorNet() {
@@ -313,7 +313,7 @@
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
           if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
+          if (!sources[balanser].show && !object.lampac_custom_select && balanser !== 'filmix' && balanser !== 'kinopub') balanser = filter_sources[0];
           source = sources[balanser].url;
           resolve(json);
         } else {
