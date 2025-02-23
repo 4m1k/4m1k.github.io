@@ -29,11 +29,11 @@
   function checkAllParsers() {
     const parsers = [
       { title: "79.137.204.8:2601",           url: "79.137.204.8:2601",  apiKey: "" },
-      { title: "jacred.xyz",        url: "jacred.xyz",         apiKey: "" },
-      { title: "jacred.pro",        url: "jacred.pro",         apiKey: "" },
-      { title: "jacred.viewbox.dev",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
-      { title: "trs.my.to:9117",  url: "trs.my.to:9117",      apiKey: "" },
-      { title: "altjacred.duckdns.org",     url: "altjacred.duckdns.org", apiKey: "" }
+      { title: "Jacred XYZ",        url: "jacred.xyz",         apiKey: "" },
+      { title: "Jacred PRO",        url: "jacred.pro",         apiKey: "" },
+      { title: "Viewbox",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
+      { title: "Trs my to",  url: "trs.my.to:9117",      apiKey: "" },
+      { title: "Duckdns",     url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
