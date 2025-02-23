@@ -306,8 +306,8 @@
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
 		        filter_sources.sort(function(a, b) {
-            if (a === 'filmix') return 1;  // a - filmix, ставим его позже
-            if (b === 'filmix') return -1; // b - filmix, ставим его позже
+            if (a === 'filmixtv') return 1;  // a - filmix, ставим его позже
+            if (b === 'filmixtv') return -1; // b - filmix, ставим его позже
             return 0;
         });
         if (filter_sources.length) {
