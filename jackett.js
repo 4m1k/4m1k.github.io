@@ -3,55 +3,51 @@
 
     Lampa.Platform.tv();
 
-    // Список парсеров из твоего кода
-    const parsers = [
-        { title: "Lampa32", url: "79.137.204.8:2601", apiKey: "" },
-        { title: "Jacred.xyz", url: "jacred.xyz", apiKey: "" },
-        { title: "Jacred Pro", url: "jacred.pro", apiKey: "" },
-        { title: "Viewbox", url: "jacred.viewbox.dev", apiKey: "viewbox" },
-        { title: "JAOS My To Jacred", url: "trs.my.to:9117", apiKey: "" },
-        { title: "Johnny Jacred", url: "altjacred.duckdns.org", apiKey: "" }
+    const parsersInfo = [
+        { name: "Lampa32", url: "79.137.204.8:2601", key: "" },
+        { name: "Jacred.xyz", url: "jacred.xyz", key: "" },
+        { name: "Jacred Pro", url: "jacred.pro", key: "" },
+        { name: "Viewbox", url: "jacred.viewbox.dev", key: "viewbox" },
+        { name: "JAOS My To Jacred", url: "trs.my.to:9117", key: "" },
+        { name: "Johnny Jacred", url: "altjacred.duckdns.org", key: "" }
     ];
 
     const proto = location.protocol === "https:" ? "https://" : "http://";
-    let cache = {}; // Кеширование запросов
+    let cache = {};
 
-    function checkParser(parser) {
-        return new Promise((resolve) => {
-            const apiUrl = `${proto}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.apiKey}`;
-            if (cache[apiUrl]) {
-                parser.status = cache[apiUrl].status;
-                return resolve(parser);
+    function checkAlive() {
+        const requests = parsersInfo.map(parser => {
+            const myLink = `${proto}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.key}`;
+            if (cache[myLink]) {
+                return Promise.resolve();
             }
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", apiUrl, true);
-            xhr.timeout = 3000;
-            xhr.onload = function () {
-                parser.status = xhr.status === 200;
-                cache[apiUrl] = { status: parser.status };
-                resolve(parser);
-            };
-            xhr.onerror = xhr.ontimeout = function () {
-                parser.status = false;
-                cache[apiUrl] = { status: parser.status };
-                resolve(parser);
-            };
-            xhr.send();
+            return new Promise(resolve => {
+                $.ajax({
+                    url: myLink,
+                    method: 'GET',
+                    success: function (response, textStatus, xhr) {
+                        const color = xhr.status === 200 ? '1aff00' : 'ff2e36';
+                        cache[myLink] = { color };
+                    },
+                    error: function () {
+                        cache[myLink] = { color: 'ff2e36' };
+                    },
+                    complete: function () {
+                        resolve();
+                    }
+                });
+            });
         });
-    }
-
-    function checkAllParsers() {
-        return Promise.all(parsers.map(parser => checkParser(parser)));
+        return Promise.all(requests);
     }
 
     function showParserSelectionMenu() {
-        checkAllParsers().then(results => {
-            results.unshift({ title: "Свой вариант", url: "", apiKey: "", status: null });
+        checkAlive().then(() => {
             const currentSelected = Lampa.Storage.get('selected_parser');
-            const items = results.map(parser => {
-                let color = parser.title !== "Свой вариант" ? (parser.status ? "#64e364" : "#ff2121") : "inherit";
-                let activeMark = parser.title === currentSelected ? '<span style="color: #4285f4; margin-right: 5px;">✔</span>' : '';
-                return { title: `${activeMark}<span style="color: ${color};">${parser.title}</span>`, parser };
+            const items = parsersInfo.map(parser => {
+                const color = cache[`${proto}${parser.url}/api/v2.0/indexers/status:healthy/results?apikey=${parser.key}`]?.color || 'inherit';
+                const activeMark = parser.name === currentSelected ? '<span style="color: #4285f4; margin-right: 5px;">✔</span>' : '';
+                return { title: `${activeMark}<span style="color: #${color};">${parser.name}</span>`, parser };
             });
             Lampa.Select.show({
                 title: "Меню смены парсера",
@@ -59,9 +55,9 @@
                 onBack: () => Lampa.Controller.toggle("settings_component"),
                 onSelect: item => {
                     Lampa.Storage.set('jackett_url', item.parser.url);
-                    Lampa.Storage.set('jackett_key', item.parser.apiKey);
-                    Lampa.Storage.set('selected_parser', item.parser.title);
-                    updateParserField(item.parser.title);
+                    Lampa.Storage.set('jackett_key', item.parser.key);
+                    Lampa.Storage.set('selected_parser', item.parser.name);
+                    updateParserField(item.parser.name);
                     Lampa.Controller.toggle("settings_component");
                     Lampa.Settings.update();
                 }
@@ -88,8 +84,8 @@
         param: {
             name: "jackett_urltwo",
             type: "select",
-            values: Object.fromEntries(parsers.map(p => [p.url, p.title])),
-            default: parsers[0]?.url || 'no_parser'
+            values: Object.fromEntries(parsersInfo.map(p => [p.url, p.name])),
+            default: parsersInfo[0]?.url || 'no_parser'
         },
         field: {
             name: `<div class="settings-folder" style="padding:0!important">
