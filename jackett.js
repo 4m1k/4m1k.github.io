@@ -1,13 +1,6 @@
 (function () {
   'use strict';
 
-  elem.off("click hover:enter").on("click hover:enter", function(e) {
-    // Если событие keydown, проверяем, что нажата клавиша Enter
-    if (e.type === "click" || (e.type === "hover:enter") || (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))) {
-        showParserSelectionMenu();
-    }
-});
-
   if (!Lampa.Storage.get("parser_torrent_type")) {
     Lampa.Storage.set("parser_torrent_type", "jackett");
   }
@@ -39,12 +32,12 @@
 
   function checkAllParsers() {
     const parsers = [
-      { title: "79.137.204.8:2601",           url: "79.137.204.8:2601",  apiKey: "" },
-      { title: "jacred.xyz",        url: "jacred.xyz",         apiKey: "" },
-      { title: "jacred.pro",        url: "jacred.pro",         apiKey: "" },
-      { title: "jacred.viewbox.dev",           url: "jacred.viewbox.dev", apiKey: "viewbox" },
-      { title: "trs.my.to:9117",  url: "trs.my.to:9117",      apiKey: "" },
-      { title: "altjacred.duckdns.org",     url: "altjacred.duckdns.org", apiKey: "" }
+      { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
+      { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "" },
+      { title: "jacred.pro",         url: "jacred.pro",         apiKey: "" },
+      { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
+      { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "" },
+      { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
     ];
     return Promise.all(parsers.map(parser => checkParser(parser)));
   }
@@ -112,24 +105,22 @@
     });
   }
 
-function updateParserField(text) {
-  $("div[data-name='jackett_urltwo']").html(
-    `<div class="settings-folder" style="padding:0!important">
-       <div style="width:1.3em;height:1.3em;padding-right:.1em">
-         <!-- SVG-иконка при необходимости -->
-       </div>
-       <div style="font-size:1.2em; font-weight: bold;">
-         <div style="padding: 0.5em 0.5em; padding-top: 0;">
-           <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
-             <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
+  function updateParserField(text) {
+    $("div[data-name='jackett_urltwo']").html(
+      `<div class="settings-folder" style="padding:0!important">
+         <div style="width:1.3em;height:1.3em;padding-right:.1em">
+           <!-- SVG-иконка при необходимости -->
+         </div>
+         <div style="font-size:1.2em; font-weight: bold;">
+           <div style="padding: 0.5em 0.5em; padding-top: 0;">
+             <div style="background: #d99821; padding: 0.7em; border-radius: 0.5em; border: 4px solid #d99821;">
+               <div style="line-height: 0.3; color: black; text-align: center;">${text}</div>
+             </div>
            </div>
          </div>
-       </div>
-     </div>`
-  );
-}
-
-
+       </div>`
+    );
+  }
 
   Lampa.SettingsApi.addParam({
     component: "parser",
@@ -174,8 +165,15 @@ function updateParserField(text) {
           elem.show();
           $('.settings-param__name', elem).css("color", "ffffff");
           $("div[data-name='jackett_urltwo']").insertAfter("div[data-name='parser_torrent_type']");
-          elem.off("click").on("click", function () {
-            showParserSelectionMenu();
+          // Изменённый обработчик для поддержки пульта:
+          elem.off("click hover:enter keydown").on("click hover:enter keydown", function(e) {
+            if (
+              e.type === "click" ||
+              e.type === "hover:enter" ||
+              (e.type === "keydown" && (e.key === "Enter" || e.keyCode === 13))
+            ) {
+              showParserSelectionMenu();
+            }
           });
           const current = Lampa.Storage.get('selected_parser');
           if (current) {
