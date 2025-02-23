@@ -6,7 +6,7 @@
   }
   Lampa.Platform.tv();
 
-  // Функция проверки одного парсера с гарантией разрешения промиса (включая фолбэк)
+  // Функция проверки одного парсера (с фолбэком)
   function checkParser(parser) {
     return new Promise((resolve) => {
       let resolved = false;
@@ -41,6 +41,7 @@
         resolveOnce();
       };
       xhr.send();
+      // Фолбэк: через 3500 мс
       setTimeout(() => {
         if (!resolved) {
           parser.status = false;
@@ -50,10 +51,10 @@
     });
   }
 
-  // Функция для генерации массива пунктов меню (buildItems)
+  // Функция для формирования массива пунктов меню по данным parsers и выбранному значению
   function buildItems(parsers, currentSelected) {
     return parsers.map(parser => {
-      let color = "#cccccc"; // нейтральный (пока не проверен)
+      let color = "#cccccc"; // нейтральный (status === null)
       if (parser.status === true) {
         color = "#64e364";
       } else if (parser.status === false) {
@@ -63,16 +64,25 @@
       if (parser.title === currentSelected) {
         activeMark = '<span style="color: #4285f4; margin-right: 5px;">&#10004;</span>';
       }
-      return { 
+      return {
         title: activeMark + `<span style="color: ${color} !important;">${parser.title}</span>`,
-        parser: parser 
+        parser: parser
       };
     });
   }
 
-  // Функция, которая открывает меню сразу и затем запускает асинхронную проверку
+  // Функция для ручного обновления DOM пунктов меню через jQuery
+  function updateMenuDOM(selectInstance, parsers, currentSelected) {
+    var items = buildItems(parsers, currentSelected);
+    // Попытка найти пункты меню – скорректируйте селектор при необходимости
+    selectInstance.$el.find('.select__list .select__item').each(function (index) {
+      $(this).html(items[index].title);
+    });
+  }
+
+  // Функция открытия меню выбора парсера с обновлением в реальном времени
   function openParserSelectionMenu() {
-    // Начальный массив – все пункты с status = null
+    // Начальный массив: все пункты с status = null
     let parsers = [
       { title: "Свой вариант", url: "", apiKey: "", status: null },
       { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "", status: null },
@@ -82,19 +92,10 @@
       { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "", status: null },
       { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "", status: null }
     ];
+
     const currentSelected = Lampa.Storage.get('selected_parser');
 
-    // Функция обновления DOM элементов меню, используя $el внутри selectInstance
-    function updateMenuDOM(selectInstance) {
-      var newItems = buildItems(parsers, currentSelected);
-      // Если ваш список пунктов имеет другой селектор, измените '.select__item'
-      selectInstance.$el.find('.select__item').each(function (index) {
-        // Обновляем HTML пункта
-        $(this).html(newItems[index].title);
-      });
-    }
-
-    // Открываем меню сразу с исходными данными
+    // Открываем меню сразу с начальными данными
     var selectInstance = Lampa.Select.show({
       title: "Меню смены парсера",
       items: buildItems(parsers, currentSelected),
@@ -128,18 +129,26 @@
       }
     });
 
-    // Для каждого пункта (кроме "Свой вариант") запускаем проверку
+    // Запускаем проверки для каждого пункта (кроме "Свой вариант") и обновляем меню по мере завершения
     parsers.forEach(function (parser) {
       if (parser.title !== "Свой вариант") {
         checkParser(parser).then(function () {
-          // После завершения обновляем меню вручную
-          updateMenuDOM(selectInstance);
+          updateMenuDOM(selectInstance, parsers, currentSelected);
         });
       }
     });
+
+    // Если проверки выполняются не одновременно, можно запустить периодическое обновление
+    var updateInterval = setInterval(function () {
+      updateMenuDOM(selectInstance, parsers, currentSelected);
+      // Если все пункты (кроме "Свой вариант") проверены, останавливаем обновление
+      if (parsers.filter(p => p.title !== "Свой вариант").every(p => p.status !== null)) {
+        clearInterval(updateInterval);
+      }
+    }, 500);
   }
 
-  // Функция обновления отображаемого выбранного парсера (для заголовка)
+  // Функция обновления заголовка выбранного парсера
   function updateParserField(text) {
     $("div[data-name='jackett_urltwo']").html(
       `<div class="settings-folder" tabindex="0" style="padding:0!important">
