@@ -76,7 +76,6 @@
             Lampa.Storage.set('jackett_key', item.parser.apiKey);
             Lampa.Storage.set('selected_parser', item.parser.title);
 
-            Lampa.Storage.set("parser_torrent_type", "jackett");
           }
           console.log("Выбран парсер:", item.parser);
           updateParserField(item.title);
