@@ -1,146 +1,127 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    function translate() {
-      Lampa.Lang.add({
-        lme_parser: {
-          ru: 'Каталог парсеров',
-          en: 'Parsers catalog',
-          uk: 'Каталог парсерів',
-          zh: '解析器目录'
-        },
-        lme_parser_description: {
-          ru: 'Нажмите для выбора парсера из ',
-          en: 'Click to select a parser from the ',
-          uk: 'Натисніть для вибору парсера з ',
-          zh: '单击以从可用的 '
-        }
-      });
-    }
-    
-    var Lang = {
-      translate: translate
-    };
+  if (!Lampa.Storage.get("parser_torrent_type")) {
+    Lampa.Storage.set("parser_torrent_type", "jackett");
+  }
 
-    var parsersInfo = [
-      { base: 'jacred_xyz', name: 'Jacred.xyz', settings: { url: 'jacred.xyz', key: '', parser_torrent_type: 'jackett' } },
-      { base: 'jacred_pro', name: 'Jacred.pro', settings: { url: 'jacred.pro', key: '', parser_torrent_type: 'jackett' } },
-      { base: 'jacred_viewbox_dev', name: 'Viewbox', settings: { url: 'jacred.viewbox.dev', key: 'viewbox', parser_torrent_type: 'jackett' } }
-    ];
+  var parsersInfo = [
+    { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
+    { title: "jacred.xyz", url: "jacred.xyz", apiKey: "" },
+    { title: "jacred.pro", url: "jacred.pro", apiKey: "" },
+    { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
+    { title: "trs.my.to:9117", url: "trs.my.to:9117", apiKey: "" },
+    { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
+  ];
 
-    var proto = location.protocol === "https:" ? 'https://' : 'http://';
-    var cache = {};
-
-    function checkAlive() {
-      var requests = parsersInfo.map(function (parser) {
-        var myLink = proto + parser.settings.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.settings.key;
-
-        var mySelector = $('div.selectbox-item__title').filter(function () {
-          return $(this).text().trim() === parser.name;
-        });
-
-        if (cache[myLink]) {
-          $(mySelector).css('color', cache[myLink].color);
-          return Promise.resolve();
-        }
-        
-        return new Promise(function (resolve) {
-          $.ajax({
-            url: myLink,
-            method: 'GET',
-            success: function (response, textStatus, xhr) {
-              var color = xhr.status === 200 ? '1aff00' : 'ff2e36';
-              $(mySelector).css('color', color);
-              cache[myLink] = { color: color };
-            },
-            error: function () {
-              $(mySelector).css('color', 'ff2e36');
-            },
-            complete: function () {
-              resolve();
-            }
-          });
-        });
-      });
-      return Promise.all(requests);
-    }
-
-    function changeParser(value) {
-      var selectedParser = parsersInfo.find(function (parser) {
-        return parser.base === value;
-      });
-      if (selectedParser) {
-        Lampa.Storage.set("jackett_url", selectedParser.settings.url);
-        Lampa.Storage.set("jackett_key", selectedParser.settings.key);
-        Lampa.Storage.set("parser_torrent_type", selectedParser.settings.parser_torrent_type);
-        console.log("Выбранный парсер:", selectedParser);
-      } else {
-        console.warn("Парсер не найден");
-      }
-    }
-
-    Lampa.Controller.listener.follow('toggle', function (e) {
-      if (e.name === 'select') {
-        checkAlive();
-      }
+  function checkParser(parser) {
+    return new Promise((resolve) => {
+      const protocol = location.protocol === "https:" ? "https://" : "http://";
+      const apiUrl = protocol + parser.url + "/api/v2.0/indexers/status:healthy/results?apikey=" + parser.apiKey;
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", apiUrl, true);
+      xhr.timeout = 3000;
+      xhr.onload = function () {
+        parser.status = (xhr.status === 200);
+        resolve(parser);
+      };
+      xhr.onerror = function () {
+        parser.status = false;
+        resolve(parser);
+      };
+      xhr.ontimeout = function () {
+        parser.status = false;
+        resolve(parser);
+      };
+      xhr.send();
     });
-    
-    function parserSetting() {
-      var s_values = parsersInfo.reduce(function (prev, _ref) {
-        var base = _ref.base, name = _ref.name;
-        prev[base] = name;
-        return prev;
-      }, { no_parser: 'Не выбран' });
+  }
 
-      Lampa.SettingsApi.addParam({
-        component: 'parser',
-        param: {
-          name: 'lme_url_two',
-          type: 'select',
-          values: s_values,
-          "default": 'no_parser'
-        },
-        field: {
-          name: "<div class=\"settings-folder\" style=\"padding:0!important\"><div style=\"font-size:1.0em\">".concat(Lampa.Lang.translate('lme_parser'), "</div></div>"),
-          description: "".concat(Lampa.Lang.translate('lme_parser_description'), " ").concat(parsersInfo.length)
-        },
-        onChange: function onChange(value) {
-          changeParser(value);
+  function checkAllParsers() {
+    return Promise.all(parsersInfo.map(parser => checkParser(parser)));
+  }
+
+  function showParserSelectionMenu() {
+    checkAllParsers().then(results => {
+      results.unshift({ title: "Свой вариант", url: "", apiKey: "", status: null });
+      const currentSelected = Lampa.Storage.get('selected_parser');
+      const items = results.map(parser => {
+        let color = parser.status ? "#64e364" : "#ff2121";
+        let activeMark = parser.title === currentSelected ? '<span style="color: #4285f4; margin-right: 5px;">✔</span>' : "";
+        return {
+          title: activeMark + `<span style="color: ${color};">${parser.title}</span>`,
+          parser: parser
+        };
+      });
+      Lampa.Select.show({
+        title: "Меню смены парсера",
+        items: items,
+        onBack: () => Lampa.Controller.toggle("settings_component"),
+        onSelect: (item) => {
+          console.log("Выбор парсера:", item.parser);
+          Lampa.Storage.set('jackett_url', item.parser.url);
+          Lampa.Storage.set('jackett_key', item.parser.apiKey);
+          Lampa.Storage.set('selected_parser', item.parser.title);
+          Lampa.Storage.set("parser_torrent_type", "jackett");
+          updateParserField(item.parser.url);
+          Lampa.Controller.toggle("settings_component");
           Lampa.Settings.update();
-        },
-        onRender: function onRender(item) {
-          setTimeout(function () {
-            $('div[data-children="parser"]').on('hover:enter', function () {
-              Lampa.Settings.update();
-            });
-            if (Lampa.Storage.field('parser_use')) {
-              item.show();
-              $('div[data-name="lme_url_two"]').insertAfter('div[data-children="parser"]');
-            } else {
-              item.hide();
-            }
-          });
         }
       });
-    }
+    });
+  }
 
-    var Parser = {
-      parserSetting: parserSetting
-    };
+  function updateParserField(url) {
+    const inputField = document.querySelector("div[data-name='jackett_url'] input");
+    if (inputField) {
+      inputField.value = url;
+      inputField.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
 
-    function add() {
-      Lang.translate();
-      Parser.parserSetting();
+  Lampa.SettingsApi.addParam({
+    component: "parser",
+    param: {
+      name: "jackett_urltwo",
+      type: "select",
+      values: {
+        no_parser: "Свой вариант",
+        jac_lampa32_ru: "79.137.204.8:2601",
+        jacred_xyz: "jacred.xyz",
+        jacred_my_to: "jacred.pro",
+        jacred_viewbox_dev: "jacred.viewbox.dev",
+        spawn_jacred: "trs.my.to:9117",
+        altjacred_duckdns_org: "altjacred.duckdns.org"
+      },
+      default: 'jacred_xyz'
+    },
+    field: {
+      name: `<div class="settings-folder" style="padding:0!important">
+                <div style="width:1.3em;height:1.3em;padding-right:.1em"></div>
+                <div style="font-size:1.0em">
+                  <div style="padding: 0.3em 0.3em; padding-top: 0;">
+                    <div style="background: #d99821; padding: 0.5em; border-radius: 0.4em; border: 3px solid #d99821;">
+                      <div style="line-height: 0.3;">Выбрать парсер</div>
+                    </div>
+                  </div>
+                </div>
+              </div>`,
+      description: "Нажмите для выбора парсера из списка"
+    },
+    onChange: (value) => {
+      Lampa.Settings.update();
+    },
+    onRender: (elem) => {
+      setTimeout(() => {
+        document.querySelector("div[data-children='parser']").addEventListener("mouseenter", () => Lampa.Settings.update());
+        if (Lampa.Storage.field("parser_use")) {
+          elem.style.display = "block";
+          document.querySelector("div[data-name='jackett_urltwo']").insertAdjacentElement("afterend", document.querySelector("div[data-name='parser_torrent_type']"));
+          elem.addEventListener("click", () => showParserSelectionMenu());
+        } else {
+          elem.style.display = "none";
+        }
+      }, 5);
     }
-    
-    function startPlugin() {
-      window.plugin_lme_ready = true;
-      if (window.appready) add(); else {
-        Lampa.Listener.follow('app', function (e) {
-          if (e.type === 'ready') add();
-        });
-      }
-    }
-    
-    if (!window.plugin_lme_ready) startPlugin();
+  });
 })();
