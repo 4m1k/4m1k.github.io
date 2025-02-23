@@ -187,18 +187,18 @@
               card_type: 'true',
               page: 1,
             });
-          } else if (cleanTitle === 'Wink') {
-            Lampa.Activity.push({
-              url: 'discover/tv?with_networks=5806&sort_by=first_air_date.desc',
-              title: 'Wink',
-              networks: '5806',
-              sort_by: 'first_air_date.desc',
-              component: 'category_full',
-              source: 'tmdb',
-              card_type: 'true',
-              page: 1,
-            });
-          } else if (cleanTitle === 'OKKO') {
+} else if (cleanTitle === 'Wink') {
+  Lampa.Activity.push({
+    url: 'discover/tv?with_networks=6000&sort_by=popularity.desc',
+    title: 'Wink',
+    networks: '6000',
+    sort_by: 'popularity.desc',
+    component: 'category_full',
+    source: 'tmdb',
+    card_type: 'true',
+    page: 1,
+  });
+} else if (cleanTitle === 'OKKO') {
             Lampa.Activity.push({
               url: 'discover/tv?with_networks=806&sort_by=first_air_date.desc',
               title: 'OKKO',
