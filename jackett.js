@@ -1,236 +1,117 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    function translate() {
-      Lampa.Lang.add({
-        lme_parser: {
-          ru: 'Каталог парсеров',
-          en: 'Parsers catalog',
-          uk: 'Каталог парсерів',
-          zh: '解析器目录' // Chinese translation
-        },
-        lme_parser_description: {
-          ru: 'Нажмите для выбора парсера из ',
-          en: 'Click to select a parser from the ',
-          uk: 'Натисніть для вибору парсера з ',
-          zh: '单击以从可用的 '
-        },
-        lme_pubtorr: {
-          ru: 'Каталог TorrServer',
-          en: 'TorrServer catalog',
-          uk: 'Каталог TorrServer',
-          zh: '解析器目录' // Chinese translation
-        },
-        lme_pubtorr_description: {
-          ru: 'Бесплатные серверы от проекта LME',
-          en: 'Free servers from the LME project',
-          uk: 'Безкоштовні сервери від проєкту LME',
-          zh: '来自 LME 项目的免费服务器 '
-        },
-        lme_pubtorr_firstrun: {
-          "ru": "Привет! Ты установил плагин LME PubTorr, учти что если стоит Mods's то в разделе парсеров будет ошибка, которая не влияет на работу. Хочешь избавиться - оставь или LME PubTorr или Mods's.",
-          "en": "Hello! You have installed the LME PubTorr plugin. Note that if Mods's is enabled, there will be an error in the parsers section that does not affect functionality. If you want to get rid of it, keep either LME PubTorr or Mods's.",
-          "uk": "Привіт! Ви встановили плагін LME PubTorr, врахуйте, що якщо активовано Mods's, то в розділі парсерів буде помилка, яка не впливає на роботу. Якщо хочете позбутися - залиште або LME PubTorr, або Mods's.",
-          "zh": "你好！你安装了LME PubTorr插件，请注意，如果启用了Mods's，解析器部分将出现错误，但这不会影响功能。如果你想摆脱它，请保留LME PubTorr或Mods's。"
-        }
-      });
-    }
-    var Lang = {
-      translate: translate
-    };
+  Lampa.Platform.tv();
 
-    var parsersInfo = [{
-      base: 'Lampa32',
-      name: 'Lampa32',
-      settings: {
-        url: '79.137.204.8:2601',
-        key: '',
-        parser_torrent_type: 'jackett'
-      }
-    }, {
-      base: 'jacred_viewbox_dev',
-      name: 'Viewbox',
-      settings: {
-        url: 'jacred.viewbox.dev',
-        key: 'viewbox',
-        parser_torrent_type: 'jackett'
-      }
-    }, {
-      base: 'jacred.xyz',
-      name: 'jacred.xyz',
-      settings: {
-        url: 'jacred.xyz',
-        key: '',
-        parser_torrent_type: 'jackett'
-      }
-    }, {
-      base: 'trs.my.to:9117',
-      name: 'trs.my.to:9117',
-      settings: {
-        url: 'trs.my.to:9117',
-        key: '',
-        parser_torrent_type: 'jackett'
-      }
-    }, {
-      base: 'jacred.pro',
-      name: 'jacred.pro',
-      settings: {
-        url: 'jacred.pro',
-        key: '',
-        parser_torrent_type: 'jackett'
-      }
-    }, {
-      base: 'altjacred.duckdns.org',
-      name: 'altjacred.duckdns.org',
-      settings: {
-        url: 'altjacred.duckdns.org',
-        key: '',
-        parser_torrent_type: 'jackett'
-      }
-    }];
-
-    var proto = location.protocol === "https:" ? 'https://' : 'http://';
-
-    // Объект для хранения кеша
-    var cache = {};
-    function checkAlive(type) {
-      if (type === 'parser') {
-        var requests = parsersInfo.map(function (parser) {
-          var protocol = parser.base === "lme_jackett" || parser.base === "lme_prowlarr" ? "" : proto;
-          var endPoint = parser.settings.parser_torrent_type === 'prowlarr' ? '/api/v1/health?apikey=' + parser.settings.key : "/api/v2.0/indexers/status:healthy/results?apikey=".concat(parser.settings.url === 'spawn.pp.ua:59117' ? '2' : parser.base === 'lme_jackett' ? parser.settings.key : '');
-          var myLink = protocol + parser.settings.url + endPoint;
-
-          // Используем jQuery для поиска элемента с текстом имени парсера
-          var mySelector = $('div.selectbox-item__title').filter(function () {
-            return $(this).text().trim() === parser.name;
-          });
-
-          // Проверяем наличие кеша
-          if (cache[myLink]) {
-            console.log('Using cached response for', myLink, cache[myLink]);
-            var color = cache[myLink].color;
-            $(mySelector).css('color', color);
-            return Promise.resolve();
+  (function () {
+    var _0x5e29f6 = function () {
+      var _0x5801f7 = true;
+      return function (_0x41c9fa, _0x51fa86) {
+        var _0x2763c1 = _0x5801f7 ? function () {
+          if (_0x51fa86) {
+            var _0x21967a = _0x51fa86.apply(_0x41c9fa, arguments);
+            _0x51fa86 = null;
+            return _0x21967a;
           }
-          return new Promise(function (resolve) {
-            //if ($(mySelector).text() !== 'Не выбран') return resolve();
+        } : function () {};
+        _0x5801f7 = false;
+        return _0x2763c1;
+      };
+    }();
 
-            $.ajax({
-              url: myLink,
-              method: 'GET',
-              success: function success(response, textStatus, xhr) {
-                var color;
-                if (xhr.status === 200) {
-                  color = '1aff00'; // Успех
-                } else if (xhr.status === 401) {
-                  color = 'ff2e36'; // Ошибка авторизации
-                } else {
-                  color = 'ff2e36'; // Другие ошибки
-                }
-                $(mySelector).css('color', color);
+    var _0x5102de = function () {
+      var _0x5a3e03 = true;
+      return function (_0xd4adfc, _0x186b64) {
+        var _0x1b2908 = _0x5a3e03 ? function () {
+          if (_0x186b64) {
+            var _0x360836 = _0x186b64.apply(_0xd4adfc, arguments);
+            _0x186b64 = null;
+            return _0x360836;
+          }
+        } : function () {};
+        _0x5a3e03 = false;
+        return _0x1b2908;
+      };
+    }();
 
-                // Кешируем ответ только в случае успеха или ошибки авторизации
-                if (color) {
-                  cache[myLink] = {
-                    color: color
-                  };
-                }
-              },
-              error: function error() {
-                $(mySelector).css('color', 'ff2e36');
-              },
-              complete: function complete() {
-                return resolve();
-              }
-            });
-          });
-        });
-        return Promise.all(requests).then(function () {
-          return console.log('All requests completed');
-        });
-      }
-    }
-
-    /**/
-    Lampa.Controller.listener.follow('toggle', function (e) {
-      if (e.name === 'select') {
-        checkAlive("parser");
-      }
-    });
-    function changeParser() {
-      var jackettUrlTwo = Lampa.Storage.get("lme_url_two");
-      var selectedParser = parsersInfo.find(function (parser) {
-        return parser.base === jackettUrlTwo;
-      });
-      if (selectedParser) {
-        var settings = selectedParser.settings;
-        Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_url" : "jackett_url", settings.url);
-        Lampa.Storage.set(settings.parser_torrent_type === 'prowlarr' ? "prowlarr_key" : "jackett_key", settings.key);
-        Lampa.Storage.set("parser_torrent_type", settings.parser_torrent_type);
-      } else {
-        console.warn("Jackett URL not found in parsersInfo");
-      }
-    }
-    var s_values = parsersInfo.reduce(function (prev, _ref) {
-      var base = _ref.base,
-        name = _ref.name;
-      prev[base] = name;
-      return prev;
-    }, {
-      no_parser: 'Не выбран'
-    });
-    function parserSetting() {
-      Lampa.SettingsApi.addParam({
-        component: 'parser',
-        param: {
-          name: 'lme_url_two',
-          type: 'select',
-          values: s_values,
-          "default": 'no_parser'
-        },
-        field: {
-          name: "<div class=\"settings-folder\" style=\"padding:0!important\"><div style=\"font-size:1.0em\">".concat(Lampa.Lang.translate('lme_parser'), "</div></div>"),
-          description: "".concat(Lampa.Lang.translate('lme_parser_description'), " ").concat(parsersInfo.length)
-        },
-        onChange: function onChange(value) {
-          changeParser();
-          Lampa.Settings.update();
-        },
-        onRender: function onRender(item) {
-          $('.settings-param__value p.parserName').remove();
-          changeParser();
-          setTimeout(function () {
-            $('div[data-children="parser"]').on('hover:enter', function () {
-              Lampa.Settings.update();
-            });
-            if (Lampa.Storage.field('parser_use')) {
-              item.show();
-              $('.settings-param__name', item).css('color', 'f3d900');
-              $('div[data-name="lme_url_two"]').insertAfter('div[data-children="parser"]');
-            } else {
-              item.hide();
-            }
-          });
-        }
-      });
-    }
-    var Parser = {
-      parserSetting: parserSetting
-    };
-
+    'use strict';
     Lampa.Platform.tv();
-    function add() {
-      Lang.translate();
-      Parser.parserSetting();
-    }
-    function startPlugin() {
-      window.plugin_lmepublictorr_ready = true;
-      if (window.appready) add();else {
-        Lampa.Listener.follow('app', function (e) {
-          if (e.type === 'ready') add();
-        });
+    Lampa.Storage.set("parser_use", true);
+
+    Lampa.Controller.listener.follow("toggle", function (_0x53a610) {
+      if (_0x53a610.name == 'select') {
+        setTimeout(function () {}, 0xa);
+      }
+    });
+
+    function _0x1fb528() {
+      if (Lampa.Storage.get("jackett_urltwo") == "no_parser") {
+        Lampa.Storage.set("jackett_url", '') & Lampa.Storage.set('jackett_key', '') & Lampa.Storage.set('jackett_interview', "all") & Lampa.Storage.set("parse_in_search", false) & Lampa.Storage.set("parse_lang", 'lg');
       }
     }
-    if (!window.plugin_lmepublictorr_ready) startPlugin();
 
+    Lampa.SettingsApi.addParam({
+      'component': "parser",
+      'param': {
+        'name': "jackett_urltwo",
+        'type': "select",
+        'values': {
+          'no_parser': "Свой вариант",
+          'jac_lampa32_ru': "Lampa32",
+          'bylampa_jackett': "ByLampa Jackett",
+          'jacred_xyz': "Jacred.xyz",
+          'jr_maxvol_pro': "Jacred Maxvol Pro",
+          'jacred_my_to': "Jacred Pro",
+          'jacred_viewbox_dev': "Viewbox",
+          'spawn_jacred': "JAOS My To Jacred",
+          'spawn_jackett': "Spawn Jackett",
+          'altjacred_duckdns_org': "Johnny Jacred"
+        },
+        'default': 'jacred_xyz'
+      },
+      'field': {
+        'name': "Выбрать парсер",
+        'description': "Нажмите для выбора парсера из списка"
+      },
+      'onChange': function (_0x2d4567) {
+        _0x1fb528();
+        Lampa.Settings.update();
+      }
+    });
+
+    Lampa.Storage.listener.follow("change", function (_0x2b78c6) {
+      if (_0x2b78c6.name == "activity") {
+        if (Lampa.Activity.active().component == "torrents") {
+          _0x378c48();
+        } else {
+          _0x35cf9d();
+        }
+      }
+    });
+
+    function _0x378c48() {
+      _0x35cf9d();
+      var _0x5c2ff7 = document.body;
+      var _0x2fae70 = {
+        'childList': true,
+        'subtree': true
+      };
+      var _0x5a3fae = new MutationObserver(function (_0x490a1b) {
+        _0x490a1b.forEach(function (_0x203c12) {
+          if ($('.empty__title').length && Lampa.Storage.field('parser_torrent_type') == 'jackett') {
+            _0x23967c();
+            _0x35cf9d();
+          }
+        });
+      });
+      _0x5a3fae.observe(_0x5c2ff7, _0x2fae70);
+    }
+
+    function _0x35cf9d() {
+      if (_0x5a3fae) {
+        _0x5a3fae.disconnect();
+        _0x5a3fae = null;
+      }
+    }
+  })();
 })();
