@@ -18,20 +18,20 @@
       function setCache(key, value){
         cache[key] = { timestamp: new Date().getTime(), value: value };
       }
-function get(method, oncomplite, onerror){
-  var url = 'https://kinopoiskapiunofficial.tech/' + method;
-  console.log('KP API: Отправка запроса по URL: ' + url);
-  network.timeout(15000);
-  network.silent(url, function(json){
-    console.log('KP API: Получен ответ:', json);
-    oncomplite(json);
-  }, function(err){
-    console.error('KP API: Ошибка запроса:', err);
-    onerror(err);
-  }, false, {
-    headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
-  });
-}
+      function get(method, oncomplite, onerror){
+        var url = 'https://kinopoiskapiunofficial.tech/' + method;
+        console.log('KP API: Отправка запроса по URL: ' + url);
+        network.timeout(15000);
+        network.silent(url, function(json){
+          console.log('KP API: Получен ответ:', json);
+          oncomplite(json);
+        }, function(err){
+          console.error('KP API: Ошибка запроса:', err);
+          onerror(err);
+        }, false, {
+          headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
+        });
+      }
       function getFromCache(method, oncomplite, onerror){
         var json = getCache(method);
         if(json){
@@ -75,72 +75,24 @@ function get(method, oncomplite, onerror){
         }, onerror);
       }
       // Функция для загрузки детальной информации по ID
-function _getById(id, params, oncomplite, onerror) {
-  var url = 'api/v2.2/films/' + id;
-  var film = getCache(url);
-  if (film) {
-    setTimeout(function () {
-      oncomplite(convertElem(film));
-    }, 10);
-  } else {
-    get(url, function (film) {
-      if (film.kinopoiskId) {
-        var type = !film.type || film.type === 'FILM' || film.type === 'VIDEO' ? 'movie' : 'tv';
-        getCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function (seasons) {
-          film.seasons_obj = seasons;
-          getComplite('api/v2.2/films/' + id + '/distributions', function (distributions) {
-            film.distributions_obj = distributions;
-            getComplite('/api/v1/staff?filmId=' + id, function (staff) {
-              film.staff_obj = staff;
-              getComplite('api/v2.1/films/' + id + '/sequels_and_prequels', function (sequels) {
-                film.sequels_obj = sequels;
-                getComplite('api/v2.2/films/' + id + '/similars', function (similars) {
-                  film.similars_obj = similars;
-                  setCache(url, film);
-                  oncomplite(convertElem(film));
-                });
-              });
-            });
-          });
-        });
-      } else onerror();
-    }, onerror);
-  }
-}
-
-function full() {
-  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-  var onerror = arguments.length > 2 ? arguments[2] : undefined;
-  var kinopoisk_id = '';
-
-  if (params.card && params.card.source === SOURCE_NAME) {
-    if (params.card.kinopoisk_id) {
-      kinopoisk_id = params.card.kinopoisk_id;
-    } else if (startsWith(params.card.id + '', SOURCE_NAME + '_')) {
-      kinopoisk_id = (params.card.id + '').substring(SOURCE_NAME.length + 1);
-      params.card.kinopoisk_id = kinopoisk_id;
-    }
-  }
-
-  if (kinopoisk_id) {
-    _getById(kinopoisk_id, params, function (json) {
-      var status = new Lampa.Status(4);
-      status.onComplite = oncomplite;
-      status.append('movie', json);
-      status.append('persons', json && json.persons);
-      status.append('collection', json && json.collection);
-      status.append('simular', json && json.similars_obj);
-    }, onerror);
-  } else onerror();
-}
-
-      // *** Новая функция getFullDetails (оставляем на будущее, но не используем в full) ***
+      function getById(id, oncomplite, onerror){
+        var url = 'api/v2.2/films/' + id;
+        getFromCache(url, function(json, cached){
+          if(json && json.kinopoiskId){
+            var result = convertElem(json);
+            oncomplite(result);
+          } else {
+            onerror();
+          }
+        }, onerror);
+      }
+      // Дополнительная функция для получения расширенной информации (например, сезонов)
       function getFullDetails(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
+            // Если основных полей не хватает, можно сделать дополнительный запрос (например, к /seasons)
             if(!result.title || !result.img){
               get(url + '/seasons', function(seasons){
                 if(seasons && seasons.items && seasons.items.length){
@@ -164,17 +116,17 @@ function full() {
         list: function(params, oncomplite, onerror){
           getList(params.url, params, oncomplite, onerror);
         },
- full: function(card, params, oncomplite, onerror){
-  console.log('KP.full вызывается для карточки:', card);
-  var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
-  if(!id) {
-    console.error('KP.full: Не найден id для карточки', card);
-    return onerror();
-  }
-  console.log('KP.full: Запрашиваем подробности для id:', id);
-  getById(id, oncomplite, onerror);
-}
-
+        full: function(card, params, oncomplite, onerror){
+          console.log('KP.full вызывается для карточки:', card);
+          var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
+          if(!id) {
+            console.error('KP.full: Не найден id для карточки', card);
+            return onerror();
+          }
+          console.log('KP.full: Запрашиваем подробности для id:', id);
+          // Прямой вызов getById (без дополнительного запроса)
+          getById(id, oncomplite, onerror);
+        }
       };
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
