@@ -1,7 +1,18 @@
 (function(){
   'use strict';
 
-  // Определяем иконки для меню (оставляем их для кнопок меню)
+  // Пример массива рандомных постеров (замените URL на реальные из плагина коллекций)
+  var randomPosters = [
+    'https://via.placeholder.com/300x200?text=Poster+1',
+    'https://via.placeholder.com/300x200?text=Poster+2',
+    'https://via.placeholder.com/300x200?text=Poster+3'
+  ];
+  function getRandomPoster(){
+    return randomPosters[Math.floor(Math.random() * randomPosters.length)];
+  }
+
+  // Определяем иконки для меню – здесь они будут использоваться в пункте меню,
+  // но в самом окне активности для "Русские фильмы" будут показаны постеры.
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -25,14 +36,13 @@
   `;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Компонент для "Русские фильмы" – окно с выбором категорий (постеры вместо надписей)
+  // Компонент для "Русские фильмы" – окно выбора категорий (постеры вместо надписей)
   function ruFilmsComponent(object) {
     var comp = new Lampa.InteractionCategory(object);
     
     comp.create = function(){
       this.activity.loader(true);
       
-      // Создаем контейнер для полноэкранного окна
       var container = document.createElement('div');
       container.className = 'ru_films_select';
       container.style.width  = '100vw';
@@ -44,17 +54,15 @@
       container.style.justifyContent = 'center';
       container.tabIndex = 0;
       
-      // Заголовок окна (уже отображается в head приложения, поэтому можно его оставить или убрать)
-      var header = document.createElement('h1');
-      header.innerText = object.title || 'Русские фильмы';
-      header.style.color = '#fff';
-      header.style.marginBottom = '40px';
-      header.style.fontSize = '2em';
-      // Если надпись уже есть в верхнем меню, её можно убрать:
-      // header.style.display = 'none';
-      container.appendChild(header);
+      // Если заголовок уже отображается в шапке приложения, можно скрыть его:
+      // var header = document.createElement('h1');
+      // header.innerText = object.title || 'Русские фильмы';
+      // header.style.color = '#fff';
+      // header.style.marginBottom = '40px';
+      // header.style.fontSize = '2em';
+      // container.appendChild(header);
       
-      // Контейнер для кнопок категорий
+      // Контейнер для кнопок
       var btnContainer = document.createElement('div');
       btnContainer.style.display = 'flex';
       btnContainer.style.gap = '60px';
@@ -62,10 +70,10 @@
       btnContainer.style.alignItems = 'center';
       container.appendChild(btnContainer);
       
-      // Функция для создания кнопки в виде широкой картинки (без надписи внутри)
-      function createCategoryButton(callback, poster) {
+      // Функция создания кнопки с постером
+      function createCategoryButton(callback, posterUrl) {
         var btn = document.createElement('div');
-        // Сделаем кнопку шире, как в плагине коллекций
+        // Кнопка делаем широкой, как в плагине коллекций
         btn.style.width = '300px';
         btn.style.height = '200px';
         btn.style.backgroundColor = '#444';
@@ -74,24 +82,23 @@
         btn.style.justifyContent = 'center';
         btn.style.borderRadius = '10px';
         btn.style.cursor = 'pointer';
-        // Создаем img, который занимает всю кнопку
+        // Добавляем CSS-класс для анимации (аналогичный класс из коллекций, например "animated-icon")
+        btn.classList.add('animated-icon');
+        // Создаем изображение – оно занимает всю кнопку
         var img = document.createElement('img');
         img.style.width = '100%';
         img.style.height = '100%';
         img.style.objectFit = 'cover';
-        // Если передан poster, используем его, иначе placeholder
-        img.src = poster || 'https://via.placeholder.com/300x200?text=Нет+изображения';
+        img.src = posterUrl;
         btn.appendChild(img);
         btn.onclick = callback;
         return btn;
       }
       
-      // Для кнопок можно использовать постеры из объекта, если они заданы
-      // Например: object.poster_new и object.poster_top
-      var posterNew = object.poster_new || object.poster || 'https://via.placeholder.com/300x200?text=Новинки';
-      var posterTop = object.poster_top || object.poster || 'https://via.placeholder.com/300x200?text=Топ';
+      // Рандомные постеры для кнопок (можно заменить реальными URL из плагина коллекций)
+      var posterNew = getRandomPoster();
+      var posterTop = getRandomPoster();
       
-      // Кнопка "Новинки"
       var btnNew = createCategoryButton(function(){
         var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}&category=new`;
         Lampa.Activity.push({
@@ -104,7 +111,6 @@
         });
       }, posterNew);
       
-      // Кнопка "Топ"
       var btnTop = createCategoryButton(function(){
         var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
         Lampa.Activity.push({
@@ -128,8 +134,7 @@
   }
   Lampa.Component.add('ru_films_select', ruFilmsComponent);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Для "Русские сериалы" и "Русские мультфильмы" можно сразу запускать активность с нужным URL:
+  // Для "Русские сериалы" и "Русские мультфильмы" сразу запускаем активность
   function ruSeriesHandler() {
     Lampa.Activity.push({
       url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
@@ -150,16 +155,16 @@
       page: 1
     });
   }
-
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Функция для добавления кнопки в меню (аналог из плагина коллекций)
-  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
+
+  // Функция добавления кнопки в меню – теперь без текстовой подписи (оставляем только иконку)
+  function addMenuButton(newItemAttr, iconHTML, onEnterHandler) {
     var NEW_ITEM_ATTR = newItemAttr;
     var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
+    // Здесь в разметке убираем блок с текстом
     var field = $(`
       <li class="menu__item selector" ${NEW_ITEM_ATTR}>
-        <div class="menu__ico">${iconHTML}</div>
-        <div class="menu__text">${newItemText}</div>
+        <div class="menu__ico animated-icon">${iconHTML}</div>
       </li>
     `);
     field.on('hover:enter', onEnterHandler);
@@ -180,12 +185,10 @@
     }
   }
 
-  // Функция для добавления кнопок в меню
-  function addMenuButtons(){
-    // "Русские фильмы" – открывает экран с выбором категорий (постерами)
+  // Функции для добавления кнопок меню
+  function addRuFilmsMenuButton(){
     addMenuButton(
       'data-action="ru_movie_films"',
-      'Русские фильмы',
       iconFilms,
       function () {
         Lampa.Activity.push({
@@ -194,20 +197,26 @@
         });
       }
     );
-    // "Русские сериалы" – сразу открывает активность
+  }
+  function addRuSeriesMenuButton(){
     addMenuButton(
       'data-action="ru_movie_series"',
-      'Русские сериалы',
       iconSeries,
       ruSeriesHandler
     );
-    // "Русские мультфильмы" – сразу открывает активность
+  }
+  function addRuCartoonsMenuButton(){
     addMenuButton(
       'data-action="ru_movie_cartoons"',
-      'Русские мультфильмы',
       iconCartoons,
       ruCartoonsHandler
     );
+  }
+
+  function addMenuButtons(){
+    addRuFilmsMenuButton();
+    addRuSeriesMenuButton();
+    addRuCartoonsMenuButton();
   }
 
   if(window.appready){
@@ -219,5 +228,19 @@
       }
     });
   }
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  // Пример CSS для анимации (вы можете добавить этот стиль в основной CSS вашего плагина)
+  var style = document.createElement('style');
+  style.innerHTML = `
+    .animated-icon {
+      transition: transform 0.3s ease;
+    }
+    .animated-icon:hover {
+      transform: scale(1.1);
+    }
+  `;
+  document.head.appendChild(style);
   
 })();
