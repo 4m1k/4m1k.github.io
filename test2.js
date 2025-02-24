@@ -82,6 +82,7 @@ Lampa.Component.add('tv_streaming_select', function(object) {
           Lampa.Activity.backward();
         }
       });
+      // Для корректного получения фокуса
       component.html.focus();
       Lampa.Controller.toggle('content');
     },
@@ -95,8 +96,8 @@ Lampa.Component.add('tv_streaming_select', function(object) {
     }
   };
 
-  // Стилизация контейнера – полноэкранное окно
-  component.html.className = 'tv-streaming-select';
+  // Основной контейнер в стиле lmeCatalog (как у TV SHOW СТРИМИНГИ)
+  component.html.className = 'lmeCatalog';
   component.html.style.position = 'fixed';
   component.html.style.top = '0';
   component.html.style.left = '0';
@@ -108,42 +109,55 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   component.html.style.alignItems = 'center';
   component.html.style.justifyContent = 'center';
   component.html.style.zIndex = '9999';
-  component.html.tabIndex = 0;
+  component.html.tabIndex = 0; // чтобы элемент можно было фокусировать
 
-  // Заголовок окна
-  var header = document.createElement('h1');
-  header.style.color = '#fff';
+  // Создадим header, в котором разместим кнопки
+  var header = document.createElement('div');
+  header.className = 'lme-catalog lme-header';
+  header.style.width = '100%';
+  header.style.display = 'flex';
+  header.style.justifyContent = 'center';
   header.style.marginBottom = '40px';
-  header.style.fontSize = '2em';
-  header.innerText = object.title || 'Выберите категорию';
-  component.html.appendChild(header);
 
-  // Контейнер для кнопок
-  var container = document.createElement('div');
-  container.style.display = 'flex';
-  container.style.gap = '60px';
-  container.style.width = '100%';
-  container.style.justifyContent = 'center';
-  // Отладочный стиль: рамка
-  container.style.border = '2px solid red';
+  // Можно добавить заголовок окна, если нужно:
+  var titleText = document.createElement('h1');
+  titleText.innerText = object.title || 'Русские фильмы';
+  titleText.style.color = '#fff';
+  titleText.style.fontSize = '2em';
+  titleText.style.marginBottom = '20px';
+  header.appendChild(titleText);
 
-  // Функция для создания кнопки
-  function createButton(text, callback) {
-    var btn = document.createElement('button');
-    btn.innerText = text;
-    btn.style.padding = '20px 40px';
-    btn.style.fontSize = '1.5em';
-    btn.style.cursor = 'pointer';
-    btn.style.border = 'none';
+  // Контейнер для кнопок выбора категории
+  var btnContainer = document.createElement('div');
+  btnContainer.style.display = 'flex';
+  btnContainer.style.justifyContent = 'center';
+  btnContainer.style.alignItems = 'center';
+  btnContainer.style.gap = '60px';
+  // Отладочно можно добавить рамку:
+  // btnContainer.style.border = '2px solid red';
+
+  // Функция для создания кнопки в стиле TV SHOW (большая иконка, надпись)
+  function createCategoryButton(label, callback) {
+    var btn = document.createElement('div');
+    btn.className = 'full-start__button selector';
+    btn.style.width = '200px';
+    btn.style.height = '200px';
+    btn.style.backgroundColor = '#333';
+    btn.style.display = 'flex';
+    btn.style.flexDirection = 'column';
+    btn.style.justifyContent = 'center';
+    btn.style.alignItems = 'center';
     btn.style.borderRadius = '10px';
-    btn.style.backgroundColor = '#444';
+    btn.style.fontSize = '1.5em';
     btn.style.color = '#fff';
+    btn.style.cursor = 'pointer';
+    btn.innerText = label;
     btn.onclick = callback;
     return btn;
   }
 
   // Кнопка "Новинки"
-  var btnNew = createButton('Новинки', function() {
+  var btnNew = createCategoryButton('Новинки', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
     Lampa.Activity.push({
       url: url,
@@ -151,12 +165,12 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       component: 'category_full',
       source: 'cp',
       card_type: true,
-      page: 1,
+      page: 1
     });
   });
 
   // Кнопка "Топ"
-  var btnTop = createButton('Топ', function() {
+  var btnTop = createCategoryButton('Топ', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
     Lampa.Activity.push({
       url: url,
@@ -164,25 +178,50 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       component: 'category_full',
       source: 'cp',
       card_type: true,
-      page: 1,
+      page: 1
     });
   });
 
-  container.appendChild(btnNew);
-  container.appendChild(btnTop);
-  component.html.appendChild(container);
+  btnContainer.appendChild(btnNew);
+  btnContainer.appendChild(btnTop);
+
+  // Собираем разметку компонента
+  // Можно поместить btnContainer в отдельный блок, если нужно добавить еще элементы (например, поиск, избранное, закладки)
+  header.appendChild(btnContainer);
+  component.html.appendChild(header);
+
+  // Если нужно добавить дополнительные кнопки (например, для поиска, избранного, закладок), их можно добавить аналогичным образом.
+  // Например:
+  /*
+  var extraContainer = document.createElement('div');
+  extraContainer.style.display = 'flex';
+  extraContainer.style.justifyContent = 'center';
+  extraContainer.style.alignItems = 'center';
+  extraContainer.style.gap = '40px';
+  // Создаем кнопку "Поиск"
+  var btnSearch = createCategoryButton('Поиск', function() {
+    Lampa.Input.edit({ free: true, nosave: true, nomic: true, value: '' }, function(val) {
+      if(val){
+        object.searchQuery = val;
+        Lampa.Activity.replace(object);
+      } else {
+        Lampa.Controller.toggle('content');
+      }
+    });
+  });
+  extraContainer.appendChild(btnSearch);
+  header.appendChild(extraContainer);
+  */
 
   // Обработчик для клавиши Esc
   component.html.addEventListener('keydown', function(e) {
-    if(e.keyCode === 27) { 
+    if(e.keyCode === 27) {
       Lampa.Activity.backward();
     }
   });
 
   return component;
 });
-
-
 
 
 
@@ -198,6 +237,7 @@ addMenuButton(
     });
   }
 );
+
 
 
 
