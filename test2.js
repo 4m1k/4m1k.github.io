@@ -1,9 +1,19 @@
 (function(){
   'use strict';
 
-  // Ждем готовности приложения
+  var originalSource = null;
+
+  // Ждем, когда приложение будет готово
   Lampa.Listener.follow('app', function(e){
     if(e.type === 'ready'){
+      // Сохраняем исходный источник из настроек (если он задан)
+      if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
+        originalSource = Object.assign({}, Lampa.Params.values.source);
+      } else {
+        originalSource = { tmdb: 'TMDB' }; // значение по умолчанию, если не задано
+      }
+      console.log('Исходный источник сохранён:', originalSource);
+
       var menu = Lampa.Menu.render();
       if(!menu || !menu.length){
         console.error('Меню не найдено');
@@ -25,7 +35,7 @@
         </li>
       `);
 
-      // Обработчик нажатия – используем событие click
+      // Обработчик нажатия – здесь используем событие click
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
         if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
@@ -41,16 +51,28 @@
             ],
             onSelect: function(item){
               console.log('Выбран пункт:', item);
+              // При переходе в категорию временно подставляем источник "KP"
               Lampa.Activity.push({
                 url: item.data.url,
                 title: item.title,
                 component: 'category_full',
-                // Убираем привязку к источнику KP – теперь окно откроется независимо
+                source: 'KP', // здесь временно используем KP для загрузки категорий
                 card_type: true,
-                page: 1
+                page: 1,
+                onBack: function(){
+                  // При выходе из категории возвращаем исходный источник
+                  if(originalSource){
+                    Lampa.Params.select('source', originalSource);
+                  }
+                  Lampa.Controller.toggle("menu");
+                }
               });
             },
             onBack: function(){
+              // При выходе из окна выбора категорий возвращаем исходный источник
+              if(originalSource){
+                Lampa.Params.select('source', originalSource);
+              }
               Lampa.Controller.toggle("menu");
             }
           });
