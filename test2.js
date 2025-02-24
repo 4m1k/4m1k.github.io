@@ -1,8 +1,9 @@
 (function(){
   'use strict';
-  // Предотвращаем повторное выполнение плагина
+  // Если плагин уже загружен – прекращаем выполнение
   if(window.KPPluginLoaded) return;
   window.KPPluginLoaded = true;
+  console.log('KP Plugin script loaded');
 
   try {
     /* ===== Минимальная интеграция KP API ===== */
@@ -305,7 +306,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Вместо запроса sequels_and_prequels (возвращавшего 404) сразу запрашиваем similars:
+                    // Вместо запроса sequels_and_prequels (возвращавшего 404) запрашиваем similars:
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -577,9 +578,7 @@
           }
           Lampa.Api.sources[KP.SOURCE_NAME] = KP;
           Object.defineProperty(Lampa.Api.sources, KP.SOURCE_NAME, {
-            get: function() {
-              return KP;
-            }
+            get: function() { return KP; }
           });
           var sources;
           if (Lampa.Params.values && Lampa.Params.values['source']) {
@@ -607,7 +606,7 @@
     }
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для восстановления
+    // Сохраняем исходный источник для последующего восстановления
     var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
       Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
@@ -640,8 +639,8 @@
     function addKPButton() {
       var menu = Lampa.Menu.render();
       if (!menu || !menu.length) {
-        console.error('Меню не найдено, повторная попытка через 2 секунды');
-        setTimeout(addKPButton, 2000);
+        console.error('Меню не найдено, повторная попытка через 1000мс');
+        setTimeout(addKPButton, 1000);
         return;
       }
       console.log('Меню найдено, добавляем кнопку Кинопоиск');
@@ -719,8 +718,9 @@
         addKPButton();
       }
     });
-    // Дополнительный вызов через 5 секунд на случай, если событие "ready" пропущено
+    // Дополнительная попытка через 5 секунд, если кнопка не добавлена
     setTimeout(addKPButton, 5000);
+
   } catch (ex) {
     console.error('Script error:', ex);
   }
