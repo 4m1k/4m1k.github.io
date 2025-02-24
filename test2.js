@@ -5,11 +5,11 @@
   if(!Lampa.Api.sources.KP){
     var network = new Lampa.Reguest();
     var cache = {};
-    
+
     function getCache(key) {
       var res = cache[key];
       if(res){
-        var cache_timestamp = new Date().getTime() - 1000 * 60 * 60;
+        var cache_timestamp = new Date().getTime() - 1000 * 60 * 60; // 1 час
         if(res.timestamp > cache_timestamp) return res.value;
       }
       return null;
@@ -34,13 +34,35 @@
         get(method, oncomplite, onerror);
       }
     }
+    // Функция преобразования элемента из KP API в формат Lampa
+    function convertElem(elem) {
+      var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
+      var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
+      var img = elem.posterUrlPreview || elem.posterUrl || '';
+      return {
+        source: 'KP',
+        id: 'KP_' + kinopoisk_id,
+        title: title,
+        original_title: title,
+        overview: elem.description || elem.shortDescription || '',
+        img: img,
+        background_image: img,
+        vote_average: parseFloat(elem.rating) || 0,
+        vote_count: elem.ratingVoteCount || 0,
+        kinopoisk_id: kinopoisk_id,
+        type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
+      };
+    }
     function getList(method, params, oncomplite, onerror){
       var page = params.page || 1;
       var url = method;
       url += '&page=' + page;
       getFromCache(url, function(json, cached){
          if(!cached && json && json.items && json.items.length) setCache(url, json);
-         var results = json.items || [];
+         var items = json.items || [];
+         var results = items.map(function(elem){
+            return convertElem(elem);
+         });
          var total_pages = json.pagesCount || json.totalPages || 1;
          oncomplite({ results: results, page: page, total_pages: total_pages });
       }, onerror);
@@ -48,11 +70,10 @@
     
     var KP = {
       SOURCE_NAME: 'KP',
-      // Для демонстрации реализуем только метод list – который используется компонентом category_full.
       list: function(params, oncomplite, onerror){
          getList(params.url, params, oncomplite, onerror);
       }
-      // Дополнительные методы (main, full, discovery и т.д.) можно добавить при необходимости.
+      // Дополнительные методы можно добавить при необходимости
     };
     Lampa.Api.sources.KP = KP;
   }
@@ -91,7 +112,7 @@
         </li>
       `);
       
-      // При нажатии открываем окно с категориями
+      // При нажатии открывается окно с категориями
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
         if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
@@ -107,7 +128,7 @@
             ],
             onSelect: function(item){
               console.log('Выбран пункт:', item);
-              // При выборе категории вызываем Activity.push с источником "KP"
+              // При выборе категории запускаем загрузку через Lampa.Activity.push с источником KP
               Lampa.Activity.push({
                 url: item.data.url,
                 title: item.title,
