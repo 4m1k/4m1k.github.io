@@ -21,6 +21,20 @@
       var SOURCE_NAME = 'KP';
       var SOURCE_TITLE = 'KP';
 
+      // Функции для работы с заголовками (используются в search)
+      function cleanTitle(str) {
+        return str.replace(/[\s.,:;’'`!?]+/g, ' ').trim();
+      }
+      function kpCleanTitle(str) {
+        return cleanTitle(str).replace(/^[ \/\\]+/, '').replace(/[ \/\\]+$/, '');
+      }
+      function normalizeTitle(str) {
+        return cleanTitle(str.toLowerCase().replace(/[\-\u2010-\u2015\u2E3A\u2E3B\uFE58\uFE63\uFF0D]+/g, '-').replace(/ё/g, 'е'));
+      }
+      function containsTitle(str, title) {
+        return typeof str === 'string' && typeof title === 'string' && normalizeTitle(str).indexOf(normalizeTitle(title)) !== -1;
+      }
+
       function startsWith(str, searchString) {
         return str.lastIndexOf(searchString, 0) === 0;
       }
@@ -305,7 +319,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Вместо запроса sequels_and_prequels (возвращавшего 404) запрашиваем similars:
+                    // Запрашиваем похожие фильмы вместо sequels_and_prequels (возвращавшего 404)
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -317,6 +331,15 @@
             } else onerror();
           }, onerror);
         }
+      }
+
+      // Добавляем stub-реализации main и category, чтобы избежать ошибки "main is not defined"
+      function main(params, oncomplite, onerror) {
+        // Для простоты вызываем list с теми же параметрами
+        list(params, oncomplite, onerror);
+      }
+      function category(params, oncomplite, onerror) {
+        list(params, oncomplite, onerror);
       }
 
       function full() {
@@ -552,7 +575,6 @@
       }
 
       if (!window.kp_source_plugin) startPlugin();
-
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
     }
@@ -563,9 +585,8 @@
       Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
 
-    // Функция для получения ID страны "Россия" через фильтры KP API
+    // Функция для получения ID страны "Россия"
     var rus_id = '225';
-    // Переименована функция loadCountryId -> kp_loadCountryId
     function kp_loadCountryId(callback) {
       try {
         get('api/v2.2/films/filters', function(json) {
@@ -676,6 +697,7 @@
         addKPButton();
       }
     });
+    // Дополнительный вызов можно убрать, чтобы избежать дублирования
 
     /* ===== Конец добавления кнопки ===== */
 
@@ -719,7 +741,6 @@
 
     Lampa.Api.sources.KP = KP;
     console.log('KP API интегрирован');
-
   } catch (ex) {
     console.error('Script error:', ex);
   }
