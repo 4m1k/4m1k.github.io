@@ -70,26 +70,48 @@
 
 // Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
 Lampa.Component.add('tv_streaming_select', function(object) {
-  var html = document.createElement('div');
-  html.className = 'tv-streaming-select';
-  // Применяем стили, чтобы окно было полноэкранным (можно задать их в CSS)
-  html.style.position = 'fixed';
-  html.style.top = '0';
-  html.style.left = '0';
-  html.style.width = '100vw';
-  html.style.height = '100vh';
-  html.style.backgroundColor = '#000';
-  html.style.display = 'flex';
-  html.style.flexDirection = 'column';
-  html.style.alignItems = 'center';
-  html.style.justifyContent = 'center';
+  var component = {
+    html: document.createElement('div'),
+    start: function() {
+      // Добавляем контроллер, если нужно
+      Lampa.Controller.add('content', {
+        link: this,
+        toggle: function() {
+          // Здесь можно задать фокус или другое поведение
+        },
+        back: function() {
+          Lampa.Activity.backward();
+        }
+      });
+      Lampa.Controller.toggle('content');
+    },
+    render: function(js) {
+      return js ? this.html : $(this.html);
+    },
+    destroy: function() {
+      this.html.remove();
+    }
+  };
+
+  // Устанавливаем стили для полноэкранного окна
+  component.html.className = 'tv-streaming-select';
+  component.html.style.position = 'fixed';
+  component.html.style.top = '0';
+  component.html.style.left = '0';
+  component.html.style.width = '100vw';
+  component.html.style.height = '100vh';
+  component.html.style.backgroundColor = '#000';
+  component.html.style.display = 'flex';
+  component.html.style.flexDirection = 'column';
+  component.html.style.alignItems = 'center';
+  component.html.style.justifyContent = 'center';
   
-  // Заголовок
+  // Заголовок окна
   var header = document.createElement('h1');
   header.style.color = '#fff';
   header.style.marginBottom = '20px';
   header.innerText = object.title || 'Выберите категорию';
-  html.appendChild(header);
+  component.html.appendChild(header);
   
   // Контейнер для кнопок
   var container = document.createElement('div');
@@ -109,7 +131,6 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   
   // Кнопка "Новинки"
   var btnNew = createButton('Новинки', function() {
-    // Формируем URL для новинок
     var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
     Lampa.Activity.push({
       url: url,
@@ -123,7 +144,6 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   
   // Кнопка "Топ"
   var btnTop = createButton('Топ', function() {
-    // Формируем URL для топовых фильмов
     var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
     Lampa.Activity.push({
       url: url,
@@ -137,17 +157,18 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   
   container.appendChild(btnNew);
   container.appendChild(btnTop);
-  html.appendChild(container);
+  component.html.appendChild(container);
   
-  // Обработчик кнопки "Назад" (например, при нажатии кнопки "back" на пульте)
-  html.addEventListener('keydown', function(e) {
-    if(e.keyCode === 27) { // Esc
+  // Обработчик клавиши Esc для возврата назад
+  component.html.addEventListener('keydown', function(e) {
+    if(e.keyCode === 27) { 
       Lampa.Activity.backward();
     }
   });
   
-  return html;
+  return component;
 });
+
 
 // Изменяем обработчик для кнопки "Русские фильмы"
 addMenuButton(
@@ -156,16 +177,8 @@ addMenuButton(
   iconFilms,
   function () {
     Lampa.Activity.push({
-      // Вызываем наш компонент вместо стандартного выбора
       component: 'tv_streaming_select',
-      title: 'Русские фильмы',
-      custom: {
-        // Здесь можно передать любые дополнительные данные, если нужно
-        categories: [
-          { title: 'Новинки', type: 'new' },
-          { title: 'Топ', type: 'top' }
-        ]
-      }
+      title: 'Русские фильмы'
     });
   }
 );
