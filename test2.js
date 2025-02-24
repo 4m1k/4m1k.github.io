@@ -1,8 +1,8 @@
 (function(){
   'use strict';
   // Предотвращаем повторное объявление плагина
-  if(window.KPPluginLoaded) return;
-  window.KPPluginLoaded = true;
+  // if(window.KPPluginLoaded) return;
+  // window.KPPluginLoaded = true;
 
   try {
     /* ===== Минимальная интеграция KP API ===== */
