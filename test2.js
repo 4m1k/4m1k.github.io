@@ -93,7 +93,7 @@ addMenuButton(
           url: url,
           title: title,
           component: 'category_full',
-          source: 'cp',
+          source: 'tmdb',
           card_type: true,
           page: 1,
         });
