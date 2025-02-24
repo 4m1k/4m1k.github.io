@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  // Устанавливаем платформу для ТВ
   Lampa.Platform.tv();
 
   // Константы: селектор для кнопки TV и таймаут перемещения
@@ -39,17 +38,17 @@
     }
   }
 
-  // Иконки, как были раньше для [RU]
 
-  // Иконка для "Русские фильмы" (пример — clapperboard)
+  // Иконка для "Русские фильмы"
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <rect x="10" y="12" width="28" height="24" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M10 12l14 12L38 12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
 
-  // Иконка для "Русские сериалы" (пример — телевизор)
+  // Иконка для "Русские сериалы"
   var iconSeries = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -58,11 +57,12 @@
     </svg>
   `;
 
-  // Иконка для "Русские мультфильмы" (пример — оригинальный вид, как был в плагине)
+  // Иконка для "Русские мультфильмы"
   var iconCartoons = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
-            d="M12.071 33V15h5.893c3.331 0 6.032 2.707 6.032 6.045s-2.7 6.045-6.032 6.045h-5.893m5.893 0l5.892 5.905m3.073-11.92V28.5a4.5 4.5 0 0 0 4.5 4.5h0a4.5 4.5 0 0 0 4.5-4.5v-7.425"/>
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
 
@@ -117,5 +117,4 @@
     }
   );
 
-  // Если раньше была кнопка "Русское", её можно не добавлять.
 })();
