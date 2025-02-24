@@ -203,8 +203,7 @@
           const crew = [];
           staff.forEach(s => {
             const person = KP_convertPerson(s);
-            if (s.professionKey === 'ACTOR') cast.push(person);
-            else crew.push(person);
+            if (s.professionKey === 'ACTOR') cast.push(person); else crew.push(person);
           });
           result.persons = { cast, crew };
         }
@@ -270,7 +269,7 @@
         }, onError);
       }
 
-      // --- Функция получения деталей – переименована, чтобы избежать дублирования ---
+      // --- Функция получения деталей (переименована, чтобы не дублировалась) ---
       function KP_getByIdInternal(id, params, onComplite, onError) {
         const url = 'api/v2.2/films/' + id;
         const film = KP_getCache(url);
@@ -301,13 +300,13 @@
       }
 
       // --- Stub‑реализации основных функций ---
-      function KP_main(params, onComplite, onError) {
-        return KP_list(params, onComplite, onError);
+      function KP_mainWrapper(params, onComplite, onError) {
+        return KP_listWrapper(params, onComplite, onError);
       }
-      function KP_category(params, onComplite, onError) {
-        return KP_list(params, onComplite, onError);
+      function KP_categoryWrapper(params, onComplite, onError) {
+        return KP_listWrapper(params, onComplite, onError);
       }
-      function KP_full(params = {}, onComplite, onError) {
+      function KP_fullWrapper(params = {}, onComplite, onError) {
         let kinopoisk_id = '';
         if (params.card && params.card.source === KP_SOURCE_NAME) {
           if (params.card.kinopoisk_id) {
@@ -319,208 +318,6 @@
         }
         if (kinopoisk_id) {
           KP_getByIdInternal(kinopoisk_id, params, function(json) {
-            let status = new Lampa.Status(4);
-            status.onComplite = onComplite;
-            status.append('movie', json);
-            status.append('persons', json && json.persons);
-            status.append('collection', json && json.collection);
-            status.append('simular', json && json.similars_obj);
-          }, onError);
-        } else onError();
-      }
-      function KP_list(params, onComplite, onError) {
-        params = params || {};
-        let method = params.url;
-        if (method === '' && params.genres) {
-          method = 'api/v2.2/films?order=NUM_VOTE&genres=' + params.genres;
-        }
-        KP_getListWrapper(method, params, onComplite, onError);
-      }
-      function KP_search(params, onComplite) {
-        params = params || {};
-        const title = decodeURIComponent(params.query || '');
-        let status = new Lampa.Status(1);
-        status.onComplite = function(data) {
-          let items = [];
-          if (data.query && data.query.results) {
-            let tmp = data.query.results.filter(elem =>
-              KP_containsTitle(elem.title, title) || KP_containsTitle(elem.original_title, title)
-            );
-            if (tmp.length && tmp.length !== data.query.results.length) {
-              data.query.results = tmp;
-              data.query.more = true;
-            }
-            let movie = Object.assign({}, data.query);
-            movie.results = data.query.results.filter(elem => elem.type === 'movie');
-            movie.title = Lampa.Lang.translate('menu_movies');
-            movie.type = 'movie';
-            if (movie.results.length) items.push(movie);
-            let tv = Object.assign({}, data.query);
-            tv.results = data.query.results.filter(elem => elem.type === 'tv');
-            tv.title = Lampa.Lang.translate('menu_tv');
-            tv.type = 'tv';
-            if (tv.results.length) items.push(tv);
-          }
-          onComplite(items);
-        };
-        KP_getListWrapper('api/v2.1/films/search-by-keyword', params, function(json) {
-          status.append('query', json);
-        }, status.error.bind(status));
-      }
-      function KP_discovery() {
-        return {
-          title: KP_SOURCE_TITLE,
-          search: KP_search,
-          params: { align_left: true, object: { source: KP_SOURCE_NAME } },
-          onMore: function(params) {
-            Lampa.Activity.push({
-              url: 'api/v2.1/films/search-by-keyword',
-              title: Lampa.Lang.translate('search') + ' - ' + params.query,
-              component: 'category_full',
-              page: 1,
-              query: encodeURIComponent(params.query),
-              source: KP_SOURCE_NAME
-            });
-          },
-          onCancel: KP_NETWORK.clear.bind(KP_NETWORK)
-        };
-      }
-      function KP_person(params, onComplite) {
-        params = params || {};
-        let status = new Lampa.Status(1);
-        status.onComplite = function(data) {
-          let result = {};
-          if (data.query) {
-            let p = data.query;
-            result.person = {
-              id: p.personId,
-              name: p.nameRu || p.nameEn || '',
-              url: '',
-              img: p.posterUrl || '',
-              gender: p.sex === 'MALE' ? 2 : p.sex === 'FEMALE' ? 1 : 0,
-              birthday: p.birthday,
-              place_of_birth: p.birthplace,
-              deathday: p.death,
-              place_of_death: p.deathplace,
-              known_for_department: p.profession || '',
-              biography: (p.facts || []).join(' ')
-            };
-            let director_films = [];
-            let director_map = {};
-            let actor_films = [];
-            let actor_map = {};
-            if (p.films) {
-              p.films.forEach(function(f) {
-                if (f.professionKey === 'DIRECTOR' && !director_map[f.filmId]) {
-                  director_map[f.filmId] = true;
-                  director_films.push(KP_convertElem(f));
-                } else if (f.professionKey === 'ACTOR' && !actor_map[f.filmId]) {
-                  actor_map[f.filmId] = true;
-                  actor_films.push(KP_convertElem(f));
-                }
-              });
-            }
-            let knownFor = [];
-            if (director_films.length) {
-              director_films.sort((a, b) => (b.vote_average - a.vote_average) || (a.id - b.id));
-              knownFor.push({
-                name: Lampa.Lang.translate('title_producer'),
-                credits: director_films
-              });
-            }
-            if (actor_films.length) {
-              actor_films.sort((a, b) => (b.vote_average - a.vote_average) || (a.id - b.id));
-              knownFor.push({
-                name: Lampa.Lang.translate(p.sex === 'FEMALE' ? 'title_actress' : 'title_actor'),
-                credits: actor_films
-              });
-            }
-            result.credits = { knownFor };
-          }
-          onComplite(result);
-        };
-        const url = 'api/v1/staff/' + params.id;
-        KP_getFromCache(url, function(json, cached) {
-          if (!cached && json.personId) KP_setCache(url, json);
-          status.append('query', json);
-        }, status.error.bind(status));
-      }
-
-      // Объединяем объект KP
-      const KP = {
-        SOURCE_NAME: KP_SOURCE_NAME,
-        SOURCE_TITLE: KP_SOURCE_TITLE,
-        main: KP_main,
-        menu: KP_menu,
-        full: KP_full,
-        list: KP_list,
-        category: KP_category,
-        clear: KP_clear,
-        person: KP_person,
-        seasons: KP_seasons,
-        menuCategory: KP_menuCategory,
-        discovery: KP_discovery,
-        search: KP_search
-      };
-
-      const ALL_SOURCES = [
-        { name: 'tmdb', title: 'TMDB' },
-        { name: 'cub', title: 'CUB' },
-        { name: 'pub', title: 'PUB' },
-        { name: 'filmix', title: 'FILMIX' },
-        { name: KP.SOURCE_NAME, title: KP.SOURCE_TITLE }
-      ];
-
-      function KP__getById(id, params, onComplite, onError) {
-        const url = 'api/v2.2/films/' + id;
-        const film = KP_getCache(url);
-        if (film) {
-          setTimeout(() => onComplite(KP_convertElem(film)), 10);
-        } else {
-          KP_get(url, function(film) {
-            if (film.kinopoiskId) {
-              const type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
-              KP_getCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function(seasons) {
-                film.seasons_obj = seasons;
-                KP_getComplite('api/v2.2/films/' + id + '/distributions', function(distributions) {
-                  film.distributions_obj = distributions;
-                  KP_getComplite('/api/v1/staff?filmId=' + id, function(staff) {
-                    film.staff_obj = staff;
-                    KP_getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
-                      film.similars_obj = similars;
-                      KP_setCache(url, film);
-                      onComplite(KP_convertElem(film));
-                    });
-                  });
-                });
-              });
-            } else onError();
-          }, onError);
-        }
-      }
-
-      // Stub‑реализации основных функций
-      function KP_mainWrapper(params, onComplite, onError) {
-        return KP_list(params, onComplite, onError);
-      }
-      function KP_categoryWrapper(params, onComplite, onError) {
-        return KP_list(params, onComplite, onError);
-      }
-      function KP_fullWrapper() {
-        const params = arguments.length > 0 ? arguments[0] : {};
-        const onComplite = arguments.length > 1 ? arguments[1] : undefined;
-        const onError = arguments.length > 2 ? arguments[2] : undefined;
-        let kinopoisk_id = '';
-        if (params.card && params.card.source === KP_SOURCE_NAME) {
-          if (params.card.kinopoisk_id) {
-            kinopoisk_id = params.card.kinopoisk_id;
-          } else if (KP_startsWith(params.card.id + '', KP_SOURCE_NAME + '_')) {
-            kinopoisk_id = (params.card.id + '').substring(KP_SOURCE_NAME.length + 1);
-            params.card.kinopoisk_id = kinopoisk_id;
-          }
-        }
-        if (kinopoisk_id) {
-          KP__getById(kinopoisk_id, params, function(json) {
             const status = new Lampa.Status(4);
             status.onComplite = onComplite;
             status.append('movie', json);
@@ -647,13 +444,13 @@
           status.append('query', json);
         }, status.error.bind(status));
       }
-      
-      // --- Объединяем объект KP ---
+
+      // --- Объединяем объект KP для Lampa ---
       const KP_OBJECT = {
         SOURCE_NAME: KP_SOURCE_NAME,
         SOURCE_TITLE: KP_SOURCE_TITLE,
         main: KP_mainWrapper,
-        menu: KP_menu,
+        // Для меню мы используем встроенную Lampa.Menu (без переопределения)
         full: KP_fullWrapper,
         list: KP_listWrapper,
         category: KP_categoryWrapper,
@@ -665,8 +462,7 @@
         search: KP_searchWrapper
       };
 
-      // Список источников
-      const ALL_SOURCES = [
+      const KP_ALL_SOURCES = [
         { name: 'tmdb', title: 'TMDB' },
         { name: 'cub', title: 'CUB' },
         { name: 'pub', title: 'PUB' },
@@ -734,12 +530,12 @@
     }
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник
+    // --- Сохранение исходного источника ---
     const originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
       Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
 
-    // --- Функция для загрузки ID страны "Россия" ---
+    // --- Функция загрузки ID страны "Россия" ---
     let rus_id = '225';
     function kp_loadCountryId(callback) {
       try {
@@ -767,7 +563,7 @@
     function addKPButton() {
       const menuEl = Lampa.Menu.render();
       if (!menuEl || !menuEl.length) {
-        console.error('Меню не найдено, повторная попытка через 1000мс');
+        console.error('Меню не найдено, повторная попытка через 1000 мс');
         setTimeout(addKPButton, 1000);
         return;
       }
@@ -858,7 +654,7 @@
           sources[KP_SOURCE_NAME] = KP_SOURCE_TITLE;
         } else {
           sources = {};
-          ALL_SOURCES.forEach(s => {
+          KP_ALL_SOURCES.forEach(s => {
             if (Lampa.Api.sources[s.name]) sources[s.name] = s.title;
           });
         }
