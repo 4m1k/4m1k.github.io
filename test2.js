@@ -40,18 +40,13 @@
 
 
   // Иконка для "Русские фильмы"
-addMenuButton(
-  'data-action="ru_movie_films"',
-  'Русские фильмы',
-  iconFilms,
-  function () {
-    Lampa.Activity.push({
-      component: 'tv_streaming_select',
-      title: 'Русские фильмы'
-    });
-  }
-);
-
+  var iconFilms = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `;
 
   // Иконка для "Русские сериалы"
   var iconSeries = `
@@ -77,7 +72,6 @@ addMenuButton(
 
 
 
-
 // Изменяем обработчик для кнопки "Русские фильмы"
 addMenuButton(
   'data-action="ru_movie_films"',
@@ -90,6 +84,7 @@ addMenuButton(
     });
   }
 );
+
 
 
 
@@ -259,5 +254,3 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   console.log('tv_streaming_select component HTML:', component.html.innerHTML);
   return component;
 });
-
-
