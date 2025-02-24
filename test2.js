@@ -2,73 +2,8 @@
   'use strict';
 
   Lampa.Platform.tv();
-
-  // Константы: селектор для кнопки TV и таймаут перемещения
-  var ITEM_TV_SELECTOR = '[data-action="tv"]';
-  var ITEM_MOVE_TIMEOUT = 2000;
-
-  // Функция для перемещения элемента
-  var moveItemAfter = function (item, after) {
-    return setTimeout(function () {
-      $(item).insertAfter($(after));
-    }, ITEM_MOVE_TIMEOUT);
-  };
-
-  // Функция для добавления отдельной кнопки в меню
-  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
-    var NEW_ITEM_ATTR = newItemAttr;
-    var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
-    var field = $(`
-      <li class="menu__item selector" ${NEW_ITEM_ATTR}>
-        <div class="menu__ico">${iconHTML}</div>
-        <div class="menu__text">${newItemText}</div>
-      </li>
-    `);
-    field.on('hover:enter', onEnterHandler);
-    if (window.appready) {
-      Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-      moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
-    } else {
-      Lampa.Listener.follow('app', function (event) {
-        if (event.type === 'ready') {
-          Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-          moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
-        }
-      });
-    }
-  }
-
-
-  // Иконка для "Русские фильмы"
-  var iconFilms = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-  `;
-
-  // Иконка для "Русские сериалы"
-  var iconSeries = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-  `;
-
-  // Иконка для "Русские мультфильмы"
-  var iconCartoons = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-  `;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
+  
+  // Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
 Lampa.Component.add('tv_streaming_select', function(object) {
   console.log('tv_streaming_select init:', object);
   var component = {
@@ -209,22 +144,93 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   return component;
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  // Константы: селектор для кнопки TV и таймаут перемещения
+  var ITEM_TV_SELECTOR = '[data-action="tv"]';
+  var ITEM_MOVE_TIMEOUT = 2000;
+
+  // Функция для перемещения элемента
+  var moveItemAfter = function (item, after) {
+    return setTimeout(function () {
+      $(item).insertAfter($(after));
+    }, ITEM_MOVE_TIMEOUT);
+  };
+
+  // Функция для добавления отдельной кнопки в меню
+  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
+    var NEW_ITEM_ATTR = newItemAttr;
+    var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
+    var field = $(`
+      <li class="menu__item selector" ${NEW_ITEM_ATTR}>
+        <div class="menu__ico">${iconHTML}</div>
+        <div class="menu__text">${newItemText}</div>
+      </li>
+    `);
+    field.on('hover:enter', onEnterHandler);
+    if (window.appready) {
+      Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
+      moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
+    } else {
+      Lampa.Listener.follow('app', function (event) {
+        if (event.type === 'ready') {
+          Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
+          moveItemAfter(NEW_ITEM_SELECTOR, ITEM_TV_SELECTOR);
+        }
+      });
+    }
+  }
+
+
+  // Иконка для "Русские фильмы"
+  var iconFilms = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `;
+
+  // Иконка для "Русские сериалы"
+  var iconSeries = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `;
+
+  // Иконка для "Русские мультфильмы"
+  var iconCartoons = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+  `;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 // Изменяем обработчик для кнопки "Русские фильмы"
-addMenuButton(
-  'data-action="ru_movie_films"',
-  'Русские фильмы',
-  iconFilms,
-  function () {
-    console.log('Нажата кнопка Русские фильмы');
-    Lampa.Activity.replace({
-      component: 'tv_streaming_select',
-      title: 'Русские фильмы'
-    });
+Lampa.Listener.follow('app', function(event) {
+  if (event.type === 'ready') {
+    addMenuButton(
+      'data-action="ru_movie_films"',
+      'Русские фильмы',
+      iconFilms,
+      function () {
+        console.log('Нажата кнопка Русские фильмы');
+        Lampa.Activity.replace({
+          component: 'tv_streaming_select',
+          title: 'Русские фильмы'
+        });
+      }
+    );
   }
-);
+});
 
 
 
