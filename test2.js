@@ -40,7 +40,7 @@
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
         var img = elem.posterUrlPreview || elem.posterUrl || '';
-        var result = {
+        return {
           source: 'KP',
           id: 'KP_' + kinopoisk_id,
           title: title,
@@ -48,20 +48,13 @@
           overview: elem.description || elem.shortDescription || '',
           img: img,
           background_image: img,
-          vote_average: parseFloat(elem.ratingKinopoisk || elem.rating) || 0,
-          vote_count: elem.ratingKinopoiskVoteCount || elem.ratingVoteCount || 0,
+          vote_average: parseFloat(elem.rating) || 0,
+          vote_count: elem.ratingVoteCount || 0,
           kinopoisk_id: kinopoisk_id,
           type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
         };
-        // Для сериалов задаем first_air_date, для фильмов — release_date
-        if(result.type === 'tv'){
-          result.first_air_date = elem.startYear || elem.year || '';
-        } else {
-          result.release_date = elem.year || '';
-        }
-        return result;
       }
-      // Загрузка списка элементов по категории
+      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror){
         var page = params.page || 1;
         var url = method;
@@ -76,7 +69,7 @@
           oncomplite({ results: results, page: page, total_pages: total_pages });
         }, onerror);
       }
-      // Загрузка детальной информации по ID
+      // Функция для загрузки детальной информации по ID
       function getById(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
         getFromCache(url, function(json, cached){
@@ -88,14 +81,15 @@
           }
         }, onerror);
       }
-      // Дополнительная функция для получения расширенной информации (например, сезонов)
+      // *** Новая функция getFullDetails ***
       function getFullDetails(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
-            // Если основные поля пусты, делаем дополнительный запрос к /seasons
+            // Если основные поля пусты, можно сделать дополнительный запрос (пример):
             if(!result.title || !result.img){
+              // Допустим, для сериалов можно запросить данные о сезонах
               get(url + '/seasons', function(seasons){
                 if(seasons && seasons.items && seasons.items.length){
                   result.overview += "\nСезоны: " + seasons.items.length;
@@ -119,13 +113,14 @@
           getList(params.url, params, oncomplite, onerror);
         },
         full: function(card, params, oncomplite, onerror){
-          // Если kinopoisk_id отсутствует, извлекаем его из card.id
+          // Если поле kinopoisk_id отсутствует, пытаемся извлечь его из card.id
           var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
           if(!id) {
             console.error('KP.full: Не найден id для карточки', card);
             return onerror();
           }
           console.log('KP.full: Запрашиваем подробности для id:', id);
+          // Используем новую функцию getFullDetails
           getFullDetails(id, oncomplite, onerror);
         }
       };
@@ -135,7 +130,7 @@
 
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для восстановления
+    // Сохраняем исходный источник для последующего восстановления
     var originalSource = null;
     if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
       originalSource = Object.assign({}, Lampa.Params.values.source);
@@ -236,9 +231,14 @@
           });
         });
 
-        // Добавляем кнопку в конец меню
-        menu.append(kpButton);
-        console.log('Кнопка Кинопоиск добавлена в конец меню');
+        var tvItem = menu.find('[data-action="tv"]');
+        if(tvItem.length){
+          tvItem.after(kpButton);
+          console.log('Кнопка Кинопоиск добавлена после элемента TV');
+        } else {
+          menu.append(kpButton);
+          console.log('Кнопка Кинопоиск добавлена в конец меню');
+        }
       }
     });
   } catch(ex) {
