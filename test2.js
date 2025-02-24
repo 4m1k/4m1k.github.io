@@ -140,6 +140,7 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   var component = {
     html: document.createElement('div'),
     start: function() {
+      console.log('tv_streaming_select: start');
       Lampa.Controller.add('content', {
         link: this,
         toggle: function() {
@@ -149,7 +150,6 @@ Lampa.Component.add('tv_streaming_select', function(object) {
           Lampa.Activity.backward();
         }
       });
-      // Для корректного получения фокуса
       component.html.focus();
       Lampa.Controller.toggle('content');
     },
@@ -163,68 +163,53 @@ Lampa.Component.add('tv_streaming_select', function(object) {
     }
   };
 
-  // Основной контейнер в стиле lmeCatalog (как у TV SHOW СТРИМИНГИ)
-  component.html.className = 'lmeCatalog';
+  // Основной контейнер
   component.html.style.position = 'fixed';
   component.html.style.top = '0';
   component.html.style.left = '0';
   component.html.style.width = '100vw';
   component.html.style.height = '100vh';
-  component.html.style.backgroundColor = '#000';
+  // Яркий фон для отладки:
+  component.html.style.backgroundColor = '#ff0000';
   component.html.style.display = 'flex';
   component.html.style.flexDirection = 'column';
   component.html.style.alignItems = 'center';
   component.html.style.justifyContent = 'center';
   component.html.style.zIndex = '9999';
-  component.html.tabIndex = 0; // чтобы элемент можно было фокусировать
+  component.html.tabIndex = 0;
 
-  // Создадим header, в котором разместим кнопки
-  var header = document.createElement('div');
-  header.className = 'lme-catalog lme-header';
-  header.style.width = '100%';
-  header.style.display = 'flex';
-  header.style.justifyContent = 'center';
+  // Заголовок окна
+  var header = document.createElement('h1');
+  header.innerText = object.title || 'Выберите категорию';
+  header.style.color = '#fff';
   header.style.marginBottom = '40px';
+  header.style.fontSize = '2em';
+  component.html.appendChild(header);
 
-  // Можно добавить заголовок окна, если нужно:
-  var titleText = document.createElement('h1');
-  titleText.innerText = object.title || 'Русские фильмы';
-  titleText.style.color = '#fff';
-  titleText.style.fontSize = '2em';
-  titleText.style.marginBottom = '20px';
-  header.appendChild(titleText);
+  // Контейнер для кнопок
+  var container = document.createElement('div');
+  container.style.display = 'flex';
+  container.style.gap = '60px';
+  container.style.justifyContent = 'center';
+  container.style.width = '100%';
+  // Для отладки добавляем рамку:
+  container.style.border = '2px solid yellow';
 
-  // Контейнер для кнопок выбора категории
-  var btnContainer = document.createElement('div');
-  btnContainer.style.display = 'flex';
-  btnContainer.style.justifyContent = 'center';
-  btnContainer.style.alignItems = 'center';
-  btnContainer.style.gap = '60px';
-  // Отладочно можно добавить рамку:
-  // btnContainer.style.border = '2px solid red';
-
-  // Функция для создания кнопки в стиле TV SHOW (большая иконка, надпись)
-  function createCategoryButton(label, callback) {
-    var btn = document.createElement('div');
-    btn.className = 'full-start__button selector';
-    btn.style.width = '200px';
-    btn.style.height = '200px';
-    btn.style.backgroundColor = '#333';
-    btn.style.display = 'flex';
-    btn.style.flexDirection = 'column';
-    btn.style.justifyContent = 'center';
-    btn.style.alignItems = 'center';
-    btn.style.borderRadius = '10px';
+  function createButton(text, callback) {
+    var btn = document.createElement('button');
+    btn.innerText = text;
+    btn.style.padding = '20px 40px';
     btn.style.fontSize = '1.5em';
-    btn.style.color = '#fff';
     btn.style.cursor = 'pointer';
-    btn.innerText = label;
+    btn.style.border = '2px solid #fff';
+    btn.style.borderRadius = '10px';
+    btn.style.backgroundColor = '#444';
+    btn.style.color = '#fff';
     btn.onclick = callback;
     return btn;
   }
 
-  // Кнопка "Новинки"
-  var btnNew = createCategoryButton('Новинки', function() {
+  var btnNew = createButton('Новинки', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
     Lampa.Activity.push({
       url: url,
@@ -232,12 +217,11 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       component: 'category_full',
       source: 'cp',
       card_type: true,
-      page: 1
+      page: 1,
     });
   });
-
-  // Кнопка "Топ"
-  var btnTop = createCategoryButton('Топ', function() {
+  
+  var btnTop = createButton('Топ', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
     Lampa.Activity.push({
       url: url,
@@ -245,42 +229,14 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       component: 'category_full',
       source: 'cp',
       card_type: true,
-      page: 1
+      page: 1,
     });
   });
+  
+  container.appendChild(btnNew);
+  container.appendChild(btnTop);
+  component.html.appendChild(container);
 
-  btnContainer.appendChild(btnNew);
-  btnContainer.appendChild(btnTop);
-
-  // Собираем разметку компонента
-  // Можно поместить btnContainer в отдельный блок, если нужно добавить еще элементы (например, поиск, избранное, закладки)
-  header.appendChild(btnContainer);
-  component.html.appendChild(header);
-
-  // Если нужно добавить дополнительные кнопки (например, для поиска, избранного, закладок), их можно добавить аналогичным образом.
-  // Например:
-  /*
-  var extraContainer = document.createElement('div');
-  extraContainer.style.display = 'flex';
-  extraContainer.style.justifyContent = 'center';
-  extraContainer.style.alignItems = 'center';
-  extraContainer.style.gap = '40px';
-  // Создаем кнопку "Поиск"
-  var btnSearch = createCategoryButton('Поиск', function() {
-    Lampa.Input.edit({ free: true, nosave: true, nomic: true, value: '' }, function(val) {
-      if(val){
-        object.searchQuery = val;
-        Lampa.Activity.replace(object);
-      } else {
-        Lampa.Controller.toggle('content');
-      }
-    });
-  });
-  extraContainer.appendChild(btnSearch);
-  header.appendChild(extraContainer);
-  */
-
-  // Обработчик для клавиши Esc
   component.html.addEventListener('keydown', function(e) {
     if(e.keyCode === 27) {
       Lampa.Activity.backward();
@@ -289,3 +245,4 @@ Lampa.Component.add('tv_streaming_select', function(object) {
 
   return component;
 });
+
