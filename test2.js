@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  // Определяем иконки (можете менять по своему вкусу)
+  // Определяем иконки для меню (оставляем их для кнопок меню)
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -25,16 +25,14 @@
   `;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Регистрация компонента для "Русские фильмы" – окно с выбором категорий (Новинки / Топ)
+  // Компонент для "Русские фильмы" – окно с выбором категорий (постеры вместо надписей)
   function ruFilmsComponent(object) {
-    // Создаем экземпляр взаимодействия на основе Lampa.InteractionCategory
     var comp = new Lampa.InteractionCategory(object);
     
     comp.create = function(){
-      // Отображаем loader, если нужно
       this.activity.loader(true);
       
-      // Создаем полноэкранный контейнер
+      // Создаем контейнер для полноэкранного окна
       var container = document.createElement('div');
       container.className = 'ru_films_select';
       container.style.width  = '100vw';
@@ -46,15 +44,17 @@
       container.style.justifyContent = 'center';
       container.tabIndex = 0;
       
-      // Заголовок
+      // Заголовок окна (уже отображается в head приложения, поэтому можно его оставить или убрать)
       var header = document.createElement('h1');
       header.innerText = object.title || 'Русские фильмы';
       header.style.color = '#fff';
       header.style.marginBottom = '40px';
       header.style.fontSize = '2em';
+      // Если надпись уже есть в верхнем меню, её можно убрать:
+      // header.style.display = 'none';
       container.appendChild(header);
       
-      // Контейнер для кнопок
+      // Контейнер для кнопок категорий
       var btnContainer = document.createElement('div');
       btnContainer.style.display = 'flex';
       btnContainer.style.gap = '60px';
@@ -62,28 +62,37 @@
       btnContainer.style.alignItems = 'center';
       container.appendChild(btnContainer);
       
-      // Функция для создания большой кнопки
-      function createBtn(label, callback) {
+      // Функция для создания кнопки в виде широкой картинки (без надписи внутри)
+      function createCategoryButton(callback, poster) {
         var btn = document.createElement('div');
-        btn.className = 'full-start__button selector';
-        btn.style.width = '200px';
+        // Сделаем кнопку шире, как в плагине коллекций
+        btn.style.width = '300px';
         btn.style.height = '200px';
         btn.style.backgroundColor = '#444';
         btn.style.display = 'flex';
-        btn.style.flexDirection = 'column';
         btn.style.alignItems = 'center';
         btn.style.justifyContent = 'center';
         btn.style.borderRadius = '10px';
-        btn.style.fontSize = '1.5em';
-        btn.style.color = '#fff';
         btn.style.cursor = 'pointer';
-        btn.innerText = label;
+        // Создаем img, который занимает всю кнопку
+        var img = document.createElement('img');
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        // Если передан poster, используем его, иначе placeholder
+        img.src = poster || 'https://via.placeholder.com/300x200?text=Нет+изображения';
+        btn.appendChild(img);
         btn.onclick = callback;
         return btn;
       }
       
+      // Для кнопок можно использовать постеры из объекта, если они заданы
+      // Например: object.poster_new и object.poster_top
+      var posterNew = object.poster_new || object.poster || 'https://via.placeholder.com/300x200?text=Новинки';
+      var posterTop = object.poster_top || object.poster || 'https://via.placeholder.com/300x200?text=Топ';
+      
       // Кнопка "Новинки"
-      var btnNew = createBtn('Новинки', function(){
+      var btnNew = createCategoryButton(function(){
         var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}&category=new`;
         Lampa.Activity.push({
           url: url,
@@ -93,10 +102,10 @@
           card_type: true,
           page: 1
         });
-      });
+      }, posterNew);
       
       // Кнопка "Топ"
-      var btnTop = createBtn('Топ', function(){
+      var btnTop = createCategoryButton(function(){
         var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
         Lampa.Activity.push({
           url: url,
@@ -106,12 +115,11 @@
           card_type: true,
           page: 1
         });
-      });
+      }, posterTop);
       
       btnContainer.appendChild(btnNew);
       btnContainer.appendChild(btnTop);
       
-      // Устанавливаем разметку в активность
       this.activity.render().html(container);
       this.activity.loader(false);
     };
@@ -120,12 +128,31 @@
   }
   Lampa.Component.add('ru_films_select', ruFilmsComponent);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Регистрация компонентов для "Русские сериалы" и "Русские мультфильмы" не требуют отдельного экрана выбора.
-  // Их обработчики будут сразу запускать активность с нужным URL.
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Для "Русские сериалы" и "Русские мультфильмы" можно сразу запускать активность с нужным URL:
+  function ruSeriesHandler() {
+    Lampa.Activity.push({
+      url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
+      title: 'Русские сериалы',
+      component: 'category_full',
+      source: 'cp',
+      card_type: true,
+      page: 1
+    });
+  }
+  function ruCartoonsHandler() {
+    Lampa.Activity.push({
+      url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}`,
+      title: 'Русские мультфильмы',
+      component: 'category_full',
+      source: 'cp',
+      card_type: true,
+      page: 1
+    });
+  }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Функция для добавления кнопки в меню (аналог addMenuButton из плагина коллекций)
+  // Функция для добавления кнопки в меню (аналог из плагина коллекций)
   function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
     var NEW_ITEM_ATTR = newItemAttr;
     var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
@@ -138,7 +165,6 @@
     field.on('hover:enter', onEnterHandler);
     if (window.appready) {
       Lampa.Menu.render().find('[data-action="tv"]').after(field);
-      // Перемещаем элемент через заданный таймаут
       setTimeout(function(){
         $(NEW_ITEM_SELECTOR).insertAfter(Lampa.Menu.render().find('[data-action="tv"]'));
       }, 2000);
@@ -154,9 +180,9 @@
     }
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Добавляем кнопку "Русские фильмы"
-  function addRuFilmsMenuButton(){
+  // Функция для добавления кнопок в меню
+  function addMenuButtons(){
+    // "Русские фильмы" – открывает экран с выбором категорий (постерами)
     addMenuButton(
       'data-action="ru_movie_films"',
       'Русские фильмы',
@@ -168,52 +194,20 @@
         });
       }
     );
-  }
-
-  // Добавляем кнопку "Русские сериалы"
-  function addRuSeriesMenuButton(){
+    // "Русские сериалы" – сразу открывает активность
     addMenuButton(
       'data-action="ru_movie_series"',
       'Русские сериалы',
       iconSeries,
-      function () {
-        Lampa.Activity.push({
-          url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
-          title: 'Русские сериалы',
-          component: 'category_full',
-          source: 'cp',
-          card_type: true,
-          page: 1
-        });
-      }
+      ruSeriesHandler
     );
-  }
-
-  // Добавляем кнопку "Русские мультфильмы"
-  function addRuCartoonsMenuButton(){
+    // "Русские мультфильмы" – сразу открывает активность
     addMenuButton(
       'data-action="ru_movie_cartoons"',
       'Русские мультфильмы',
       iconCartoons,
-      function () {
-        Lampa.Activity.push({
-          url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}`,
-          title: 'Русские мультфильмы',
-          component: 'category_full',
-          source: 'cp',
-          card_type: true,
-          page: 1
-        });
-      }
+      ruCartoonsHandler
     );
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Добавляем кнопки в меню после готовности приложения
-  function addMenuButtons(){
-    addRuFilmsMenuButton();
-    addRuSeriesMenuButton();
-    addRuCartoonsMenuButton();
   }
 
   if(window.appready){
