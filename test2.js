@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  // Если плагин уже загружен – ничего не делаем
+  // Если плагин уже загружен – выходим
   if(window.KPPluginLoaded) return;
   window.KPPluginLoaded = true;
   console.log('KP Plugin script loaded');
@@ -285,7 +285,6 @@
                   film.distributions_obj = distributions;
                   KP_getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Запрашиваем похожие фильмы вместо sequels_and_prequels
                     KP_getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       KP_setCache(url, film);
@@ -297,6 +296,23 @@
             } else onError();
           }, onError);
         }
+      }
+
+      // --- Добавляем недостающие функции: KP_seasons и KP_menuCategory ---
+      function KP_seasons(tv, from, onComplite) {
+        const status = new Lampa.Status(from.length);
+        status.onComplite = onComplite;
+        from.forEach(function(season) {
+          const s = (tv.seasons || []).filter(s => s.season_number === season);
+          if (s.length) {
+            status.append('' + season, s[0]);
+          } else {
+            status.error();
+          }
+        });
+      }
+      function KP_menuCategory(params, onComplite) {
+        onComplite([]);
       }
 
       // --- Stub‑реализации основных функций ---
@@ -450,7 +466,7 @@
         SOURCE_NAME: KP_SOURCE_NAME,
         SOURCE_TITLE: KP_SOURCE_TITLE,
         main: KP_mainWrapper,
-        // Для меню мы используем встроенную Lampa.Menu (без переопределения)
+        // Для меню используется встроенная Lampa.Menu
         full: KP_fullWrapper,
         list: KP_listWrapper,
         category: KP_categoryWrapper,
@@ -523,7 +539,7 @@
           }, onError);
         } else onError();
       }
-      
+
       // Объединяем конечный объект KP для Lampa
       Lampa.Api.sources.KP = KP_OBJECT;
       console.log('KP API интегрирован');
