@@ -1,6 +1,13 @@
-if (!window.KPPluginLoaded) {
+// Оборачиваем весь плагин в IIFE и проверяем, загружен ли он уже
+(function(){
+  if(window.KPPluginLoaded){
+    console.log("KP Plugin уже загружен");
+    return;
+  }
   window.KPPluginLoaded = true;
-  (function(){
+  
+  // Весь код плагина помещён в отдельный блок для минимизации утечек в глобальную область
+  {
     'use strict';
     console.log('KP Plugin script loaded');
 
@@ -1192,8 +1199,10 @@ if (!window.KPPluginLoaded) {
       if (!window.kp_source_plugin) startPlugin();
       Lampa.Api.sources.KP = KP_OBJECT;
       console.log('KP API интегрирован');
-    } catch (ex) {
-      console.error('Script error:', ex);
     }
-  })();
-}
+    /* ===== Конец интеграции KP API ===== */
+  }
+  catch(ex) {
+    console.error('Script error:', ex);
+  }
+})();
