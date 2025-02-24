@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  // Если плагин уже загружен – прекращаем выполнение
+  // Предотвращаем повторное выполнение плагина
   if(window.KPPluginLoaded) return;
   window.KPPluginLoaded = true;
   console.log('KP Plugin script loaded');
@@ -140,9 +140,7 @@
           "img": elem.posterUrlPreview || elem.posterUrl || '',
           "background_image": elem.coverUrl || elem.posterUrl || elem.posterUrlPreview || '',
           "genres": elem.genres && elem.genres.map(function(e) {
-            if(e.genre === 'для взрослых') {
-              adult = true;
-            }
+            if(e.genre === 'для взрослых') { adult = true; }
             return { "id": e.genre && genres_map[e.genre] || 0, "name": e.genre, "url": '' };
           }) || [],
           "production_companies": [],
@@ -265,6 +263,7 @@
         };
       }
 
+      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror) {
         var page = params.page || 1;
         var url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
@@ -306,7 +305,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Вместо запроса sequels_and_prequels (возвращавшего 404) запрашиваем similars:
+                    // Запрашиваем похожие фильмы вместо sequels_and_prequels (возвращавшего 404)
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -396,6 +395,17 @@
         }, status.error.bind(status));
       }
 
+      // Минимальные stub-реализации функций main, category и discovery.
+      function main(params, oncomplite, onerror) {
+        // Для stub-реализации просто вызываем list
+        list(params, oncomplite, onerror);
+      }
+
+      function category(params, oncomplite, onerror) {
+        // Для stub-реализации также вызываем list
+        list(params, oncomplite, onerror);
+      }
+
       function discovery() {
         return {
           title: SOURCE_TITLE,
@@ -404,7 +414,7 @@
             align_left: true,
             object: { source: SOURCE_NAME }
           },
-          onMore: function onMore(params) {
+          onMore: function(params) {
             Lampa.Activity.push({
               url: 'api/v2.1/films/search-by-keyword',
               title: Lampa.Lang.translate('search') + ' - ' + params.query,
@@ -549,7 +559,8 @@
         person: person,
         seasons: seasons,
         menuCategory: menuCategory,
-        discovery: discovery
+        discovery: discovery,
+        search: search
       };
 
       var ALL_SOURCES = [{
@@ -600,13 +611,12 @@
       }
 
       if (!window.kp_source_plugin) startPlugin();
-
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
     }
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для последующего восстановления
+    // Сохраняем исходный источник для восстановления
     var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
       Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
