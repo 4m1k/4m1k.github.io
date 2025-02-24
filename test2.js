@@ -54,7 +54,7 @@
           type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
         };
       }
-      // Загрузка списка элементов по категории
+      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror){
         var page = params.page || 1;
         var url = method;
@@ -69,13 +69,38 @@
           oncomplite({ results: results, page: page, total_pages: total_pages });
         }, onerror);
       }
-      // Загрузка детальной информации по ID
+      // Функция для загрузки детальной информации по ID
       function getById(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
             oncomplite(result);
+          } else {
+            onerror();
+          }
+        }, onerror);
+      }
+      // *** Новая функция getFullDetails ***
+      function getFullDetails(id, oncomplite, onerror){
+        var url = 'api/v2.2/films/' + id;
+        getFromCache(url, function(json, cached){
+          if(json && json.kinopoiskId){
+            var result = convertElem(json);
+            // Если основные поля пусты, можно сделать дополнительный запрос (пример):
+            if(!result.title || !result.img){
+              // Допустим, для сериалов можно запросить данные о сезонах
+              get(url + '/seasons', function(seasons){
+                if(seasons && seasons.items && seasons.items.length){
+                  result.overview += "\nСезоны: " + seasons.items.length;
+                }
+                oncomplite(result);
+              }, function(){
+                oncomplite(result);
+              });
+            } else {
+              oncomplite(result);
+            }
           } else {
             onerror();
           }
@@ -88,14 +113,15 @@
           getList(params.url, params, oncomplite, onerror);
         },
         full: function(card, params, oncomplite, onerror){
-          // Если поле kinopoisk_id отсутствует, пытаемся извлечь из card.id (удаляя префикс "KP_")
+          // Если поле kinopoisk_id отсутствует, пытаемся извлечь его из card.id
           var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
           if(!id) {
             console.error('KP.full: Не найден id для карточки', card);
             return onerror();
           }
           console.log('KP.full: Запрашиваем подробности для id:', id);
-          getById(id, oncomplite, onerror);
+          // Используем новую функцию getFullDetails
+          getFullDetails(id, oncomplite, onerror);
         }
       };
       Lampa.Api.sources.KP = KP;
@@ -104,7 +130,7 @@
 
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для восстановления
+    // Сохраняем исходный источник для последующего восстановления
     var originalSource = null;
     if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
       originalSource = Object.assign({}, Lampa.Params.values.source);
