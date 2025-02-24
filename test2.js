@@ -6,10 +6,10 @@
     var network = new Lampa.Reguest();
     var cache = {};
 
-    function getCache(key) {
+    function getCache(key){
       var res = cache[key];
       if(res){
-        var cache_timestamp = new Date().getTime() - 1000 * 60 * 60; // 1 час
+        var cache_timestamp = new Date().getTime() - (1000 * 60 * 60); // 1 час
         if(res.timestamp > cache_timestamp) return res.value;
       }
       return null;
@@ -34,7 +34,7 @@
         get(method, oncomplite, onerror);
       }
     }
-    // Функция преобразования элемента из KP API в формат Lampa
+    // Функция преобразования элемента из KP API в формат, понятный Lampa
     function convertElem(elem) {
       var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
       var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
@@ -53,6 +53,7 @@
         type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
       };
     }
+    // Метод для загрузки списка элементов по категории
     function getList(method, params, oncomplite, onerror){
       var page = params.page || 1;
       var url = method;
@@ -67,17 +68,32 @@
          oncomplite({ results: results, page: page, total_pages: total_pages });
       }, onerror);
     }
+    // Метод для загрузки детальной информации по ID фильма/сериала
+    function getById(id, oncomplite, onerror){
+      var url = 'api/v2.2/films/' + id;
+      getFromCache(url, function(json, cached){
+         if(json && json.kinopoiskId){
+           var result = convertElem(json);
+           oncomplite(result);
+         } else {
+           onerror();
+         }
+      }, onerror);
+    }
     
     var KP = {
       SOURCE_NAME: 'KP',
       list: function(params, oncomplite, onerror){
          getList(params.url, params, oncomplite, onerror);
+      },
+      full: function(card, params, oncomplite, onerror){
+         var id = card.kinopoisk_id;
+         if(!id) return onerror();
+         getById(id, oncomplite, onerror);
       }
-      // Дополнительные методы можно добавить при необходимости
     };
     Lampa.Api.sources.KP = KP;
   }
-  
   /* ===== Конец интеграции KP API ===== */
   
   // Сохраняем исходный источник из настроек Лампы для последующего восстановления
@@ -112,7 +128,7 @@
         </li>
       `);
       
-      // При нажатии открывается окно с категориями
+      // Обработчик нажатия кнопки "Кинопоиск"
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
         if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
@@ -128,7 +144,7 @@
             ],
             onSelect: function(item){
               console.log('Выбран пункт:', item);
-              // При выборе категории запускаем загрузку через Lampa.Activity.push с источником KP
+              // При выборе категории запускается загрузка через Lampa.Activity.push с источником "KP"
               Lampa.Activity.push({
                 url: item.data.url,
                 title: item.title,
@@ -157,7 +173,7 @@
         }
       });
       
-      // Добавляем кнопку после элемента с data-action="tv", если он найден, иначе в конец меню
+      // Добавляем кнопку "Кинопоиск" после элемента с data-action="tv" (если найден), иначе в конец меню
       var tvItem = menu.find('[data-action="tv"]');
       if(tvItem.length){
         tvItem.after(kpButton);
