@@ -34,7 +34,7 @@
         get(method, oncomplite, onerror);
       }
     }
-    // Функция преобразования элемента из KP API в формат, понятный Lampa
+    // Преобразуем элемент из KP API в формат Lampa
     function convertElem(elem) {
       var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
       var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
@@ -53,7 +53,7 @@
         type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
       };
     }
-    // Метод для загрузки списка элементов по категории
+    // Загрузка списка элементов по категории
     function getList(method, params, oncomplite, onerror){
       var page = params.page || 1;
       var url = method;
@@ -68,7 +68,7 @@
          oncomplite({ results: results, page: page, total_pages: total_pages });
       }, onerror);
     }
-    // Метод для загрузки детальной информации по ID фильма/сериала
+    // Загрузка детальной информации по ID
     function getById(id, oncomplite, onerror){
       var url = 'api/v2.2/films/' + id;
       getFromCache(url, function(json, cached){
@@ -95,8 +95,8 @@
     Lampa.Api.sources.KP = KP;
   }
   /* ===== Конец интеграции KP API ===== */
-  
-  // Сохраняем исходный источник из настроек Лампы для последующего восстановления
+
+  // Сохраняем исходный источник для последующего восстановления
   var originalSource = null;
   if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
     originalSource = Object.assign({}, Lampa.Params.values.source);
@@ -104,7 +104,26 @@
     originalSource = { tmdb: 'TMDB' };
   }
   console.log('Исходный источник сохранён:', originalSource);
-  
+
+  // Функция для получения ID страны "Россия" через фильтры KP API
+  var rus_id = '225'; // значение по умолчанию
+  function loadCountryId(callback){
+    get('api/v2.2/films/filters', function(json){
+      if(json && json.countries){
+        json.countries.forEach(function(c){
+          if(c.country.toLowerCase() === 'россия'){
+            rus_id = c.id;
+          }
+        });
+      }
+      console.log('ID России:', rus_id);
+      if(callback) callback();
+    }, function(){
+      console.error('Не удалось загрузить фильтры для определения страны');
+      if(callback) callback();
+    });
+  }
+
   /* ===== Добавление кнопки "Кинопоиск" в меню ===== */
   Lampa.Listener.follow('app', function(e){
     if(e.type === 'ready'){
@@ -127,61 +146,30 @@
           <div class="menu__text">Кинопоиск</div>
         </li>
       `);
-      
-      // Обработчик нажатия кнопки "Кинопоиск"
+
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
-        if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
-          Lampa.Select.show({
-            title: 'Кинопоиск',
-            items: [
-              { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
-              { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM' } },
-              { title: 'Российские Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM&countries=225' } },
-              { title: 'Российские Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES&countries=225' } },
-              { title: 'Популярные Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES' } },
-              { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
-            ],
-            onSelect: function(item){
-              console.log('Выбран пункт:', item);
-              // При выборе категории запускается загрузка через Lampa.Activity.push с источником "KP"
-              Lampa.Activity.push({
-                url: item.data.url,
-                title: item.title,
-                component: 'category_full',
-                source: 'KP',
-                card_type: true,
-                page: 1,
-                onBack: function(){
-                  if(originalSource){
-                    Lampa.Params.select('source', originalSource);
-                  }
-                  Lampa.Controller.toggle("menu");
-                }
-              });
-            },
-            onBack: function(){
-              if(originalSource){
-                Lampa.Params.select('source', originalSource);
-              }
-              Lampa.Controller.toggle("menu");
-            }
-          });
-          console.log('Окно выбора категорий открыто');
-        } else {
-          console.error('Lampa.Select.show недоступен');
-        }
-      });
-      
-      // Добавляем кнопку "Кинопоиск" после элемента с data-action="tv" (если найден), иначе в конец меню
-      var tvItem = menu.find('[data-action="tv"]');
-      if(tvItem.length){
-        tvItem.after(kpButton);
-        console.log('Кнопка Кинопоиск добавлена после элемента TV');
-      } else {
-        menu.append(kpButton);
-        console.log('Кнопка Кинопоиск добавлена в конец меню');
-      }
-    }
-  });
-})();
+        // Сначала загрузим фильтры, чтобы получить актуальный rus_id, затем откроем окно категорий
+        loadCountryId(function(){
+          if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
+            Lampa.Select.show({
+              title: 'Кинопоиск',
+              items: [
+                // Для "Популярные Фильмы" используем TOP_100_POPULAR_FILMS
+                { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
+                // "Топ Фильмы" – TOP_250_BEST_FILMS
+                { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
+                { title: 'Российские Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM&countries=' + rus_id } },
+                { title: 'Российские Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES&countries=' + rus_id } },
+                { title: 'Популярные Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES' } },
+                { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
+              ],
+              onSelect: function(item){
+                console.log('Выбран пункт:', item);
+                // Открываем категорию с источником "KP"
+                Lampa.Activity.push({
+                  url: item.data.url,
+                  title: item.title,
+                  component: 'category_full',
+                  source: 'KP',
+            
