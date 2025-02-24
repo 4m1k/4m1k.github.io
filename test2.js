@@ -78,19 +78,13 @@ addMenuButton(
   'Русские фильмы',
   iconFilms,
   function () {
-    console.log('Нажата кнопка Русские фильмы');
-    Lampa.Activity.push({
-      component: 'tv_streaming_select',
-      title: 'Русские фильмы',
-      onAfter: function(compInstance) {
-        console.log('Активность отрисована, запускаем start компонента');
-        if(compInstance && compInstance.start){
-          compInstance.start();
-        } else {
-          console.error('Метод start не найден у компонента');
-        }
-      }
-    });
+    console.log('Нажата кнопка Русские фильмы (ручной запуск)');
+    var comp = Lampa.Component.get('tv_streaming_select')({ title: 'Русские фильмы' });
+    comp.start();
+    // Очистим текущую активность и вставим новый контент
+    var container = Lampa.Activity.active().activity.find('.activity__body');
+    container.empty();
+    container.append(comp.render(true));
   }
 );
 
