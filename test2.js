@@ -1,21 +1,7 @@
 (function(){
   'use strict';
 
-  // Пример манифеста плагина (можно изменить по необходимости)
-  var manifest = {
-    type: 'video',
-    version: '1.0.0',
-    name: 'Русские фильмы',
-    description: 'Выбор категорий для русских фильмов',
-    component: 'ru_films_select'
-  };
-  Lampa.Manifest.plugins = manifest;
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////
-
-  // Иконка для "Русские фильмы"
+  // Определяем иконки (можете менять по своему вкусу)
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -23,8 +9,6 @@
       <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
-
-  // Иконка для "Русские сериалы"
   var iconSeries = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -32,8 +16,6 @@
       <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
-
-  // Иконка для "Русские мультфильмы"
   var iconCartoons = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -42,19 +24,17 @@
     </svg>
   `;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
- // Регистрация компонента "ru_films_select"
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Регистрация компонента для "Русские фильмы" – окно с выбором категорий (Новинки / Топ)
   function ruFilmsComponent(object) {
-    // Создаем новый экземпляр взаимодействия на основе Lampa.InteractionCategory
+    // Создаем экземпляр взаимодействия на основе Lampa.InteractionCategory
     var comp = new Lampa.InteractionCategory(object);
     
-    // Переопределяем метод create – он отвечает за построение экрана активности
     comp.create = function(){
-      // Показываем loader (если требуется)
+      // Отображаем loader, если нужно
       this.activity.loader(true);
       
-      // Создаем полный экран с заголовком и блоком кнопок
+      // Создаем полноэкранный контейнер
       var container = document.createElement('div');
       container.className = 'ru_films_select';
       container.style.width  = '100vw';
@@ -80,9 +60,9 @@
       btnContainer.style.gap = '60px';
       btnContainer.style.justifyContent = 'center';
       btnContainer.style.alignItems = 'center';
-      // (для отладки можно добавить рамку: btnContainer.style.border = '2px solid yellow';)
+      container.appendChild(btnContainer);
       
-      // Функция создания кнопки – большой квадрат
+      // Функция для создания большой кнопки
       function createBtn(label, callback) {
         var btn = document.createElement('div');
         btn.className = 'full-start__button selector';
@@ -130,45 +110,118 @@
       
       btnContainer.appendChild(btnNew);
       btnContainer.appendChild(btnTop);
-      container.appendChild(btnContainer);
       
-      // Устанавливаем собранную разметку как содержимое активности
+      // Устанавливаем разметку в активность
       this.activity.render().html(container);
-      // Останавливаем loader
       this.activity.loader(false);
     };
-
+    
     return comp;
   }
-
-  // Регистрируем компонент под именем 'ru_films_select'
   Lampa.Component.add('ru_films_select', ruFilmsComponent);
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Регистрация компонентов для "Русские сериалы" и "Русские мультфильмы" не требуют отдельного экрана выбора.
+  // Их обработчики будут сразу запускать активность с нужным URL.
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Функция добавления кнопки в меню (аналог addMenuButton из плагина коллекций)
-  function addRuFilmsMenuButton(){
-    var button = $(`
-      <li class="menu__item selector" data-action="ru_movie_films">
-        <div class="menu__ico">${iconFilms}</div>
-        <div class="menu__text">Русские фильмы</div>
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Функция для добавления кнопки в меню (аналог addMenuButton из плагина коллекций)
+  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
+    var NEW_ITEM_ATTR = newItemAttr;
+    var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
+    var field = $(`
+      <li class="menu__item selector" ${NEW_ITEM_ATTR}>
+        <div class="menu__ico">${iconHTML}</div>
+        <div class="menu__text">${newItemText}</div>
       </li>
     `);
-    button.on('hover:enter', function(){
-      Lampa.Activity.push({
-        component: 'ru_films_select',
-        title: 'Русские фильмы'
+    field.on('hover:enter', onEnterHandler);
+    if (window.appready) {
+      Lampa.Menu.render().find('[data-action="tv"]').after(field);
+      // Перемещаем элемент через заданный таймаут
+      setTimeout(function(){
+        $(NEW_ITEM_SELECTOR).insertAfter(Lampa.Menu.render().find('[data-action="tv"]'));
+      }, 2000);
+    } else {
+      Lampa.Listener.follow('app', function (event) {
+        if (event.type === 'ready') {
+          Lampa.Menu.render().find('[data-action="tv"]').after(field);
+          setTimeout(function(){
+            $(NEW_ITEM_SELECTOR).insertAfter(Lampa.Menu.render().find('[data-action="tv"]'));
+          }, 2000);
+        }
       });
-    });
-    // Добавляем кнопку после элемента с data-action="tv"
-    Lampa.Menu.render().find('[data-action="tv"]').after(button);
+    }
   }
 
-  // Ждем, когда приложение будет готово, и добавляем кнопку
-  if(window.appready) {
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Добавляем кнопку "Русские фильмы"
+  function addRuFilmsMenuButton(){
+    addMenuButton(
+      'data-action="ru_movie_films"',
+      'Русские фильмы',
+      iconFilms,
+      function () {
+        Lampa.Activity.push({
+          component: 'ru_films_select',
+          title: 'Русские фильмы'
+        });
+      }
+    );
+  }
+
+  // Добавляем кнопку "Русские сериалы"
+  function addRuSeriesMenuButton(){
+    addMenuButton(
+      'data-action="ru_movie_series"',
+      'Русские сериалы',
+      iconSeries,
+      function () {
+        Lampa.Activity.push({
+          url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
+          title: 'Русские сериалы',
+          component: 'category_full',
+          source: 'cp',
+          card_type: true,
+          page: 1
+        });
+      }
+    );
+  }
+
+  // Добавляем кнопку "Русские мультфильмы"
+  function addRuCartoonsMenuButton(){
+    addMenuButton(
+      'data-action="ru_movie_cartoons"',
+      'Русские мультфильмы',
+      iconCartoons,
+      function () {
+        Lampa.Activity.push({
+          url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}`,
+          title: 'Русские мультфильмы',
+          component: 'category_full',
+          source: 'cp',
+          card_type: true,
+          page: 1
+        });
+      }
+    );
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Добавляем кнопки в меню после готовности приложения
+  function addMenuButtons(){
     addRuFilmsMenuButton();
+    addRuSeriesMenuButton();
+    addRuCartoonsMenuButton();
+  }
+
+  if(window.appready){
+    addMenuButtons();
   } else {
     Lampa.Listener.follow('app', function(e){
       if(e.type === 'ready'){
-        addRuFilmsMenuButton();
+        addMenuButtons();
       }
     });
   }
