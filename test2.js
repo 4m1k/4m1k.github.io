@@ -89,6 +89,14 @@ addMenuButton(
   }
 );
 
+Lampa.Listener.follow('app', function(event) {
+  if (event.type === 'ready') {
+    Lampa.Activity.push({
+      component: 'tv_streaming_select',
+      title: 'Русские фильмы'
+    });
+  }
+});
 
 
 
