@@ -1,16 +1,16 @@
 (function(){
   'use strict';
 
-  // Функция для получения рандомного постера (если объект не передаёт свои)
+  // Функция для получения рандомного постера (пример – можно заменить реальными данными)
   function getRandomPoster(prefix){
-    // Если передан префикс, формируем URL через Lampa.TMDB.image, иначе placeholder
+    // Если у вас настроен Lampa.TMDB.image – используйте его, иначе placeholder:
     if(typeof Lampa !== 'undefined' && Lampa.TMDB && Lampa.TMDB.image){
       return Lampa.TMDB.image('t/p/w300/' + prefix);
     }
     return 'https://via.placeholder.com/300x200?text=' + encodeURIComponent(prefix);
   }
 
-  // Определяем иконки для меню – здесь в меню будут подписи
+  // Иконки для меню (с подписями)
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -41,42 +41,54 @@
     comp.create = function(){
       this.activity.loader(true);
       
-      // Создаем контейнер, занимающий весь экран
+      // Создаем контейнер окна – не полный экран, а например 80vw x 80vh, с обводкой и закруглением
       var container = document.createElement('div');
       container.className = 'ru_films_select';
-      container.style.width  = '100vw';
-      container.style.height = '100vh';
-      container.style.backgroundColor = '#000';
+      container.style.width  = '80vw';
+      container.style.height = '80vh';
+      container.style.backgroundColor = '#1a1a1a';
+      container.style.border = '2px solid #333';
+      container.style.borderRadius = '10px';
       container.style.display = 'flex';
       container.style.flexDirection = 'column';
       container.style.alignItems = 'center';
       container.style.justifyContent = 'center';
+      container.style.margin = 'auto';
       container.tabIndex = 0;
       
-      // Если заголовок уже есть в шапке, его можно не выводить.
-      // Здесь можно скрыть заголовок:
-      // header.style.display = 'none';
+      // Можно не выводить заголовок, если он уже отображается в верхней части приложения.
+      // Но если нужно – раскомментируйте следующий блок:
+      /*
+      var header = document.createElement('h1');
+      header.innerText = object.title || 'Русские фильмы';
+      header.style.color = '#fff';
+      header.style.marginBottom = '20px';
+      header.style.fontSize = '1.8em';
+      container.appendChild(header);
+      */
       
       // Контейнер для кнопок категорий
       var btnContainer = document.createElement('div');
       btnContainer.style.display = 'flex';
-      btnContainer.style.gap = '60px';
+      btnContainer.style.gap = '40px';
       btnContainer.style.justifyContent = 'center';
       btnContainer.style.alignItems = 'center';
       container.appendChild(btnContainer);
       
-      // Функция создания кнопки – теперь кнопка содержит изображение и подпись под ним
+      // Функция создания кнопки с постером и подписью
       function createCategoryButton(label, callback, posterUrl) {
         var btn = document.createElement('div');
-        // Контейнер кнопки: ширина 300px, высота 250px (200px для постера, 50px для подписи)
-        btn.style.width = '300px';
-        btn.style.height = '250px';
+        // Размер кнопки: 250px x 220px (200px для постера, 20px для подписи, немного отступ)
+        btn.style.width = '250px';
+        btn.style.height = '220px';
+        btn.style.backgroundColor = '#222';
         btn.style.display = 'flex';
         btn.style.flexDirection = 'column';
         btn.style.alignItems = 'center';
         btn.style.justifyContent = 'center';
+        btn.style.border = '2px solid #444';
+        btn.style.borderRadius = '10px';
         btn.style.cursor = 'pointer';
-        // Добавляем класс для анимации при наведении
         btn.classList.add('animated-icon');
         
         // Изображение-постер
@@ -84,6 +96,7 @@
         img.style.width = '100%';
         img.style.height = '200px';
         img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
         img.src = posterUrl;
         btn.appendChild(img);
         
@@ -92,19 +105,18 @@
         caption.innerText = label;
         caption.style.color = '#fff';
         caption.style.fontSize = '1.3em';
-        caption.style.marginTop = '10px';
+        caption.style.marginTop = '5px';
         btn.appendChild(caption);
         
         btn.onclick = callback;
         return btn;
       }
       
-      // Определяем постеры для кнопок "Новинки" и "Топ".
-      // Если объект передает poster_new или poster_top, они будут использованы, иначе – получаем рандомный постер через функцию getRandomPoster.
+      // Определяем постеры для кнопок "Новинки" и "Топ"
+      // Здесь можно использовать реальные постеры из коллекций, если они передаются в объекте.
       var posterNew = object.poster_new || getRandomPoster('Новинки');
       var posterTop = object.poster_top || getRandomPoster('Топ');
       
-      // Кнопка "Новинки"
       var btnNew = createCategoryButton('Новинки', function(){
         var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0,10)}&category=new`;
         Lampa.Activity.push({
@@ -117,7 +129,6 @@
         });
       }, posterNew);
       
-      // Кнопка "Топ"
       var btnTop = createCategoryButton('Топ', function(){
         var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
         Lampa.Activity.push({
@@ -133,7 +144,7 @@
       btnContainer.appendChild(btnNew);
       btnContainer.appendChild(btnTop);
       
-      // Помещаем собранную разметку в активность
+      // Устанавливаем содержимое активности – вставляем контейнер в область активности
       this.activity.render().html(container);
       this.activity.loader(false);
     };
@@ -142,7 +153,7 @@
   }
   Lampa.Component.add('ru_films_select', ruFilmsComponent);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Для "Русские сериалы" и "Русские мультфильмы" сразу запускаем активность с нужным URL
+  // Для "Русские сериалы" и "Русские мультфильмы" сразу запускаем активность
   function ruSeriesHandler() {
     Lampa.Activity.push({
       url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
@@ -165,7 +176,7 @@
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Функция для добавления кнопки в меню – теперь с подписью
+  // Функция добавления кнопки в меню – теперь с подписью под иконкой
   function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
     var NEW_ITEM_ATTR = newItemAttr;
     var field = $(`
@@ -240,7 +251,7 @@
   }
   
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // CSS для анимации и стилей (аналог плагина коллекций)
+  // CSS для анимации и оформления, аналогичный плагину коллекций
   var style = document.createElement('style');
   style.innerHTML = `
     .animated-icon {
@@ -249,10 +260,10 @@
     .animated-icon:hover {
       transform: scale(1.1);
     }
-    /* Пример стилей для кнопок выбора категорий в ru_films_select */
-    .ru_films_select h1 {
-      margin: 0;
-      padding: 0 20px;
+    /* Пример стилей для компонента ru_films_select */
+    .ru_films_select {
+      padding: 20px;
+      box-sizing: border-box;
     }
   `;
   document.head.appendChild(style);
