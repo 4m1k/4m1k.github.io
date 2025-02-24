@@ -2,7 +2,7 @@
   'use strict';
 
   try {
-    // Минимальная интеграция KP API
+    /* ===== Минимальная интеграция KP API ===== */
     if(!Lampa.Api.sources.KP){
       var network = new Lampa.Reguest();
       var cache = {};
@@ -88,8 +88,13 @@
           getList(params.url, params, oncomplite, onerror);
         },
         full: function(card, params, oncomplite, onerror){
-          var id = card.kinopoisk_id;
-          if(!id) return onerror();
+          // Если поле kinopoisk_id отсутствует, пытаемся извлечь из card.id (удаляя префикс "KP_")
+          var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
+          if(!id) {
+            console.error('KP.full: Не найден id для карточки', card);
+            return onerror();
+          }
+          console.log('KP.full: Запрашиваем подробности для id:', id);
           getById(id, oncomplite, onerror);
         }
       };
@@ -97,7 +102,9 @@
       console.log('KP API интегрирован');
     }
 
-    // Сохранение исходного источника для восстановления
+    /* ===== Конец интеграции KP API ===== */
+
+    // Сохраняем исходный источник для восстановления
     var originalSource = null;
     if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
       originalSource = Object.assign({}, Lampa.Params.values.source);
@@ -130,7 +137,7 @@
       }
     }
 
-    // Добавление кнопки "Кинопоиск" в меню
+    /* ===== Добавление кнопки "Кинопоиск" в меню ===== */
     Lampa.Listener.follow('app', function(e){
       if(e.type === 'ready'){
         var menu = Lampa.Menu.render();
