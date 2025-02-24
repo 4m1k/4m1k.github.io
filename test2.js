@@ -4,13 +4,13 @@
   // Ждем готовности приложения
   Lampa.Listener.follow('app', function(e){
     if(e.type === 'ready'){
-      // Получаем меню
       var menu = Lampa.Menu.render();
       if(!menu || !menu.length){
         console.error('Меню не найдено');
         return;
       }
-      
+      console.log('Меню найдено, добавляем кнопку Кинопоиск');
+
       // Создаем кнопку "Кинопоиск"
       var kpButton = $(`
         <li class="menu__item selector" data-action="kp">
@@ -25,42 +25,49 @@
         </li>
       `);
 
-      // Обработчик нажатия кнопки – открываем окно выбора категорий через Lampa.Select.show
-      kpButton.on('hover:enter', function(){
-        Lampa.Select.show({
-          title: 'Кинопоиск',
-          items: [
-            { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
-            { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM' } },
-            { title: 'Российские Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM&countries=225' } },
-            { title: 'Российские Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES&countries=225' } },
-            { title: 'Популярные Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES' } },
-            { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
-          ],
-          onSelect: function(item){
-            // При выборе категории открываем ее через Lampa.Activity.push
-            Lampa.Activity.push({
-              url: item.data.url,
-              title: item.title,
-              component: 'category_full',
-              source: 'KP', // источник можно указать как KP
-              card_type: true,
-              page: 1
-            });
-          },
-          onBack: function(){
-            // При нажатии кнопки "назад" возвращаемся в меню
-            Lampa.Controller.toggle("menu");
-          }
-        });
+      // Обработчик нажатия – используем click вместо hover:enter
+      kpButton.on('click', function(){
+        console.log('Нажата кнопка Кинопоиск');
+        if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
+          Lampa.Select.show({
+            title: 'Кинопоиск',
+            items: [
+              { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
+              { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM' } },
+              { title: 'Российские Фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=FILM&countries=225' } },
+              { title: 'Российские Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES&countries=225' } },
+              { title: 'Популярные Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES' } },
+              { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
+            ],
+            onSelect: function(item){
+              console.log('Выбран пункт:', item);
+              Lampa.Activity.push({
+                url: item.data.url,
+                title: item.title,
+                component: 'category_full',
+                source: 'KP',
+                card_type: true,
+                page: 1
+              });
+            },
+            onBack: function(){
+              Lampa.Controller.toggle("menu");
+            }
+          });
+          console.log('Окно выбора категорий открыто');
+        } else {
+          console.error('Lampa.Select.show недоступен');
+        }
       });
 
-      // Добавляем кнопку "Кинопоиск" после элемента с data-action="tv"
+      // Добавляем кнопку после элемента с data-action="tv", если он найден
       var tvItem = menu.find('[data-action="tv"]');
       if(tvItem.length){
         tvItem.after(kpButton);
+        console.log('Кнопка Кинопоиск добавлена после элемента TV');
       } else {
         menu.append(kpButton);
+        console.log('Кнопка Кинопоиск добавлена в конец меню');
       }
     }
   });
