@@ -67,21 +67,44 @@
   `;
 
   // Добавляем кнопку "Русские фильмы"
-  addMenuButton(
-    'data-action="ru_movie_films"',
-    'Русские фильмы',
-    iconFilms,
-    function () {
-      Lampa.Activity.push({
-        url: `discover/movie?vote_average.gte=5&vote_average.lte=9&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-        title: 'Русские фильмы',
-        component: 'category_full',
-        source: 'cp',
-        card_type: true,
-        page: 1,
-      });
-    }
-  );
+// Добавляем кнопку "Русские фильмы" с выбором категории
+addMenuButton(
+  'data-action="ru_movie_films"',
+  'Русские фильмы',
+  iconFilms,
+  function () {
+    Lampa.Select.show({
+      title: 'Выберите категорию',
+      items: [
+        { title: 'Новинки', type: 'new' },
+        { title: 'Топ', type: 'top' }
+      ],
+      onSelect: function(a) {
+        var type = a.type;
+        var url, title;
+        if (type === 'new') {
+          url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
+          title = 'Русские фильмы - Новинки';
+        } else if (type === 'top') {
+          url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
+          title = 'Русские фильмы - Топ';
+        }
+        Lampa.Activity.push({
+          url: url,
+          title: title,
+          component: 'category_full',
+          source: 'cp',
+          card_type: true,
+          page: 1,
+        });
+      },
+      onBack: function() {
+        Lampa.Controller.toggle('menu');
+      }
+    });
+  }
+);
+
 
   // Добавляем кнопку "Русские сериалы"
   addMenuButton(
