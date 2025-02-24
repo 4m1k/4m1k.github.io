@@ -55,7 +55,7 @@
         };
       }
       // Функция для загрузки списка элементов по категории
-      function getList(method, params, oncomplite, onerror){
+      function _getList(method, params, oncomplite, onerror){
         var page = params.page || 1;
         var url = method;
         url += '&page=' + page;
