@@ -35,7 +35,7 @@
           get(method, oncomplite, onerror);
         }
       }
-      // Преобразование элемента из KP API в формат Lampa (обновлено)
+      // Преобразование элемента из KP API в формат Lampa
       function convertElem(elem) {
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
