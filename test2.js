@@ -73,29 +73,35 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   var component = {
     html: document.createElement('div'),
     start: function() {
-      // Добавляем контроллер для обработки клавиш, если нужно
+      // Добавляем контроллер для управления фокусом и кнопкой "Назад"
       Lampa.Controller.add('content', {
         link: this,
         toggle: function() {
-          // Можно установить фокус на компонент
           Navigator.focused(component.html);
         },
         back: function() {
           Lampa.Activity.backward();
         }
       });
-      // Автоматически устанавливаем фокус
+      // Устанавливаем фокус на наше окно
+      component.html.focus();
       Lampa.Controller.toggle('content');
     },
-    render: function(js) {
-      return js ? this.html : $(this.html);
+    pause: function() {
+      // Можно оставить пустым, если ничего не нужно при паузе
+    },
+    stop: function() {
+      // Аналогично
     },
     destroy: function() {
       this.html.remove();
+    },
+    render: function(js) {
+      return js ? this.html : $(this.html);
     }
   };
 
-  // Стилизация контейнера — полноэкранное окно
+  // Стилизация контейнера – полноэкранное окно
   component.html.className = 'tv-streaming-select';
   component.html.style.position = 'fixed';
   component.html.style.top = '0';
@@ -108,6 +114,8 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   component.html.style.alignItems = 'center';
   component.html.style.justifyContent = 'center';
   component.html.style.zIndex = '9999';
+  // Чтобы окно могло получать фокус через клавиатуру
+  component.html.tabIndex = 0;
 
   // Заголовок окна
   var header = document.createElement('h1');
@@ -167,15 +175,16 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   container.appendChild(btnTop);
   component.html.appendChild(container);
 
-  // Обработчик клавиши Esc для возврата назад
+  // Обработчик для клавиши Esc (код 27) для возврата назад
   component.html.addEventListener('keydown', function(e) {
-    if(e.keyCode === 27) { 
+    if (e.keyCode === 27) {
       Lampa.Activity.backward();
     }
   });
 
   return component;
 });
+
 
 
 
@@ -191,6 +200,7 @@ addMenuButton(
     });
   }
 );
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
