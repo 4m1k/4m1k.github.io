@@ -237,8 +237,8 @@
         });
 
         // Добавляем кнопку в начало меню
-        menu.prepend(kpButton);
-        console.log('Кнопка Кинопоиск добавлена в начало меню');
+         menu.append(kpButton);
+        console.log('Кнопка Кинопоиск добавлена в конец меню');
       }
     });
   } catch(ex) {
