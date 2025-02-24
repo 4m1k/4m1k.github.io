@@ -1,19 +1,15 @@
 (function(){
   'use strict';
 
-  // Функции для получения постеров (как в плагине коллекции постер берется из элемента, здесь используем значения из объекта)
+  // Функции для получения постеров (аналогично плагину коллекции, где postер берётся из element.img)
   function getPosterNew(object){
-    return object.poster_new || (Lampa.TMDB && Lampa.TMDB.image 
-      ? Lampa.TMDB.image('t/p/w300/placeholder_new.jpg') 
-      : 'https://via.placeholder.com/300x200?text=Новинки');
+    return object.poster_new || 'https://via.placeholder.com/300x200?text=Новинки';
   }
   function getPosterTop(object){
-    return object.poster_top || (Lampa.TMDB && Lampa.TMDB.image 
-      ? Lampa.TMDB.image('t/p/w300/placeholder_top.jpg') 
-      : 'https://via.placeholder.com/300x200?text=Топ');
+    return object.poster_top || 'https://via.placeholder.com/300x200?text=Топ';
   }
 
-  // Иконки для меню – для пунктов меню возвращаются подписи
+  // Иконки для меню (возвращаются подписи вместе с иконкой)
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -37,14 +33,14 @@
   `;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Компонент "ru_films_select" – окно выбора категорий для "Русских фильмов"
+  // Компонент "ru_films_select" – экран выбора категорий для "Русских фильмов"
   function ruFilmsComponent(object) {
     var comp = new Lampa.InteractionCategory(object);
     
     comp.create = function(){
       this.activity.loader(true);
       
-      // Адаптивный контейнер окна – аналог плагина коллекции
+      // Контейнер окна – адаптивный (80% ширины, макс. 800px, 80vh по высоте)
       var container = document.createElement('div');
       container.className = 'ru_films_select';
       container.style.width  = '80%';
@@ -62,7 +58,7 @@
       container.style.justifyContent = 'center';
       container.tabIndex = 0;
       
-      // Контейнер для кнопок категорий
+      // Контейнер для кнопок категорий – растягивается по ширине
       var btnContainer = document.createElement('div');
       btnContainer.className = 'category-buttons';
       btnContainer.style.display = 'flex';
@@ -71,10 +67,11 @@
       btnContainer.style.alignItems = 'center';
       container.appendChild(btnContainer);
       
-      // Функция создания кнопки категории – кнопка содержит изображение и подпись под ним
+      // Функция создания кнопки категории – кнопка содержит изображение (постер) и подпись под ним
       function createCategoryButton(label, callback, posterUrl) {
         var btn = document.createElement('div');
         btn.className = 'category-button selector';
+        // Используем flex для адаптивного размера
         btn.style.flex = '1 1 300px';
         btn.style.margin = '10px';
         btn.style.backgroundColor = '#f5f5f5';
@@ -85,6 +82,7 @@
         btn.style.flexDirection = 'column';
         btn.style.alignItems = 'center';
         btn.style.justifyContent = 'center';
+        // Добавляем класс для анимации при наведении (аналогичный плагину коллекции)
         btn.classList.add('animated-icon');
         
         var img = document.createElement('img');
@@ -108,7 +106,7 @@
         return btn;
       }
       
-      // Постеры для кнопок "Новинки" и "Топ" берутся из объекта (как в плагине коллекции)
+      // Постеры для кнопок "Новинки" и "Топ" – берутся из объекта
       var posterNew = getPosterNew(object);
       var posterTop = getPosterTop(object);
       
@@ -148,7 +146,7 @@
   Lampa.Component.add('ru_films_select', ruFilmsComponent);
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Обработчики для "Русские сериалы" и "Русские мультфильмы" – сразу вызывают активность
+  // Обработчики для "Русские сериалы" и "Русские мультфильмы"
   function ruSeriesHandler(){
     Lampa.Activity.push({
       url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
@@ -171,8 +169,9 @@
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // Функция добавления кнопки в меню – теперь с подписью под иконкой
+  // Функция добавления кнопки в меню – возвращает подписи и иконку
   function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler){
+    // newItemAttr ожидается как строка вида: data-action="ru_movie_films"
     var field = $(`
       <li class="menu__item selector" ${newItemAttr}>
         <div class="menu__ico animated-icon">${iconHTML}</div>
@@ -180,21 +179,8 @@
       </li>
     `);
     field.on('hover:enter', onEnterHandler);
-    if(window.appready){
-      Lampa.Menu.render().find('[data-action="tv"]').after(field);
-      setTimeout(function(){
-        $(newItemAttr).insertAfter(Lampa.Menu.render().find('[data-action="tv"]'));
-      },2000);
-    } else {
-      Lampa.Listener.follow('app', function(event){
-        if(event.type==='ready'){
-          Lampa.Menu.render().find('[data-action="tv"]').after(field);
-          setTimeout(function(){
-            $(newItemAttr).insertAfter(Lampa.Menu.render().find('[data-action="tv"]'));
-          },2000);
-        }
-      });
-    }
+    // Добавляем кнопку сразу в меню
+    Lampa.Menu.render().find('[data-action="tv"]').after(field);
   }
   
   // Функции для добавления кнопок меню
@@ -243,5 +229,33 @@
       }
     });
   }
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Добавляем CSS-стили, аналогичные плагину коллекций
+  var style = document.createElement('style');
+  style.innerHTML = `
+    .animated-icon {
+      transition: transform 0.3s ease;
+    }
+    .animated-icon:hover {
+      transform: scale(1.1);
+    }
+    /* Стили для экрана выбора категорий "Русские фильмы" */
+    .ru_films_select {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .category-button {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .category-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .category-button .caption {
+      font-weight: 600;
+    }
+  `;
+  document.head.appendChild(style);
   
 })();
