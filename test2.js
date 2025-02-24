@@ -263,7 +263,6 @@
         };
       }
 
-      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror) {
         var page = params.page || 1;
         var url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
@@ -305,7 +304,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Запрашиваем похожие фильмы вместо sequels_and_prequels (возвращавшего 404)
+                    // Вместо запроса sequels_and_prequels (404) запрашиваем similars:
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -393,17 +392,6 @@
         getList('api/v2.1/films/search-by-keyword', params, function(json) {
           status.append('query', json);
         }, status.error.bind(status));
-      }
-
-      // Минимальные stub-реализации функций main, category и discovery.
-      function main(params, oncomplite, onerror) {
-        // Для stub-реализации просто вызываем list
-        list(params, oncomplite, onerror);
-      }
-
-      function category(params, oncomplite, onerror) {
-        // Для stub-реализации также вызываем list
-        list(params, oncomplite, onerror);
       }
 
       function discovery() {
@@ -499,54 +487,6 @@
         }, status.error.bind(status));
       }
 
-      function menu() {
-        var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
-        if (menu_list.length) oncomplite(menu_list); else {
-          get('api/v2.2/films/filters', function(j) {
-            if (j.genres) {
-              j.genres.forEach(function(g) {
-                menu_list.push({
-                  "id": g.id,
-                  "title": g.genre,
-                  "url": '',
-                  "hide": g.genre === 'для взрослых',
-                  "separator": !g.genre
-                });
-                genres_map[g.genre] = g.id;
-              });
-            }
-            if (j.countries) {
-              j.countries.forEach(function(c) {
-                countries_map[c.country] = c.id;
-              });
-            }
-            oncomplite(menu_list);
-          }, function() {
-            oncomplite([]);
-          });
-        }
-      }
-
-      function menuCategory(params, oncomplite) {
-        oncomplite([]);
-      }
-
-      function seasons(tv, from, oncomplite) {
-        var status = new Lampa.Status(from.length);
-        status.onComplite = oncomplite;
-        from.forEach(function(season) {
-          var seasons = tv.seasons || [];
-          seasons = seasons.filter(function(s) {
-            return s.season_number === season;
-          });
-          if (seasons.length) {
-            status.append('' + season, seasons[0]);
-          } else {
-            status.error();
-          }
-        });
-      }
-
       var KP = {
         SOURCE_NAME: SOURCE_NAME,
         SOURCE_TITLE: SOURCE_TITLE,
@@ -611,6 +551,7 @@
       }
 
       if (!window.kp_source_plugin) startPlugin();
+
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
     }
@@ -651,6 +592,11 @@
       if (!menu || !menu.length) {
         console.error('Меню не найдено, повторная попытка через 1000мс');
         setTimeout(addKPButton, 1000);
+        return;
+      }
+      // Проверяем, что кнопка ещё не добавлена
+      if (menu.find('[data-action="kp"]').length) {
+        console.log('Кнопка "Кинопоиск" уже добавлена');
         return;
       }
       console.log('Меню найдено, добавляем кнопку Кинопоиск');
@@ -728,9 +674,74 @@
         addKPButton();
       }
     });
-    // Дополнительная попытка через 5 секунд, если кнопка не добавлена
-    setTimeout(addKPButton, 5000);
+    // Дополнительный вызов можно убрать, чтобы избежать дублирования
+    // setTimeout(addKPButton, 5000);
 
+    /* ===== Конец добавления кнопки ===== */
+
+    // Сохраняем исходный источник для восстановления
+    var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
+      Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
+    console.log('Исходный источник сохранён:', originalSource);
+
+    // Функция для получения ID страны "Россия"
+    var rus_id = '225';
+    function loadCountryId(callback) {
+      try {
+        get('api/v2.2/films/filters', function(json) {
+          if (json && json.countries) {
+            json.countries.forEach(function(c) {
+              if (c.country.toLowerCase() === 'россия') {
+                rus_id = c.id;
+              }
+            });
+          }
+          console.log('ID России:', rus_id);
+          if (callback) callback();
+        }, function() {
+          console.error('Не удалось загрузить фильтры для определения страны');
+          if (callback) callback();
+        });
+      } catch (e) {
+        console.error('Ошибка в loadCountryId:', e);
+        if (callback) callback();
+      }
+    }
+
+    /* ===== Запуск плагина KP API ===== */
+    function startPlugin() {
+      window.kp_source_plugin = true;
+      function addPlugin() {
+        if (Lampa.Api.sources[KP.SOURCE_NAME]) {
+          Lampa.Noty.show('Установлен плагин несовместимый с kp_source');
+          return;
+        }
+        Lampa.Api.sources[KP.SOURCE_NAME] = KP;
+        Object.defineProperty(Lampa.Api.sources, KP.SOURCE_NAME, {
+          get: function() { return KP; }
+        });
+        var sources;
+        if (Lampa.Params.values && Lampa.Params.values['source']) {
+          sources = Object.assign({}, Lampa.Params.values['source']);
+          sources[KP.SOURCE_NAME] = KP.SOURCE_TITLE;
+        } else {
+          sources = {};
+          ALL_SOURCES.forEach(function(s) {
+            if (Lampa.Api.sources[s.name]) sources[s.name] = s.title;
+          });
+        }
+        Lampa.Params.select('source', sources, 'tmdb');
+      }
+      if (window.appready) addPlugin(); else {
+        Lampa.Listener.follow('app', function(e) {
+          if (e.type == 'ready') addPlugin();
+        });
+      }
+    }
+
+    if (!window.kp_source_plugin) startPlugin();
+    Lampa.Api.sources.KP = KP;
+    console.log('KP API интегрирован');
   } catch (ex) {
     console.error('Script error:', ex);
   }
