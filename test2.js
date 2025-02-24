@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function(){
   // Задержка 3 секунды для полной инициализации Lampa
   setTimeout(function(){
     try {
-      // Проверяем, что Lampa существует
+      // Проверяем, что объект Lampa доступен
       if (typeof Lampa === 'undefined') {
         console.error('Lampa не найден');
         return;
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
       
       /* ===== Добавление кнопки "Кинопоиск" в меню ===== */
-      // Используем Lampa.Listener, если доступен, или setTimeout как запасной вариант
+      // Используем Lampa.Listener или setTimeout, если он недоступен
       if(Lampa.Listener && typeof Lampa.Listener.follow === 'function'){
         Lampa.Listener.follow('app', function(e){
           if(e.type === 'ready'){
@@ -249,11 +249,10 @@ document.addEventListener('DOMContentLoaded', function(){
           });
         });
         
-        // Добавляем кнопку в конец меню
+        // Добавляем кнопку "Кинопоиск" в конец меню
         menu.append(kpButton);
         console.log('Кнопка Кинопоиск добавлена в конец меню');
       }
-      
     } catch(e) {
       console.error('Script error:', e);
     }
