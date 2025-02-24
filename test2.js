@@ -2,7 +2,7 @@
   'use strict';
 
   try {
-    /* ===== Минимальная интеграция KP API ===== */
+    // Если источник KP ещё не зарегистрирован, регистрируем его
     if(!Lampa.Api.sources.KP){
       var network = new Lampa.Reguest();
       var cache = {};
@@ -95,7 +95,6 @@
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
-            // Если основные поля пусты, делаем дополнительный запрос к /seasons
             if(!result.title || !result.img){
               get(url + '/seasons', function(seasons){
                 if(seasons && seasons.items && seasons.items.length){
@@ -136,12 +135,8 @@
     /* ===== Конец интеграции KP API ===== */
 
     // Сохраняем исходный источник для восстановления
-    var originalSource = null;
-    if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
-      originalSource = Object.assign({}, Lampa.Params.values.source);
-    } else {
-      originalSource = { tmdb: 'TMDB' };
-    }
+    var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ? 
+                           Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
 
     // Функция для получения ID страны "Россия" через фильтры KP API
