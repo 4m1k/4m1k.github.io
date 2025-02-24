@@ -83,7 +83,16 @@ addMenuButton(
       title: 'Русские фильмы'
     });
   }
+if(Lampa.Component.get('tv_streaming_select')){
+  Lampa.Activity.push({
+    component: 'tv_streaming_select',
+    title: 'Русские фильмы'
+  });
+} else {
+  console.error('Компонент tv_streaming_select не зарегистрирован!');
+}
 );
+
 
 
 
