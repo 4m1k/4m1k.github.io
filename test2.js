@@ -70,7 +70,7 @@
         }, onerror);
       }
       // Функция для загрузки детальной информации по ID
-function _getById(id, params, oncomplite, onerror) {
+function getById(id, params, oncomplite, onerror) {
   var url = 'api/v2.2/films/' + id;
   var film = getCache(url);
   if (film) {
