@@ -1,6 +1,5 @@
 (function(){
   'use strict';
-  // Если плагин уже загружен – выходим
   if(window.KPPluginLoaded) return;
   window.KPPluginLoaded = true;
   console.log('KP Plugin script loaded');
@@ -38,16 +37,16 @@
         return str.lastIndexOf(searchString, 0) === 0;
       }
 
-      // --- Сетевые функции ---
-      function KP_get(method, onComplite, onError) {
+      // --- Сетевые функции (переименованы) ---
+      function KP_myGet(method, onComplite, onError) {
         let use_proxy = KP_total_cnt >= 10 && KP_good_cnt > KP_total_cnt / 2;
         if (!use_proxy) KP_total_cnt++;
         const kp_prox = 'https://cors.kp556.workers.dev:8443/';
         const url = 'https://kinopoiskapiunofficial.tech/' + method;
-        console.log('KP_get: URL:', url);
+        console.log('KP_myGet: URL:', url);
         KP_NETWORK.timeout(15000);
         KP_NETWORK.silent((use_proxy ? kp_prox : '') + url, function(json) {
-          console.log('KP_get: Ответ:', json);
+          console.log('KP_myGet: Ответ:', json);
           onComplite(json);
         }, function(a, c) {
           use_proxy = !use_proxy && (KP_proxy_cnt < 10 || KP_good_cnt > KP_proxy_cnt / 2);
@@ -67,17 +66,17 @@
           headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
         });
       }
-      function KP_getComplite(method, onComplite) {
-        KP_get(method, onComplite, () => onComplite(null));
+      function KP_myGetComplite(method, onComplite) {
+        KP_myGet(method, onComplite, () => onComplite(null));
       }
-      function KP_getCompliteIf(condition, method, onComplite) {
+      function KP_myGetCompliteIf(condition, method, onComplite) {
         if (condition) {
-          KP_getComplite(method, onComplite);
+          KP_myGetComplite(method, onComplite);
         } else {
           setTimeout(() => onComplite(null), 10);
         }
       }
-      function KP_getCache(key) {
+      function KP_myGetCache(key) {
         const res = KP_cache[key];
         if (res) {
           const cache_timestamp = new Date().getTime() - KP_CACHE_TIME;
@@ -89,7 +88,7 @@
         }
         return null;
       }
-      function KP_setCache(key, value) {
+      function KP_mySetCache(key, value) {
         const timestamp = new Date().getTime();
         let size = Object.keys(KP_cache).length;
         if (size >= KP_CACHE_SIZE) {
@@ -115,16 +114,16 @@
         }
         KP_cache[key] = { timestamp, value };
       }
-      function KP_getFromCache(method, onComplite, onError) {
-        console.log('KP_getFromCache:', method);
-        const json = KP_getCache(method);
+      function KP_myGetFromCache(method, onComplite, onError) {
+        console.log('KP_myGetFromCache:', method);
+        const json = KP_myGetCache(method);
         if (json) {
           setTimeout(() => onComplite(json, true), 10);
         } else {
-          KP_get(method, onComplite, onError);
+          KP_myGet(method, onComplite, onError);
         }
       }
-      function KP_clear() {
+      function KP_myClear() {
         KP_NETWORK.clear();
       }
 
@@ -249,12 +248,12 @@
       function KP_getListWrapper(method, params, onComplite, onError) {
         const page = params.page || 1;
         const url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
-        KP_getFromCache(url, function(json, cached) {
+        KP_myGetFromCache(url, function(json, cached) {
           let items = [];
           if (json.items && json.items.length) items = json.items;
           else if (json.films && json.films.length) items = json.films;
           else if (json.releases && json.releases.length) items = json.releases;
-          if (!cached && items.length) KP_setCache(url, json);
+          if (!cached && items.length) KP_mySetCache(url, json);
           let results = items.map(elem => KP_convertElem(elem));
           results = results.filter(elem => !elem.adult);
           const total_pages = json.pagesCount || json.totalPages || 1;
@@ -269,25 +268,25 @@
         }, onError);
       }
 
-      // --- Функция получения деталей (переименована, чтобы не дублировалась) ---
+      // --- Функция получения деталей (переименована) ---
       function KP_getByIdInternal(id, params, onComplite, onError) {
         const url = 'api/v2.2/films/' + id;
-        const film = KP_getCache(url);
+        const film = KP_myGetCache(url);
         if (film) {
           setTimeout(() => onComplite(KP_convertElem(film)), 10);
         } else {
-          KP_get(url, function(film) {
+          KP_myGet(url, function(film) {
             if (film.kinopoiskId) {
               const type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
-              KP_getCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function(seasons) {
+              KP_myGetCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function(seasons) {
                 film.seasons_obj = seasons;
-                KP_getComplite('api/v2.2/films/' + id + '/distributions', function(distributions) {
+                KP_myGetComplite('api/v2.2/films/' + id + '/distributions', function(distributions) {
                   film.distributions_obj = distributions;
-                  KP_getComplite('/api/v1/staff?filmId=' + id, function(staff) {
+                  KP_myGetComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    KP_getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
+                    KP_myGetComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
-                      KP_setCache(url, film);
+                      KP_mySetCache(url, film);
                       onComplite(KP_convertElem(film));
                     });
                   });
@@ -298,24 +297,7 @@
         }
       }
 
-      // --- Добавляем недостающие функции: KP_seasons и KP_menuCategory ---
-      function KP_seasons(tv, from, onComplite) {
-        const status = new Lampa.Status(from.length);
-        status.onComplite = onComplite;
-        from.forEach(function(season) {
-          const s = (tv.seasons || []).filter(s => s.season_number === season);
-          if (s.length) {
-            status.append('' + season, s[0]);
-          } else {
-            status.error();
-          }
-        });
-      }
-      function KP_menuCategory(params, onComplite) {
-        onComplite([]);
-      }
-
-      // --- Stub‑реализации основных функций ---
+      // --- Функции-обёртки для внешнего использования ---
       function KP_mainWrapper(params, onComplite, onError) {
         return KP_listWrapper(params, onComplite, onError);
       }
@@ -333,7 +315,7 @@
           }
         }
         if (kinopoisk_id) {
-          KP_getByIdInternal(kinopoisk_id, params, function(json) {
+          KP__getById(kinopoisk_id, params, function(json) {
             const status = new Lampa.Status(4);
             status.onComplite = onComplite;
             status.append('movie', json);
@@ -455,8 +437,8 @@
           onComplite(result);
         };
         const url = 'api/v1/staff/' + params.id;
-        KP_getFromCache(url, function(json, cached) {
-          if (!cached && json.personId) KP_setCache(url, json);
+        KP_myGetFromCache(url, function(json, cached) {
+          if (!cached && json.personId) KP_mySetCache(url, json);
           status.append('query', json);
         }, status.error.bind(status));
       }
@@ -466,11 +448,10 @@
         SOURCE_NAME: KP_SOURCE_NAME,
         SOURCE_TITLE: KP_SOURCE_TITLE,
         main: KP_mainWrapper,
-        // Для меню используется встроенная Lampa.Menu
         full: KP_fullWrapper,
         list: KP_listWrapper,
         category: KP_categoryWrapper,
-        clear: KP_clear,
+        clear: KP_myClear,
         person: KP_personWrapper,
         seasons: KP_seasons,
         menuCategory: KP_menuCategory,
@@ -488,22 +469,22 @@
 
       function KP__getById(id, params, onComplite, onError) {
         const url = 'api/v2.2/films/' + id;
-        const film = KP_getCache(url);
+        const film = KP_myGetCache(url);
         if (film) {
           setTimeout(() => onComplite(KP_convertElem(film)), 10);
         } else {
-          KP_get(url, function(film) {
+          KP_myGet(url, function(film) {
             if (film.kinopoiskId) {
               const type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
-              KP_getCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function(seasons) {
+              KP_myGetCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function(seasons) {
                 film.seasons_obj = seasons;
-                KP_getComplite('api/v2.2/films/' + id + '/distributions', function(distributions) {
+                KP_myGetComplite('api/v2.2/films/' + id + '/distributions', function(distributions) {
                   film.distributions_obj = distributions;
-                  KP_getComplite('/api/v1/staff?filmId=' + id, function(staff) {
+                  KP_myGetComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    KP_getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
+                    KP_myGetComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
-                      KP_setCache(url, film);
+                      KP_mySetCache(url, film);
                       onComplite(KP_convertElem(film));
                     });
                   });
@@ -539,7 +520,7 @@
           }, onError);
         } else onError();
       }
-
+      
       // Объединяем конечный объект KP для Lampa
       Lampa.Api.sources.KP = KP_OBJECT;
       console.log('KP API интегрирован');
@@ -555,7 +536,7 @@
     let rus_id = '225';
     function kp_loadCountryId(callback) {
       try {
-        KP_get('api/v2.2/films/filters', function(json) {
+        KP_myGet('api/v2.2/films/filters', function(json) {
           if (json && json.countries) {
             json.countries.forEach(c => {
               if (c.country.toLowerCase() === 'россия') {
