@@ -53,7 +53,7 @@
           kinopoisk_id: kinopoisk_id,
           type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
         };
-        // Для сериалов задаем first_air_date, для фильмов – release_date
+        // Для сериалов задаем first_air_date, для фильмов — release_date
         if(result.type === 'tv'){
           result.first_air_date = elem.startYear || elem.year || '';
         } else {
@@ -119,7 +119,7 @@
           getList(params.url, params, oncomplite, onerror);
         },
         full: function(card, params, oncomplite, onerror){
-          // Если поле kinopoisk_id отсутствует, извлекаем его из card.id
+          // Если kinopoisk_id отсутствует, извлекаем его из card.id
           var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
           if(!id) {
             console.error('KP.full: Не найден id для карточки', card);
@@ -236,7 +236,7 @@
           });
         });
 
-        // Добавляем кнопку "Кинопоиск" в конец меню
+        // Добавляем кнопку в начало меню
         menu.append(kpButton);
         console.log('Кнопка Кинопоиск добавлена в конец меню');
       }
