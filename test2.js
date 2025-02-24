@@ -20,7 +20,7 @@
       }
       function get(method, oncomplite, onerror){
         var url = 'https://kinopoiskapiunofficial.tech/' + method;
-        console.log('KP API: Отправка запроса по URL: ' + url);
+        console.log('KP API: Отправка запроса по URL:', url);
         network.timeout(15000);
         network.silent(url, function(json){
           console.log('KP API: Получен ответ:', json);
@@ -52,7 +52,7 @@
           original_title: title,
           overview: elem.description || elem.shortDescription || '',
           img: img,
-          background_image: img,
+          background_image: elem.coverUrl || img,
           vote_average: parseFloat(elem.rating) || 0,
           vote_count: elem.ratingVoteCount || 0,
           kinopoisk_id: kinopoisk_id,
@@ -62,8 +62,7 @@
       // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror){
         var page = params.page || 1;
-        var url = method;
-        url += '&page=' + page;
+        var url = method + '&page=' + page;
         getFromCache(url, function(json, cached){
           if(!cached && json && json.items && json.items.length) setCache(url, json);
           var items = json.items || [];
@@ -77,35 +76,14 @@
       // Функция для загрузки детальной информации по ID
       function getById(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
+        console.log('KP API (getById): Отправка запроса по URL:', url);
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
+            console.log('KP API (getById): Получены данные для id', id, result);
             oncomplite(result);
           } else {
-            onerror();
-          }
-        }, onerror);
-      }
-      // Дополнительная функция для получения расширенной информации (например, сезонов)
-      function getFullDetails(id, oncomplite, onerror){
-        var url = 'api/v2.2/films/' + id;
-        getFromCache(url, function(json, cached){
-          if(json && json.kinopoiskId){
-            var result = convertElem(json);
-            // Если основных полей не хватает, можно сделать дополнительный запрос (например, к /seasons)
-            if(!result.title || !result.img){
-              get(url + '/seasons', function(seasons){
-                if(seasons && seasons.items && seasons.items.length){
-                  result.overview += "\nСезоны: " + seasons.items.length;
-                }
-                oncomplite(result);
-              }, function(){
-                oncomplite(result);
-              });
-            } else {
-              oncomplite(result);
-            }
-          } else {
+            console.error('KP API (getById): Нет данных для id', id);
             onerror();
           }
         }, onerror);
@@ -124,7 +102,7 @@
             return onerror();
           }
           console.log('KP.full: Запрашиваем подробности для id:', id);
-          // Прямой вызов getById (без дополнительного запроса)
+          // Используем прямой вызов getById – дополнительный запрос не нужен
           getById(id, oncomplite, onerror);
         }
       };
@@ -134,12 +112,8 @@
     /* ===== Конец интеграции KP API ===== */
 
     // Сохраняем исходный источник для восстановления
-    var originalSource = null;
-    if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
-      originalSource = Object.assign({}, Lampa.Params.values.source);
-    } else {
-      originalSource = { tmdb: 'TMDB' };
-    }
+    var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
+                           Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
 
     // Функция для получения ID страны "Россия" через фильтры KP API
