@@ -35,7 +35,7 @@
           get(method, oncomplite, onerror);
         }
       }
-      // Преобразование элемента из KP API в формат Lampa (обновлено)
+      // Преобразование элемента из KP API в формат Lampa
       function convertElem(elem) {
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
@@ -47,14 +47,13 @@
           original_title: title,
           overview: elem.description || elem.shortDescription || '',
           img: img,
-          background_image: elem.coverUrl || img,
+          background_image: img,
           vote_average: parseFloat(elem.ratingKinopoisk || elem.rating) || 0,
           vote_count: elem.ratingKinopoiskVoteCount || elem.ratingVoteCount || 0,
           kinopoisk_id: kinopoisk_id,
-          type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie',
-          persons: { cast: [], crew: [] },
-          genres: elem.genres ? elem.genres.map(function(e){ return { id: 0, name: e.genre }; }) : []
+          type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
         };
+        // Для сериалов задаем first_air_date, для фильмов — release_date
         if(result.type === 'tv'){
           result.first_air_date = elem.startYear || elem.year || '';
         } else {
@@ -120,6 +119,7 @@
           getList(params.url, params, oncomplite, onerror);
         },
         full: function(card, params, oncomplite, onerror){
+          // Если kinopoisk_id отсутствует, извлекаем его из card.id
           var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
           if(!id) {
             console.error('KP.full: Не найден id для карточки', card);
@@ -145,7 +145,7 @@
     console.log('Исходный источник сохранён:', originalSource);
 
     // Функция для получения ID страны "Россия" через фильтры KP API
-    var rus_id = '225';
+    var rus_id = '225'; // значение по умолчанию
     function loadCountryId(callback){
       try {
         get('api/v2.2/films/filters', function(json){
@@ -236,7 +236,7 @@
           });
         });
 
-        // Добавляем кнопку "Кинопоиск" в конец меню
+        // Добавляем кнопку в конец меню
         menu.append(kpButton);
         console.log('Кнопка Кинопоиск добавлена в конец меню');
       }
