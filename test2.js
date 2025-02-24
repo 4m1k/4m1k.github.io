@@ -73,7 +73,6 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   var component = {
     html: document.createElement('div'),
     start: function() {
-      // Добавляем контроллер для управления фокусом и кнопкой "Назад"
       Lampa.Controller.add('content', {
         link: this,
         toggle: function() {
@@ -83,16 +82,11 @@ Lampa.Component.add('tv_streaming_select', function(object) {
           Lampa.Activity.backward();
         }
       });
-      // Устанавливаем фокус на наше окно
       component.html.focus();
       Lampa.Controller.toggle('content');
     },
-    pause: function() {
-      // Можно оставить пустым, если ничего не нужно при паузе
-    },
-    stop: function() {
-      // Аналогично
-    },
+    pause: function() {},
+    stop: function() {},
     destroy: function() {
       this.html.remove();
     },
@@ -114,7 +108,6 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   component.html.style.alignItems = 'center';
   component.html.style.justifyContent = 'center';
   component.html.style.zIndex = '9999';
-  // Чтобы окно могло получать фокус через клавиатуру
   component.html.tabIndex = 0;
 
   // Заголовок окна
@@ -129,6 +122,10 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   var container = document.createElement('div');
   container.style.display = 'flex';
   container.style.gap = '60px';
+  container.style.width = '100%';
+  container.style.justifyContent = 'center';
+  // Отладочный стиль: рамка
+  container.style.border = '2px solid red';
 
   // Функция для создания кнопки
   function createButton(text, callback) {
@@ -175,15 +172,16 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   container.appendChild(btnTop);
   component.html.appendChild(container);
 
-  // Обработчик для клавиши Esc (код 27) для возврата назад
+  // Обработчик для клавиши Esc
   component.html.addEventListener('keydown', function(e) {
-    if (e.keyCode === 27) {
+    if(e.keyCode === 27) { 
       Lampa.Activity.backward();
     }
   });
 
   return component;
 });
+
 
 
 
@@ -200,6 +198,7 @@ addMenuButton(
     });
   }
 );
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
