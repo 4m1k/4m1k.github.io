@@ -164,7 +164,7 @@ function full() {
         list: function(params, oncomplite, onerror){
           getList(params.url, params, oncomplite, onerror);
         },
-full: function(card, params, oncomplite, onerror){
+ full: function(card, params, oncomplite, onerror){
   console.log('KP.full вызывается для карточки:', card);
   var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
   if(!id) {
@@ -174,10 +174,7 @@ full: function(card, params, oncomplite, onerror){
   console.log('KP.full: Запрашиваем подробности для id:', id);
   getById(id, oncomplite, onerror);
 }
-          console.log('KP.full: Запрашиваем подробности для id:', id);
-          // Используем прямой вызов getById вместо getFullDetails
-          getById(id, oncomplite, onerror);
-        }
+
       };
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
