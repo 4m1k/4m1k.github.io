@@ -672,4 +672,4 @@
   } catch (ex) {
     console.error('Script error:', ex);
   }
-})();
+});
