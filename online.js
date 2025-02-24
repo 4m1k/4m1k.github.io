@@ -71,7 +71,7 @@
       season: [],
       voice: []
     };
-    var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
+    var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
 
     function account(url) {
       url = url + '';
@@ -298,7 +298,6 @@
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
           var name = balanserName(j);
-		  if(name === 'filmix' || name === 'rc/filmix'  || name === 'filmixtv' ) return; // пропускаем эти источники
           sources[name] = {
             url: j.url,
             name: j.name,
@@ -306,6 +305,18 @@
           };
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
+        var lowPriorityBalancers = ['filmix', 'filmixtv', 'kinopub'];
+
+        filter_sources.sort(function(a, b) {
+
+            if (a === 'zetflix') return -1;
+            if (b === 'zetflix') return 1;
+            var aLow = lowPriorityBalancers.indexOf(a) !== -1;
+            var bLow = lowPriorityBalancers.indexOf(b) !== -1;
+            if (aLow && !bLow) return 1;
+            if (bLow && !aLow) return -1;
+            return 0;
+        });
         if (filter_sources.length) {
           var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
           if (last_select_balanser[object.movie.id]) {
@@ -313,9 +324,16 @@
           } else {
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
-          if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
-          source = sources[balanser].url;
+            if (lowPriorityBalancers.indexOf(balanser) !== -1 && filter_sources.some(function(item) {
+                return lowPriorityBalancers.indexOf(item) === -1;
+            })) {
+                balanser = filter_sources.find(function(item) {
+                    return lowPriorityBalancers.indexOf(item) === -1;
+                });
+            }
+            if (!sources[balanser]) balanser = filter_sources[0];
+            if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
+            source = sources[balanser].url;
           resolve(json);
         } else {
           reject();
@@ -632,8 +650,8 @@
     this.parse = function(str) {
       var json = Lampa.Arrays.decodeJson(str, {});
 	   if (json && json.accsdb && json.msg && json.msg.indexOf('@Abcinema_bot') !== -1) {
-        json.msg = 'Войдите в систему, используя ваш аккаунт'; // новый текст
-        json.accsdb = false; // сброс флага ошибки, чтобы дальше не обрабатывать как ошибку
+        json.msg = '';
+        json.accsdb = false;
     }
       if (Lampa.Arrays.isObject(str) && str.rch) json = str;
       if (json.rch) return this.rch(json);
@@ -1322,23 +1340,14 @@
       scroll.append(html);
       this.loading(false);
     };
-this.noConnectToServer = function(er) {
-    var customMsg = 'Войдите в систему, используя ваш аккаунт';
-    if(er && er.accsdb) {
-        if(er.msg && er.msg.indexOf('@Abcinema_bot') !== -1) {
-            er.msg = customMsg;
-        }
-        // Сбросим флаг, чтобы ошибка не обрабатывалась дальше
-        er.accsdb = false;
-    }
-    var html = Lampa.Template.get('lampac_does_not_answer', {});
-    html.find('.online-empty__time').text(er && er.accsdb 
-        ? er.msg 
-        : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', sources[balanser].name)
-    );
-    scroll.clear();
-    scroll.append(html);
-    this.loading(false);
+    this.noConnectToServer = function(er) {
+      var html = Lampa.Template.get('lampac_does_not_answer', {});
+      html.find('.online-empty__buttons').remove();
+      html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
+      html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
+      scroll.clear();
+      scroll.append(html);
+      this.loading(false);
     };
     this.doesNotAnswer = function(er) {
       var _this9 = this;
@@ -1585,21 +1594,20 @@ this.noConnectToServer = function(er) {
       Lampa.Template.add('lampac_prestige_folder', "<div class=\"online-prestige online-prestige--folder selector\">\n            <div class=\"online-prestige__folder\">\n                <svg viewBox=\"0 0 128 112\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"20\" width=\"128\" height=\"92\" rx=\"13\" fill=\"white\"></rect>\n                    <path d=\"M29.9963 8H98.0037C96.0446 3.3021 91.4079 0 86 0H42C36.5921 0 31.9555 3.3021 29.9963 8Z\" fill=\"white\" fill-opacity=\"0.23\"></path>\n                    <rect x=\"11\" y=\"8\" width=\"106\" height=\"76\" rx=\"13\" fill=\"white\" fill-opacity=\"0.51\"></rect>\n                </svg>\n            </div>\n            <div class=\"online-prestige__body\">\n                <div class=\"online-prestige__head\">\n                    <div class=\"online-prestige__title\">{title}</div>\n                    <div class=\"online-prestige__time\">{time}</div>\n                </div>\n\n                <div class=\"online-prestige__footer\">\n                    <div class=\"online-prestige__info\">{info}</div>\n                </div>\n            </div>\n        </div>");
       Lampa.Template.add('lampac_prestige_watched', "<div class=\"online-prestige online-prestige-watched selector\">\n            <div class=\"online-prestige-watched__icon\">\n                <svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n            <div class=\"online-prestige-watched__body\">\n                \n            </div>\n        </div>");
     }
-    var button = "<div class=\"full-start__button selector view--online lampac--button\" data-subtitle=\"".concat(manifst.name, " v").concat(manifst.version, "\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 392.697 392.697\" xml:space=\"preserve\">\n            <path d=\"M21.837,83.419l36.496,16.678L227.72,19.886c1.229-0.592,2.002-1.846,1.98-3.209c-0.021-1.365-0.834-2.592-2.082-3.145\n                L197.766,0.3c-0.903-0.4-1.933-0.4-2.837,0L21.873,77.036c-1.259,0.559-2.073,1.803-2.081,3.18\n                C19.784,81.593,20.584,82.847,21.837,83.419z\" fill=\"currentColor\"></path>\n            <path d=\"M185.689,177.261l-64.988-30.01v91.617c0,0.856-0.44,1.655-1.167,2.114c-0.406,0.257-0.869,0.386-1.333,0.386\n                c-0.368,0-0.736-0.082-1.079-0.244l-68.874-32.625c-0.869-0.416-1.421-1.293-1.421-2.256v-92.229L6.804,95.5\n                c-1.083-0.496-2.344-0.406-3.347,0.238c-1.002,0.645-1.608,1.754-1.608,2.944v208.744c0,1.371,0.799,2.615,2.045,3.185\n                l178.886,81.768c0.464,0.211,0.96,0.315,1.455,0.315c0.661,0,1.318-0.188,1.892-0.555c1.002-0.645,1.608-1.754,1.608-2.945\n                V180.445C187.735,179.076,186.936,177.831,185.689,177.261z\" fill=\"currentColor\"></path>\n            <path d=\"M389.24,95.74c-1.002-0.644-2.264-0.732-3.347-0.238l-178.876,81.76c-1.246,0.57-2.045,1.814-2.045,3.185v208.751\n                c0,1.191,0.606,2.302,1.608,2.945c0.572,0.367,1.23,0.555,1.892,0.555c0.495,0,0.991-0.104,1.455-0.315l178.876-81.768\n                c1.246-0.568,2.045-1.813,2.045-3.185V98.685C390.849,97.494,390.242,96.384,389.24,95.74z\" fill=\"currentColor\"></path>\n            <path d=\"M372.915,80.216c-0.009-1.377-0.823-2.621-2.082-3.18l-60.182-26.681c-0.938-0.418-2.013-0.399-2.938,0.045\n                l-173.755,82.992l60.933,29.117c0.462,0.211,0.958,0.316,1.455,0.316s0.993-0.105,1.455-0.316l173.066-79.092\n                C372.122,82.847,372.923,81.593,372.915,80.216z\" fill=\"currentColor\"></path>\n        </svg>\n\n        <span>#{title_online}</span>\n    </div>"); // нужна заглушка, а то при страте лампы говорит пусто
+  var button = "<div class=\"full-start__button selector view--online4 4m1K--button\" data-subtitle=\"".concat(manifst.name, " ").concat(manifst.version, "\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 392.697 392.697\" xml:space=\"preserve\">\n            <path d=\"M21.837,83.419l36.496,16.678L227.72,19.886c1.229-0.592,2.002-1.846,1.98-3.209c-0.021-1.365-0.834-2.592-2.082-3.145\n                L197.766,0.3c-0.903-0.4-1.933-0.4-2.837,0L21.873,77.036c-1.259,0.559-2.073,1.803-2.081,3.18\n                C19.784,81.593,20.584,82.847,21.837,83.419z\" fill=\"currentColor\"></path>\n            <path d=\"M185.689,177.261l-64.988-30.01v91.617c0,0.856-0.44,1.655-1.167,2.114c-0.406,0.257-0.869,0.386-1.333,0.386\n                c-0.368,0-0.736-0.082-1.079-0.244l-68.874-32.625c-0.869-0.416-1.421-1.293-1.421-2.256v-92.229L6.804,95.5\n                c-1.083-0.496-2.344-0.406-3.347,0.238c-1.002,0.645-1.608,1.754-1.608,2.944v208.744c0,1.371,0.799,2.615,2.045,3.185\n                l178.886,81.768c0.464,0.211,0.96,0.315,1.455,0.315c0.661,0,1.318-0.188,1.892-0.555c1.002-0.645,1.608-1.754,1.608-2.945\n                V180.445C187.735,179.076,186.936,177.831,185.689,177.261z\" fill=\"currentColor\"></path>\n            <path d=\"M389.24,95.74c-1.002-0.644-2.264-0.732-3.347-0.238l-178.876,81.76c-1.246,0.57-2.045,1.814-2.045,3.185v208.751\n                c0,1.191,0.606,2.302,1.608,2.945c0.572,0.367,1.23,0.555,1.892,0.555c0.495,0,0.991-0.104,1.455-0.315l178.876-81.768\n                c1.246-0.568,2.045-1.813,2.045-3.185V98.685C390.849,97.494,390.242,96.384,389.24,95.74z\" fill=\"currentColor\"></path>\n            <path d=\"M372.915,80.216c-0.009-1.377-0.823-2.621-2.082-3.18l-60.182-26.681c-0.938-0.418-2.013-0.399-2.938,0.045\n                l-173.755,82.992l60.933,29.117c0.462,0.211,0.958,0.316,1.455,0.316s0.993-0.105,1.455-0.316l173.066-79.092\n                C372.122,82.847,372.923,81.593,372.915,80.216z\" fill=\"currentColor\"></path>\n        </svg>\n\n        <span>#{title_online}</span>\n    </div>"); // нужна заглушка, а то при страте лампы говорит пусто
     Lampa.Component.add('lampac', component); //то же самое
     resetTemplates();
 
     function addButton(e) {
-      if (e.render.find('.lampac--button').length) return;
+      if (e.render.find('.4m1K--button').length) return;
       var btn = $(Lampa.Lang.translate(button));
-	  // console.log(btn.clone().removeClass('focus').prop('outerHTML'))
       btn.on('hover:enter', function() {
         resetTemplates();
         Lampa.Component.add('lampac', component);
-
+		
 		var id = Lampa.Utils.hash(e.movie.number_of_seasons ? e.movie.original_name : e.movie.original_title)
 		var all = Lampa.Storage.get('clarification_search','{}')
-
+		
         Lampa.Activity.push({
           url: '',
           title: Lampa.Lang.translate('title_online'),
@@ -1612,12 +1620,12 @@ this.noConnectToServer = function(er) {
 		  clarification: all[id] ? true : false
         });
       });
-      e.render.after(btn);
+      e.render.before(btn);
     }
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
         setTimeout(function(){
-                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg id="Icons" enable-background="new 0 0 32 32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m31.6 5.2c-.2-.2-.6-.2-.9-.2-9.6 2.6-19.8 2.6-29.4 0-.3 0-.7 0-.9.2-.3.2-.4.5-.4.8v20c0 .3.1.6.4.8.2.2.6.2.9.2 9.6-2.6 19.8-2.6 29.5 0h.3c.2 0 .4-.1.6-.2.2-.2.4-.5.4-.8v-20c-.1-.3-.2-.6-.5-.8zm-17.6 14.8c0 .6-.4 1-1 1s-1-.4-1-1v-2h-4c-.4 0-.8-.2-.9-.6-.2-.4-.1-.8.2-1.1l5-5c.1-.1.2-.2.3-.2.2-.1.5-.1.8 0 .2.1.4.3.5.5.1.1.1.3.1.4zm8.8-.6c.3.4.2 1.1-.2 1.4-.2.1-.4.2-.6.2-.3 0-.6-.1-.8-.4l-3-4c-.1-.2-.2-.4-.2-.6v4c0 .6-.4 1-1 1s-1-.4-1-1v-8c0-.6.4-1 1-1s1 .4 1 1v4c0-.2.1-.4.2-.6l3-4c.3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-2.5 3.4z"></path><path fill="currentColor" d="m12 16v-1.6l-1.6 1.6z"></path></g></svg>&nbsp&nbsp4m1K');
+                $(".view--online4", Lampa.Activity.active().activity.render()).empty().append('<svg id="Icons" enable-background="new 0 0 32 32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g><path fill="currentColor" d="m31.6 5.2c-.2-.2-.6-.2-.9-.2-9.6 2.6-19.8 2.6-29.4 0-.3 0-.7 0-.9.2-.3.2-.4.5-.4.8v20c0 .3.1.6.4.8.2.2.6.2.9.2 9.6-2.6 19.8-2.6 29.5 0h.3c.2 0 .4-.1.6-.2.2-.2.4-.5.4-.8v-20c-.1-.3-.2-.6-.5-.8zm-17.6 14.8c0 .6-.4 1-1 1s-1-.4-1-1v-2h-4c-.4 0-.8-.2-.9-.6-.2-.4-.1-.8.2-1.1l5-5c.1-.1.2-.2.3-.2.2-.1.5-.1.8 0 .2.1.4.3.5.5.1.1.1.3.1.4zm8.8-.6c.3.4.2 1.1-.2 1.4-.2.1-.4.2-.6.2-.3 0-.6-.1-.8-.4l-3-4c-.1-.2-.2-.4-.2-.6v4c0 .6-.4 1-1 1s-1-.4-1-1v-8c0-.6.4-1 1-1s1 .4 1 1v4c0-.2.1-.4.2-.6l3-4c.3-.4 1-.5 1.4-.2s.5 1 .2 1.4l-2.5 3.4z"></path><path fill="currentColor" d="m12 16v-1.6l-1.6 1.6z"></path></g></svg>&nbsp&nbsp4m1K');
         }, 5);
         if (Lampa.Storage.get('card_interfice_type') === 'new') {
                 addButton({
