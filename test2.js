@@ -1,8 +1,8 @@
 (function(){
   'use strict';
-  // Предотвращаем повторное объявление плагина
-  // if(window.KPPluginLoaded) return;
-  // window.KPPluginLoaded = true;
+  // Предотвращаем повторное выполнение плагина
+  if(window.KPPluginLoaded) return;
+  window.KPPluginLoaded = true;
 
   try {
     /* ===== Минимальная интеграция KP API ===== */
@@ -121,7 +121,6 @@
         network.clear();
       }
 
-      // Функция преобразования элемента
       function convertElem(elem) {
         var type = !elem.type || elem.type === 'FILM' || elem.type === 'VIDEO' ? 'movie' : 'tv';
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
@@ -265,7 +264,6 @@
         };
       }
 
-      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror) {
         var page = params.page || 1;
         var url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
@@ -307,7 +305,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Запрашиваем похожие фильмы вместо sequels_and_prequels (возвращал 404)
+                    // Вместо запроса sequels_and_prequels (возвращавшего 404) сразу запрашиваем similars:
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -403,9 +401,7 @@
           search: search,
           params: {
             align_left: true,
-            object: {
-              source: SOURCE_NAME
-            }
+            object: { source: SOURCE_NAME }
           },
           onMore: function onMore(params) {
             Lampa.Activity.push({
@@ -480,9 +476,7 @@
                 "credits": actor_films
               });
             }
-            result.credits = {
-              "knownFor": knownFor
-            };
+            result.credits = { "knownFor": knownFor };
           }
           oncomplite(result);
         };
@@ -725,6 +719,8 @@
         addKPButton();
       }
     });
+    // Дополнительный вызов через 5 секунд на случай, если событие "ready" пропущено
+    setTimeout(addKPButton, 5000);
   } catch (ex) {
     console.error('Script error:', ex);
   }
