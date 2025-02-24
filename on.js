@@ -309,8 +309,8 @@
 
         filter_sources.sort(function(a, b) {
 
-            if (a === 'zetflix') return -1;
-            if (b === 'zetflix') return 1;
+            if (a === '') return -1;
+            if (b === '') return 1;
             var aLow = lowPriorityBalancers.indexOf(a) !== -1;
             var bLow = lowPriorityBalancers.indexOf(b) !== -1;
             if (aLow && !bLow) return 1;
