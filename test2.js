@@ -70,40 +70,94 @@
         }, onerror);
       }
       // Функция для загрузки детальной информации по ID
-      function getById(id, oncomplite, onerror){
-        var url = 'api/v2.2/films/' + id;
-        getFromCache(url, function(json, cached){
-          if(json && json.kinopoiskId){
-            var result = convertElem(json);
-            oncomplite(result);
-          } else {
-            onerror();
-          }
-        }, onerror);
-      }
-      // *** Новая функция getFullDetails (оставляем на будущее, но не используем в full) ***
-      function getFullDetails(id, oncomplite, onerror){
-        var url = 'api/v2.2/films/' + id;
-        getFromCache(url, function(json, cached){
-          if(json && json.kinopoiskId){
-            var result = convertElem(json);
-            if(!result.title || !result.img){
-              get(url + '/seasons', function(seasons){
-                if(seasons && seasons.items && seasons.items.length){
-                  result.overview += "\nСезоны: " + seasons.items.length;
-                }
-                oncomplite(result);
-              }, function(){
-                oncomplite(result);
+      function _getById(id, params, oncomplite, onerror) {
+  var url = 'api/v2.2/films/' + id;
+  var film = getCache(url);
+  if (film) {
+    setTimeout(function () {
+      oncomplite(convertElem(film));
+    }, 10);
+  } else {
+    get(url, function (film) {
+      if (film.kinopoiskId) {
+        var type = !film.type || film.type === 'FILM' || film.type === 'VIDEO' ? 'movie' : 'tv';
+        getCompliteIf(type == 'tv', 'api/v2.2/films/' + id + '/seasons', function (seasons) {
+          film.seasons_obj = seasons;
+          getComplite('api/v2.2/films/' + id + '/distributions', function (distributions) {
+            film.distributions_obj = distributions;
+            getComplite('/api/v1/staff?filmId=' + id, function (staff) {
+              film.staff_obj = staff;
+              getComplite('api/v2.1/films/' + id + '/sequels_and_prequels', function (sequels) {
+                film.sequels_obj = sequels;
+                getComplite('api/v2.2/films/' + id + '/similars', function (similars) {
+                  film.similars_obj = similars;
+                  setCache(url, film);
+                  oncomplite(convertElem(film));
+                });
               });
-            } else {
-              oncomplite(result);
-            }
-          } else {
-            onerror();
-          }
-        }, onerror);
-      }
+            });
+          });
+        });
+      } else onerror();
+    }, onerror);
+  }
+}
+
+function full() {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
+  var onerror = arguments.length > 2 ? arguments[2] : undefined;
+  var kinopoisk_id = '';
+
+  if (params.card && params.card.source === SOURCE_NAME) {
+    if (params.card.kinopoisk_id) {
+      kinopoisk_id = params.card.kinopoisk_id;
+    } else if (startsWith(params.card.id + '', SOURCE_NAME + '_')) {
+      kinopoisk_id = (params.card.id + '').substring(SOURCE_NAME.length + 1);
+      params.card.kinopoisk_id = kinopoisk_id;
+    }
+  }
+
+  if (kinopoisk_id) {
+    _getById(kinopoisk_id, params, function (json) {
+      var status = new Lampa.Status(4);
+      status.onComplite = oncomplite;
+      status.append('movie', json);
+      status.append('persons', json && json.persons);
+      status.append('collection', json && json.collection);
+      status.append('simular', json && json.similars_obj);
+    }, onerror);
+  } else onerror();
+}
+
+
+function full() {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
+  var onerror = arguments.length > 2 ? arguments[2] : undefined;
+  var kinopoisk_id = '';
+
+  if (params.card && params.card.source === SOURCE_NAME) {
+    if (params.card.kinopoisk_id) {
+      kinopoisk_id = params.card.kinopoisk_id;
+    } else if (startsWith(params.card.id + '', SOURCE_NAME + '_')) {
+      kinopoisk_id = (params.card.id + '').substring(SOURCE_NAME.length + 1);
+      params.card.kinopoisk_id = kinopoisk_id;
+    }
+  }
+
+  if (kinopoisk_id) {
+    _getById(kinopoisk_id, params, function (json) {
+      var status = new Lampa.Status(4);
+      status.onComplite = oncomplite;
+      status.append('movie', json);
+      status.append('persons', json && json.persons);
+      status.append('collection', json && json.collection);
+      status.append('simular', json && json.similars_obj);
+    }, onerror);
+  } else onerror();
+}
+
       
       var KP = {
         SOURCE_NAME: 'KP',
