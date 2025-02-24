@@ -18,15 +18,20 @@
       function setCache(key, value){
         cache[key] = { timestamp: new Date().getTime(), value: value };
       }
-      function get(method, oncomplite, onerror){
-        var url = 'https://kinopoiskapiunofficial.tech/' + method;
-        network.timeout(15000);
-        network.silent(url, function(json){
-          oncomplite(json);
-        }, onerror, false, {
-          headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
-        });
-      }
+function get(method, oncomplite, onerror){
+  var url = 'https://kinopoiskapiunofficial.tech/' + method;
+  console.log('KP API: Отправка запроса по URL: ' + url);
+  network.timeout(15000);
+  network.silent(url, function(json){
+    console.log('KP API: Получен ответ:', json);
+    oncomplite(json);
+  }, function(err){
+    console.error('KP API: Ошибка запроса:', err);
+    onerror(err);
+  }, false, {
+    headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
+  });
+}
       function getFromCache(method, oncomplite, onerror){
         var json = getCache(method);
         if(json){
@@ -55,7 +60,7 @@
         };
       }
       // Функция для загрузки списка элементов по категории
-      function _getList(method, params, oncomplite, onerror){
+      function getList(method, params, oncomplite, onerror){
         var page = params.page || 1;
         var url = method;
         url += '&page=' + page;
@@ -70,7 +75,7 @@
         }, onerror);
       }
       // Функция для загрузки детальной информации по ID
-function getById(id, params, oncomplite, onerror) {
+function _getById(id, params, oncomplite, onerror) {
   var url = 'api/v2.2/films/' + id;
   var film = getCache(url);
   if (film) {
