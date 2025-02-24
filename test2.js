@@ -25,7 +25,7 @@
         </li>
       `);
 
-      // Обработчик нажатия – используем click вместо hover:enter
+      // Обработчик нажатия – используем событие click
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
         if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
@@ -45,7 +45,7 @@
                 url: item.data.url,
                 title: item.title,
                 component: 'category_full',
-                source: 'KP',
+                // Убираем привязку к источнику KP – теперь окно откроется независимо
                 card_type: true,
                 page: 1
               });
