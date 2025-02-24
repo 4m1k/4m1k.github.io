@@ -79,7 +79,8 @@ addMenuButton(
   iconFilms,
   function () {
     if (Lampa.Component.get('tv_streaming_select')) {
-      Lampa.Activity.push({
+      console.log('Компонент найден, запускаем активность через replace');
+      Lampa.Activity.replace({
         component: 'tv_streaming_select',
         title: 'Русские фильмы'
       });
@@ -89,14 +90,6 @@ addMenuButton(
   }
 );
 
-Lampa.Listener.follow('app', function(event) {
-  if (event.type === 'ready') {
-    Lampa.Activity.push({
-      component: 'tv_streaming_select',
-      title: 'Русские фильмы'
-    });
-  }
-});
 
 
 
