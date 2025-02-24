@@ -43,8 +43,8 @@
   var iconFilms = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
 
@@ -52,8 +52,8 @@
   var iconSeries = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
 
@@ -61,8 +61,8 @@
   var iconCartoons = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
     </svg>
   `;
 
