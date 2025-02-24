@@ -263,6 +263,7 @@
         };
       }
 
+      // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror) {
         var page = params.page || 1;
         var url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
@@ -304,7 +305,7 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
-                    // Вместо запроса sequels_and_prequels (404) запрашиваем similars:
+                    // Вместо запроса sequels_and_prequels (возвращавшего 404) запрашиваем similars:
                     getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       setCache(url, film);
@@ -564,7 +565,8 @@
 
     // Функция для получения ID страны "Россия" через фильтры KP API
     var rus_id = '225';
-    function loadCountryId(callback) {
+    // Переименована функция loadCountryId -> kp_loadCountryId
+    function kp_loadCountryId(callback) {
       try {
         get('api/v2.2/films/filters', function(json) {
           if (json && json.countries) {
@@ -581,7 +583,7 @@
           if (callback) callback();
         });
       } catch (e) {
-        console.error('Ошибка в loadCountryId:', e);
+        console.error('Ошибка в kp_loadCountryId:', e);
         if (callback) callback();
       }
     }
@@ -616,7 +618,7 @@
 
       kpButton.on('click', function() {
         console.log('Нажата кнопка Кинопоиск');
-        loadCountryId(function() {
+        kp_loadCountryId(function() {
           if (typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function') {
             Lampa.Select.show({
               title: 'Кинопоиск',
@@ -674,8 +676,6 @@
         addKPButton();
       }
     });
-    // Дополнительный вызов можно убрать, чтобы избежать дублирования
-    // setTimeout(addKPButton, 5000);
 
     /* ===== Конец добавления кнопки ===== */
 
@@ -683,30 +683,6 @@
     var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
       Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
-
-    // Функция для получения ID страны "Россия"
-    var rus_id = '225';
-    function loadCountryId(callback) {
-      try {
-        get('api/v2.2/films/filters', function(json) {
-          if (json && json.countries) {
-            json.countries.forEach(function(c) {
-              if (c.country.toLowerCase() === 'россия') {
-                rus_id = c.id;
-              }
-            });
-          }
-          console.log('ID России:', rus_id);
-          if (callback) callback();
-        }, function() {
-          console.error('Не удалось загрузить фильтры для определения страны');
-          if (callback) callback();
-        });
-      } catch (e) {
-        console.error('Ошибка в loadCountryId:', e);
-        if (callback) callback();
-      }
-    }
 
     /* ===== Запуск плагина KP API ===== */
     function startPlugin() {
@@ -740,8 +716,10 @@
     }
 
     if (!window.kp_source_plugin) startPlugin();
+
     Lampa.Api.sources.KP = KP;
     console.log('KP API интегрирован');
+
   } catch (ex) {
     console.error('Script error:', ex);
   }
