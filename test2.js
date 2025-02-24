@@ -45,10 +45,10 @@
         if (!use_proxy) KP_total_cnt++;
         var kp_prox = 'https://cors.kp556.workers.dev:8443/';
         var url = 'https://kinopoiskapiunofficial.tech/' + method;
-        console.log('KP API (get): URL:', url);
+        console.log('KP_get: URL:', url);
         KP_network.timeout(15000);
         KP_network.silent((use_proxy ? kp_prox : '') + url, function(json) {
-          console.log('KP API (get): Ответ:', json);
+          console.log('KP_get: Ответ:', json);
           oncomplite(json);
         }, function(a, c) {
           use_proxy = !use_proxy && (KP_proxy_cnt < 10 || KP_good_cnt > KP_proxy_cnt / 2);
@@ -146,7 +146,7 @@
           img: elem.posterUrlPreview || elem.posterUrl || '',
           background_image: elem.coverUrl || elem.posterUrl || elem.posterUrlPreview || '',
           genres: elem.genres && elem.genres.map(function(e) {
-            if(e.genre === 'для взрослых') { adult = true; }
+            if (e.genre === 'для взрослых') { adult = true; }
             return { id: e.genre && KP_genres_map[e.genre] || 0, name: e.genre, url: '' };
           }) || [],
           production_companies: [],
@@ -172,10 +172,9 @@
           var year_timestamp = Date.parse(first_air_date);
           var min = null;
           distributions.forEach(function(d) {
-            if(d.date && (d.type === 'WORLD_PREMIER' || d.type === 'ALL')) {
+            if (d.date && (d.type === 'WORLD_PREMIER' || d.type === 'ALL')) {
               var timestamp = Date.parse(d.date);
-              if(!isNaN(timestamp) && (min == null || timestamp < min) &&
-                  (isNaN(year_timestamp) || timestamp >= year_timestamp)) {
+              if (!isNaN(timestamp) && (min == null || timestamp < min) && (isNaN(year_timestamp) || timestamp >= year_timestamp)) {
                 min = timestamp;
                 first_air_date = d.date;
               }
@@ -186,25 +185,25 @@
           result.name = title;
           result.original_name = original_title;
           result.first_air_date = first_air_date;
-          if(last_air_date) result.last_air_date = last_air_date;
+          if (last_air_date) result.last_air_date = last_air_date;
         } else {
           result.release_date = first_air_date;
         }
         if (elem.seasons_obj) {
           var seasons = elem.seasons_obj.items || [];
           result.number_of_seasons = elem.seasons_obj.total || seasons.length || 1;
-          result.seasons = seasons.map(function(s){ return KP_convertSeason(s); });
+          result.seasons = seasons.map(function(s) { return KP_convertSeason(s); });
           var number_of_episodes = 0;
-          result.seasons.forEach(function(s){ number_of_episodes += s.episode_count; });
+          result.seasons.forEach(function(s) { number_of_episodes += s.episode_count; });
           result.number_of_episodes = number_of_episodes;
         }
         if (elem.staff_obj) {
           var staff = elem.staff_obj || [];
           var cast = [];
           var crew = [];
-          staff.forEach(function(s){
+          staff.forEach(function(s) {
             var person = KP_convertPerson(s);
-            if(s.professionKey === 'ACTOR') cast.push(person); else crew.push(person);
+            if (s.professionKey === 'ACTOR') cast.push(person); else crew.push(person);
           });
           result.persons = { cast: cast, crew: crew };
         }
@@ -220,7 +219,7 @@
       }
       function KP_convertSeason(season) {
         var episodes = season.episodes || [];
-        episodes = episodes.map(function(e){
+        episodes = episodes.map(function(e) {
           return {
             season_number: e.seasonNumber,
             episode_number: e.episodeNumber,
@@ -248,8 +247,8 @@
         };
       }
 
-      // Функции для загрузки списка и деталей
-      function KP_getList(method, params, oncomplite, onerror) {
+      // Функция загрузки списка по категории
+      function KP_getListWrapper(method, params, oncomplite, onerror) {
         var page = params.page || 1;
         var url = Lampa.Utils.addUrlComponent(method, 'page=' + page);
         KP_getFromCache(url, function(json, cached) {
@@ -258,7 +257,7 @@
           else if (json.films && json.films.length) items = json.films;
           else if (json.releases && json.releases.length) items = json.releases;
           if (!cached && items.length) KP_setCache(url, json);
-          var results = items.map(function(elem){ return KP_convertElem(elem); });
+          var results = items.map(function(elem) { return KP_convertElem(elem); });
           results = results.filter(function(elem) { return !elem.adult; });
           var total_pages = json.pagesCount || json.totalPages || 1;
           oncomplite({
@@ -271,7 +270,8 @@
           });
         }, onerror);
       }
-      // Переименовываем функцию для получения деталей, чтобы избежать повторного объявления
+
+      // Функция для получения деталей фильма/сериала (переименована в KP_getByIdInternal)
       function KP_getByIdInternal(id, params, oncomplite, onerror) {
         var url = 'api/v2.2/films/' + id;
         var film = KP_getCache(url);
@@ -287,6 +287,7 @@
                   film.distributions_obj = distributions;
                   KP_getComplite('/api/v1/staff?filmId=' + id, function(staff) {
                     film.staff_obj = staff;
+                    // Запрашиваем similars (вместо sequels_and_prequels, который может возвращать 404)
                     KP_getComplite('api/v2.2/films/' + id + '/similars', function(similars) {
                       film.similars_obj = similars;
                       KP_setCache(url, film);
@@ -300,7 +301,7 @@
         }
       }
 
-      // Stub-реализации основных функций
+      // Основные stub‑реализации
       function KP_main(params, oncomplite, onerror) {
         KP_list(params, oncomplite, onerror);
       }
@@ -337,7 +338,7 @@
         if (method === '' && params.genres) {
           method = 'api/v2.2/films?order=NUM_VOTE&genres=' + params.genres;
         }
-        KP_getList(method, params, oncomplite, onerror);
+        KP_getListWrapper(method, params, oncomplite, onerror);
       }
       function KP_search(params, oncomplite) {
         params = params || {};
@@ -366,7 +367,7 @@
           }
           oncomplite(items);
         };
-        KP_getList('api/v2.1/films/search-by-keyword', params, function(json) {
+        KP_getListWrapper('api/v2.1/films/search-by-keyword', params, function(json) {
           status.append('query', json);
         }, status.error.bind(status));
       }
@@ -457,52 +458,6 @@
         }, status.error.bind(status));
       }
 
-      // Функции для меню и сезонов
-      function KP_menu(oncomplite) {
-        var m_list = [];
-        if (KP_menu_list.length) {
-          m_list = KP_menu_list;
-          if (oncomplite) oncomplite(m_list);
-        } else {
-          KP_get('api/v2.2/films/filters', function(j) {
-            if (j.genres) {
-              j.genres.forEach(function(g) {
-                m_list.push({
-                  id: g.id,
-                  title: g.genre,
-                  url: '',
-                  hide: g.genre === 'для взрослых',
-                  separator: !g.genre
-                });
-                KP_genres_map[g.genre] = g.id;
-              });
-            }
-            if (j.countries) {
-              j.countries.forEach(function(c) {
-                KP_countries_map[c.country] = c.id;
-              });
-            }
-            KP_menu_list = m_list;
-            if (oncomplite) oncomplite(m_list);
-          }, function() {
-            if (oncomplite) oncomplite([]);
-          });
-        }
-      }
-      function KP_menuCategory(params, oncomplite) { oncomplite([]); }
-      function KP_seasons(tv, from, oncomplite) {
-        var status = new Lampa.Status(from.length);
-        status.onComplite = oncomplite;
-        from.forEach(function(season) {
-          var s = (tv.seasons || []).filter(function(s) { return s.season_number === season; });
-          if (s.length) {
-            status.append('' + season, s[0]);
-          } else {
-            status.error();
-          }
-        });
-      }
-
       // Объединяем объект KP
       var KP = {
         SOURCE_NAME: KP_SOURCE_NAME,
@@ -537,7 +492,7 @@
         title: KP.SOURCE_TITLE
       }];
 
-      function KP_getByIdInternal(id, params, oncomplite, onerror) {
+      function KP__getById(id, params, oncomplite, onerror) {
         var url = 'api/v2.2/films/' + id;
         var film = KP_getCache(url);
         if (film) {
@@ -565,7 +520,7 @@
         }
       }
 
-      // Stub-реализации основных функций (main, category, full, list, search, discovery, person)
+      // Stub-реализации основных функций
       function KP_main(params, oncomplite, onerror) {
         KP_list(params, oncomplite, onerror);
       }
@@ -586,7 +541,7 @@
           }
         }
         if (kinopoisk_id) {
-          KP_getByIdInternal(kinopoisk_id, params, function(json) {
+          KP__getById(kinopoisk_id, params, function(json) {
             var status = new Lampa.Status(4);
             status.onComplite = oncomplite;
             status.append('movie', json);
@@ -602,7 +557,7 @@
         if (method === '' && params.genres) {
           method = 'api/v2.2/films?order=NUM_VOTE&genres=' + params.genres;
         }
-        KP_getList(method, params, oncomplite, onerror);
+        KP_getListWrapper(method, params, oncomplite, onerror);
       }
       function KP_search(params, oncomplite) {
         params = params || {};
@@ -631,7 +586,7 @@
           }
           oncomplite(items);
         };
-        KP_getList('api/v2.1/films/search-by-keyword', params, function(json) {
+        KP_getListWrapper('api/v2.1/films/search-by-keyword', params, function(json) {
           status.append('query', json);
         }, status.error.bind(status));
       }
@@ -749,7 +704,7 @@
           console.error('Не удалось загрузить фильтры для определения страны');
           if (callback) callback();
         });
-      } catch (e) {
+      } catch(e) {
         console.error('Ошибка в kp_loadCountryId:', e);
         if (callback) callback();
       }
@@ -857,11 +812,17 @@
         }
         Lampa.Params.select('source', sources, 'tmdb');
       }
-      if (window.appready) addPlugin(); else {
-        Lampa.Listener.follow('app', function(e) { if (e.type == 'ready') addPlugin(); });
+      if (window.appready) {
+        addPlugin();
+      } else {
+        Lampa.Listener.follow('app', function(e) {
+          if (e.type == 'ready') addPlugin();
+        });
       }
     }
-    if (!window.kp_source_plugin) startPlugin();
+    if (!window.kp_source_plugin) {
+      startPlugin();
+    }
     Lampa.Api.sources.KP = KP;
     console.log('KP API интегрирован');
   } catch (ex) {
