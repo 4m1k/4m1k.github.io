@@ -68,6 +68,72 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+// Изменяем обработчик для кнопки "Русские фильмы"
+addMenuButton(
+  'data-action="ru_movie_films"',
+  'Русские фильмы',
+  iconFilms,
+  function () {
+    Lampa.Activity.push({
+      component: 'tv_streaming_select',
+      title: 'Русские фильмы'
+    });
+  }
+);
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  // Добавляем кнопку "Русские сериалы"
+  addMenuButton(
+    'data-action="ru_movie_series"',
+    'Русские сериалы',
+    iconSeries,
+    function () {
+      Lampa.Activity.push({
+        url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
+        title: 'Русские сериалы',
+        component: 'category_full',
+        source: 'cp',
+        card_type: true,
+        page: 1,
+      });
+    }
+  );
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  // Добавляем кнопку "Русские мультфильмы"
+  addMenuButton(
+    'data-action="ru_movie_cartoons"',
+    'Русские мультфильмы',
+    iconCartoons,
+    function () {
+      Lampa.Activity.push({
+        url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
+        title: 'Русские мультфильмы',
+        component: 'category_full',
+        source: 'cp',
+        card_type: true,
+        page: 1,
+      });
+    }
+  );
+
+})();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 // Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
 Lampa.Component.add('tv_streaming_select', function(object) {
   var component = {
@@ -222,60 +288,3 @@ Lampa.Component.add('tv_streaming_select', function(object) {
 
   return component;
 });
-
-
-
-// Изменяем обработчик для кнопки "Русские фильмы"
-addMenuButton(
-  'data-action="ru_movie_films"',
-  'Русские фильмы',
-  iconFilms,
-  function () {
-    Lampa.Activity.push({
-      component: 'tv_streaming_select',
-      title: 'Русские фильмы'
-    });
-  }
-);
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  // Добавляем кнопку "Русские сериалы"
-  addMenuButton(
-    'data-action="ru_movie_series"',
-    'Русские сериалы',
-    iconSeries,
-    function () {
-      Lampa.Activity.push({
-        url: 'discover/tv?with_original_language=ru&sort_by=first_air_date.desc',
-        title: 'Русские сериалы',
-        component: 'category_full',
-        source: 'cp',
-        card_type: true,
-        page: 1,
-      });
-    }
-  );
-
-  // Добавляем кнопку "Русские мультфильмы"
-  addMenuButton(
-    'data-action="ru_movie_cartoons"',
-    'Русские мультфильмы',
-    iconCartoons,
-    function () {
-      Lampa.Activity.push({
-        url: `discover/movie?with_genres=16&with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}`,
-        title: 'Русские мультфильмы',
-        component: 'category_full',
-        source: 'cp',
-        card_type: true,
-        page: 1,
-      });
-    }
-  );
-
-})();
