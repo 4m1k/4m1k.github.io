@@ -164,13 +164,16 @@ function full() {
         list: function(params, oncomplite, onerror){
           getList(params.url, params, oncomplite, onerror);
         },
-        full: function(card, params, oncomplite, onerror){
-          // Если поле kinopoisk_id отсутствует, извлекаем его из card.id
-          var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
-          if(!id) {
-            console.error('KP.full: Не найден id для карточки', card);
-            return onerror();
-          }
+full: function(card, params, oncomplite, onerror){
+  console.log('KP.full вызывается для карточки:', card);
+  var id = card.kinopoisk_id || (card.id ? card.id.replace('KP_', '') : 0);
+  if(!id) {
+    console.error('KP.full: Не найден id для карточки', card);
+    return onerror();
+  }
+  console.log('KP.full: Запрашиваем подробности для id:', id);
+  getById(id, oncomplite, onerror);
+}
           console.log('KP.full: Запрашиваем подробности для id:', id);
           // Используем прямой вызов getById вместо getFullDetails
           getById(id, oncomplite, onerror);
