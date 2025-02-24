@@ -1,19 +1,76 @@
 (function(){
   'use strict';
 
+  /* ===== Минимальная интеграция KP API ===== */
+  if(!Lampa.Api.sources.KP){
+    var network = new Lampa.Reguest();
+    var cache = {};
+    
+    function getCache(key) {
+      var res = cache[key];
+      if(res){
+        var cache_timestamp = new Date().getTime() - 1000 * 60 * 60;
+        if(res.timestamp > cache_timestamp) return res.value;
+      }
+      return null;
+    }
+    function setCache(key, value){
+      cache[key] = { timestamp: new Date().getTime(), value: value };
+    }
+    function get(method, oncomplite, onerror){
+      var url = 'https://kinopoiskapiunofficial.tech/' + method;
+      network.timeout(15000);
+      network.silent(url, function(json){
+         oncomplite(json);
+      }, onerror, false, {
+         headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
+      });
+    }
+    function getFromCache(method, oncomplite, onerror){
+      var json = getCache(method);
+      if(json){
+        setTimeout(function(){ oncomplite(json, true); }, 10);
+      } else {
+        get(method, oncomplite, onerror);
+      }
+    }
+    function getList(method, params, oncomplite, onerror){
+      var page = params.page || 1;
+      var url = method;
+      url += '&page=' + page;
+      getFromCache(url, function(json, cached){
+         if(!cached && json && json.items && json.items.length) setCache(url, json);
+         var results = json.items || [];
+         var total_pages = json.pagesCount || json.totalPages || 1;
+         oncomplite({ results: results, page: page, total_pages: total_pages });
+      }, onerror);
+    }
+    
+    var KP = {
+      SOURCE_NAME: 'KP',
+      // Для демонстрации реализуем только метод list – который используется компонентом category_full.
+      list: function(params, oncomplite, onerror){
+         getList(params.url, params, oncomplite, onerror);
+      }
+      // Дополнительные методы (main, full, discovery и т.д.) можно добавить при необходимости.
+    };
+    Lampa.Api.sources.KP = KP;
+  }
+  
+  /* ===== Конец интеграции KP API ===== */
+  
+  // Сохраняем исходный источник из настроек Лампы для последующего восстановления
   var originalSource = null;
-
-  // Ждем, когда приложение будет готово
+  if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
+    originalSource = Object.assign({}, Lampa.Params.values.source);
+  } else {
+    originalSource = { tmdb: 'TMDB' };
+  }
+  console.log('Исходный источник сохранён:', originalSource);
+  
+  /* ===== Добавление кнопки "Кинопоиск" в меню ===== */
   Lampa.Listener.follow('app', function(e){
     if(e.type === 'ready'){
-      // Сохраняем исходный источник из настроек (если он задан)
-      if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
-        originalSource = Object.assign({}, Lampa.Params.values.source);
-      } else {
-        originalSource = { tmdb: 'TMDB' }; // значение по умолчанию, если не задано
-      }
-      console.log('Исходный источник сохранён:', originalSource);
-
       var menu = Lampa.Menu.render();
       if(!menu || !menu.length){
         console.error('Меню не найдено');
@@ -21,7 +78,6 @@
       }
       console.log('Меню найдено, добавляем кнопку Кинопоиск');
 
-      // Создаем кнопку "Кинопоиск"
       var kpButton = $(`
         <li class="menu__item selector" data-action="kp">
           <div class="menu__ico">
@@ -34,8 +90,8 @@
           <div class="menu__text">Кинопоиск</div>
         </li>
       `);
-
-      // Обработчик нажатия – здесь используем событие click
+      
+      // При нажатии открываем окно с категориями
       kpButton.on('click', function(){
         console.log('Нажата кнопка Кинопоиск');
         if(typeof Lampa.Select !== 'undefined' && typeof Lampa.Select.show === 'function'){
@@ -51,16 +107,15 @@
             ],
             onSelect: function(item){
               console.log('Выбран пункт:', item);
-              // При переходе в категорию временно подставляем источник "KP"
+              // При выборе категории вызываем Activity.push с источником "KP"
               Lampa.Activity.push({
                 url: item.data.url,
                 title: item.title,
                 component: 'category_full',
-                source: 'KP', // здесь временно используем KP для загрузки категорий
+                source: 'KP',
                 card_type: true,
                 page: 1,
                 onBack: function(){
-                  // При выходе из категории возвращаем исходный источник
                   if(originalSource){
                     Lampa.Params.select('source', originalSource);
                   }
@@ -69,7 +124,6 @@
               });
             },
             onBack: function(){
-              // При выходе из окна выбора категорий возвращаем исходный источник
               if(originalSource){
                 Lampa.Params.select('source', originalSource);
               }
@@ -81,8 +135,8 @@
           console.error('Lampa.Select.show недоступен');
         }
       });
-
-      // Добавляем кнопку после элемента с data-action="tv", если он найден
+      
+      // Добавляем кнопку после элемента с data-action="tv", если он найден, иначе в конец меню
       var tvItem = menu.find('[data-action="tv"]');
       if(tvItem.length){
         tvItem.after(kpButton);
