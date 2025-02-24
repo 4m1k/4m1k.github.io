@@ -1,3 +1,5 @@
+console.log('KP script loaded');
+
 document.addEventListener('DOMContentLoaded', function(){
   console.log('KP script loaded');
   // Задержка 3 секунды для полной инициализации Lampa
