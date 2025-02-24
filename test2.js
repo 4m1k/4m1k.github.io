@@ -27,7 +27,6 @@
         cache[key] = { timestamp: new Date().getTime(), value: value };
       }
       function get(method, oncomplite, onerror){
-        // Здесь можно добавить логи для отладки запроса
         var url = 'https://kinopoiskapiunofficial.tech/' + method;
         console.log('KP API (get): Отправка запроса по URL:', url);
         network.timeout(15000);
@@ -51,7 +50,6 @@
       }
       // Преобразование элемента из KP API в формат Lampa
       function convertElem(elem) {
-        // Если kinopoiskId отсутствует, используется filmId
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
         var img = elem.posterUrlPreview || elem.posterUrl || '';
@@ -98,22 +96,20 @@
           }
         }, onerror);
       }
-      // Функция для последовательной загрузки дополнительных данных
-      function getCompliteIf(condition, method, oncomplite) {
-        if (condition) {
-          getComplite(method, oncomplite);
-        } else {
-          setTimeout(function () {
-            oncomplite(null);
-          }, 10);
-        }
-      }
+      // Функции для последовательных вызовов (из исходного кода)
       function getComplite(method, oncomplite) {
         get(method, oncomplite, function () {
           oncomplite(null);
         });
       }
-      // Функция для загрузки детальной информации с дополнительными данными
+      function getCompliteIf(condition, method, oncomplite) {
+        if (condition) getComplite(method, oncomplite); else {
+          setTimeout(function () {
+            oncomplite(null);
+          }, 10);
+        }
+      }
+      // Функция _getById для получения расширенной информации карточки
       function _getById(id, params, oncomplite, onerror) {
         var url = 'api/v2.2/films/' + id;
         var film = getCache(url);
@@ -131,13 +127,20 @@
                   film.distributions_obj = distributions;
                   getComplite('/api/v1/staff?filmId=' + id, function (staff) {
                     film.staff_obj = staff;
-                    getComplite('api/v2.1/films/' + id + '/sequels_and_prequels', function (sequels) {
-                      film.sequels_obj = sequels;
-                      getComplite('api/v2.2/films/' + id + '/similars', function (similars) {
-                        film.similars_obj = similars;
-                        setCache(url, film);
-                        oncomplite(convertElem(film));
-                      });
+                    // Убираем запрос к sequels_and_prequels, так как он возвращает 404
+                    // getComplite('api/v2.1/films/' + id + '/sequels_and_prequels', function (sequels) {
+                    //   film.sequels_obj = sequels;
+                    //   getComplite('api/v2.2/films/' + id + '/similars', function (similars) {
+                    //     film.similars_obj = similars;
+                    //     setCache(url, film);
+                    //     oncomplite(convertElem(film));
+                    //   });
+                    // });
+                    // Вместо sequels_and_prequels сразу запрашиваем similars:
+                    getComplite('api/v2.2/films/' + id + '/similars', function (similars) {
+                      film.similars_obj = similars;
+                      setCache(url, film);
+                      oncomplite(convertElem(film));
                     });
                   });
                 });
@@ -146,7 +149,7 @@
           }, onerror);
         }
       }
-      // Метод full – получает расширенную карточку
+      // Метод full – получает полную карточку с дополнительными данными
       function full() {
         var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var oncomplite = arguments.length > 1 ? arguments[1] : undefined;
@@ -173,28 +176,27 @@
           }, onerror);
         } else onerror();
       }
-
+      
       var KP = {
         SOURCE_NAME: SOURCE_NAME,
         list: function(params, oncomplite, onerror){
           getList(params.url, params, oncomplite, onerror);
         },
         full: full,
-        // Остальные методы, такие как menu, category, person, discovery, seasons, можно оставить без изменений,
-        // если они нужны для полноценного функционирования плагина.
+        // Остальные методы (menu, category, person, discovery, seasons, menuCategory) можно добавить при необходимости
       };
       Lampa.Api.sources.KP = KP;
       console.log('KP API интегрирован');
     }
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для восстановления
+    // Сохраняем исходный источник для последующего восстановления
     var originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
                            Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
     console.log('Исходный источник сохранён:', originalSource);
 
     // Функция для получения ID страны "Россия" через фильтры KP API
-    var rus_id = '225';
+    var rus_id = '225'; // значение по умолчанию
     function loadCountryId(callback){
       try {
         get('api/v2.2/films/filters', function(json){
