@@ -71,7 +71,7 @@ start: function() {
   console.log('tv_streaming_select: start');
   // ...
 }
-component.html.style.backgroundColor = '#f00'; 
+
 
 
 
