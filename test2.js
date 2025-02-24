@@ -66,44 +66,111 @@
     </svg>
   `;
 
-  // Добавляем кнопку "Русские фильмы"
-// Добавляем кнопку "Русские фильмы" с выбором категории
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
+Lampa.Component.add('tv_streaming_select', function(object) {
+  var html = document.createElement('div');
+  html.className = 'tv-streaming-select';
+  // Применяем стили, чтобы окно было полноэкранным (можно задать их в CSS)
+  html.style.position = 'fixed';
+  html.style.top = '0';
+  html.style.left = '0';
+  html.style.width = '100vw';
+  html.style.height = '100vh';
+  html.style.backgroundColor = '#000';
+  html.style.display = 'flex';
+  html.style.flexDirection = 'column';
+  html.style.alignItems = 'center';
+  html.style.justifyContent = 'center';
+  
+  // Заголовок
+  var header = document.createElement('h1');
+  header.style.color = '#fff';
+  header.style.marginBottom = '20px';
+  header.innerText = object.title || 'Выберите категорию';
+  html.appendChild(header);
+  
+  // Контейнер для кнопок
+  var container = document.createElement('div');
+  container.style.display = 'flex';
+  container.style.gap = '40px';
+  
+  // Функция для создания кнопки
+  function createButton(text, callback) {
+    var btn = document.createElement('button');
+    btn.innerText = text;
+    btn.style.padding = '20px 40px';
+    btn.style.fontSize = '1.5em';
+    btn.style.cursor = 'pointer';
+    btn.onclick = callback;
+    return btn;
+  }
+  
+  // Кнопка "Новинки"
+  var btnNew = createButton('Новинки', function() {
+    // Формируем URL для новинок
+    var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
+    Lampa.Activity.push({
+      url: url,
+      title: 'Русские фильмы - Новинки',
+      component: 'category_full',
+      source: 'cp',
+      card_type: true,
+      page: 1,
+    });
+  });
+  
+  // Кнопка "Топ"
+  var btnTop = createButton('Топ', function() {
+    // Формируем URL для топовых фильмов
+    var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
+    Lampa.Activity.push({
+      url: url,
+      title: 'Русские фильмы - Топ',
+      component: 'category_full',
+      source: 'cp',
+      card_type: true,
+      page: 1,
+    });
+  });
+  
+  container.appendChild(btnNew);
+  container.appendChild(btnTop);
+  html.appendChild(container);
+  
+  // Обработчик кнопки "Назад" (например, при нажатии кнопки "back" на пульте)
+  html.addEventListener('keydown', function(e) {
+    if(e.keyCode === 27) { // Esc
+      Lampa.Activity.backward();
+    }
+  });
+  
+  return html;
+});
+
+// Изменяем обработчик для кнопки "Русские фильмы"
 addMenuButton(
   'data-action="ru_movie_films"',
   'Русские фильмы',
   iconFilms,
   function () {
-    Lampa.Select.show({
-      title: 'Выберите категорию',
-      items: [
-        { title: 'Новинки', type: 'new' },
-        { title: 'Топ', type: 'top' }
-      ],
-      onSelect: function(a) {
-        var type = a.type;
-        var url, title;
-        if (type === 'new') {
-          url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
-          title = 'Русские фильмы - Новинки';
-        } else if (type === 'top') {
-          url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
-          title = 'Русские фильмы - Топ';
-        }
-        Lampa.Activity.push({
-          url: url,
-          title: title,
-          component: 'category_full',
-          source: 'cp' || 'tmdb',
-          card_type: true,
-          page: 1,
-        });
-      },
-      onBack: function() {
-        Lampa.Controller.toggle('menu');
+    Lampa.Activity.push({
+      // Вызываем наш компонент вместо стандартного выбора
+      component: 'tv_streaming_select',
+      title: 'Русские фильмы',
+      custom: {
+        // Здесь можно передать любые дополнительные данные, если нужно
+        categories: [
+          { title: 'Новинки', type: 'new' },
+          { title: 'Топ', type: 'top' }
+        ]
       }
     });
   }
 );
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   // Добавляем кнопку "Русские сериалы"
