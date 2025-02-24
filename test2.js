@@ -172,4 +172,38 @@
                   title: item.title,
                   component: 'category_full',
                   source: 'KP',
-            
+                  card_type: true,
+                  page: 1,
+                  onBack: function(){
+                    if(originalSource){
+                      Lampa.Params.select('source', originalSource);
+                    }
+                    Lampa.Controller.toggle("menu");
+                  }
+                });
+              },
+              onBack: function(){
+                if(originalSource){
+                  Lampa.Params.select('source', originalSource);
+                }
+                Lampa.Controller.toggle("menu");
+              }
+            });
+            console.log('Окно выбора категорий открыто');
+          } else {
+            console.error('Lampa.Select.show недоступен');
+          }
+        });
+      });
+
+      var tvItem = menu.find('[data-action="tv"]');
+      if(tvItem.length){
+        tvItem.after(kpButton);
+        console.log('Кнопка Кинопоиск добавлена после элемента TV');
+      } else {
+        menu.append(kpButton);
+        console.log('Кнопка Кинопоиск добавлена в конец меню');
+      }
+    }
+  });
+})();
