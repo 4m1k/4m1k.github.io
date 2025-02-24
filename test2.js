@@ -40,13 +40,18 @@
 
 
   // Иконка для "Русские фильмы"
-  var iconFilms = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-      <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
-      <path fill="currentColor" d="M24 32v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-      <path fill="currentColor" d="M16 40h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-    </svg>
-  `;
+addMenuButton(
+  'data-action="ru_movie_films"',
+  'Русские фильмы',
+  iconFilms,
+  function () {
+    Lampa.Activity.push({
+      component: 'tv_streaming_select',
+      title: 'Русские фильмы'
+    });
+  }
+);
+
 
   // Иконка для "Русские сериалы"
   var iconSeries = `
@@ -137,10 +142,11 @@ addMenuButton(
 
 // Добавляем компонент для выбора категории (аналог TV SHOW стримингов)
 Lampa.Component.add('tv_streaming_select', function(object) {
+  console.log('tv_streaming_select component init with object:', object);
   var component = {
     html: document.createElement('div'),
     start: function() {
-      console.log('tv_streaming_select: start');
+      console.log('tv_streaming_select start');
       Lampa.Controller.add('content', {
         link: this,
         toggle: function() {
@@ -163,14 +169,14 @@ Lampa.Component.add('tv_streaming_select', function(object) {
     }
   };
 
-  // Основной контейнер
+  // Основной контейнер — полноэкранное окно
+  component.html.className = 'tv-streaming-select';
   component.html.style.position = 'fixed';
   component.html.style.top = '0';
   component.html.style.left = '0';
   component.html.style.width = '100vw';
   component.html.style.height = '100vh';
-  // Яркий фон для отладки:
-  component.html.style.backgroundColor = '#ff0000';
+  component.html.style.backgroundColor = '#000';
   component.html.style.display = 'flex';
   component.html.style.flexDirection = 'column';
   component.html.style.alignItems = 'center';
@@ -178,37 +184,50 @@ Lampa.Component.add('tv_streaming_select', function(object) {
   component.html.style.zIndex = '9999';
   component.html.tabIndex = 0;
 
-  // Заголовок окна
-  var header = document.createElement('h1');
-  header.innerText = object.title || 'Выберите категорию';
-  header.style.color = '#fff';
+  // Создаём header с заголовком
+  var header = document.createElement('div');
+  header.className = 'tv-streaming-header';
+  header.style.width = '100%';
+  header.style.textAlign = 'center';
   header.style.marginBottom = '40px';
-  header.style.fontSize = '2em';
+  var titleElem = document.createElement('h1');
+  titleElem.innerText = object.title || 'Выберите категорию';
+  titleElem.style.color = '#fff';
+  titleElem.style.fontSize = '2em';
+  header.appendChild(titleElem);
   component.html.appendChild(header);
 
   // Контейнер для кнопок
   var container = document.createElement('div');
+  container.className = 'tv-streaming-buttons';
   container.style.display = 'flex';
-  container.style.gap = '60px';
   container.style.justifyContent = 'center';
-  container.style.width = '100%';
-  // Для отладки добавляем рамку:
+  container.style.alignItems = 'center';
+  container.style.gap = '60px';
+  // Для отладки добавляем яркую рамку:
   container.style.border = '2px solid yellow';
+  component.html.appendChild(container);
 
+  // Функция для создания кнопки (большой квадрат с надписью)
   function createButton(text, callback) {
-    var btn = document.createElement('button');
-    btn.innerText = text;
-    btn.style.padding = '20px 40px';
-    btn.style.fontSize = '1.5em';
-    btn.style.cursor = 'pointer';
-    btn.style.border = '2px solid #fff';
-    btn.style.borderRadius = '10px';
+    var btn = document.createElement('div');
+    btn.className = 'tv-streaming-btn selector';
+    btn.style.width = '200px';
+    btn.style.height = '200px';
     btn.style.backgroundColor = '#444';
+    btn.style.display = 'flex';
+    btn.style.alignItems = 'center';
+    btn.style.justifyContent = 'center';
+    btn.style.borderRadius = '10px';
+    btn.style.fontSize = '1.5em';
     btn.style.color = '#fff';
+    btn.style.cursor = 'pointer';
+    btn.innerText = text;
     btn.onclick = callback;
     return btn;
   }
 
+  // Кнопка "Новинки"
   var btnNew = createButton('Новинки', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=primary_release_date.desc&primary_release_date.lte=${new Date().toISOString().slice(0, 10)}&category=new`;
     Lampa.Activity.push({
@@ -220,7 +239,8 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       page: 1,
     });
   });
-  
+
+  // Кнопка "Топ"
   var btnTop = createButton('Топ', function() {
     var url = `discover/movie?with_original_language=ru&sort_by=popularity.desc&category=top`;
     Lampa.Activity.push({
@@ -232,17 +252,12 @@ Lampa.Component.add('tv_streaming_select', function(object) {
       page: 1,
     });
   });
-  
+
   container.appendChild(btnNew);
   container.appendChild(btnTop);
-  component.html.appendChild(container);
 
-  component.html.addEventListener('keydown', function(e) {
-    if(e.keyCode === 27) {
-      Lampa.Activity.backward();
-    }
-  });
-
+  console.log('tv_streaming_select component HTML:', component.html.innerHTML);
   return component;
 });
+
 
