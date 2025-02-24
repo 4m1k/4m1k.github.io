@@ -35,24 +35,34 @@
           get(method, oncomplite, onerror);
         }
       }
-      // Преобразование элемента из KP API в формат Lampa
+      // Преобразование элемента из KP API в формат Lampa (обновлено)
       function convertElem(elem) {
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || 'undefined';
         var img = elem.posterUrlPreview || elem.posterUrl || '';
-        return {
+        var result = {
           source: 'KP',
           id: 'KP_' + kinopoisk_id,
           title: title,
           original_title: title,
           overview: elem.description || elem.shortDescription || '',
           img: img,
-          background_image: img,
-          vote_average: parseFloat(elem.rating) || 0,
-          vote_count: elem.ratingVoteCount || 0,
+          background_image: elem.coverUrl || img,
+          vote_average: parseFloat(elem.ratingKinopoisk || elem.rating) || 0,
+          vote_count: elem.ratingKinopoiskVoteCount || elem.ratingVoteCount || 0,
           kinopoisk_id: kinopoisk_id,
-          type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie'
+          type: (elem.type === 'TV_SHOW' || elem.type === 'TV_SERIES') ? 'tv' : 'movie',
+          persons: { cast: [], crew: [] },
+          genres: elem.genres ? elem.genres.map(function(g){ return { id: g.genre, name: g.genre }; }) : [],
+          imdb_id: elem.imdbId || '',
+          webUrl: elem.webUrl || ''
         };
+        if(result.type === 'tv'){
+          result.first_air_date = elem.startYear || elem.year || '';
+        } else {
+          result.release_date = elem.year || '';
+        }
+        return result;
       }
       // Функция для загрузки списка элементов по категории
       function getList(method, params, oncomplite, onerror){
@@ -81,15 +91,14 @@
           }
         }, onerror);
       }
-      // *** Новая функция getFullDetails ***
+      // Новая функция getFullDetails для расширенной информации
       function getFullDetails(id, oncomplite, onerror){
         var url = 'api/v2.2/films/' + id;
         getFromCache(url, function(json, cached){
           if(json && json.kinopoiskId){
             var result = convertElem(json);
-            // Если основные поля пусты, можно сделать дополнительный запрос (пример):
+            // Если основных полей не хватает, можно запросить дополнительные данные (например, сезоны)
             if(!result.title || !result.img){
-              // Допустим, для сериалов можно запросить данные о сезонах
               get(url + '/seasons', function(seasons){
                 if(seasons && seasons.items && seasons.items.length){
                   result.overview += "\nСезоны: " + seasons.items.length;
@@ -120,7 +129,6 @@
             return onerror();
           }
           console.log('KP.full: Запрашиваем подробности для id:', id);
-          // Используем новую функцию getFullDetails
           getFullDetails(id, oncomplite, onerror);
         }
       };
@@ -130,7 +138,7 @@
 
     /* ===== Конец интеграции KP API ===== */
 
-    // Сохраняем исходный источник для последующего восстановления
+    // Сохраняем исходный источник для восстановления
     var originalSource = null;
     if(Lampa.Params && Lampa.Params.values && Lampa.Params.values.source){
       originalSource = Object.assign({}, Lampa.Params.values.source);
@@ -173,7 +181,7 @@
         }
         console.log('Меню найдено, добавляем кнопку Кинопоиск');
 
-        var kpButton = $(`  
+        var kpButton = $(`
           <li class="menu__item selector" data-action="kp">
             <div class="menu__ico">
               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
