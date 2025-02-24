@@ -36,11 +36,11 @@
     var container = document.createElement('div');
     container.className = 'kp-categories';
 
-    // Получаем ID страны "Россия" из кэша (если он уже загружен через вызов menu API)
-    // В данном примере предполагается, что переменная countries_map уже определена в пространстве плагина
-    var rus_id = window.countries_map && window.countries_map['Россия'] ? window.countries_map['Россия'] : '';
+    // Если у вас есть заранее известный ID для России, задайте его.
+    // Здесь в примере используется ID "225", замените его на актуальный или оставьте пустым.
+    var rus_id = '225'; 
 
-    // Список категорий с соответствующими API ссылками
+    // Список категорий с соответствующими API-ссылками
     var categories = [
       { title: 'Топ Фильмы', url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' },
       { title: 'Популярные Фильмы', url: 'api/v2.2/films?order=NUM_VOTE&type=FILM' },
@@ -60,16 +60,16 @@
           url: cat.url,
           title: cat.title,
           component: 'category_full',
-          source: 'KP', // источник указываем как KP (Kinopoisk)
+          source: 'KP', // Указываем источник как "KP" (используются API Кинопоиска)
           card_type: true,
           page: 1
         });
-        Lampa.Popup.close(); // Закрываем окно после выбора
+        Lampa.Popup.close(); // Закрываем окно после выбора категории
       };
       container.appendChild(btn);
     });
 
-    // Открываем всплывающее окно с созданным контентом
+    // Открываем всплывающее окно с созданным контейнером
     Lampa.Popup.open({
       title: 'Кинопоиск',
       html: container.outerHTML,
@@ -89,15 +89,4 @@
       openKPWindow();
     }
   );
-
-  // Если countries_map еще не загружен, можно вызвать menu() плагина для его инициализации
-  if(window.Lampa && Lampa.Api && Lampa.Api.sources && Lampa.Api.sources.KP){
-    Lampa.Api.sources.KP.menu(function(menuList){
-      // сохраняем для доступа к id страны "Россия"
-      window.countries_map = {};
-      menuList.forEach(function(item){
-        if(item.title === 'Россия' && item.id) window.countries_map['Россия'] = item.id;
-      });
-    });
-  }
 })();
