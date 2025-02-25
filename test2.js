@@ -446,7 +446,11 @@
   KP_PLUGIN.discovery = discovery;
 
   // Функция добавления плагина в Lampa
-  function startPlugin()
+  function startPlugin(){
+    if(Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME]){
+      Lampa.Noty.show('Установлен плагин несовместимый с kp_source');
+      return;
+    }
     Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME] = KP_PLUGIN;
     Object.defineProperty(Lampa.Api.sources, KP_PLUGIN.SOURCE_NAME, {
       get: function(){ return KP_PLUGIN; }
