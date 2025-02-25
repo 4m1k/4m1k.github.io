@@ -1,10 +1,10 @@
 (function(){
   'use strict';
 
-  // Если плагин уже загружен, ничего не делаем
+  // Если плагин уже загружен – выходим
   if(window.KP_PLUGIN) return;
 
-  // Основные переменные плагина
+  // --- Основные переменные плагина ---
   var KP_PLUGIN = {};
   var network = new Lampa.Reguest();
   var cache = {};
@@ -15,10 +15,13 @@
   var CACHE_TIME = 1000 * 60 * 60;
   var SOURCE_NAME = 'KP';
   var SOURCE_TITLE = 'KP';
-  // Жёстко задаём id страны «Россия»
+  // Фиксированное id страны «Россия»
   var rus_id = 34;
+  var menu_list = [];
+  var genres_map = {};
+  var countries_map = {};
 
-  // Функция GET с поддержкой прокси
+  // --- Функции работы с запросами ---
   function get(method, oncomplite, onerror){
     var use_proxy = total_cnt >= 10 && good_cnt > total_cnt / 2;
     if(!use_proxy) total_cnt++;
@@ -35,7 +38,7 @@
          network.silent(kp_prox + url, function(json){
             good_cnt++;
             oncomplite(json);
-         }, onerror, false, { headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'}});
+         }, onerror, false, { headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'} });
       } else onerror(a,c);
     }, false, { headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'} });
   }
@@ -74,7 +77,7 @@
     network.clear();
   }
 
-  // Функции преобразования элементов API в формат Lampa
+  // --- Функции преобразования данных ---
   function convertElem(elem){
     var type = (!elem.type || elem.type === 'FILM' || elem.type === 'VIDEO') ? 'movie' : 'tv';
     var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
@@ -135,7 +138,7 @@
     };
   }
 
-  // Функция получения списка элементов по категории
+  // --- Функция получения списка элементов по категории ---
   function getList(method, params, oncomplite, onerror){
     var url = method;
     if(params.query){
@@ -151,13 +154,14 @@
       else if(json.results && json.results.length) items = json.results;
       if(!cached && items.length) setCache(url, json);
       var results = items.map(convertElem);
+      // Фильтруем взрослый контент (если он присутствует)
       results = results.filter(function(elem){ return !elem.adult; });
       var total_pages = json.pagesCount || json.totalPages || json.total_pages || 1;
       oncomplite({ results: results, page: page, total_pages: total_pages });
     }, onerror);
   }
 
-  // Получение детальной информации по id
+  // --- Функция получения детальной информации по id ---
   function _getById(id, params, oncomplite, onerror){
     var url = 'api/v2.2/films/' + id;
     var film = getCache(url);
@@ -168,6 +172,7 @@
         if(film.kinopoiskId){
           var type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
           if(type === 'tv'){
+            // Для сериалов – получаем данные о сезонах, распределениях, сотрудниках и похожих фильмах
             getComplite('api/v2.2/films/' + id + '/seasons', function(seasons){
               film.seasons_obj = seasons;
               getComplite('api/v2.2/films/' + id + '/distributions', function(distributions){
@@ -198,7 +203,7 @@
     _getById(id, params, oncomplite, onerror);
   }
 
-  // Основной раздел – сбор нескольких частей
+  // --- Основной раздел – объединение нескольких категорий ---
   function main(params, oncomplite, onerror){
     params = params || {};
     var parts_limit = 5;
@@ -252,7 +257,7 @@
     loadPart(oncomplite, onerror);
   }
 
-  // Категории – похожая логика, добавляем российские категории
+  // --- Раздел категорий ---
   function category(params, oncomplite, onerror){
     params = params || {};
     var parts_limit = 5;
@@ -260,7 +265,7 @@
       function(call){
         call({
           results: Lampa.Favorite.continues(params.url) || [],
-          title: params.url == 'tv' ? Lampa.Lang.translate('title_continue') : Lampa.Lang.translate('title_watched')
+          title: params.url === 'tv' ? Lampa.Lang.translate('title_continue') : Lampa.Lang.translate('title_watched')
         });
       },
       function(call){
@@ -269,7 +274,7 @@
           title: Lampa.Lang.translate('title_recomend_watch')
         });
       },
-      // Российские категории
+      // Российские категории (без запроса к фильтрам)
       function(call){
         getList('api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=FILM', params, function(json){
           json.title = 'Популярные российские фильмы';
@@ -295,13 +300,14 @@
     loadPart(oncomplite, onerror);
   }
 
-  // Детальная карточка
+  // --- Детальная карточка ---
   function full(params, oncomplite, onerror){
     params = params || {};
     var kinopoisk_id = '';
     if(params.card && params.card.source === SOURCE_NAME){
-      if(params.card.kinopoisk_id) kinopoisk_id = params.card.kinopoisk_id;
-      else if(String(params.card.id).indexOf(SOURCE_NAME + '_') === 0){
+      if(params.card.kinopoisk_id) {
+        kinopoisk_id = params.card.kinopoisk_id;
+      } else if(String(params.card.id).indexOf(SOURCE_NAME + '_') === 0){
          kinopoisk_id = String(params.card.id).substring(SOURCE_NAME.length + 1);
          params.card.kinopoisk_id = kinopoisk_id;
       }
@@ -313,12 +319,12 @@
          status.append('movie', json);
          status.append('persons', json.persons);
          status.append('collection', json.collection);
-         status.append('simular', json.simular);
+         status.append('simular', json.similar || json.simular);
       }, onerror);
     } else onerror();
   }
 
-  // Поиск
+  // --- Поиск ---
   function search(params, oncomplite, onerror){
     params = params || {};
     var title = decodeURIComponent(params.query || '');
@@ -352,7 +358,7 @@
     }, status.error.bind(status));
   }
 
-  // Discovery (для раздела поиска)
+  // --- Discovery (для раздела поиска) ---
   function discovery(){
     return {
       title: SOURCE_TITLE,
@@ -375,7 +381,7 @@
     };
   }
 
-  // Персона
+  // --- Персона ---
   function person(params, oncomplite, onerror){
     params = params || {};
     var status = new Lampa.Status(1);
@@ -431,21 +437,51 @@
     }, status.error.bind(status));
   }
 
-  // Экспонируем методы плагина
+  // --- Экспонируем методы плагина ---
   KP_PLUGIN.SOURCE_NAME = SOURCE_NAME;
   KP_PLUGIN.SOURCE_TITLE = SOURCE_TITLE;
   KP_PLUGIN.main = main;
-  KP_PLUGIN.menu = menu;
+  KP_PLUGIN.menu = menu; // функция получения фильтров (если нужна)
   KP_PLUGIN.full = full;
   KP_PLUGIN.list = getList;
   KP_PLUGIN.category = category;
   KP_PLUGIN.clear = clear;
   KP_PLUGIN.person = person;
-  KP_PLUGIN.seasons = function(tv, from, oncomplite){ seasons(tv, from, oncomplite); };
+  KP_PLUGIN.seasons = function(tv, from, oncomplite){ return seasons(tv, from, oncomplite); };
   KP_PLUGIN.menuCategory = function(params, oncomplite){ oncomplite([]); };
   KP_PLUGIN.discovery = discovery;
 
-  // Функция добавления плагина в Lampa
+  // --- Функция получения фильтров (меню) ---
+  function menu(oncomplite){
+    if(menu_list.length){
+      oncomplite(menu_list);
+    } else {
+      get('api/v2.2/films/filters', function(j){
+         if(j.genres){
+           j.genres.forEach(function(g){
+             menu_list.push({
+               id: g.id,
+               title: g.genre,
+               url: '',
+               hide: g.genre === 'для взрослых',
+               separator: !g.genre
+             });
+             genres_map[g.genre] = g.id;
+           });
+         }
+         if(j.countries){
+           j.countries.forEach(function(c){
+             countries_map[c.country] = c.id;
+           });
+         }
+         oncomplite(menu_list);
+      }, function(){
+         oncomplite([]);
+      });
+    }
+  }
+
+  // --- Регистрация плагина в Lampa ---
   function startPlugin(){
     if(Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME]){
       Lampa.Noty.show('Установлен плагин несовместимый с kp_source');
@@ -467,7 +503,7 @@
   if(window.appready) startPlugin();
   else Lampa.Listener.follow('app', function(e){ if(e.type === 'ready') startPlugin(); });
 
-  // Функция добавления кнопки «Кинопоиск» в меню
+  // --- Добавление кнопки "Кинопоиск" в главное меню ---
   function addKPMenuButton(){
     var ITEM_TV_SELECTOR = '[data-action="tv"]';
     var ITEM_MOVE_TIMEOUT = 2000;
@@ -476,8 +512,10 @@
         $(item).insertAfter($(after));
       }, ITEM_MOVE_TIMEOUT);
     };
-    // Новая иконка, приведённая к размеру 1em
-    var iconKP = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 192 192" fill="none"><path d="M96.5 20L66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    // Новая SVG-иконка (адаптирована под 1em)
+    var iconKP = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 192 192" fill="none">
+      <path d="M96.5 20L66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
     var button = $(`
       <li class="menu__item selector" data-action="kp">
         <div class="menu__ico">${iconKP}</div>
@@ -516,13 +554,13 @@
       });
       console.log('Окно выбора категорий открыто');
     });
-    var menu = Lampa.Menu.render();
-    var tvItem = menu.find(ITEM_TV_SELECTOR);
+    var menuDOM = Lampa.Menu.render();
+    var tvItem = menuDOM.find(ITEM_TV_SELECTOR);
     if(tvItem.length){
        tvItem.after(button);
        console.log('Кнопка Кинопоиск добавлена после элемента TV');
     } else {
-       menu.append(button);
+       menuDOM.append(button);
        console.log('Кнопка Кинопоиск добавлена в конец меню');
     }
   }
@@ -531,6 +569,6 @@
   else Lampa.Listener.follow('app', function(e){
     if(e.type === 'ready') addKPMenuButton();
   });
-  
+
   window.KP_PLUGIN = KP_PLUGIN;
 })();
