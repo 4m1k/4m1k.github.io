@@ -4,67 +4,66 @@
   // Если плагин уже загружен – выходим
   if(window.KP_PLUGIN) return;
 
-  // --- Основные переменные плагина ---
+  // ============================================================================
+  // Основные переменные
+  // ============================================================================
   var KP_PLUGIN = {};
   var network = new Lampa.Reguest();
   var cache = {};
-  var total_cnt = 0;
-  var proxy_cnt = 0;
-  var good_cnt = 0;
-  var CACHE_SIZE = 100;
-  var CACHE_TIME = 1000 * 60 * 60;
-  var SOURCE_NAME = 'KP';
-  var SOURCE_TITLE = 'KP';
-  // Фиксированное id страны «Россия»
+  var total_cnt = 0, proxy_cnt = 0, good_cnt = 0;
+  var CACHE_SIZE = 100, CACHE_TIME = 1000 * 60 * 60;
+  var SOURCE_NAME = 'KP', SOURCE_TITLE = 'KP';
+  // Фиксированный ID страны для России
   var rus_id = 34;
   var menu_list = [];
-  var genres_map = {};
+  var genres_map = {}; // здесь можно добавить предустановленные id жанров при необходимости
   var countries_map = {};
 
-  // --- Функции работы с запросами ---
-  function get(method, oncomplite, onerror){
-    var use_proxy = total_cnt >= 10 && good_cnt > total_cnt / 2;
+  // ============================================================================
+  // Функции для запросов и кеширования
+  // ============================================================================
+  function get(method, oncomplite, onerror) {
+    var use_proxy = total_cnt >= 10 && good_cnt > total_cnt/2;
     if(!use_proxy) total_cnt++;
     var kp_prox = 'https://cors.kp556.workers.dev:8443/';
     var url = 'https://kinopoiskapiunofficial.tech/' + method;
     network.timeout(15000);
     network.silent((use_proxy ? kp_prox : '') + url, function(json){
       oncomplite(json);
-    }, function(a, c){
+    }, function(a,c){
       use_proxy = !use_proxy && (proxy_cnt < 10 || good_cnt > proxy_cnt/2);
-      if(use_proxy && (a.status == 429 || (a.status == 0 && a.statusText !== 'timeout'))){
-         proxy_cnt++;
-         network.timeout(15000);
-         network.silent(kp_prox + url, function(json){
-            good_cnt++;
-            oncomplite(json);
-         }, onerror, false, { headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'} });
+      if(use_proxy && (a.status==429 || (a.status==0 && a.statusText!=='timeout'))){
+        proxy_cnt++;
+        network.timeout(15000);
+        network.silent(kp_prox + url, function(json){
+          good_cnt++;
+          oncomplite(json);
+        }, onerror, false, {
+          headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'}
+        });
       } else onerror(a,c);
-    }, false, { headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'} });
+    }, false, {
+      headers: {'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'}
+    });
   }
 
-  function getComplite(method, oncomplite){
-    get(method, oncomplite, function(){ oncomplite(null); });
-  }
-
-  function getCache(key){
+  function getCache(key) {
     var res = cache[key];
     if(res){
-      var cache_timestamp = new Date().getTime() - CACHE_TIME;
-      if(res.timestamp > cache_timestamp) return res.value;
+      var t = new Date().getTime() - CACHE_TIME;
+      if(res.timestamp > t) return res.value;
       for(var k in cache){
-        if(!(cache[k] && cache[k].timestamp > cache_timestamp)) delete cache[k];
+        if(!(cache[k] && cache[k].timestamp > t)) delete cache[k];
       }
     }
     return null;
   }
 
-  function setCache(key, value){
-    var timestamp = new Date().getTime();
-    cache[key] = { timestamp: timestamp, value: value };
+  function setCache(key, value) {
+    cache[key] = { timestamp: new Date().getTime(), value: value };
   }
 
-  function getFromCache(method, oncomplite, onerror){
+  function getFromCache(method, oncomplite, onerror) {
     var json = getCache(method);
     if(json){
       setTimeout(function(){ oncomplite(json, true); }, 10);
@@ -73,20 +72,20 @@
     }
   }
 
-  function clear(){
-    network.clear();
-  }
+  function clear() { network.clear(); }
 
-  // --- Функции преобразования данных ---
-  function convertElem(elem){
-    var type = (!elem.type || elem.type === 'FILM' || elem.type === 'VIDEO') ? 'movie' : 'tv';
+  // ============================================================================
+  // Функции преобразования данных
+  // ============================================================================
+  function convertElem(elem) {
+    var type = (!elem.type || elem.type==='FILM' || elem.type==='VIDEO') ? 'movie' : 'tv';
     var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
     var title = elem.nameRu || elem.nameEn || elem.nameOriginal || '';
     var original_title = elem.nameOriginal || elem.nameEn || elem.nameRu || '';
     var genres = [];
     if(elem.genres && Array.isArray(elem.genres)){
       genres = elem.genres.map(function(e){
-        return { id: 0, name: e.genre, url: '' };
+        return { id: genres_map[e.genre] || 0, name: e.genre, url: '' };
       });
     }
     return {
@@ -107,9 +106,8 @@
     };
   }
 
-  function convertSeason(season){
-    var episodes = season.episodes || [];
-    episodes = episodes.map(function(e){
+  function convertSeason(season) {
+    var episodes = (season.episodes || []).map(function(e){
       return {
         season_number: e.seasonNumber,
         episode_number: e.episodeNumber,
@@ -127,7 +125,7 @@
     };
   }
 
-  function convertPerson(person){
+  function convertPerson(person) {
     return {
       id: person.staffId,
       name: person.nameRu || person.nameEn || '',
@@ -138,8 +136,10 @@
     };
   }
 
-  // --- Функция получения списка элементов по категории ---
-  function getList(method, params, oncomplite, onerror){
+  // ============================================================================
+  // Функция получения списка элементов по категории
+  // ============================================================================
+  function getList(method, params, oncomplite, onerror) {
     var url = method;
     if(params.query){
       var keyword = encodeURIComponent(params.query);
@@ -154,15 +154,16 @@
       else if(json.results && json.results.length) items = json.results;
       if(!cached && items.length) setCache(url, json);
       var results = items.map(convertElem);
-      // Фильтруем взрослый контент (если он присутствует)
       results = results.filter(function(elem){ return !elem.adult; });
       var total_pages = json.pagesCount || json.totalPages || json.total_pages || 1;
       oncomplite({ results: results, page: page, total_pages: total_pages });
     }, onerror);
   }
 
-  // --- Функция получения детальной информации по id ---
-  function _getById(id, params, oncomplite, onerror){
+  // ============================================================================
+  // Функция получения детальной информации по id
+  // ============================================================================
+  function _getById(id, params, oncomplite, onerror) {
     var url = 'api/v2.2/films/' + id;
     var film = getCache(url);
     if(film){
@@ -170,8 +171,8 @@
     } else {
       get(url, function(film){
         if(film.kinopoiskId){
-          var type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
-          if(type === 'tv'){
+          var type = (!film.type || film.type==='FILM' || film.type==='VIDEO') ? 'movie' : 'tv';
+          if(type==='tv'){
             // Для сериалов – получаем данные о сезонах, распределениях, сотрудниках и похожих фильмах
             getComplite('api/v2.2/films/' + id + '/seasons', function(seasons){
               film.seasons_obj = seasons;
@@ -198,13 +199,14 @@
       }, onerror);
     }
   }
-
-  function getById(id, params, oncomplite, onerror){
+  function getById(id, params, oncomplite, onerror) {
     _getById(id, params, oncomplite, onerror);
   }
 
-  // --- Основной раздел – объединение нескольких категорий ---
-  function main(params, oncomplite, onerror){
+  // ============================================================================
+  // Основная секция – комбинированные категории для главного меню
+  // ============================================================================
+  function main(params, oncomplite, onerror) {
     params = params || {};
     var parts_limit = 5;
     var parts_data = [
@@ -251,14 +253,16 @@
         }, call);
       }
     ];
-    function loadPart(partLoaded, partEmpty){
+    function loadPart(partLoaded, partEmpty) {
       Lampa.Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
     }
     loadPart(oncomplite, onerror);
   }
 
-  // --- Раздел категорий ---
-  function category(params, oncomplite, onerror){
+  // ============================================================================
+  // Категории (при переходе в раздел каталога)
+  // ============================================================================
+  function category(params, oncomplite, onerror) {
     params = params || {};
     var parts_limit = 5;
     var parts_data = [
@@ -274,7 +278,7 @@
           title: Lampa.Lang.translate('title_recomend_watch')
         });
       },
-      // Российские категории (без запроса к фильтрам)
+      // Добавляем российские категории сразу (без запроса фильтров)
       function(call){
         getList('api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=FILM', params, function(json){
           json.title = 'Популярные российские фильмы';
@@ -294,139 +298,142 @@
         }, call);
       }
     ];
-    function loadPart(partLoaded, partEmpty){
+    function loadPart(partLoaded, partEmpty) {
       Lampa.Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
     }
     loadPart(oncomplite, onerror);
   }
 
-  // --- Детальная карточка ---
-  function full(params, oncomplite, onerror){
+  // ============================================================================
+  // Детальная карточка
+  // ============================================================================
+  function full(params, oncomplite, onerror) {
     params = params || {};
     var kinopoisk_id = '';
     if(params.card && params.card.source === SOURCE_NAME){
-      if(params.card.kinopoisk_id) {
+      if(params.card.kinopoisk_id){
         kinopoisk_id = params.card.kinopoisk_id;
       } else if(String(params.card.id).indexOf(SOURCE_NAME + '_') === 0){
-         kinopoisk_id = String(params.card.id).substring(SOURCE_NAME.length + 1);
-         params.card.kinopoisk_id = kinopoisk_id;
+        kinopoisk_id = String(params.card.id).substring(SOURCE_NAME.length + 1);
+        params.card.kinopoisk_id = kinopoisk_id;
       }
     }
     if(kinopoisk_id){
       getById(kinopoisk_id, params, function(json){
-         var status = new Lampa.Status(4);
-         status.onComplite = oncomplite;
-         status.append('movie', json);
-         status.append('persons', json.persons);
-         status.append('collection', json.collection);
-         status.append('simular', json.similar || json.simular);
+        var status = new Lampa.Status(4);
+        status.onComplite = oncomplite;
+        status.append('movie', json);
+        status.append('persons', json.persons);
+        status.append('collection', json.collection);
+        status.append('simular', json.similar || json.similar);
       }, onerror);
     } else onerror();
   }
 
-  // --- Поиск ---
-  function search(params, oncomplite, onerror){
+  // ============================================================================
+  // Поиск
+  // ============================================================================
+  function search(params, oncomplite, onerror) {
     params = params || {};
     var title = decodeURIComponent(params.query || '');
     var status = new Lampa.Status(1);
     status.onComplite = function(data){
       var items = [];
       if(data.query && data.query.results){
-         var tmp = data.query.results.filter(function(elem){
-           return elem.title.toLowerCase().indexOf(title.toLowerCase()) !== -1 ||
-                  elem.original_title.toLowerCase().indexOf(title.toLowerCase()) !== -1;
-         });
-         if(tmp.length && tmp.length !== data.query.results.length){
-           data.query.results = tmp;
-           data.query.more = true;
-         }
-         var movie = Object.assign({}, data.query);
-         movie.results = data.query.results.filter(function(elem){ return elem.type === 'movie'; });
-         movie.title = Lampa.Lang.translate('menu_movies');
-         movie.type = 'movie';
-         if(movie.results.length) items.push(movie);
-         var tv = Object.assign({}, data.query);
-         tv.results = data.query.results.filter(function(elem){ return elem.type === 'tv'; });
-         tv.title = Lampa.Lang.translate('menu_tv');
-         tv.type = 'tv';
-         if(tv.results.length) items.push(tv);
+        var tmp = data.query.results.filter(function(elem){
+          return (elem.title && elem.title.toLowerCase().indexOf(title.toLowerCase()) !== -1) ||
+                 (elem.original_title && elem.original_title.toLowerCase().indexOf(title.toLowerCase()) !== -1);
+        });
+        if(tmp.length && tmp.length !== data.query.results.length){
+          data.query.results = tmp;
+          data.query.more = true;
+        }
+        var movie = Object.assign({}, data.query);
+        movie.results = data.query.results.filter(function(elem){ return elem.type==='movie'; });
+        movie.title = Lampa.Lang.translate('menu_movies');
+        movie.type = 'movie';
+        if(movie.results.length) items.push(movie);
+        var tv = Object.assign({}, data.query);
+        tv.results = data.query.results.filter(function(elem){ return elem.type==='tv'; });
+        tv.title = Lampa.Lang.translate('menu_tv');
+        tv.type = 'tv';
+        if(tv.results.length) items.push(tv);
       }
       oncomplite(items);
     };
     getList('api/v2.1/films/search-by-keyword', params, function(json){
-       status.append('query', json);
+      status.append('query', json);
     }, status.error.bind(status));
   }
 
-  // --- Discovery (для раздела поиска) ---
+  // ============================================================================
+  // Discovery для интерфейса поиска
+  // ============================================================================
   function discovery(){
     return {
       title: SOURCE_TITLE,
       search: search,
-      params: {
-         align_left: true,
-         object: { source: SOURCE_NAME }
-      },
+      params: { align_left: true, object: { source: SOURCE_NAME } },
       onMore: function(params){
-         Lampa.Activity.push({
-           url: 'api/v2.1/films/search-by-keyword',
-           title: Lampa.Lang.translate('search') + ' - ' + params.query,
-           component: 'category_full',
-           page: 1,
-           query: encodeURIComponent(params.query),
-           source: SOURCE_NAME
-         });
+        Lampa.Activity.push({
+          url: 'api/v2.1/films/search-by-keyword',
+          title: Lampa.Lang.translate('search') + ' - ' + params.query,
+          component: 'category_full',
+          page: 1,
+          query: encodeURIComponent(params.query),
+          source: SOURCE_NAME
+        });
       },
       onCancel: network.clear.bind(network)
     };
   }
 
-  // --- Персона ---
+  // ============================================================================
+  // Детали персоны
+  // ============================================================================
   function person(params, oncomplite, onerror){
     params = params || {};
     var status = new Lampa.Status(1);
     status.onComplite = function(data){
       var result = {};
       if(data.query){
-         var p = data.query;
-         result.person = {
-           id: p.personId,
-           name: p.nameRu || p.nameEn || '',
-           url: '',
-           img: p.posterUrl || '',
-           gender: p.sex === 'MALE' ? 2 : p.sex === 'FEMALE' ? 1 : 0,
-           birthday: p.birthday,
-           place_of_birth: p.birthplace,
-           deathday: p.death,
-           place_of_death: p.deathplace,
-           known_for_department: p.profession || '',
-           biography: (p.facts || []).join(' ')
-         };
-         var director_films = [];
-         var director_map = {};
-         var actor_films = [];
-         var actor_map = {};
-         if(p.films){
-           p.films.forEach(function(f){
-              if(f.professionKey === 'DIRECTOR' && !director_map[f.filmId]){
-                 director_map[f.filmId] = true;
-                 director_films.push(convertElem(f));
-              } else if(f.professionKey === 'ACTOR' && !actor_map[f.filmId]){
-                 actor_map[f.filmId] = true;
-                 actor_films.push(convertElem(f));
-              }
-           });
-         }
-         var knownFor = [];
-         if(director_films.length){
-           director_films.sort(function(a,b){ return b.vote_average - a.vote_average || a.id - b.id; });
-           knownFor.push({ name: Lampa.Lang.translate('title_producer'), credits: director_films });
-         }
-         if(actor_films.length){
-           actor_films.sort(function(a,b){ return b.vote_average - a.vote_average || a.id - b.id; });
-           knownFor.push({ name: Lampa.Lang.translate(p.sex === 'FEMALE' ? 'title_actress' : 'title_actor'), credits: actor_films });
-         }
-         result.credits = { knownFor: knownFor };
+        var p = data.query;
+        result.person = {
+          id: p.personId,
+          name: p.nameRu || p.nameEn || '',
+          url: '',
+          img: p.posterUrl || '',
+          gender: p.sex === 'MALE' ? 2 : p.sex === 'FEMALE' ? 1 : 0,
+          birthday: p.birthday,
+          place_of_birth: p.birthplace,
+          deathday: p.death,
+          place_of_death: p.deathplace,
+          known_for_department: p.profession || '',
+          biography: (p.facts || []).join(' ')
+        };
+        var director_films = [], director_map = {};
+        var actor_films = [], actor_map = {};
+        if(p.films){
+          p.films.forEach(function(f){
+            if(f.professionKey==='DIRECTOR' && !director_map[f.filmId]){
+              director_map[f.filmId] = true;
+              director_films.push(convertElem(f));
+            } else if(f.professionKey==='ACTOR' && !actor_map[f.filmId]){
+              actor_map[f.filmId] = true;
+              actor_films.push(convertElem(f));
+            }
+          });
+        }
+        var knownFor = [];
+        if(director_films.length){
+          director_films.sort(function(a,b){ return b.vote_average - a.vote_average || a.id - b.id; });
+          knownFor.push({ name: Lampa.Lang.translate('title_producer'), credits: director_films });
+        }
+        if(actor_films.length){
+          actor_films.sort(function(a,b){ return b.vote_average - a.vote_average || a.id - b.id; });
+          knownFor.push({ name: Lampa.Lang.translate(p.sex==='FEMALE' ? 'title_actress' : 'title_actor'), credits: actor_films });
+        }
+        result.credits = { knownFor: knownFor };
       }
       oncomplite(result);
     };
@@ -437,51 +444,50 @@
     }, status.error.bind(status));
   }
 
-  // --- Экспонируем методы плагина ---
+  // ============================================================================
+  // Экспонирование методов в KP_PLUGIN
+  // ============================================================================
   KP_PLUGIN.SOURCE_NAME = SOURCE_NAME;
   KP_PLUGIN.SOURCE_TITLE = SOURCE_TITLE;
   KP_PLUGIN.main = main;
-  KP_PLUGIN.menu = menu; // функция получения фильтров (если нужна)
   KP_PLUGIN.full = full;
   KP_PLUGIN.list = getList;
   KP_PLUGIN.category = category;
   KP_PLUGIN.clear = clear;
   KP_PLUGIN.person = person;
-  KP_PLUGIN.seasons = function(tv, from, oncomplite){ return seasons(tv, from, oncomplite); };
-  KP_PLUGIN.menuCategory = function(params, oncomplite){ oncomplite([]); };
   KP_PLUGIN.discovery = discovery;
 
-  // --- Функция получения фильтров (меню) ---
-  function menu(oncomplite){
+  // Функция меню (для фильтров; используется редко)
+  KP_PLUGIN.menu = function(oncomplite){
     if(menu_list.length){
       oncomplite(menu_list);
     } else {
       get('api/v2.2/films/filters', function(j){
-         if(j.genres){
-           j.genres.forEach(function(g){
-             menu_list.push({
-               id: g.id,
-               title: g.genre,
-               url: '',
-               hide: g.genre === 'для взрослых',
-               separator: !g.genre
-             });
-             genres_map[g.genre] = g.id;
-           });
-         }
-         if(j.countries){
-           j.countries.forEach(function(c){
-             countries_map[c.country] = c.id;
-           });
-         }
-         oncomplite(menu_list);
-      }, function(){
-         oncomplite([]);
-      });
+        if(j.genres){
+          j.genres.forEach(function(g){
+            menu_list.push({
+              id: g.id,
+              title: g.genre,
+              url: '',
+              hide: (g.genre==='для взрослых'),
+              separator: !g.genre
+            });
+            genres_map[g.genre] = g.id;
+          });
+        }
+        if(j.countries){
+          j.countries.forEach(function(c){
+            countries_map[c.country] = c.id;
+          });
+        }
+        oncomplite(menu_list);
+      }, function(){ oncomplite([]); });
     }
-  }
+  };
 
-  // --- Регистрация плагина в Lampa ---
+  // ============================================================================
+  // Регистрация плагина в Lampa
+  // ============================================================================
   function startPlugin(){
     if(Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME]){
       Lampa.Noty.show('Установлен плагин несовместимый с kp_source');
@@ -501,9 +507,11 @@
     Lampa.Params.select('source', sources, 'tmdb');
   }
   if(window.appready) startPlugin();
-  else Lampa.Listener.follow('app', function(e){ if(e.type === 'ready') startPlugin(); });
+  else Lampa.Listener.follow('app', function(e){ if(e.type==='ready') startPlugin(); });
 
-  // --- Добавление кнопки "Кинопоиск" в главное меню ---
+  // ============================================================================
+  // Добавление кнопки "Кинопоиск" в главное меню
+  // ============================================================================
   function addKPMenuButton(){
     var ITEM_TV_SELECTOR = '[data-action="tv"]';
     var ITEM_MOVE_TIMEOUT = 2000;
@@ -525,50 +533,48 @@
     button.on('hover:enter', function(){
       console.log('Нажата кнопка Кинопоиск');
       Lampa.Select.show({
-         title: 'Кинопоиск',
-         items: [
-           { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
-           { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
-           { title: 'Популярные российские фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=FILM' } },
-           { title: 'Популярные российские сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=TV_SERIES' } },
-           { title: 'Популярные российские мини-сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=MINI_SERIES' } },
-           { title: 'Популярные телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
-         ],
-         onSelect: function(item){
-            console.log('[Выбран пункт:]', item);
-            Lampa.Activity.push({
-              url: item.data.url,
-              title: item.title,
-              component: 'category_full',
-              source: KP_PLUGIN.SOURCE_NAME,
-              card_type: true,
-              page: 1,
-              onBack: function(){
-                 Lampa.Controller.toggle("menu");
-              }
-            });
-         },
-         onBack: function(){
-            Lampa.Controller.toggle("menu");
-         }
+        title: 'Кинопоиск',
+        items: [
+          { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
+          { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
+          { title: 'Популярные российские фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=FILM' } },
+          { title: 'Популярные российские сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=TV_SERIES' } },
+          { title: 'Популярные российские мини-сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=' + rus_id + '&type=MINI_SERIES' } },
+          { title: 'Популярные телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
+        ],
+        onSelect: function(item){
+          console.log('[Выбран пункт:]', item);
+          Lampa.Activity.push({
+            // Преобразуем data.url в строку на всякий случай
+            url: String(item.data.url),
+            title: item.title,
+            component: 'category_full',
+            source: KP_PLUGIN.SOURCE_NAME,
+            card_type: true,
+            page: 1,
+            onBack: function(){
+              Lampa.Controller.toggle("menu");
+            }
+          });
+        },
+        onBack: function(){
+          Lampa.Controller.toggle("menu");
+        }
       });
       console.log('Окно выбора категорий открыто');
     });
     var menuDOM = Lampa.Menu.render();
     var tvItem = menuDOM.find(ITEM_TV_SELECTOR);
     if(tvItem.length){
-       tvItem.after(button);
-       console.log('Кнопка Кинопоиск добавлена после элемента TV');
+      tvItem.after(button);
+      console.log('Кнопка Кинопоиск добавлена после элемента TV');
     } else {
-       menuDOM.append(button);
-       console.log('Кнопка Кинопоиск добавлена в конец меню');
+      menuDOM.append(button);
+      console.log('Кнопка Кинопоиск добавлена в конец меню');
     }
   }
-  
   if(window.appready) addKPMenuButton();
-  else Lampa.Listener.follow('app', function(e){
-    if(e.type === 'ready') addKPMenuButton();
-  });
+  else Lampa.Listener.follow('app', function(e){ if(e.type==='ready') addKPMenuButton(); });
 
   window.KP_PLUGIN = KP_PLUGIN;
 })();
