@@ -1,7 +1,7 @@
 (function(){
   'use strict';
 
-  // Если плагин уже загружен – не загружаем повторно
+  // Если плагин уже загружен – выходим
   if(window.KPPluginLoaded){
     console.log("KP Plugin уже загружен");
     return;
@@ -61,8 +61,8 @@
         { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
         { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
         { title: 'Популярные Сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SERIES' } },
-        { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } },
-        // Если фильтры загрузятся, в category будут добавлены русские категории (например, популярные российские фильмы)
+        { title: 'Популярные Телешоу', data: { url: 'api/v2.2/films?order=NUM_VOTE&type=TV_SHOW' } }
+        // Дополнительные категории можно добавить здесь.
       ],
       onSelect: function(item){
         console.log("Выбран пункт:", item);
@@ -87,7 +87,7 @@
     console.log("Окно выбора категорий открыто");
   }
 
-  // Добавляем кнопку "Кинопоиск" после элемента TV (если нет — в конец)
+  // Добавляем кнопку "Кинопоиск" после элемента TV (если нет – в конец)
   addMenuButton('data-action="kp"', 'Кинопоиск', kpIcon, openKPSelect);
 
   // Сохраняем исходный источник для возврата в главное меню
@@ -98,15 +98,12 @@
 
   // ---------------- Часть 2. Интеграция KP API ----------------
 
-  // Создаём пространство имён плагина и все его свойства
   const KP_PLUGIN = {
     SOURCE_NAME: 'KP',
     SOURCE_TITLE: 'KP',
-    // Для хранения фильтров
     menu_list: [],
     genres_map: {},
     countries_map: {},
-    // Счетчики и кэш
     network: new Lampa.Reguest(),
     cache: {},
     totalCount: 0,
@@ -115,6 +112,9 @@
     CACHE_SIZE: 100,
     CACHE_TIME: 1000 * 60 * 60
   };
+
+  // Задаём жёстко id для страны «Россия»
+  KP_PLUGIN.countries_map["Россия"] = 34;
 
   // Функции кэширования
   KP_PLUGIN.getCache = function(key){
@@ -399,15 +399,12 @@
     KP_PLUGIN.menu(() => {
       const rusId = KP_PLUGIN.countries_map['Россия'];
       if(rusId){
-        // Добавляем «Популярные российские фильмы»
         partsData.splice(3, 0, cb => {
           KP_PLUGIN.getList('api/v2.2/films?order=NUM_VOTE&countries=' + rusId + '&type=FILM', params, json => { json.title = 'Популярные российские фильмы'; cb(json); }, cb);
         });
-        // «Популярные российские сериалы»
         partsData.splice(5, 0, cb => {
           KP_PLUGIN.getList('api/v2.2/films?order=NUM_VOTE&countries=' + rusId + '&type=TV_SERIES', params, json => { json.title = 'Популярные российские сериалы'; cb(json); }, cb);
         });
-        // «Популярные российские мини-сериалы»
         partsData.splice(7, 0, cb => {
           KP_PLUGIN.getList('api/v2.2/films?order=NUM_VOTE&countries=' + rusId + '&type=MINI_SERIES', params, json => { json.title = 'Популярные российские мини-сериалы'; cb(json); }, cb);
         });
@@ -601,7 +598,6 @@
     { name: KP_PLUGIN.SOURCE_NAME, title: KP_PLUGIN.SOURCE_TITLE }
   ];
 
-  // Функция загрузки фильтров (жанров и стран)
   KP_PLUGIN.menu = function(onComplite){
     if(KP_PLUGIN.menu_list.length){
       onComplite(KP_PLUGIN.menu_list);
@@ -623,6 +619,10 @@
           j.countries.forEach(c => {
             KP_PLUGIN.countries_map[c.country] = c.id;
           });
+          // Если вдруг в фильтрах не было "Россия", оставляем наше значение 34
+          if(!KP_PLUGIN.countries_map["Россия"]){
+            KP_PLUGIN.countries_map["Россия"] = 34;
+          }
         }
         onComplite(KP_PLUGIN.menu_list);
       }, () => { onComplite([]); });
@@ -647,7 +647,6 @@
     });
   };
 
-  // Регистрация плагина в Lampa.Api.sources и установка источника по умолчанию
   function startPlugin(){
     window.kp_source_plugin = true;
     function addPlugin(){
