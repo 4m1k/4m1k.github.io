@@ -448,7 +448,7 @@
   // Функция добавления плагина в Lampa
   function startPlugin(){
     if(Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME]){
-      Lampa.Noty.show('Установлен плагин несовместимый с kp_source');
+      Lampa.Noty.show('Установлен плагин Кинопоиск');
       return;
     }
     Lampa.Api.sources[KP_PLUGIN.SOURCE_NAME] = KP_PLUGIN;
