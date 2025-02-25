@@ -1,6 +1,7 @@
 (function(){
   'use strict';
-  // Предотвращаем повторное выполнение плагина
+
+  // Если плагин уже загружен – не загружаем повторно
   if(window.KPPluginLoaded){
     console.log("KP Plugin уже загружен");
     return;
@@ -8,37 +9,40 @@
   window.KPPluginLoaded = true;
   console.log("KP Plugin script loaded");
 
-  // ------------------- Добавление кнопки в меню -------------------
-  // Селектор для кнопки TV и таймаут перемещения
+  // -------------- Часть 1. Добавление кнопки в меню --------------
   const ITEM_TV_SELECTOR = '[data-action="tv"]';
   const ITEM_MOVE_TIMEOUT = 2000;
-  function moveItemAfter(item, after){
+
+  // Функция для перемещения элемента через таймаут
+  function moveItemAfter(item, after) {
     return setTimeout(() => {
       $(item).insertAfter($(after));
     }, ITEM_MOVE_TIMEOUT);
   }
-  function addMenuButton(attr, text, iconHTML, onEnterHandler){
+
+  // Функция для добавления кнопки в меню
+  function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
     const field = $(`
-      <li class="menu__item selector" ${attr}>
+      <li class="menu__item selector" ${newItemAttr}>
         <div class="menu__ico">${iconHTML}</div>
-        <div class="menu__text">${text}</div>
+        <div class="menu__text">${newItemText}</div>
       </li>
     `);
     field.on('hover:enter', onEnterHandler);
     if(window.appready){
       Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-      moveItemAfter(`[${attr}]`, ITEM_TV_SELECTOR);
+      moveItemAfter(`[${newItemAttr}]`, ITEM_TV_SELECTOR);
     } else {
       Lampa.Listener.follow('app', event => {
         if(event.type === 'ready'){
           Lampa.Menu.render().find(ITEM_TV_SELECTOR).after(field);
-          moveItemAfter(`[${attr}]`, ITEM_TV_SELECTOR);
+          moveItemAfter(`[${newItemAttr}]`, ITEM_TV_SELECTOR);
         }
       });
     }
   }
 
-  // Используем простую иконку для кнопки "Кинопоиск"
+  // Иконка для кнопки "Кинопоиск" (можете заменить на свою)
   const kpIcon = `
     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
       <rect x="6" y="10" width="36" height="22" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="4"/>
@@ -47,7 +51,7 @@
     </svg>
   `;
 
-  // Функция открытия окна выбора категорий KP
+  // Функция, открывающая окно выбора категорий KP
   function openKPSelect(){
     console.log("Нажата кнопка Кинопоиск");
     Lampa.Select.show({
@@ -81,25 +85,32 @@
     console.log("Окно выбора категорий открыто");
   }
 
-  // Добавляем кнопку "Кинопоиск" в меню
+  // Добавляем кнопку "Кинопоиск" после элемента TV (если его нет – в конец)
   addMenuButton('data-action="kp"', 'Кинопоиск', kpIcon, openKPSelect);
 
-  // ------------------- KP API Integration -------------------
-  // Объект плагина
+  // Сохраняем исходный источник для возврата в главное меню
+  const originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
+    Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
+  console.log("Исходный источник сохранён:", originalSource);
+
+  // -------------- Часть 2. Интеграция KP API --------------
+  // Создаём пространство имён плагина
   const KP_PLUGIN = {};
   KP_PLUGIN.SOURCE_NAME = 'KP';
   KP_PLUGIN.SOURCE_TITLE = 'KP';
-  
-  // Создаём экземпляр Reguest и кэш
+  // Для хранения сопоставлений жанров и стран
+  KP_PLUGIN.genres_map = {};
+  KP_PLUGIN.countries_map = {};
+  // Экземпляр сетевого запроса и кэш
   KP_PLUGIN.network = new Lampa.Reguest();
   KP_PLUGIN.cache = {};
   KP_PLUGIN.totalCount = 0;
   KP_PLUGIN.proxyCount = 0;
   KP_PLUGIN.goodCount = 0;
   KP_PLUGIN.CACHE_SIZE = 100;
-  KP_PLUGIN.CACHE_TIME = 1000 * 60 * 60; // 1 час
-  
-  // Функции кэширования
+  KP_PLUGIN.CACHE_TIME = 1000 * 60 * 60;
+
+  // Кэширование
   KP_PLUGIN.getCache = function(key){
     const res = KP_PLUGIN.cache[key];
     if(res){
@@ -111,6 +122,7 @@
     }
     return null;
   };
+
   KP_PLUGIN.setCache = function(key, value){
     const timestamp = new Date().getTime();
     if(Object.keys(KP_PLUGIN.cache).length >= KP_PLUGIN.CACHE_SIZE){
@@ -128,6 +140,7 @@
     }
     KP_PLUGIN.cache[key] = { timestamp, value };
   };
+
   KP_PLUGIN.getFromCache = function(method, onComplite, onError){
     const json = KP_PLUGIN.getCache(method);
     if(json){
@@ -136,13 +149,14 @@
       KP_PLUGIN.get(method, onComplite, onError);
     }
   };
+
   KP_PLUGIN.clear = function(){
     KP_PLUGIN.network.clear();
   };
-  
-  // Сетевой запрос
+
+  // Функция запроса
   KP_PLUGIN.get = function(method, onComplite, onError){
-    let useProxy = KP_PLUGIN.totalCount >= 10 && KP_PLUGIN.goodCount > KP_PLUGIN.totalCount/2;
+    let useProxy = KP_PLUGIN.totalCount >= 10 && KP_PLUGIN.goodCount > KP_PLUGIN.totalCount / 2;
     if(!useProxy) KP_PLUGIN.totalCount++;
     const kpProxy = 'https://cors.kp556.workers.dev:8443/';
     const url = 'https://kinopoiskapiunofficial.tech/' + method;
@@ -151,7 +165,7 @@
       console.log("KP get response:", json);
       onComplite(json);
     }, function(a, c){
-      useProxy = !useProxy && (KP_PLUGIN.proxyCount < 10 || KP_PLUGIN.goodCount > KP_PLUGIN.proxyCount/2);
+      useProxy = !useProxy && (KP_PLUGIN.proxyCount < 10 || KP_PLUGIN.goodCount > KP_PLUGIN.proxyCount / 2);
       if(useProxy && (a.status === 429 || (a.status === 0 && a.statusText !== 'timeout'))){
         KP_PLUGIN.proxyCount++;
         KP_PLUGIN.network.timeout(15000);
@@ -168,15 +182,17 @@
       headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
     });
   };
+
   KP_PLUGIN.getComplite = function(method, onComplite){
     KP_PLUGIN.get(method, onComplite, () => onComplite(null));
   };
+
   KP_PLUGIN.getCompliteIf = function(condition, method, onComplite){
     if(condition) KP_PLUGIN.getComplite(method, onComplite);
     else setTimeout(() => onComplite(null), 10);
   };
 
-  // Функции преобразования данных
+  // Преобразование элемента из KP API в формат Lampa
   KP_PLUGIN.convertElem = function(elem){
     const type = (!elem.type || elem.type === 'FILM' || elem.type === 'VIDEO') ? 'movie' : 'tv';
     const kpId = elem.kinopoiskId || elem.filmId || 0;
@@ -196,7 +212,7 @@
       background_image: elem.coverUrl || elem.posterUrl || elem.posterUrlPreview || '',
       genres: elem.genres ? elem.genres.map(e => {
          if(e.genre === 'для взрослых') adult = true;
-         return { id: (e.genre && genres_map[e.genre]) || 0, name: e.genre, url: '' };
+         return { id: (e.genre && KP_PLUGIN.genres_map[e.genre]) || 0, name: e.genre, url: '' };
       }) : [],
       production_companies: [],
       production_countries: elem.countries ? elem.countries.map(e => ({ name: e.country })) : [],
@@ -264,6 +280,7 @@
     }
     return result;
   };
+
   KP_PLUGIN.convertSeason = function(season){
     const episodes = (season.episodes || []).map(e => ({
       season_number: e.seasonNumber,
@@ -280,6 +297,7 @@
       overview: ''
     };
   };
+
   KP_PLUGIN.convertPerson = function(person){
     return {
       id: person.staffId,
@@ -312,6 +330,7 @@
       onComplite({ results, url: method, page, total_pages: totalPages, total_results: 0, more: totalPages > page });
     }, onError);
   };
+
   KP_PLUGIN._getById = function(id, params = {}, onComplite, onError){
     const url = 'api/v2.2/films/' + id;
     const film = KP_PLUGIN.getCache(url);
@@ -342,12 +361,14 @@
       }, onError);
     }
   };
+
   KP_PLUGIN.getById = function(id, params = {}, onComplite, onError){
     // Для корректного вызова сначала загружаем меню (если требуется)
     menu(() => {
       KP_PLUGIN._getById(id, params, onComplite, onError);
     });
   };
+
   KP_PLUGIN.main = function(params = {}, onComplite, onError){
     const partsLimit = 5;
     const partsData = [
@@ -362,7 +383,7 @@
       Lampa.Api.partNext(partsData, partsLimit, loaded, empty);
     }
     menu(() => {
-      const rusId = countries_map['Россия'];
+      const rusId = KP_PLUGIN.countries_map['Россия'];
       if(rusId){
         partsData.splice(3, 0, cb => {
           KP_PLUGIN.getList('api/v2.2/films?order=NUM_VOTE&countries=' + rusId + '&type=FILM', params, json => { json.title = 'Популярные российские фильмы'; cb(json); }, cb);
@@ -378,9 +399,9 @@
     });
     return loadPart;
   };
-  
+
   KP_PLUGIN.category = function(params = {}, onComplite, onError){
-    const show = ['movie','tv'].indexOf(params.url) > -1 && !params.genres;
+    const show = (['movie','tv'].indexOf(params.url) > -1) && !params.genres;
     let books = show ? Lampa.Favorite.continues(params.url) : [];
     books.forEach(elem => { if(!elem.source) elem.source = 'tmdb'; });
     books = books.filter(elem => [KP_PLUGIN.SOURCE_NAME, 'tmdb', 'cub'].indexOf(elem.source) !== -1);
@@ -389,7 +410,7 @@
     recomend = recomend.filter(elem => [KP_PLUGIN.SOURCE_NAME, 'tmdb', 'cub'].indexOf(elem.source) !== -1);
     const partsLimit = 5;
     const partsData = [
-      cb => { cb({ results: books, title: params.url === 'tv' ? Lampa.Lang.translate('title_continue') : Lampa.Lang.translate('title_watched') }); },
+      cb => { cb({ results: books, title: (params.url === 'tv' ? Lampa.Lang.translate('title_continue') : Lampa.Lang.translate('title_watched')) }); },
       cb => { cb({ results: recomend, title: Lampa.Lang.translate('title_recomend_watch') }); }
     ];
     function loadPart(loaded, empty){
@@ -398,7 +419,7 @@
     menu(() => {
       const priority = ['семейный','детский','короткометражка','мультфильм','аниме'];
       priority.forEach(g => {
-        const id = genres_map[g];
+        const id = KP_PLUGIN.genres_map[g];
         if(id){
           partsData.push(cb => {
             KP_PLUGIN.getList('api/v2.2/films?order=NUM_VOTE&genres=' + id + '&type=' + (params.url === 'tv' ? 'TV_SERIES' : 'FILM'), params, json => {
@@ -422,14 +443,14 @@
     });
     return loadPart;
   };
-  
+
   KP_PLUGIN.full = function(params = {}, onComplite, onError){
     let kinopoisk_id = '';
     if(params.card && params.card.source === KP_PLUGIN.SOURCE_NAME){
       if(params.card.kinopoisk_id){
         kinopoisk_id = params.card.kinopoisk_id;
-      } else if(startsWith(params.card.id + '', KP_PLUGIN.SOURCE_NAME + '_')){
-        kinopoisk_id = (params.card.id + '').substring(KP_PLUGIN.SOURCE_NAME.length + 1);
+      } else if(String(params.card.id).startsWith(KP_PLUGIN.SOURCE_NAME + '_')){
+        kinopoisk_id = String(params.card.id).substring(KP_PLUGIN.SOURCE_NAME.length + 1);
         params.card.kinopoisk_id = kinopoisk_id;
       }
     }
@@ -446,7 +467,7 @@
       onError();
     }
   };
-  
+
   KP_PLUGIN.list = function(params = {}, onComplite, onError){
     let method = params.url;
     if(method === '' && params.genres){
@@ -454,7 +475,7 @@
     }
     KP_PLUGIN.getList(method, params, onComplite, onError);
   };
-  
+
   KP_PLUGIN.search = function(params = {}, onComplite){
     const title = decodeURIComponent(params.query || '');
     const status = new Lampa.Status(1);
@@ -462,7 +483,8 @@
       let items = [];
       if(data.query && data.query.results){
         const tmp = data.query.results.filter(elem =>
-          containsTitle(elem.title, title) || containsTitle(elem.original_title, title)
+          (elem.title && elem.title.toLowerCase().includes(title.toLowerCase())) ||
+          (elem.original_title && elem.original_title.toLowerCase().includes(title.toLowerCase()))
         );
         if(tmp.length && tmp.length !== data.query.results.length){
           data.query.results = tmp;
@@ -485,7 +507,7 @@
       status.append('query', json);
     }, status.error.bind(status));
   };
-  
+
   KP_PLUGIN.discovery = function(){
     return {
       title: KP_PLUGIN.SOURCE_TITLE,
@@ -504,7 +526,7 @@
       onCancel: KP_PLUGIN.clear.bind(KP_PLUGIN)
     };
   };
-  
+
   KP_PLUGIN.person = function(params = {}, onComplite){
     const status = new Lampa.Status(1);
     status.onComplite = function(data){
@@ -558,8 +580,8 @@
       status.append('query', json);
     }, status.error.bind(status));
   };
-  
-  // ------------------- Регистрация плагина в Lampa -------------------
+
+  // -------------- Регистрация плагина в Lampa --------------
   const ALL_SOURCES = [
     { name: 'tmdb', title: 'TMDB' },
     { name: 'cub', title: 'CUB' },
@@ -567,11 +589,7 @@
     { name: 'filmix', title: 'FILMIX' },
     { name: KP_PLUGIN.SOURCE_NAME, title: KP_PLUGIN.SOURCE_TITLE }
   ];
-  
-  const originalSource = (Lampa.Params && Lampa.Params.values && Lampa.Params.values.source) ?
-    Object.assign({}, Lampa.Params.values.source) : { tmdb: 'TMDB' };
-  console.log("Исходный источник сохранён:", originalSource);
-  
+
   function startPlugin(){
     window.kp_source_plugin = true;
     function addPlugin(){
