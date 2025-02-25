@@ -42,54 +42,35 @@
 
   // Новая SVG-иконка для кнопки "Кинопоиск"
   var iconKP = `
-    <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="1em"
-  height="1em"
-  viewBox="0 0 48 48"
+    <?xml version="1.0" encoding="utf-8"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="192px"
+    height="192px"
+    viewBox="0 0 192 192"
 >
-  <!-- Прямоугольник со скруглёнными углами -->
+  <!-- Квадрат со скруглёнными углами (толстая обводка) -->
   <rect
-    x="6"
-    y="10"
-    width="36"
-    height="22"
-    rx="2"
-    ry="2"
+    x="4"
+    y="4"
+    width="184"
+    height="184"
+    rx="16"
+    ry="16"
     fill="none"
     stroke="currentColor"
-    stroke-width="4"
-  />
-
-  <!-- Вертикальная линия «K» -->
-  <path
-    d="M19 13v16"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="4"
+    stroke-width="14"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
 
-  <!-- Верхняя диагональ «K» -->
-  <path
-    d="M19 21l10-8"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="4"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-
-  <!-- Нижняя диагональ «K» -->
-  <path
-    d="M19 21l10 8"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="4"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
+  <!-- Буква «K» как отдельная залитая фигура -->
+  <g transform="translate(-10.63, 0)">
+    <path
+      d="M96.5 20 66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z"
+      fill="currentColor"
+    />
+  </g>
 </svg>
 
   `;
