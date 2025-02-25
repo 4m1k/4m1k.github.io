@@ -1,32 +1,30 @@
 (function () {
   'use strict';
 
-  // ========================
-  // Часть 1. Добавление кнопки "Кинопоиск" в меню
-  // ========================
-
+  // =============================
+  // Часть 1. Добавление кнопки "Кинопоиск" в меню Lampa
+  // =============================
   Lampa.Platform.tv();
 
-  // Селектор для кнопки TV и таймаут перемещения
   var ITEM_TV_SELECTOR = '[data-action="tv"]';
   var ITEM_MOVE_TIMEOUT = 2000;
 
-  // Функция перемещения элемента
+  // Функция для перемещения элемента
   var moveItemAfter = function (item, after) {
     return setTimeout(function () {
       $(item).insertAfter($(after));
     }, ITEM_MOVE_TIMEOUT);
   };
 
-  // Функция для добавления отдельной кнопки в меню
+  // Функция для добавления кнопки в меню
   function addMenuButton(newItemAttr, newItemText, iconHTML, onEnterHandler) {
     var NEW_ITEM_ATTR = newItemAttr;
     var NEW_ITEM_SELECTOR = '[' + NEW_ITEM_ATTR + ']';
     var field = $(
       `<li class="menu__item selector" ${NEW_ITEM_ATTR}>
-        <div class="menu__ico">${iconHTML}</div>
-        <div class="menu__text">${newItemText}</div>
-      </li>`
+         <div class="menu__ico">${iconHTML}</div>
+         <div class="menu__text">${newItemText}</div>
+       </li>`
     );
     field.on('hover:enter', onEnterHandler);
     if (window.appready) {
@@ -42,27 +40,26 @@
     }
   }
 
-  // Новая иконка (SVG) для кнопки Кинопоиск
+  // Новая SVG-иконка (можно редактировать по вкусу)
   var iconKP = `
     <svg width="800px" height="800px" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
       <path d="M96.5 20 66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z" 
-        style="stroke:#000000; stroke-width:8; stroke-linecap:round; stroke-linejoin:round;" />
+        style="stroke:#000; stroke-width:8; stroke-linecap:round; stroke-linejoin:round;" />
     </svg>
   `;
 
-  // Добавляем кнопку "Кинопоиск"
+  // Добавляем кнопку "Кинопоиск" в меню
   addMenuButton(
     'data-action="kp"',
     'Кинопоиск',
     iconKP,
     function () {
-      // При нажатии открывается окно выбора категорий
       Lampa.Select.show({
         title: 'Кинопоиск',
         items: [
           { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
           { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
-          // Русские категории добавлены сразу с фиксированным id страны "34"
+          // Русские категории (с фиксированным id страны "34")
           { title: 'Популярные российские фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=FILM' } },
           { title: 'Популярные российские сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=TV_SERIES' } },
           { title: 'Популярные российские мини-сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=MINI_SERIES' } },
@@ -88,15 +85,14 @@
     }
   );
 
-  // ========================
-  // Часть 2. Новый плагин KP_API (обёрнут в один объект, чтобы избежать конфликтов)
-  // ========================
-
-  // Если плагин ещё не объявлен, создаём его в пространстве window.KP_PLUGIN
+  // =============================
+  // Часть 2. Новый плагин KP_API (объект KP_PLUGIN)
+  // =============================
   if (!window.KP_PLUGIN) {
     window.KP_PLUGIN = (function () {
       'use strict';
 
+      // Локальные переменные и константы
       var network = new Lampa.Reguest();
       var cache = {};
       var total_cnt = 0;
@@ -110,7 +106,7 @@
       var SOURCE_NAME = 'KP';
       var SOURCE_TITLE = 'KP';
 
-      // Функция запроса с явным приведением метода к строке
+      // Функция запроса (приводим метод к строке, чтобы не получался [object Object])
       function get(method, oncomplite, onerror) {
         var use_proxy = total_cnt >= 10 && good_cnt > total_cnt / 2;
         if (!use_proxy) total_cnt++;
@@ -128,31 +124,19 @@
               good_cnt++;
               oncomplite(json);
             }, onerror, false, {
-              headers: {
-                'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'
-              }
+              headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
             });
           } else onerror(a, c);
-        }, false, {
-          headers: {
-            'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616'
-          }
-        });
+        }, false, { headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' } });
       }
 
       function getComplite(method, oncomplite) {
-        get(method, oncomplite, function () {
-          oncomplite(null);
-        });
+        get(method, oncomplite, function () { oncomplite(null); });
       }
 
       function getCompliteIf(condition, method, oncomplite) {
         if (condition) getComplite(method, oncomplite);
-        else {
-          setTimeout(function () {
-            oncomplite(null);
-          }, 10);
-        }
+        else setTimeout(function () { oncomplite(null); }, 10);
       }
 
       function getCache(key) {
@@ -184,9 +168,7 @@
               var _node = cache[_ID];
               timestamps.push(_node && _node.timestamp || 0);
             }
-            timestamps.sort(function (a, b) {
-              return a - b;
-            });
+            timestamps.sort(function (a, b) { return a - b; });
             cache_timestamp = timestamps[Math.floor(timestamps.length / 2)];
             for (var _ID2 in cache) {
               var _node2 = cache[_ID2];
@@ -194,27 +176,21 @@
             }
           }
         }
-        cache[key] = {
-          timestamp: timestamp,
-          value: value
-        };
+        cache[key] = { timestamp: timestamp, value: value };
       }
 
       function getFromCache(method, oncomplite, onerror) {
         var json = getCache(method);
         if (json) {
-          setTimeout(function () {
-            oncomplite(json, true);
-          }, 10);
+          setTimeout(function () { oncomplite(json, true); }, 10);
         } else get(method, oncomplite, onerror);
       }
 
-      function clear() {
-        network.clear();
-      }
+      function clear() { network.clear(); }
 
+      // Функция преобразования элемента из KP API в формат Lampa
       function convertElem(elem) {
-        var type = !elem.type || elem.type === 'FILM' || elem.type === 'VIDEO' ? 'movie' : 'tv';
+        var type = (!elem.type || elem.type === 'FILM' || elem.type === 'VIDEO') ? 'movie' : 'tv';
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
         var kp_rating = +elem.rating || +elem.ratingKinopoisk || 0;
         var title = elem.nameRu || elem.nameEn || elem.nameOriginal || '';
@@ -230,20 +206,12 @@
           overview: elem.description || elem.shortDescription || '',
           img: elem.posterUrlPreview || elem.posterUrl || '',
           background_image: elem.coverUrl || elem.posterUrl || elem.posterUrlPreview || '',
-          genres: elem.genres && elem.genres.map(function (e) {
-            if (e.genre === 'для взрослых') {
-              adult = true;
-            }
-            return {
-              id: (e.genre && genres_map[e.genre]) || 0,
-              name: e.genre,
-              url: ''
-            };
-          }) || [],
+          genres: (elem.genres || []).map(function (e) {
+            if (e.genre === 'для взрослых') { adult = true; }
+            return { id: (e.genre && genres_map[e.genre]) || 0, name: e.genre, url: '' };
+          }),
           production_companies: [],
-          production_countries: elem.countries && elem.countries.map(function (e) {
-            return { name: e.country };
-          }) || [],
+          production_countries: (elem.countries || []).map(function (e) { return { name: e.country }; }),
           vote_average: kp_rating,
           vote_count: elem.ratingVoteCount || elem.ratingKinopoiskVoteCount || 0,
           kinopoisk_id: kinopoisk_id,
@@ -252,7 +220,7 @@
           imdb_rating: elem.ratingImdb || 0
         };
         result.adult = adult;
-        var first_air_date = elem.year && elem.year !== 'null' ? elem.year : '';
+        var first_air_date = (elem.year && elem.year !== 'null') ? elem.year : '';
         var last_air_date = '';
         if (type === 'tv') {
           if (elem.startYear && elem.startYear !== 'null') first_air_date = elem.startYear;
@@ -265,7 +233,8 @@
           distributions.forEach(function (d) {
             if (d.date && (d.type === 'WORLD_PREMIER' || d.type === 'ALL')) {
               var timestamp = Date.parse(d.date);
-              if (!isNaN(timestamp) && (min == null || timestamp < min) && (isNaN(year_timestamp) || timestamp >= year_timestamp)) {
+              if (!isNaN(timestamp) && (min == null || timestamp < min) &&
+                  (isNaN(year_timestamp) || timestamp >= year_timestamp)) {
                 min = timestamp;
                 first_air_date = d.date;
               }
@@ -283,20 +252,15 @@
         if (elem.seasons_obj) {
           var _seasons = elem.seasons_obj.items || [];
           result.number_of_seasons = elem.seasons_obj.total || _seasons.length || 1;
-          result.seasons = _seasons.map(function (s) {
-            return convertSeason(s);
-          });
+          result.seasons = _seasons.map(convertSeason);
           var number_of_episodes = 0;
-          result.seasons.forEach(function (s) {
-            number_of_episodes += s.episode_count;
-          });
+          result.seasons.forEach(function (s) { number_of_episodes += s.episode_count; });
           result.number_of_episodes = number_of_episodes;
         }
         if (elem.staff_obj) {
-          var staff = elem.staff_obj || [];
           var cast = [];
           var crew = [];
-          staff.forEach(function (s) {
+          elem.staff_obj.forEach(function (s) {
             var person = convertPerson(s);
             if (s.professionKey === 'ACTOR') cast.push(person);
             else crew.push(person);
@@ -304,23 +268,20 @@
           result.persons = { cast: cast, crew: crew };
         }
         if (elem.sequels_obj) {
-          var sequels = elem.sequels_obj || [];
-          result.collection = { results: sequels.map(function (s) { return convertElem(s); }) };
+          result.collection = { results: (elem.sequels_obj || []).map(convertElem) };
         }
         if (elem.similars_obj) {
-          var similars = elem.similars_obj.items || [];
-          result.simular = { results: similars.map(function (s) { return convertElem(s); }) };
+          result.simular = { results: (elem.similars_obj.items || []).map(convertElem) };
         }
         return result;
       }
 
       function convertSeason(season) {
-        var episodes = season.episodes || [];
-        episodes = episodes.map(function (e) {
+        var episodes = (season.episodes || []).map(function (e) {
           return {
             season_number: e.seasonNumber,
             episode_number: e.episodeNumber,
-            name: e.nameRu || e.nameEn || 'S' + e.seasonNumber + ' / ' + Lampa.Lang.translate('torrent_serial_episode') + ' ' + e.episodeNumber,
+            name: e.nameRu || e.nameEn || ('S' + e.seasonNumber + ' / ' + Lampa.Lang.translate('torrent_serial_episode') + ' ' + e.episodeNumber),
             overview: e.synopsis || '',
             air_date: e.releaseDate
           };
@@ -350,24 +311,26 @@
       }
 
       function kpCleanTitle(str) {
-        return cleanTitle(str).replace(/^[ \/\\]+/, '').replace(/[ \/\\]+$/, '')
-          .replace(/\+( *[+\/\\])+/g, '+').replace(/([+\/\\] *)+\+/g, '+')
+        return cleanTitle(str)
+          .replace(/^[ \/\\]+/, '')
+          .replace(/[ \/\\]+$/, '')
+          .replace(/\+( *[+\/\\])+/g, '+')
+          .replace(/([+\/\\] *)+\+/g, '+')
           .replace(/( *[\/\\]+ *)+/g, '+');
       }
 
       function normalizeTitle(str) {
-        return cleanTitle(str.toLowerCase().replace(/[\-\u2010-\u2015\u2E3A\u2E3B\uFE58\uFE63\uFF0D]+/g, '-').replace(/ё/g, 'е'));
+        return cleanTitle(str.toLowerCase()
+          .replace(/[\-\u2010-\u2015\u2E3A\u2E3B\uFE58\uFE63\uFF0D]+/g, '-')
+          .replace(/ё/g, 'е'));
       }
 
       function containsTitle(str, title) {
-        return typeof str === 'string' && typeof title === 'string' &&
-          normalizeTitle(str).indexOf(normalizeTitle(title)) !== -1;
+        return (typeof str === 'string' && typeof title === 'string' &&
+                normalizeTitle(str).indexOf(normalizeTitle(title)) !== -1);
       }
 
-      function getList(method) {
-        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var oncomplite = arguments.length > 2 ? arguments[2] : undefined;
-        var onerror = arguments.length > 3 ? arguments[3] : undefined;
+      function getList(method, params = {}, oncomplite, onerror) {
         var url = method;
         if (params.query) {
           var clean_title = params.query && kpCleanTitle(decodeURIComponent(params.query));
@@ -385,22 +348,16 @@
           else if (json.films && json.films.length) items = json.films;
           else if (json.releases && json.releases.length) items = json.releases;
           if (!cached && items.length) setCache(url, json);
-          var results = items.map(function (elem) {
-            return convertElem(elem);
-          });
-          results = results.filter(function (elem) {
-            return !elem.adult;
-          });
+          var results = items.map(convertElem).filter(function (elem) { return !elem.adult; });
           var total_pages = json.pagesCount || json.totalPages || 1;
-          var res = {
+          oncomplite({
             results: results,
             url: method,
             page: page,
             total_pages: total_pages,
             total_results: 0,
             more: total_pages > page
-          };
-          oncomplite(res);
+          });
         }, onerror);
       }
 
@@ -408,13 +365,11 @@
         var url = 'api/v2.2/films/' + id;
         var film = getCache(url);
         if (film) {
-          setTimeout(function () {
-            oncomplite(convertElem(film));
-          }, 10);
+          setTimeout(function () { oncomplite(convertElem(film)); }, 10);
         } else {
           get(url, function (film) {
             if (film.kinopoiskId) {
-              var type = !film.type || film.type === 'FILM' || film.type === 'VIDEO' ? 'movie' : 'tv';
+              var type = (!film.type || film.type === 'FILM' || film.type === 'VIDEO') ? 'movie' : 'tv';
               getCompliteIf(type === 'tv', 'api/v2.2/films/' + id + '/seasons', function (seasons) {
                 film.seasons_obj = seasons;
                 getComplite('api/v2.2/films/' + id + '/distributions', function (distributions) {
@@ -437,15 +392,14 @@
         }
       }
 
-      function getById(id, params, oncomplite, onerror) {
-        // Перед получением деталей сначала вызываем menu() чтобы убедиться, что фильтры загружены (если нужны)
-        menu({}, function () {
+      function getById(id, params = {}, oncomplite, onerror) {
+        // Перед получением деталей убеждаемся, что фильтры загружены (через kpMenu)
+        kpMenu({}, function () {
           _getById(id, params, oncomplite, onerror);
         });
       }
 
-      function main(params, oncomplite, onerror) {
-        params = params || {};
+      function main(params = {}, oncomplite, onerror) {
         var parts_limit = 5;
         var parts_data = [
           function (call) {
@@ -485,35 +439,22 @@
             }, call);
           }
         ];
-
-        // Добавляем русские категории сразу (с фиксированным id страны "34")
-        menu_list.push({
-          id: '34',
-          title: 'Популярные российские фильмы',
-          url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=FILM'
-        });
-        menu_list.push({
-          id: '34',
-          title: 'Популярные российские сериалы',
-          url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=TV_SERIES'
-        });
-        menu_list.push({
-          id: '34',
-          title: 'Популярные российские мини-сериалы',
-          url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=MINI_SERIES'
-        });
+        // Фиксированные русские категории (страна id = 34)
+        menu_list.push({ id: '34', title: 'Популярные российские фильмы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=FILM' });
+        menu_list.push({ id: '34', title: 'Популярные российские сериалы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=TV_SERIES' });
+        menu_list.push({ id: '34', title: 'Популярные российские мини-сериалы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=MINI_SERIES' });
 
         function loadPart(partLoaded, partEmpty) {
           Lampa.Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
         }
-        menu({}, function () {
+        // Перед загрузкой частей вызываем kpMenu (чтобы, если понадобится, загрузить фильтры)
+        kpMenu({}, function () {
           loadPart(oncomplite, onerror);
         });
         return loadPart;
       }
 
-      function category(params, oncomplite, onerror) {
-        params = params || {};
+      function category(params = {}, oncomplite, onerror) {
         var show = ['movie', 'tv'].indexOf(params.url) > -1 && !params.genres;
         var books = show ? Lampa.Favorite.continues(params.url) : [];
         books.forEach(function (elem) {
@@ -532,31 +473,22 @@
         var parts_limit = 5;
         var parts_data = [
           function (call) {
-            call({
-              results: books,
-              title: params.url === 'tv'
-                ? Lampa.Lang.translate('title_continue')
-                : Lampa.Lang.translate('title_watched')
-            });
+            call({ results: books, title: (params.url === 'tv') ? Lampa.Lang.translate('title_continue') : Lampa.Lang.translate('title_watched') });
           },
           function (call) {
-            call({
-              results: recomend,
-              title: Lampa.Lang.translate('title_recomend_watch')
-            });
+            call({ results: recomend, title: Lampa.Lang.translate('title_recomend_watch') });
           }
         ];
         function loadPart(partLoaded, partEmpty) {
           Lampa.Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
         }
-        menu({}, function () {
+        kpMenu({}, function () {
           var priority_list = ['семейный', 'детский', 'короткометражка', 'мультфильм', 'аниме'];
           priority_list.forEach(function (g) {
             var id = genres_map[g];
             if (id) {
               parts_data.push(function (call) {
-                getList('api/v2.2/films?order=NUM_VOTE&genres=' + id +
-                  '&type=' + (params.url === 'tv' ? 'TV_SERIES' : 'FILM'), params, function (json) {
+                getList('api/v2.2/films?order=NUM_VOTE&genres=' + id + '&type=' + (params.url === 'tv' ? 'TV_SERIES' : 'FILM'), params, function (json) {
                   json.title = Lampa.Utils.capitalizeFirstLetter(g);
                   call(json);
                 }, call);
@@ -566,8 +498,7 @@
           menu_list.forEach(function (g) {
             if (!g.hide && !g.separator && priority_list.indexOf(g.title) === -1) {
               parts_data.push(function (call) {
-                getList('api/v2.2/films?order=NUM_VOTE&genres=' + g.id +
-                  '&type=' + (params.url === 'tv' ? 'TV_SERIES' : 'FILM'), params, function (json) {
+                getList('api/v2.2/films?order=NUM_VOTE&genres=' + g.id + '&type=' + (params.url === 'tv' ? 'TV_SERIES' : 'FILM'), params, function (json) {
                   json.title = Lampa.Utils.capitalizeFirstLetter(g.title);
                   call(json);
                 }, call);
@@ -579,8 +510,7 @@
         return loadPart;
       }
 
-      function full(params, oncomplite, onerror) {
-        params = params || {};
+      function full(params = {}, oncomplite, onerror) {
         var kinopoisk_id = '';
         if (params.card && params.card.source === SOURCE_NAME) {
           if (params.card.kinopoisk_id) {
@@ -597,13 +527,12 @@
             status.append('movie', json);
             status.append('persons', json && json.persons);
             status.append('collection', json && json.collection);
-            status.append('simular', json && json.simular);
+            status.append('simular', json && json.similar);
           }, onerror);
         } else onerror();
       }
 
-      function list(params, oncomplite, onerror) {
-        params = params || {};
+      function list(params = {}, oncomplite, onerror) {
         var method = params.url;
         if (method === '' && params.genres) {
           method = 'api/v2.2/films?order=NUM_VOTE&genres=' + params.genres;
@@ -611,32 +540,26 @@
         getList(method, params, oncomplite, onerror);
       }
 
-      function search(params, oncomplite) {
-        params = params || {};
+      function search(params = {}, oncomplite) {
         var title = decodeURIComponent(params.query || '');
         var status = new Lampa.Status(1);
         status.onComplite = function (data) {
           var items = [];
           if (data.query && data.query.results) {
             var tmp = data.query.results.filter(function (elem) {
-              return containsTitle(elem.title, title) ||
-                     containsTitle(elem.original_title, title);
+              return containsTitle(elem.title, title) || containsTitle(elem.original_title, title);
             });
             if (tmp.length && tmp.length !== data.query.results.length) {
               data.query.results = tmp;
               data.query.more = true;
             }
             var movie = Object.assign({}, data.query);
-            movie.results = data.query.results.filter(function (elem) {
-              return elem.type === 'movie';
-            });
+            movie.results = data.query.results.filter(function (elem) { return elem.type === 'movie'; });
             movie.title = Lampa.Lang.translate('menu_movies');
             movie.type = 'movie';
             if (movie.results.length) items.push(movie);
             var tv = Object.assign({}, data.query);
-            tv.results = data.query.results.filter(function (elem) {
-              return elem.type === 'tv';
-            });
+            tv.results = data.query.results.filter(function (elem) { return elem.type === 'tv'; });
             tv.title = Lampa.Lang.translate('menu_tv');
             tv.type = 'tv';
             if (tv.results.length) items.push(tv);
@@ -652,10 +575,7 @@
         return {
           title: SOURCE_TITLE,
           search: search,
-          params: {
-            align_left: true,
-            object: { source: SOURCE_NAME }
-          },
+          params: { align_left: true, object: { source: SOURCE_NAME } },
           onMore: function (params) {
             Lampa.Activity.push({
               url: 'api/v2.1/films/search-by-keyword',
@@ -670,8 +590,7 @@
         };
       }
 
-      function person(params, oncomplite) {
-        params = params || {};
+      function person(params = {}, oncomplite) {
         var status = new Lampa.Status(1);
         status.onComplite = function (data) {
           var result = {};
@@ -711,20 +630,14 @@
                 var res = b.vote_average - a.vote_average;
                 return res || a.id - b.id;
               });
-              knownFor.push({
-                name: Lampa.Lang.translate('title_producer'),
-                credits: director_films
-              });
+              knownFor.push({ name: Lampa.Lang.translate('title_producer'), credits: director_films });
             }
             if (actor_films.length) {
               actor_films.sort(function (a, b) {
                 var res = b.vote_average - a.vote_average;
                 return res || a.id - b.id;
               });
-              knownFor.push({
-                name: Lampa.Lang.translate(p.sex === 'FEMALE' ? 'title_actress' : 'title_actor'),
-                credits: actor_films
-              });
+              knownFor.push({ name: Lampa.Lang.translate(p.sex === 'FEMALE' ? 'title_actress' : 'title_actor'), credits: actor_films });
             }
             result.credits = { knownFor: knownFor };
           }
@@ -737,12 +650,43 @@
         }, status.error.bind(status));
       }
 
+      // Функция загрузки фильтров (переименована в kpMenu, чтобы не конфликтовать)
+      function kpMenu(options, oncomplite) {
+        // Если список меню уже загружен, сразу возвращаем его
+        if (menu_list.length) {
+          oncomplite(menu_list);
+        } else {
+          get('api/v2.2/films/filters', function (j) {
+            if (j.genres) {
+              j.genres.forEach(function (g) {
+                menu_list.push({
+                  id: g.id,
+                  title: g.genre,
+                  url: '',
+                  hide: (g.genre === 'для взрослых'),
+                  separator: !g.genre
+                });
+                genres_map[g.genre] = g.id;
+              });
+            }
+            if (j.countries) {
+              j.countries.forEach(function (c) {
+                countries_map[c.country] = c.id;
+              });
+            }
+            oncomplite(menu_list);
+          }, function () {
+            oncomplite([]);
+          });
+        }
+      }
+
       // Возвращаем объект плагина
       return {
         SOURCE_NAME: SOURCE_NAME,
         SOURCE_TITLE: SOURCE_TITLE,
         main: main,
-        menu: menu,
+        menu: kpMenu,
         full: full,
         list: list,
         category: category,
@@ -753,9 +697,7 @@
           status.onComplite = oncomplite;
           from.forEach(function (season) {
             var seasons = tv.seasons || [];
-            seasons = seasons.filter(function (s) {
-              return s.season_number === season;
-            });
+            seasons = seasons.filter(function (s) { return s.season_number === season; });
             if (seasons.length) status.append('' + season, seasons[0]);
             else status.error();
           });
@@ -766,9 +708,9 @@
     })();
   }
 
-  // ========================
-  // Часть 3. Регистрация плагина в системе Lampa
-  // ========================
+  // =============================
+  // Часть 3. Регистрация плагина в Lampa
+  // =============================
   (function startPlugin() {
     'use strict';
     window.kp_source_plugin = true;
