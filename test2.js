@@ -40,11 +40,18 @@
     }
   }
 
-  // Новая SVG-иконка (можно редактировать по вкусу)
+  // Новая SVG-иконка для кнопки "Кинопоиск"
   var iconKP = `
     <svg width="800px" height="800px" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <path d="M96.5 20 66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z" 
-        style="stroke:#000; stroke-width:8; stroke-linecap:round; stroke-linejoin:round;" />
+      <!-- Квадратная рамка со скруглёнными углами -->
+      <rect x="4" y="4" width="184" height="184" rx="16" ry="16"
+            fill="none" stroke="#000000" stroke-width="8"
+            stroke-linecap="round" stroke-linejoin="round" />
+      <!-- Группа со смещением по оси X, чтобы центр «K» совпал с центром квадрата -->
+      <g transform="translate(-10.63, 0)">
+        <path d="M96.5 20 66.1 75.733V20H40.767v152H66.1v-55.733L96.5 172h35.467C116.767 153.422 95.2 133.578 80 115c28.711 16.889 63.789 35.044 92.5 51.933v-30.4C148.856 126.4 108.644 115.133 85 105c23.644 3.378 63.856 7.889 87.5 11.267v-30.4L85 90c27.022-11.822 60.478-22.711 87.5-34.533v-30.4C143.789 41.956 108.711 63.11 80 80l51.967-60z"
+              style="display:inline; fill:none; stroke:#000000; stroke-width:8; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:10; stroke-dasharray:none; stroke-opacity:1" />
+      </g>
     </svg>
   `;
 
@@ -59,7 +66,7 @@
         items: [
           { title: 'Популярные Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_100_POPULAR_FILMS' } },
           { title: 'Топ Фильмы', data: { url: 'api/v2.2/films/top?type=TOP_250_BEST_FILMS' } },
-          // Русские категории (с фиксированным id страны "34")
+          // Фиксированные русские категории (страна id = 34)
           { title: 'Популярные российские фильмы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=FILM' } },
           { title: 'Популярные российские сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=TV_SERIES' } },
           { title: 'Популярные российские мини-сериалы', data: { url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=MINI_SERIES' } },
@@ -106,7 +113,7 @@
       var SOURCE_NAME = 'KP';
       var SOURCE_TITLE = 'KP';
 
-      // Функция запроса (приводим метод к строке, чтобы не получался [object Object])
+      // Функция запроса
       function get(method, oncomplite, onerror) {
         var use_proxy = total_cnt >= 10 && good_cnt > total_cnt / 2;
         if (!use_proxy) total_cnt++;
@@ -188,7 +195,7 @@
 
       function clear() { network.clear(); }
 
-      // Функция преобразования элемента из KP API в формат Lampa
+      // Преобразование элемента из KP API в формат Lampa
       function convertElem(elem) {
         var type = (!elem.type || elem.type === 'FILM' || elem.type === 'VIDEO') ? 'movie' : 'tv';
         var kinopoisk_id = elem.kinopoiskId || elem.filmId || 0;
@@ -439,7 +446,7 @@
             }, call);
           }
         ];
-        // Фиксированные русские категории (страна id = 34)
+        // Добавляем фиксированные русские категории (страна id = 34)
         menu_list.push({ id: '34', title: 'Популярные российские фильмы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=FILM' });
         menu_list.push({ id: '34', title: 'Популярные российские сериалы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=TV_SERIES' });
         menu_list.push({ id: '34', title: 'Популярные российские мини-сериалы', url: 'api/v2.2/films?order=NUM_VOTE&countries=34&type=MINI_SERIES' });
@@ -447,7 +454,6 @@
         function loadPart(partLoaded, partEmpty) {
           Lampa.Api.partNext(parts_data, parts_limit, partLoaded, partEmpty);
         }
-        // Перед загрузкой частей вызываем kpMenu (чтобы, если понадобится, загрузить фильтры)
         kpMenu({}, function () {
           loadPart(oncomplite, onerror);
         });
@@ -650,9 +656,8 @@
         }, status.error.bind(status));
       }
 
-      // Функция загрузки фильтров (переименована в kpMenu, чтобы не конфликтовать)
+      // Функция загрузки фильтров (переименована в kpMenu)
       function kpMenu(options, oncomplite) {
-        // Если список меню уже загружен, сразу возвращаем его
         if (menu_list.length) {
           oncomplite(menu_list);
         } else {
