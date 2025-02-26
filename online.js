@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam.akter-black.com/',
+    localhost: 'https://akter-black.com/',
     apn: ''
   };
 
@@ -97,7 +97,7 @@ function account(url) {
     if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
   }
   // Подставляем фиксированный токен для успешной авторизации
-  url = Lampa.Utils.addUrlComponent(url, 'ab_token=Z18GTIeNYL801YzUSii7Qjfo');
+  url = Lampa.Utils.addUrlComponent(url,);
   return url;
 }
 
@@ -512,7 +512,7 @@ function account(url) {
 	  var _this = this;
 
       function addAbToken(string) {
-        return string + '&ab_token=' + Lampa.Storage.get('token');
+        return string;
       }
 
       if (file.stream && file.stream.indexOf('alloha') >= 0) {
