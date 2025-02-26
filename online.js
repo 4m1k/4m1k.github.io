@@ -88,8 +88,7 @@
       'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'
     ];
 
-    // ============================================================================
-    // Функция account переделана для привязки фиксированного токена.
+    // Функция account – теперь всегда привязывает фиксированный токен
     function account(url) {
       url = url + '';
       if (url.indexOf('account_email=') === -1) {
@@ -102,11 +101,10 @@
         if (uid)
           url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
       }
-      // Здесь вместо получения токена из хранилища всегда добавляется фиксированное значение:
+      // Жёстко привязываем токен для источников:
       url = Lampa.Utils.addUrlComponent(url, 'ab_token=Z18GTIeNYL801YzUSii7Qjfo');
       return url;
     }
-    // ============================================================================
 
     function balanserName(j) {
       var bals = j.balanser;
@@ -184,7 +182,9 @@
       this.externalids().then(function() {
         return _this.createSource();
       }).then(function(json) {
-        if (!balansers_with_search.find(function(b) { return balanser.slice(0, b.length) === b; }))
+        if (!balansers_with_search.find(function(b) {
+            return balanser.slice(0, b.length) === b;
+          }))
           filter.render().find('.filter--search').addClass('hide');
         _this.search();
       }).catch(function(e) {
@@ -323,7 +323,8 @@
         var url = _this3.requestParams(Defined.localhost + 'lifeevents?memkey=' + (_this3.memkey || ''));
         var red = false;
         var gou = function gou(json, any) {
-          if (json.accsdb) return reject(json);
+          if (json.accsdb)
+            return reject(json);
           var last_balanser = _this3.getLastChoiceBalanser();
           if (!red) {
             var _filter = json.online.filter(function(c) {
@@ -365,11 +366,10 @@
             }
           }, function() {
             life_wait_times++;
-            if (life_wait_times > 15) {
+            if (life_wait_times > 15)
               reject();
-            } else {
+            else
               life_wait_timer = setTimeout(fin, 1000);
-            }
           });
         };
         fin();
@@ -498,9 +498,8 @@
       };
     };
     this.appendAPN = function(data) {
-      if (Defined.api.indexOf('pwa') === 0 && Defined.apn.length && data.url && typeof data.url === 'string' && data.url.indexOf(Defined.apn) === -1) {
+      if (Defined.api.indexOf('pwa') === 0 && Defined.apn.length && data.url && typeof data.url === 'string' && data.url.indexOf(Defined.apn) === -1)
         data.url_reserve = Defined.apn + data.url;
-      }
     };
     this.setDefaultQuality = function(data) {
       if (Lampa.Arrays.getKeys(data.quality).length) {
@@ -571,7 +570,8 @@
               } else {
                 playlist.push(first);
               }
-              if (playlist.length > 1) first.playlist = playlist;
+              if (playlist.length > 1)
+                first.playlist = playlist;
               if (first.url) {
                 Lampa.Player.play(first);
                 Lampa.Player.playlist(playlist);
@@ -982,9 +982,7 @@
                       "season": element.season || 0,
                       "episode": element.episode || 0
                     }),
-                    error: function(e) {
-                      console.log('track error request', e);
-                    }
+                    error: function(e) { console.log('track error request', e); }
                   });
                 } catch(e) {
                   console.log('track error', e);
@@ -1008,12 +1006,8 @@
               if (params.onContextMenu)
                 params.onContextMenu(element, html, data, call);
             },
-            onClearAllMark: function() {
-              items.forEach(function(elem) { elem.unmark(); });
-            },
-            onClearAllTime: function() {
-              items.forEach(function(elem) { elem.timeclear(); });
-            }
+            onClearAllMark: function() { items.forEach(function(elem) { elem.unmark(); }); },
+            onClearAllTime: function() { items.forEach(function(elem) { elem.timeclear(); }); }
           });
           scroll.append(html);
         });
@@ -1180,9 +1174,7 @@
       if (er && er.accsdb)
         html.find('.online-empty__title').html(er.msg);
       var tic = er && er.accsdb ? 10 : 5;
-      html.find('.cancel').on('hover:enter', function() {
-        clearInterval(balanser_timer);
-      });
+      html.find('.cancel').on('hover:enter', function() { clearInterval(balanser_timer); });
       html.find('.change').on('hover:enter', function() {
         clearInterval(balanser_timer);
         filter.render().find('.filter--sort').trigger('hover:enter');
@@ -1228,9 +1220,7 @@
           Lampa.Controller.collectionSet(scroll.render(), files.render());
           Lampa.Controller.collectionFocus(last || false, scroll.render());
         },
-        gone: function() {
-          clearTimeout(balanser_timer);
-        },
+        gone: function() { clearTimeout(balanser_timer); },
         up: function() {
           if (Navigator.canmove('up'))
             Navigator.move('up');
@@ -1255,13 +1245,9 @@
       Lampa.Controller.toggle('content');
     };
 
-    this.render = function() {
-      return files.render();
-    };
+    this.render = function() { return files.render(); };
 
-    this.back = function() {
-      Lampa.Activity.backward();
-    };
+    this.back = function() { Lampa.Activity.backward(); };
 
     this.pause = function() {};
     this.stop = function() {};
@@ -1294,7 +1280,8 @@
           description: 'Плагин для просмотра онлайн сериалов и фильмов'
         };
       },
-      onContextLauch: function(object) {
+      // ВАЖНО: Используем правильное свойство onContextLaunch (с "n")
+      onContextLaunch: function(object) {
         resetTemplates();
         Lampa.Component.add('lampac', component);
         var id = Lampa.Utils.hash(object.number_of_seasons ? object.original_name : object.original_title);
