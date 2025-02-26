@@ -474,7 +474,7 @@
 	  var _this = this;
 
       function addAbToken(string) {
-        return string + ''ab_token=Z18GTIeNYL801YzUSii7Qjfo'');
+        return string + '&ab_token=' + Lampa.Storage.get('token');
       }
 
       if (file.stream && file.stream.indexOf('alloha') >= 0) {
