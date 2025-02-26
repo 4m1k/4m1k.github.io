@@ -305,7 +305,7 @@
           };
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
-        var lowPriorityBalancers = ['filmix', 'filmixtv', "collaps", 'kinopub'];
+        var lowPriorityBalancers = ['filmix', 'filmixtv', "collaps", "collaps (dash)", 'kinopub'];
 
         filter_sources.sort(function(a, b) {
 
