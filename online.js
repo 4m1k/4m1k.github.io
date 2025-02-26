@@ -7,19 +7,6 @@
     apn: ''
   };
 
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-  if (!unic_id) {
-	unic_id = Lampa.Utils.uid(8).toLowerCase();
-	Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
-
-  if (!window.rch) {
-    Lampa.Utils.putScript(["https://akter-black.com/invc-rch.js"], function() {}, false, function() {
-      if (!window.rch.startTypeInvoke)
-        window.rch.typeInvoke('https://akter-black.com', function() {});
-    }, true);
-  }
-
   function BlazorNet() {
     this.net = new Lampa.Reguest();
     this.timeout = function(time) {
@@ -86,21 +73,25 @@
     };
     var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
 
-function account(url) {
-  url = url + '';
-  if (url.indexOf('account_email=') === -1) {
-    var email = Lampa.Storage.get('account_email');
-    if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
-  }
-  if (url.indexOf('uid=') === -1) {
-    var uid = Lampa.Storage.get('lampac_unic_id', '');
-    if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
-  }
-  // Подставляем фиксированный токен для успешной авторизации
-  url = Lampa.Utils.addUrlComponent(url,);
-  return url;
-}
+    function account(url) {
+      url = url + '';
+      if (url.indexOf('account_email=') == -1) {
+        var email = Lampa.Storage.get('account_email');
+        if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
+      }
+      if (url.indexOf('uid=') == -1) {
+        var uid = Lampa.Storage.get('lampac_unic_id', '');
+        if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
+      }
+      if (url.indexOf('token=') == -1) {
+        var token = '';
+        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+      }
 
+      url = Lampa.Utils.addUrlComponent(url, 'ab_token=Z18GTIeNYL801YzUSii7Qjfo'));
+      
+      return url;
+    }
 
     function balanserName(j) {
       var bals = j.balanser;
@@ -221,7 +212,7 @@ function account(url) {
         }
         hubConnection = new signalR.HubConnectionBuilder().withUrl(json.ws).build();
         hubConnection.start().then(function() {
-          window.rch.Registry('https://akter-black.com', hubConnection, function() {
+          window.rch.Registry('https://abmsx.tech', hubConnection, function() {
             console.log('RCH', 'hubConnection start');
             if (!noreset) _this2.find();
             else noreset()
@@ -238,7 +229,7 @@ function account(url) {
 		}
       };
       if (typeof signalR == 'undefined') {
-        Lampa.Utils.putScript(["https://akter-black.com/signalr-6.0.25_es5.js"], function() {}, false, function() {
+        Lampa.Utils.putScript(["https://abmsx.tech/signalr-6.0.25_es5.js"], function() {}, false, function() {
           load();
         }, true);
       } else load();
@@ -332,12 +323,9 @@ function account(url) {
     };
     this.lifeSource = function() {
       var _this3 = this;
-      var isFilm = false;
-      
       return new Promise(function(resolve, reject) {
         var url = _this3.requestParams(Defined.localhost + 'lifeevents?memkey=' + (_this3.memkey || ''));
         var red = false;
-        isFilm = url.indexOf('serial=0') > -1
         var gou = function gou(json, any) {
           if (json.accsdb) return reject(json);
           var last_balanser = _this3.getLastChoiceBalanser();
@@ -355,38 +343,12 @@ function account(url) {
             }
           }
         };
-        
-        function is4k(data) {
-            return data.name.indexOf('2160') > -1
-        }
-        
-        function isLargeScreen() {
-            return window.matchMedia("(min-width: 768px)").matches;
-        }
-        
         var fin = function fin(call) {
           network.timeout(3000);
           network.silent(account(url), function(json) {
             life_wait_times++;
             filter_sources = [];
             sources = {};
-            // if (!isFilm || !isLargeScreen()) {
-            //     console.log('json.online', json.online)
-            //     json.online = json.online.filter(function(j) {
-            //         return j.balanser !== 'filmix' && j.balanser !== 'kinopub'
-            //     })
-            // }
-            // probuem 4k
-            // if (!isLargeScreen()) {
-                console.log('json.online', json.online)
-                json.online = json.online.filter(function(j) {
-                    if (j.balanser === 'filmix' || j.balanser === 'kinopub') {
-                        return is4k(j) && isLargeScreen()
-                    }
-
-                    return true
-                })
-            // }
             json.online.forEach(function(j) {
               var name = balanserName(j);
               sources[name] = {
@@ -512,7 +474,7 @@ function account(url) {
 	  var _this = this;
 
       function addAbToken(string) {
-        return string;
+        return string + ''ab_token=Z18GTIeNYL801YzUSii7Qjfo'');
       }
 
       if (file.stream && file.stream.indexOf('alloha') >= 0) {
@@ -1469,8 +1431,8 @@ function account(url) {
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '1.4.3',
-      name: 'Lampac',
+      version: '2',
+      name: '4m1K',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1502,9 +1464,9 @@ function account(url) {
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
-        ru: 'Смотреть онлайн',
-        en: 'Watch online',
-        uk: 'Дивитися онлайн',
+        ru: 'Онлайн 4am1k',
+        en: 'Online 4am1k',
+        uk: 'Онлайн 4am1k',
         zh: '在线观看'
       },
       lampac_video: { //
@@ -1640,10 +1602,21 @@ function account(url) {
     }
     Lampa.Listener.follow('full', function(e) {
       if (e.type == 'complite') {
-        addButton({
-          render: e.object.activity.render().find('.view--torrent'),
-          movie: e.data.movie
-        });
+        setTimeout(function(){
+                $(".view--online", Lampa.Activity.active().activity.render()).empty().append('<svg id="Layer_1" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path fill="currentColor" d="m20.359 37.33h-5.681a1 1 0 0 1 -1-1v-3.966h-8.226a1 1 0 0 1 -1-1v-3.857a1 1 0 0 1 .148-.527l8.086-13.067a1 1 0 0 1 .85-.474h6.822a1 1 0 0 1 1 1v11.206h1.467a1 1 0 0 1 1 1v4.719a1 1 0 0 1 -1 1h-1.466v3.966a1 1 0 0 1 -1 1zm-4.681-2h3.681v-3.966a1 1 0 0 1 1-1h1.467v-2.719h-1.467a1 1 0 0 1 -1-1v-11.206h-5.265l-7.642 12.352v2.573h8.226a1 1 0 0 1 1 1zm-1-7.685h-3.235a1 1 0 0 1 -.855-1.518l2.317-3.827c.307-.575.608-1.168.906-1.768a1 1 0 0 1 1.895.479c-.017.523-.028 1.04-.028 1.553v4.08a1 1 0 0 1 -1 1.001zm-1.461-2h.461v-.761z"></path><path fill="currentColor" d="m44.548 37.33h-6.927a1 1 0 0 1 -.869-.5l-4.352-7.639-.076.1v7.039a1 1 0 0 1 -1 1h-5.908a1 1 0 0 1 -1-1v-22.66a1 1 0 0 1 1-1h5.905a1 1 0 0 1 1 1v5.03l3.794-5.594a1 1 0 0 1 .828-.438h7.4a1 1 0 0 1 .79 1.613l-7.167 9.224 7.434 12.308a1 1 0 0 1 -.856 1.517zm-6.346-2h4.573l-6.875-11.376a1 1 0 0 1 .066-1.131l6.334-8.153h-4.827l-5.314 7.854a1 1 0 0 1 -1.838-.545v-7.309h-3.905v20.66h3.905v-6.394a1 1 0 0 1 .22-.626l1.217-1.516a1 1 0 0 1 1.649.131z"></path></svg>&nbsp&nbsp4m1K');
+        }, 5);
+        if (Lampa.Storage.get('card_interfice_type') === 'new') {
+                addButton({
+                    render: e.object.activity.render().find('.button--play'),
+                    movie: e.data.movie
+                });
+         }
+         else {
+                addButton({
+                    render: e.object.activity.render().find('.view--torrent'),
+                    movie: e.data.movie
+                });
+         }
       }
     });
     try {
