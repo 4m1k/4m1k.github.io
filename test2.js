@@ -142,7 +142,7 @@
             let info;       // Ссылка на DOM «правого» блока
             let selected;   // Текущая карточка
             let categories = [
-                { title: "Focus Pack", url: "https://bylampa.github.io/themes/categories/stroke.json" },
+                { title: "Focus Pack", url: "http://4m1k.github.io/stroke.json" },
                 { title: "Color Gallery", url: "https://bylampa.github.io/themes/categories/color_gallery.json" }
             ];
 
