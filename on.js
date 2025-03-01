@@ -6,6 +6,19 @@
     localhost: 'https://lam.akter-black.com/',
     apn: '10'
   };
+  
+    var unic_id = Lampa.Storage.get('lampac_unic_id', '');
+  if (!unic_id) {
+    unic_id = Lampa.Utils.uid(8).toLowerCase();
+    Lampa.Storage.set('lampac_unic_id', unic_id);
+  }
+
+  if (!window.rch) {
+    Lampa.Utils.putScript(["https://abmsx.tech/invc-rch.js"], function() {}, false, function() {
+      if (!window.rch.startTypeInvoke)
+        window.rch.typeInvoke('https://abmsx.tech', function() {});
+    }, true);
+  }
 
   function BlazorNet() {
     this.net = new Lampa.Reguest();
@@ -256,7 +269,7 @@
       });
     };
     this.updateBalanser = function(balanser_name) {
-      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
+      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 2000, {});
       last_select_balanser[object.movie.id] = balanser_name;
       Lampa.Storage.set('online_last_balanser', last_select_balanser);
     };
@@ -270,8 +283,11 @@
       Lampa.Activity.replace();
     };
     this.requestParams = function(url) {
+      if (balanser && balanser.toLowerCase() === 'filmixtv') {
+        url = "http://rc.bwa.to/rc/fxapi";
+      }
       var query = [];
-      var card_source = object.movie.source || 'tmdb'; //Lampa.Storage.field('source')
+      var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
       if (object.movie.imdb_id) query.push('imdb_id=' + (object.movie.imdb_id || ''));
       if (object.movie.kinopoisk_id) query.push('kinopoisk_id=' + (object.movie.kinopoisk_id || ''));
@@ -286,8 +302,9 @@
       if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
       return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
     };
+  
     this.getLastChoiceBalanser = function() {
-      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
+      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 2000, {});
       if (last_select_balanser[object.movie.id]) {
         return last_select_balanser[object.movie.id];
       } else {
@@ -295,51 +312,59 @@
       }
     };
     this.startSource = function(json) {
-      return new Promise(function(resolve, reject) {
-        json.forEach(function(j) {
-          var name = balanserName(j);
-          sources[name] = {
-            url: j.url,
-            name: j.name,
-            show: typeof j.show == 'undefined' ? true : j.show
-          };
+  return new Promise(function(resolve, reject) {
+    json.forEach(function(j) {
+      var name = balanserName(j);
+      if(name === "filmixtv") {
+        j.name = "Filmix - 720p";
+      }
+      sources[name] = {
+        url: j.url,
+        name: j.name,
+        show: typeof j.show == 'undefined' ? true : j.show
+      };
+    });
+    
+    if(sources.filmixtv){
+      sources.filmixtv.name = "Filmix - 720p";
+    }
+    
+    filter_sources = Lampa.Arrays.getKeys(sources);
+    var lowPriorityBalancers = [];
+    
+    filter_sources.sort(function(a, b) {
+      if (a === '') return -1;
+      if (b === '') return 1;
+      var aLow = lowPriorityBalancers.indexOf(a) !== -1;
+      var bLow = lowPriorityBalancers.indexOf(b) !== -1;
+      if (aLow && !bLow) return 1;
+      if (bLow && !aLow) return -1;
+      return 0;
+    });
+    if (filter_sources.length) {
+      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
+      if (last_select_balanser[object.movie.id]) {
+        balanser = last_select_balanser[object.movie.id];
+      } else {
+        balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
+      }
+      if (lowPriorityBalancers.indexOf(balanser) !== -1 && filter_sources.some(function(item) {
+          return lowPriorityBalancers.indexOf(item) === -1;
+      })) {
+        balanser = filter_sources.find(function(item) {
+          return lowPriorityBalancers.indexOf(item) === -1;
         });
-        filter_sources = Lampa.Arrays.getKeys(sources);
-        var lowPriorityBalancers = [];
+      }
+      if (!sources[balanser]) balanser = filter_sources[0];
+      if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
+      source = sources[balanser].url;
+      resolve(json);
+    } else {
+      reject();
+    }
+  });
+};
 
-        filter_sources.sort(function(a, b) {
-
-            if (a === '') return -1;
-            if (b === '') return 1;
-            var aLow = lowPriorityBalancers.indexOf(a) !== -1;
-            var bLow = lowPriorityBalancers.indexOf(b) !== -1;
-            if (aLow && !bLow) return 1;
-            if (bLow && !aLow) return -1;
-            return 0;
-        });
-        if (filter_sources.length) {
-          var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
-          if (last_select_balanser[object.movie.id]) {
-            balanser = last_select_balanser[object.movie.id];
-          } else {
-            balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
-          }
-            if (lowPriorityBalancers.indexOf(balanser) !== -1 && filter_sources.some(function(item) {
-                return lowPriorityBalancers.indexOf(item) === -1;
-            })) {
-                balanser = filter_sources.find(function(item) {
-                    return lowPriorityBalancers.indexOf(item) === -1;
-                });
-            }
-            if (!sources[balanser]) balanser = filter_sources[0];
-            if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
-            source = sources[balanser].url;
-          resolve(json);
-        } else {
-          reject();
-        }
-      });
-    };
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
@@ -369,13 +394,16 @@
             filter_sources = [];
             sources = {};
             json.online.forEach(function(j) {
-              var name = balanserName(j);
-              sources[name] = {
-                url: j.url,
-                name: j.name,
-                show: typeof j.show == 'undefined' ? true : j.show
-              };
-            });
+         var name = balanserName(j);
+          if(name === "filmixtv") {
+          j.name = "Filmix - 720p";
+         }
+           sources[name] = {
+           url: j.url,
+            name: j.name,
+            show: typeof j.show === 'undefined' ? true : j.show
+           };
+          });
             filter_sources = Lampa.Arrays.getKeys(sources);
             filter.set('sort', filter_sources.map(function(e) {
               return {
@@ -1344,7 +1372,7 @@
       var html = Lampa.Template.get('lampac_does_not_answer', {});
       html.find('.online-empty__buttons').remove();
       html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
-      html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
+      html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', sources[balanser].name));
       scroll.clear();
       scroll.append(html);
       this.loading(false);
