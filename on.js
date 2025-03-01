@@ -318,6 +318,9 @@
       if(name === "filmixtv") {
         j.name = "Filmix - 720p";
       }
+	if(name === "pidtor") {
+       j.name = "Torrent - 2160";
+   }
       sources[name] = {
         url: j.url,
         name: j.name,
@@ -398,6 +401,9 @@
           if(name === "filmixtv") {
           j.name = "Filmix - 720p";
          }
+	  if(name === "pidtor") {
+          j.name = "Torrent - 2160";
+       }
            sources[name] = {
            url: j.url,
             name: j.name,
