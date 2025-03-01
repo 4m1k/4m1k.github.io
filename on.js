@@ -331,10 +331,6 @@
       };
     });
     
-    if(sources.filmixtv){
-      sources.filmixtv.name = "Filmix - 720p";
-    }
-    
     filter_sources = Lampa.Arrays.getKeys(sources);
     var lowPriorityBalancers = [];
     
