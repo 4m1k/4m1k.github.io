@@ -500,15 +500,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://andreyurl54.github.io/diesel5/tricks.js', 'Приятные Мелочи', '@AndreyURL54', 'Tricks');
+							itemON('https://amikdn.github.io/tricks.js', 'Приятные Мелочи', '@lampa', 'Tricks');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://andreyurl54.github.io/diesel5/tricks.js";
+							var pluginToRemoveUrl = "https://amikdn.github.io/tricks.js";
 							deletePlugin(pluginToRemoveUrl);
 						}	
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900');  hideInstall()
-						/*var myResult = checkPlugin('https://andreyurl54.github.io/diesel5/tricks.js')
+						/*var myResult = checkPlugin('https://amikdn.github.io/tricks.js')
 						setTimeout(function() {	
 							$('div[data-name="Tricks"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -517,13 +517,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Tricks"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://andreyurl54.github.io/diesel5/tricks.js');
+						var myResult = checkPlugin('https://amikdn.github.io/tricks.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Tricks"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://andreyurl54.github.io/diesel5/tricks.js') {
+                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/tricks.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
