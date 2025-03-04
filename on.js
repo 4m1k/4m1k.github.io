@@ -4,7 +4,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://lam.akter-black.com/',
-    apn: '10'
+    apn: ''
   };
   
     var unic_id = Lampa.Storage.get('lampac_unic_id', '');
@@ -324,6 +324,9 @@
 	if(name === "pidtor") {
        j.name = "Torrent - 2160";
    }
+	if(name === "alloha") {
+        j.name = "Alloha - 2160";
+    }
       sources[name] = {
         url: j.url,
         name: j.name,
@@ -403,6 +406,9 @@
 	  if(name === "pidtor") {
           j.name = "Torrent - 2160";
        }
+	if(name === "alloha") {
+        j.name = "Alloha - 2160";
+    }
            sources[name] = {
            url: j.url,
             name: j.name,
