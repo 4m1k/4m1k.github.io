@@ -324,7 +324,7 @@
 	if(name === "pidtor") {
        j.name = "Torrent - 2160";
    }
-	if(name === "alloha") {
+	if(name === "mirage") {
         j.name = "Alloha - 2160";
     }
       sources[name] = {
@@ -406,7 +406,7 @@
 	  if(name === "pidtor") {
           j.name = "Torrent - 2160";
        }
-	if(name === "alloha") {
+	if(name === "mirage") {
         j.name = "Alloha - 2160";
     }
            sources[name] = {
