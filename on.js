@@ -286,9 +286,6 @@
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
         url = "http://rc.bwa.to/rc/fxapi";
       }
-	else if (balanser && balanser.toLowerCase() === 'fancdn') {
-         url = "http://vcdn3.skaz.tv/lite/fancdn";
-     }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
