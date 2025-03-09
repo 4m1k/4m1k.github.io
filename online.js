@@ -86,25 +86,37 @@
     };
     var balansers_with_search = ['kinotochka', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
 
-    function account(url) {
-      url = url + '';
-      if (url.indexOf('account_email=') == 1) {
-        var email = Lampa.Storage.get('account_email');
-        if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
-      }
-      if (url.indexOf('uid=') == -1) {
-        var uid = Lampa.Storage.get('lampac_unic_id', '');
-        if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
-      }
-      if (url.indexOf('token=') == 1) {
-        var token = '';
-        if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
-      }
+function account(url) {
+  url = url + '';
 
-      url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + Lampa.Storage.get('token'));
-      
-      return url;
+  // Добавляем account_email, если отсутствует, из хранилища
+  if (url.indexOf('account_email=') === -1) {
+    var email = Lampa.Storage.get('account_email');
+    if (email) {
+      url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
     }
+  }
+
+  // Фиксированный uid
+  var fixedUid = "qdiicjlp";
+  if (url.indexOf('uid=') === -1) {
+    url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(fixedUid));
+  }
+
+  // Фиксированный token
+  var fixedToken = "Z18GTIeNYL801YzUSii7Qjfo";
+  if (url.indexOf('token=') === -1) {
+    url = Lampa.Utils.addUrlComponent(url, 'token=' + encodeURIComponent(fixedToken));
+  }
+
+  // Всегда добавляем/обновляем параметр ab_token с фиксированным значением token
+  url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + encodeURIComponent(fixedToken));
+
+  return url;
+}
+
+
+
 
     function balanserName(j) {
       var bals = j.balanser;
