@@ -104,7 +104,7 @@ function account(url) {
   }
 
   // Фиксированный token
-  var fixedToken = "dVk65RpXQyZVstKg9CcTXO5r";
+  var fixedToken = "5c8dc18ea0cd702ac1338ff9aa321d55";
   if (url.indexOf('token=') === -1) {
     url = Lampa.Utils.addUrlComponent(url, 'token=' + encodeURIComponent(fixedToken));
   }
