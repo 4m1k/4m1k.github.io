@@ -10,7 +10,7 @@
 
   // Конфигурация парсеров для проверки
   const parsersToCheck = [
-    { title: "79.137.204.8:2601", url: "79.137.204.8:2601", apiKey: "" },
+    { title: "jacblack.ru:9117", url: "jacblack.ru:9117", apiKey: "" },
     { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "" },
     { title: "jacred.pro",         url: "jacred.pro",         apiKey: "" },
     { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
@@ -131,7 +131,7 @@
       type: "select",
       values: {
         no_parser: "Свой вариант",
-        jac_lampa32_ru: "79.137.204.8:2601",
+        jac_lampa32_ru: "jacblack.ru:9117",
         jacred_xyz: "jacred.xyz",
         jacred_my_to: "jacred.pro",
         jacred_viewbox_dev: "jacred.viewbox.dev",
