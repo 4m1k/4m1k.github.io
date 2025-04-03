@@ -14,7 +14,7 @@
     { title: "jacred.xyz",         url: "jacred.xyz",         apiKey: "" },
     { title: "jacred.pro",         url: "jacred.pro",         apiKey: "" },
     { title: "jacred.viewbox.dev", url: "jacred.viewbox.dev", apiKey: "viewbox" },
-    { title: "trs.my.to:9117",     url: "trs.my.to:9117",     apiKey: "" },
+    { title: "https://jr.maxvol.pro",     url: "https://jr.maxvol.pro",     apiKey: "" },
     { title: "altjacred.duckdns.org", url: "altjacred.duckdns.org", apiKey: "" }
   ];
 
@@ -135,7 +135,7 @@
         jacred_xyz: "jacred.xyz",
         jacred_my_to: "jacred.pro",
         jacred_viewbox_dev: "jacred.viewbox.dev",
-        spawn_jacred: "trs.my.to:9117",
+        spawn_jacred: "https://jr.maxvol.pro",
         altjacred_duckdns_org: "altjacred.duckdns.org"
       },
       default: "jacred_my_to"
