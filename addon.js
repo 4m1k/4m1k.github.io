@@ -390,7 +390,7 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
 						name: 'Interface Mod',
-						description: 'Настройки Интерфейса'
+						description: 'Улучшенный интерфейс'
                             },
 					onChange: function(value) {
 						if (value == '1') {
