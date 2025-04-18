@@ -415,7 +415,7 @@ Lampa.SettingsApi.addComponent({
 						var myResult = checkPlugin('https://4m1k.github.io/interface_mod.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="TMDB"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Interface Mod"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'https://4m1k.github.io/interface_mod.js') {
