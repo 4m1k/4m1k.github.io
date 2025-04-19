@@ -3646,7 +3646,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://bylampa.github.io/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
+							itemON('https://4m1k.github.io/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://4m1k.github.io/tv.js";
