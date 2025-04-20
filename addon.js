@@ -390,7 +390,7 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
 						name: 'TMDB Alt',
-						description: 'Альтернативный плагин проксирование постеров для сайта TMDB'
+						description: 'Альтернативный плагин проксирования постеров для сайта TMDB'
                             },
 					onChange: function(value) {
 						if (value == '1') {
