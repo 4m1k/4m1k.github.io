@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam5.akter-black.com/',
+    localhost: 'https://lam.akter-black.com/',
     apn: ''
   };
   
@@ -1696,3 +1696,4 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
