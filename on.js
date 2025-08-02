@@ -316,7 +316,7 @@
     json.forEach(function(j) {
       var name = balanserName(j);
       if(name === "filmixtv") {
-        j.name = "Filmix - 720p";
+        j.name = "Filmix - 480p";
       }
 	if(name === "pidtor") {
        j.name = "Torrent - 2160";
@@ -398,7 +398,7 @@
             json.online.forEach(function(j) {
          var name = balanserName(j);
           if(name === "filmixtv") {
-          j.name = "Filmix - 720p";
+          j.name = "Filmix - 480p";
          }
 	  if(name === "pidtor") {
           j.name = "Torrent - 2160";
@@ -1696,4 +1696,5 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
