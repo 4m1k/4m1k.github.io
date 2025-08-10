@@ -2752,62 +2752,6 @@ Lampa.SettingsApi.addComponent({
 						});
 					}
 		});
-                 
-			Lampa.SettingsApi.addParam({
-					component: 'add_online_plugin',
-					param: {
-                                		name: 'Lampa.app Online',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-					},
-					//default: '1',
-              				},
-					field: {
-						name: 'Lampa.app Online',
-						description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн.'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://lampa.app/online.js', 'Lampa.app Online', '@lampa', 'Lampa.app Online');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://lampa.app/online.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://lampa.app/online.js')
-						setTimeout(function() {	
-							$('div[data-name="Lampa.app Online"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Lampa.app Online"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Lampa.app Online"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('http://lampa.app/online.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Lampa.app Online"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://lampa.app/online.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Lampa.app Online"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Lampa.app Online"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Lampa.app Online"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-        });
         
 		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
