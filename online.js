@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam.akter-black.com/',
+    localhost: 'https://lam5.akter-black.com/',
     apn: ''
   };
   
@@ -284,7 +284,7 @@
     };
     this.requestParams = function(url) {
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
-        url = "http://rc.bwa.to/rc/fxapi";
+        url = "http://rc.bwa.to/rc/filmix";
       }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
@@ -316,7 +316,7 @@
     json.forEach(function(j) {
       var name = balanserName(j);
       if(name === "filmixtv") {
-        j.name = "Filmix - 720p";
+        j.name = "Filmix - 480p";
       }
 	if(name === "pidtor") {
        j.name = "Torrent - 2160";
@@ -398,7 +398,7 @@
             json.online.forEach(function(j) {
          var name = balanserName(j);
           if(name === "filmixtv") {
-          j.name = "Filmix - 720p";
+          j.name = "Filmix - 480p";
          }
 	  if(name === "pidtor") {
           j.name = "Torrent - 2160";
@@ -1696,4 +1696,6 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
+
 
