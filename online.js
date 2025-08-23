@@ -270,7 +270,7 @@
     };
     this.requestParams = function(url) {
       if (balanser && balanser.toLowerCase() === 'filmixtv') {
-        url = "http://rc.bwa.to/rc/filmix";
+        url = "https://akter-black.com/lite/filmix";
       }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
@@ -1682,3 +1682,4 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
