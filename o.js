@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: 'https://cf-stream.stull.xyz/',
+    localhost: 'https://akter-black.com/',
     apn: 'http://apn.cfhttp.top/'
   };
 
