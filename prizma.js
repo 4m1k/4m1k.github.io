@@ -52,10 +52,7 @@
       Lampa.Utils.putScript(["https://cf-stream.stull.xyz/signalr-6.0.25_es5.js"], function() {}, false, function() {
         rchInvoke(json, call);
       }, true);
-    } else {
-      rchInvoke(json, call);
-    }
-  }
+    } 
   
   function account(url) {
     url = url + '';
@@ -1745,3 +1742,4 @@ else if (element.url) {
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
