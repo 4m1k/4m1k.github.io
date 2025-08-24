@@ -543,7 +543,7 @@ Lampa.SettingsApi.addComponent({
 						setTimeout(function() {	
 							$('div[data-name="Personal Hub"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="IPersonal Hub"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Personal Hub"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
 								$('div[data-name="Personal Hub"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
