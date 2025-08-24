@@ -22,7 +22,6 @@ var imgProxyUrl = "https://lampa.maxvol.pro/proxyimg/"; // Прокси для �
 Lampa.Listener.follow("full", function(a) {
     if (a.type === "complite") {
         var e = a.data.movie;
-        var urlType = e.name ? "tv" : "movie"; // Определяем тип
 
         var o = apiProxyUrl + "http://api.themoviedb.org/3/" + urlType + "/" + e.id + "/images?api_key=" + apiKey + "&language=" + Lampa.Storage.get("language");
 
