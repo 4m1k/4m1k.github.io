@@ -45,7 +45,7 @@ Lampa.Listener.follow("full", function(a) {
   });
   Lampa.Utils.putScriptAsync(
     [
-      'http://4m1k.github.io/tmdbproxy.js?v=' + Math.random(),
+    //  'http://4m1k.github.io/tmdbproxy.js?v=' + Math.random(),
 
     ],
     function () {}
