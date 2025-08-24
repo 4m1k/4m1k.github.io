@@ -51,13 +51,6 @@ Lampa.Listener.follow("full", function(a) {
     function () {}
   );
 
-  /*Ставим Cub источником по умолчанию,клавиатуру системную,а безопасное соединение - нет*/
-
-  Lampa.Storage.set('source', 'cub');
-  Lampa.Storage.set('keyboard_type', 'integrate');
-  Lampa.Storage.set('protocol', 'http');
-  Lampa.Storage.set('parser_use', 'false');
-
   /*Заменяем иконки и названия в кнопках Онлайн и Трейлеры
                Убираем кнопки из раздела смотреть*/
 
