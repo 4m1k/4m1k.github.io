@@ -312,7 +312,6 @@
 	if(name === "mirage") {
         j.name = "Alloha - 2160";
     }
-   }
       sources[name] = {
         url: j.url,
         name: j.name,
@@ -1685,6 +1684,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
