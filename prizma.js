@@ -617,13 +617,11 @@
   // online.js
 }
 else if (element.url) {
-  if (Platform.is('browser') && location.host.indexOf("127.0.0.1") !== -1) {
-    Noty.show('Видео открыто в playerInner', {time: 3000});
-    $.get('https://cf-stream.stull.xyz/player-inner/' + element.url);
-    return;
+
   }
 
   Player.play(element);
+
 }
                 Lampa.Player.play(first);
                 Lampa.Player.playlist(playlist);
