@@ -274,6 +274,9 @@
     } else if (balanser && balanser.toLowerCase() === 'rezka') {
        url = "https://lam.akter-black.com/lite/rezka";
     }
+    } else if (balanser && balanser.toLowerCase() === 'kinobase') {
+       url = "https://lam7.akter-black.com/lite/kinobase";
+    }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
@@ -1684,6 +1687,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
