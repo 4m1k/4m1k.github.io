@@ -274,7 +274,6 @@
     } else if (balanser && balanser.toLowerCase() === 'rezka') {
        url = "https://lam.akter-black.com/lite/rezka";
     }
-    }
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
@@ -1685,6 +1684,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
