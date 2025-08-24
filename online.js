@@ -109,7 +109,16 @@
 
 		Lampa.Storage.set('clarification_search',all)
 	}
-
+	  
+    function createHintText(html) {
+        return '<div style="display: block;"><div class="myBot" style="display:none; line-height: 0.5;color: #ffffff;font-family: &quot;SegoeUI&quot;, sans-serif;font-size: 1em;box-sizing: border-box;outline: none;user-select: none;display: flex;-webkit-box-align: start;align-items: flex-start;position: relative;background-color: rgba(255, 255, 255, 0.1);border-radius: 0.3em;margin-bottom: 1.5em;"><div style="background-color: rgba(255, 255, 255, 0.1);    padding: 1em;    -webkit-box-flex: 1;    -webkit-flex-grow: 1;    -moz-box-flex: 1;    -ms-flex-positive: 1;    flex-grow: 1;    line-height: 1.7;"><b style="background: #ffe216;color: #000;border-radius: 0.3em;padding: 0.3em;margin-right: 0.5em;">Подсказка</b>' + html + '</div></div></div>'   
+    }
+  
+    var hint1 = $(createHintText('Тормозит или не воспроизводится видео? Переключи <b>Источник</b> с помощью кнопки над текстом.'));
+    var hint2 = $(createHintText('Для просмотра в 4К переключи <b>Источник</b>'));
+    
+    var hints = [hint1]
+	  
 	function clarificationSearchDelete(){
 		var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title)
 		var all = Lampa.Storage.get('clarification_search','{}')
@@ -1684,6 +1693,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
