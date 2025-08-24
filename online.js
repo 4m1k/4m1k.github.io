@@ -271,7 +271,7 @@
     this.requestParams = function(url) {
      if (balanser && balanser.toLowerCase() === 'filmixtv') {
       url = "https://akter-black.com/lite/filmix";
-    } else if (balanser && balanser.toLowerCase() === 'rezka') {
+    } else if (balanser && balanser.toLowerCase() === 'cdnmovies') {
        url = "https://lam.akter-black.com/lite/rezka";
     }
       var query = [];
@@ -311,6 +311,9 @@
    }
 	if(name === "mirage") {
         j.name = "Alloha - 2160";
+    }
+	if(name === "cdnmovies") {
+        j.name = "Rezka - 720p";
     }
       sources[name] = {
         url: j.url,
@@ -1684,6 +1687,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
