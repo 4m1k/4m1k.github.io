@@ -80,7 +80,7 @@
       season: [],
       voice: []
     };
-    var balansers_with_search = ['kinotochka', 'videocdn', 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
+    var balansers_with_search = ['kinotochka', "vidsrc", 'kinopub', 'lumex', 'filmix', 'filmixtv', 'redheadsound', 'animevost', 'animego', 'animedia', 'animebesst', 'anilibria', 'rezka', 'rhsprem', 'kodik', 'remux', 'animelib', 'kinoukr', 'rc/filmix', 'rc/fxapi', 'rc/kinopub', 'rc/rhs', 'vcdn'];
 
     function account(url) {
       url = url + '';
@@ -271,7 +271,7 @@
     this.requestParams = function(url) {
      if (balanser && balanser.toLowerCase() === 'filmixtv') {
       url = "https://akter-black.com/lite/filmix";
-    } else if (balanser && balanser.toLowerCase() === 'videocdn') {
+    } else if (balanser && balanser.toLowerCase() === "vidsrc") {
        url = "https://lam.akter-black.com/lite/rezka";
     }
       var query = [];
@@ -312,7 +312,7 @@
 	if(name === "mirage") {
         j.name = "Alloha - 2160";
     }
-	if(name === "videocdn") {
+	if(name === "vidsrc") {
         j.name = "Rezka - 720p";
     }
       sources[name] = {
@@ -1677,7 +1677,7 @@
       }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
-      var balansers_sync = ["filmix", 'filmixtv',"fxapi", "videocdn", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/kinopub", "rc/rhs", "vcdn"];
+      var balansers_sync = ["filmix", 'filmixtv',"fxapi", "vidsrc", "rezka", "rhsprem", "lumex", "videodb", "collaps", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/kinopub", "rc/rhs", "vcdn"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
@@ -1687,6 +1687,7 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
 
 
