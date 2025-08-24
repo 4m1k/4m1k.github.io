@@ -608,7 +608,7 @@ Lampa.SettingsApi.addComponent({
 						var myResult = checkPlugin('https://4m1k.github.io/qlty.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Personal Hub"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="qlty"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'https://4m1k.github.io/qlty.js') {
