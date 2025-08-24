@@ -19,9 +19,28 @@ var apiKey = "4ef0d7355d9ffb5151e987764708ce96";
 var apiProxyUrl = "https://lampa.maxvol.pro/proxy/"; // Прокси для API
 var imgProxyUrl = "https://lampa.maxvol.pro/proxyimg/"; // Прокси для изображений
 
+Lampa.Listener.follow("full", function(a) {
+    if (a.type === "complite") {
+        var e = a.data.movie;
+        var urlType = e.name ? "tv" : "movie"; // Определяем тип
+
+        var o = apiProxyUrl + "http://api.themoviedb.org/3/" + urlType + "/" + e.id + "/images?api_key=" + apiKey + "&language=" + Lampa.Storage.get("language");
+
+        $.get(o, function(response) {
+            if (response.logos && response.logos[0]) {
+                var logoPath = response.logos[0].file_path;
+                if (logoPath !== "") {
+                    $(".full-start-new__title").html(
+                        '<img style="margin-top: 5px; max-height: 125px;" src="' + imgProxyUrl + "http://image.tmdb.org/t/p/w500" + logoPath.replace(".svg", ".png") + '" />'
+                    );
+                }
+            }
+        });
+    }
+});
 
   /*Запуск сторонних плагинов*/
-  Lampa.Utils.putScriptAsync(['http://4m1k.github.io/o.js?v=' + Math.random()], function () {
+  Lampa.Utils.putScriptAsync(['http://4m1k.github.io/online.js?v=' + Math.random()], function () {
     window.lampac_localhost = '//' + location.hostname + '/'
   });
   Lampa.Utils.putScriptAsync(
