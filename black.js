@@ -27,15 +27,7 @@ var imgProxyUrl = "https://lampa.maxvol.pro/proxyimg/"; // Прокси для �
   Lampa.Utils.putScriptAsync(
     [
       'http://4m1k.github.io/tmdbproxy.js?v=' + Math.random(),
-    //   '/metrika.js',
-    //   '/guide.js',
-    //   '/text1.js',
-    //  '/jackett.js',
-    //   '//cub.abmsx.tech/plugin/collections',
-    //   '//cub.abmsx.tech/plugin/tracks',
-//      '/torrserver.js',
-    //  '/qual.js',
-    //  '//lampame.github.io/main/music.js'
+
     ],
     function () {}
   );
@@ -63,21 +55,6 @@ var imgProxyUrl = "https://lampa.maxvol.pro/proxyimg/"; // Прокси для �
      },10);
      }
     })
-
-  /*Загружаем плагин радио в зависимости от платформы*/
-
-  if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) {
-    Lampa.Utils.putScriptAsync(['//cub.red/plugin/radio'], function () {});
-  } else {
-    // Lampa.Utils.putScriptAsync(['//lampame.github.io/main/rradio.js'], function () {});
-    Lampa.Utils.putScriptAsync(['/radio.js'], function () {});
-  }
-
-  if (Lampa.Platform.screen('mobile')) {
-    Lampa.Storage.set('video_quality_default', '2160');
-  } else {
-    Lampa.Storage.set('video_quality_default', '2160');
-  }
 
   /*  Принудительный выбор плеера*/
 
