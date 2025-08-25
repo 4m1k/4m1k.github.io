@@ -526,20 +526,20 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
 						name: 'PersonalHub',
-						description: 'Плагин добавляет источник Personal Hub, в котором можно сортировать и изменять разделы и карточки на свой вкус'
+						description: 'Плагин добавляет источник Bylampa, в котором можно сортировать и изменять разделы и карточки на свой вкус'
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://4m1k.github.io/personalhub.js', 'PersonalHub', '@lampa', 'PersonalHub');
+							itemON('http://amikdn.github.io/personal.js', 'PersonalHub', '@lampa', 'PersonalHub');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://4m1k.github.io/personalhub.js";
+							var pluginToRemoveUrl = "http://amikdn.github.io/personal.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://4m1k.github.io/personalhub.js')
+						/*var myResult = checkPlugin('http://amikdn.github.io/personal.js')
 						setTimeout(function() {	
 							$('div[data-name="PersonalHub"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -548,13 +548,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="PersonalHub"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://4m1k.github.io/ipersonalhub.js');
+						var myResult = checkPlugin('http://amikdn.github.io/personal.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="PersonalHub"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/personalhub.js') {
+                                                          if (pluginsArray[i].url === 'http://amikdn.github.io/personal.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
