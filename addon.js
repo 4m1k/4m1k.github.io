@@ -3734,7 +3734,7 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://4m1k.github.io/tv.js');
+						var myResult = checkPlugin('https://amikdn.github.io/ip_tv.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>');
