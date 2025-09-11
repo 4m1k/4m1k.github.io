@@ -2234,15 +2234,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/dlna', 'DLNA', '@lampa', 'DLNA');
+							itemON('http://cub.rip/plugin/dlna', 'DLNA', '@lampa', 'DLNA');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/dlna";
+							var pluginToRemoveUrl = "http://cub.rip/plugin/dlna";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/dlna')
+						/*var myResult = checkPlugin('http://cub.rip/plugin/dlna')
 						setTimeout(function() {	
 							$('div[data-name="DLNA"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2251,13 +2251,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="DLNA"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/dlna');
+						var myResult = checkPlugin('http://cub.rip/plugin/dlna');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="DLNA"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/dlna') {
+                                                          if (pluginsArray[i].url === 'http://cub.rip/plugin/dlna') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3662,15 +3662,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/iptv', 'IPTV', '@lampa', 'IPTV');
+							itemON('http://cub.rip/plugin/iptv', 'IPTV', '@lampa', 'IPTV');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/iptv";
+							var pluginToRemoveUrl = "http://cub.rip/plugin/iptv";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/iptv')
+						/*var myResult = checkPlugin('http://cub.rip/plugin/iptv')
 						setTimeout(function() {	
 							$('div[data-name="IPTV"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3679,13 +3679,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="IPTV"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/iptv');
+						var myResult = checkPlugin('http://cub.rip/plugin/iptv');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="IPTV"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/iptv') {
+                                                          if (pluginsArray[i].url === 'http://cub.rip/plugin/iptv') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3717,15 +3717,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://4m1k.github.io/tv.js', 'Hack TV', '@lampa', 'Hack_TV');
+							itemON('https://amikdn.github.io/ip_tv.js', 'Hack TV', '@lampa', 'Hack_TV');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://4m1k.github.io/tv.js";
+							var pluginToRemoveUrl = "https://amikdn.github.io/ip_tv.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://4m1k.github.io/tv.js')
+						/*var myResult = checkPlugin('https://amikdn.github.io/ip_tv.js')
 						setTimeout(function() {	
 							$('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3740,7 +3740,7 @@ Lampa.SettingsApi.addComponent({
                                                        $('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/tv.js') {
+                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/ip_tv.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -3803,15 +3803,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://cub.red/plugin/radio', 'Радио Record', '@lampa', 'Record');
+							itemON('http://cub.rip/plugin/radio', 'Радио Record', '@lampa', 'Record');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://cub.red/plugin/radio";
+							var pluginToRemoveUrl = "http://cub.rip/plugin/radio";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://cub.red/plugin/radio')
+						/*var myResult = checkPlugin('http://cub.rip/plugin/radio')
 						setTimeout(function() {	
 							$('div[data-name="Record"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3820,13 +3820,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Record"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://cub.red/plugin/radio');
+						var myResult = checkPlugin('http://cub.rip/plugin/radio');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Record"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://cub.red/plugin/radio') {
+                                                          if (pluginsArray[i].url === 'http://cub.rip/plugin/radio') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
