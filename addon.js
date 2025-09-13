@@ -644,16 +644,16 @@ Lampa.SettingsApi.addComponent({
                             },
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://llpp.in/ur/notrailer.js', 'Удаление Трейлеров', '@lampa', 'NoTrailer');
+							itemON('https://4m1k.github.io/notrailer.js', 'Удаление Трейлеров', '@lampa', 'NoTrailer');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://llpp.in/ur/notrailer.js";
+							var pluginToRemoveUrl = "https://4m1k.github.io/notrailer.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://llpp.in/ur/notrailer.js')
+						/*var myResult = checkPlugin('https://4m1k.github.io/notrailer.js')
 						setTimeout(function() {	
 							$('div[data-name="NoTrailer"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -662,13 +662,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="NoTrailer"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://llpp.in/ur/notrailer.js');
+						var myResult = checkPlugin('https://4m1k.github.io/notrailer.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="NoTrailer"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://llpp.in/ur/notrailer.js') {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/notrailer.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
