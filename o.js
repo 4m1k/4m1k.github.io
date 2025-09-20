@@ -12,7 +12,6 @@ var randomUrl = vybor[randomIndex];
     api: 'lampac',
     localhost: randomUrl,
     apn: 'https://apn.watch/'
-  };
 
   var balansers_with_search;
   
