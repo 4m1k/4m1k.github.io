@@ -1545,7 +1545,7 @@ else if (element.url) {
 
         Lampa.Activity.push({
           url: params.element.url,
-          title: 'Onlyskaz - ' + params.element.title,
+          title: '4m1K - ' + params.element.title,
           component: 'lampacskaz',
           movie: params.element,
           page: 1,
@@ -1562,60 +1562,11 @@ else if (element.url) {
 
   function startPlugin() {
     window.onlyskaz_plugin = true;
-	if (!window.plugin_iptvskaz_ready && !window.plugin_iptv_ready2)
-	  {
-		Lampa.SettingsApi.addComponent({
-        component: 'iptvskaz',
-        icon: "<svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <rect x=\"2\" y=\"8\" width=\"34\" height=\"21\" rx=\"3\" stroke=\"white\" stroke-width=\"3\"/>\n                <line x1=\"13.0925\" y1=\"2.34874\" x2=\"16.3487\" y2=\"6.90754\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <line x1=\"1.5\" y1=\"-1.5\" x2=\"9.31665\" y2=\"-1.5\" transform=\"matrix(-0.757816 0.652468 0.652468 0.757816 26.197 2)\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <line x1=\"9.5\" y1=\"34.5\" x2=\"29.5\" y2=\"34.5\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n            </svg>",
-        name: 'by skaz'
-      });
-	  Lampa.SettingsApi.addParam({
-				component: 'iptvskaz',
-				param: {
-					name: 'only_title',
-					type: 'title',
-					default: true
-				},
-				field: {
-					name: 'Онлайн'
-				}
-			});
-	  	  Lampa.SettingsApi.addParam({
-        component: 'iptvskaz',
-        param: {
-          name: 'online_skaz2',
-          type: 'select',
-           values: {
-                'true': 'Отображать',
-                'false': 'Скрыть',
-            },
-            default: false,
-        },
-        field: {
-          name: 'Отображать Onlyskaz 2.0',
-		  description: 'Онлайн с автовыбором источника, управление в плеере'
-        }
-	  });
-	  	  	  Lampa.SettingsApi.addParam({
-        component: 'iptvskaz',
-        param: {
-          name: 'skazonline2_view',
-          type: 'trigger',
-            default: false,
-        },
-        field: {
-          name: 'Спрятать значок Onlyskaz 2.0',
-		  description: 'Позволяет скрыть значок с карточки фильма'
-        },
-        onChange: function (value) {
-			Lampa.Noty.show('Необходимо перезайти в лампу');
-		}
-	  });
-	}
+
     var manifst = {
       type: 'video',
       version: '',
-       name: 'Onlyskaz',
+       name: '4m1K',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampacskaz',
       onContextMenu: function onContextMenu(object) {
@@ -1685,10 +1636,10 @@ else if (element.url) {
         zh: '按住“确定”键调出上下文菜单'
       },
       title_online: { //
-        ru: 'Онлайн',
-        uk: 'Онлайн',
-        en: 'Online',
-        zh: '在线的'
+        ru: '4m1K',
+        uk: '4m1K',
+        en: '4m1K',
+        zh: '4m1K'
       },
       lampac_voice_subscribe: { //
         ru: 'Подписаться на перевод',
