@@ -1815,7 +1815,5 @@ else if (element.url) {
   }
   if (!window.onlyskaz_plugin) startPlugin();
 	  $.getScript('http://skaz.tv/lampac-src-filter.js');
-	  if (Lampa.Storage.get('online_skaz2')==true) {
-			$.getScript('http://skaz.tv/play.js');
-	}
+	  if (Lampa.Storage.get('online_skaz2')==true)
 })();
