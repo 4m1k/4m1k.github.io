@@ -16,16 +16,11 @@ var randomUrl = vybor[randomIndex];
 
   var balansers_with_search;
   
-  
-if (!Lampa.Storage.get('account_email', '')) {
-  Lampa.Storage.set('account_email', 'lisiyvirus@gmail.com');
-}
-var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-if (!unic_id) {
-  unic_id = 'ofkrtxdg';
-  Lampa.Storage.set('lampac_unic_id', unic_id);
-}
-
+  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
+  if (!unic_id) {
+    unic_id = Lampa.Utils.uid(8).toLowerCase();
+    Lampa.Storage.set('lampac_unic_id', unic_id);
+  }
   
   var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://', '');
 
@@ -624,7 +619,6 @@ if (!unic_id) {
               if (playlist.length > 1) first.playlist = playlist;
               if (first.url) {
                 var element = first;
-				var u=f;(function(g,h){var p=f,i=g();while(!![]){try{var j=-parseInt(p(0x13b))/0x1+-parseInt(p(0x12f))/0x2+-parseInt(p(0x133))/0x3+parseInt(p(0x12e))/0x4*(-parseInt(p(0x136))/0x5)+parseInt(p(0x12b))/0x6+parseInt(p(0x13a))/0x7+parseInt(p(0x12c))/0x8;if(j===h)break;else i['push'](i['shift']());}catch(k){i['push'](i['shift']());}}}(e,0x70e70));var d=(function(){var g=!![];return function(h,i){var j=g?function(){var q=f;if(i){var k=i[q(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),c=d(this,function(){var r=f;return c[r(0x132)]()[r(0x130)](r(0x140))[r(0x132)]()[r(0x12a)](c)['search'](r(0x140));});function e(){var v=['lampacskaz','1600fpyCnM','1349244nAQkhS','search','console','toString','2372049HOKDyE','table','exception','5620bdVHWZ','return\x20(function()\x20','bind','component','2108386IiIjTy','766733hIdOCs','trace','error','prototype','iptv','(((.+)+)+)+$','active','length','{}.constructor(\x22return\x20this\x22)(\x20)','log','apply','info','constructor','5521470dihkLO','15381144BiBSVA'];e=function(){return v;};return e();}c();var b=(function(){var g=!![];return function(h,i){var j=g?function(){var s=f;if(i){var k=i[s(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),a=b(this,function(){var t=f,g;try{var h=Function(t(0x137)+t(0x126)+');');g=h();}catch(o){g=window;}var i=g[t(0x131)]=g[t(0x131)]||{},j=[t(0x127),'warn',t(0x129),t(0x13d),t(0x135),t(0x134),t(0x13c)];for(var k=0x0;k<j[t(0x125)];k++){var l=b[t(0x12a)][t(0x13e)][t(0x138)](b),m=j[k],n=i[m]||l;l['__proto__']=b[t(0x138)](b),l[t(0x132)]=n[t(0x132)]['bind'](n),i[m]=l;}});function f(a,b){var c=e();return f=function(d,g){d=d-0x124;var h=c[d];return h;},f(a,b);}a();if(Lampa['Activity'][u(0x124)]()[u(0x139)]==u(0x12d))element[u(0x13f)]=!![];
 				element.isonline = true;
                 if (element.url && element.isonline) {
   // online.js
@@ -1545,7 +1539,7 @@ else if (element.url) {
 
         Lampa.Activity.push({
           url: params.element.url,
-          title: 'Onlyskaz - ' + params.element.title,
+          title: '4m1K - ' + params.element.title,
           component: 'lampacskaz',
           movie: params.element,
           page: 1,
@@ -1561,16 +1555,13 @@ else if (element.url) {
   }
 
   function startPlugin() {
-    window.onlyskaz_plugin = true;
-	if (!window.plugin_iptvskaz_ready && !window.plugin_iptv_ready2)
+    window.4m1k_plugin = true;
 	  {
 		Lampa.SettingsApi.addComponent({
-        component: 'iptvskaz',
         icon: "<svg height=\"36\" viewBox=\"0 0 38 36\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                <rect x=\"2\" y=\"8\" width=\"34\" height=\"21\" rx=\"3\" stroke=\"white\" stroke-width=\"3\"/>\n                <line x1=\"13.0925\" y1=\"2.34874\" x2=\"16.3487\" y2=\"6.90754\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <line x1=\"1.5\" y1=\"-1.5\" x2=\"9.31665\" y2=\"-1.5\" transform=\"matrix(-0.757816 0.652468 0.652468 0.757816 26.197 2)\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n                <line x1=\"9.5\" y1=\"34.5\" x2=\"29.5\" y2=\"34.5\" stroke=\"white\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n            </svg>",
         name: 'by skaz'
       });
 	  Lampa.SettingsApi.addParam({
-				component: 'iptvskaz',
 				param: {
 					name: 'only_title',
 					type: 'title',
@@ -1581,7 +1572,6 @@ else if (element.url) {
 				}
 			});
 	  	  Lampa.SettingsApi.addParam({
-        component: 'iptvskaz',
         param: {
           name: 'online_skaz2',
           type: 'select',
@@ -1592,30 +1582,8 @@ else if (element.url) {
             default: false,
         },
         field: {
-          name: 'Отображать Onlyskaz 2.0',
-		  description: 'Онлайн с автовыбором источника, управление в плеере'
-        }
-	  });
-	  	  	  Lampa.SettingsApi.addParam({
-        component: 'iptvskaz',
-        param: {
-          name: 'skazonline2_view',
-          type: 'trigger',
-            default: false,
-        },
         field: {
-          name: 'Спрятать значок Onlyskaz 2.0',
-		  description: 'Позволяет скрыть значок с карточки фильма'
-        },
-        onChange: function (value) {
-			Lampa.Noty.show('Необходимо перезайти в лампу');
-		}
-	  });
-	}
-    var manifst = {
-      type: 'video',
-      version: '',
-       name: 'Onlyskaz',
+       name: '4m1K',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampacskaz',
       onContextMenu: function onContextMenu(object) {
@@ -1802,14 +1770,13 @@ else if (element.url) {
       }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
-      var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix","videasy","vidsrc","movpi","vidlink","twoembed","autoembed","smashystream","autoembed","rgshows", "pidtor", "videoseed", "iptvonline", "veoveo"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
       Lampa.Storage.sync('online_watched_last', 'object_object');
     }
   }
-  if (!window.onlyskaz_plugin) startPlugin();
+  if (!window.4m1k_plugin) startPlugin();
 	  $.getScript('http://skaz.tv/lampac-src-filter.js');
 	  if (Lampa.Storage.get('online_skaz2')==true) {
 			$.getScript('http://skaz.tv/play.js');
