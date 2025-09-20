@@ -1545,7 +1545,7 @@ else if (element.url) {
 
         Lampa.Activity.push({
           url: params.element.url,
-          title: 'Onlyskaz - ' + params.element.title,
+          title: '4m1K - ' + params.element.title,
           component: 'lampacskaz',
           movie: params.element,
           page: 1,
@@ -1566,7 +1566,7 @@ else if (element.url) {
     var manifst = {
       type: 'video',
       version: '',
-       name: 'Onlyskaz',
+       name: '4m1K',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampacskaz',
       onContextMenu: function onContextMenu(object) {
