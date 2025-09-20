@@ -10,7 +10,7 @@ var randomUrl = vybor[randomIndex];
 
   var Defined = {
     apn: 'https://apn.watch/'
-  };
+}
 
   var balansers_with_search;
   
@@ -88,11 +88,11 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       season: Lampa.Lang.translate('torrent_serial_season'),
       voice: Lampa.Lang.translate('torrent_parser_voice'),
       source: Lampa.Lang.translate('settings_rest_source')
-    };
+}
     var filter_find = {
       season: [],
       voice: []
-    };
+}
 	
     if (balansers_with_search == undefined) {
       network.timeout(10000);
@@ -146,10 +146,10 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           clarification: true,
           similar: true
         });
-      };
+}
       filter.onBack = function() {
         _this.start();
-      };
+}
       filter.render().find('.selector').on('hover:enter', function() {
         clearInterval(balanser_timer);
       });
@@ -190,7 +190,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           object.lampac_custom_select = a.source;
           _this.changeBalanser(a.source);
         }
-      };
+}
       if (filter.addButtonBack) filter.addButtonBack();
       filter.render().find('.filter--sort span').text(Lampa.Lang.translate('lampac_balanser'));
       scroll.body().addClass('torrent-list');
@@ -226,14 +226,14 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       })["catch"](function(e) {
         _this.noConnectToServer(e);
       });
-    };
+}
     this.rch = function(json, noreset) {
       var _this2 = this;
 	  rchRun(json, function() {
         if (!noreset) _this2.find();
         else noreset();
 	  });
-    };
+}
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
         if (!object.movie.imdb_id || !object.movie.kinopoisk_id) {
@@ -254,12 +254,12 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           });
         } else resolve();
       });
-    };
+}
     this.updateBalanser = function(balanser_name) {
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
       last_select_balanser[object.movie.id] = balanser_name;
       Lampa.Storage.set('online_last_balanser', last_select_balanser);
-    };
+}
     this.changeBalanser = function(balanser_name) {
       this.updateBalanser(balanser_name);
       Lampa.Storage.set('online_balanser', balanser_name);
@@ -268,7 +268,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       if (from.voice_name) to.voice_name = from.voice_name;
       this.saveChoice(to, balanser_name);
       Lampa.Activity.replace();
-    };
+}
     this.requestParams = function(url) {
       var query = [];
       var card_source = object.movie.source || 'tmdb'; //Lampa.Storage.field('source')
@@ -286,7 +286,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       query.push('similar=' + (object.similar ? true : false));
       if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
       return url + (url.indexOf('?') &gt;= 0 ? '&amp;' : '?') + query.join('&amp;');
-    };
+}
     this.getLastChoiceBalanser = function() {
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
       if (last_select_balanser[object.movie.id]) {
@@ -294,7 +294,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       } else {
         return Lampa.Storage.get('online_balanser', filter_sources.length ? filter_sources[0] : '');
       }
-    };
+}
     this.startSource = function(json) {
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
@@ -303,7 +303,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
             url: j.url,
             name: j.name,
             show: typeof j.show == 'undefined' ? true : j.show
-          };
+}
         });
         filter_sources = Lampa.Arrays.getKeys(sources);
         if (filter_sources.length) {
@@ -321,7 +321,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           reject();
         }
       });
-    };
+}
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
@@ -343,7 +343,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               reject();
             }
           }
-        };
+}
         var fin = function fin(call) {
           network.timeout(3000);
           network.silent(account(url), function(json) {
@@ -356,7 +356,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
                 url: j.url,
                 name: j.name,
                 show: typeof j.show == 'undefined' ? true : j.show
-              };
+}
             });
             filter_sources = Lampa.Arrays.getKeys(sources);
             filter.set('sort', filter_sources.map(function(e) {
@@ -365,7 +365,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
                 source: e,
                 selected: e == balanser,
                 ghost: !sources[e].show
-              };
+}
             }));
             filter.chosen('sort', [sources[balanser] ? sources[balanser].name : balanser]);
             gou(json);
@@ -387,10 +387,10 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               life_wait_timer = setTimeout(fin, 1000);
             }
           });
-        };
+}
         fin();
       });
-    };
+}
     this.createSource = function() {
       var _this4 = this;
       return new Promise(function(resolve, reject) {
@@ -411,13 +411,13 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           }
         }, reject);
       });
-    };
+}
     /**
      * Подготовка
      */
     this.create = function() {
       return this.render();
-    };
+}
     /**
      * Начать поиск
      */
@@ -426,10 +426,10 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         source: filter_sources
       }, this.getChoice());
       this.find();
-    };
+}
     this.find = function() {
       this.request(this.requestParams(source));
-    };
+}
     this.request = function(url) {
       number_of_requests++;
       if (number_of_requests &lt; 10) {
@@ -441,7 +441,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           number_of_requests = 0;
         }, 4000);
       } else this.empty();
-    };
+}
     this.parseJsonDate = function(str, name) {
       try {
         var html = $('<div>' + str + '</div>');
@@ -474,7 +474,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       } catch (e) {
         return [];
       }
-    };
+}
     this.getFileUrl = function(file, call) {
 	  var _this = this;
 	  
@@ -508,7 +508,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           call(false, {});
         });
       }
-    };
+}
     this.toPlayElement = function(file) {
       var play = {
         title: file.title,
@@ -517,16 +517,16 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         timeline: file.timeline,
         subtitles: file.subtitles,
         callback: file.mark
-      };
+}
       return play;
-    };
+}
     this.orUrlReserve = function(data) {
       if (data.url &amp;&amp; typeof data.url == 'string' &amp;&amp; data.url.indexOf(" or ") !== -1) {
         var urls = data.url.split(" or ");
         data.url = urls[0];
         data.url_reserve = urls[1];
       }
-    };
+}
     this.setDefaultQuality = function(data) {
       if (Lampa.Arrays.getKeys(data.quality).length) {
         for (var q in data.quality) {
@@ -538,7 +538,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
             data.quality[q] = data.quality[q].split(" or ")[0];
         }
       }
-    };
+}
     this.display = function(videos) {
       var _this5 = this;
       this.draw(videos, {
@@ -589,7 +589,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
                             cell.url = '';
                             call();
                           });
-                        };
+}
                       }
                     } else {
                       cell.url = elem.url;
@@ -638,7 +638,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         })
       }, this.getChoice());
       Lampa.Controller.enable('content');
-    };
+}
     this.getChoice = function(for_balanser) {
       var data = Lampa.Storage.cache('online_choice_' + (for_balanser || balanser), 3000, {});
       var save = data[object.movie.id] || {};
@@ -651,18 +651,18 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         movie_view: ''
       });
       return save;
-    };
+}
     this.saveChoice = function(choice, for_balanser) {
       var data = Lampa.Storage.cache('online_choice_' + (for_balanser || balanser), 3000, {});
       data[object.movie.id] = choice;
       Lampa.Storage.set('online_choice_' + (for_balanser || balanser), data);
       this.updateBalanser(for_balanser || balanser);
-    };
+}
     this.replaceChoice = function(choice, for_balanser) {
       var to = this.getChoice(for_balanser);
       Lampa.Arrays.extend(to, choice, true);
       this.saveChoice(to, for_balanser);
-    };
+}
     this.clearImages = function() {
       images.forEach(function(img) {
         img.onerror = function() {};
@@ -670,7 +670,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         img.src = '';
       });
       images = [];
-    };
+}
     /**
      * Очистить список файлов
      */
@@ -683,7 +683,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.clear();
       scroll.reset();
       scroll.body().append(Lampa.Template.get('lampac_content_loading'));
-    };
+}
     /**
      * Загрузка
      */
@@ -693,7 +693,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         this.activity.loader(false);
         this.activity.toggle();
       }
-    };
+}
     /**
      * Построить фильтр
      */
@@ -718,7 +718,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           items: subitems,
           stype: type
         });
-      };
+}
       filter_items.source = filter_sources;
       select.push({
         title: Lampa.Lang.translate('torrent_parser_reset'),
@@ -734,10 +734,10 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           source: e,
           selected: e == balanser,
           ghost: !sources[e].show
-        };
+}
       }));
       this.selected(filter_items);
-    };
+}
     /**
      * Показать что выбрано в фильтре
      */
@@ -757,7 +757,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       }
       filter.chosen('filter', select);
       filter.chosen('sort', [sources[balanser].name]);
-    };
+}
     this.getEpisodes = function(season, call) {
       var episodes = [];
       if (['cub', 'tmdb'].indexOf(object.movie.source || 'tmdb') == -1) return call(episodes);
@@ -772,7 +772,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           call(episodes);
         });
       } else call(episodes);
-    };
+}
     this.watched = function(set) {
       var file_id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title);
       var watched = Lampa.Storage.cache('online_watched_last', 5000, {});
@@ -784,7 +784,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       } else {
         return watched[file_id];
       }
-    };
+}
     this.updateWatched = function() {
       var watched = this.watched();
       var body = scroll.body().find('.online-prestige-watched .online-prestige-watched__body').empty();
@@ -798,7 +798,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           body.append('<span>' + n + '</span>');
         });
       } else body.append('<span>' + Lampa.Lang.translate('lampac_no_watch_history') + '</span>');
-    };
+}
     /**
      * Отрисовка файлов
      */
@@ -838,7 +838,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           var data = {
             hash_timeline: hash_timeline,
             hash_behold: hash_behold
-          };
+}
           var info = [];
           if (element.season) {
             element.translate_episode_end = _this8.getLastEpisode(items);
@@ -877,12 +877,12 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
             var img = html.find('img')[0];
             img.onerror = function() {
               img.src = './img/img_broken.svg';
-            };
+}
             img.onload = function() {
               image.addClass('online-prestige__img--loaded');
               loader.remove();
               if (serial) image.append('<div class="online-prestige__episode-number">' + ('0' + (element.episode || index + 1)).slice(-2) + '</div>');
-            };
+}
             img.src = Lampa.TMDB.image('t/p/w300' + (episode ? episode.still_path : object.movie.backdrop_path));
             images.push(img);
           }
@@ -917,7 +917,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               episode: element.episode,
               season: element.season
             });
-          };
+}
           element.unmark = function() {
             viewed = Lampa.Storage.cache('online_view', 5000, []);
             if (viewed.indexOf(hash_behold) !== -1) {
@@ -926,13 +926,13 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               Lampa.Storage.remove('online_view', hash_behold);
               html.find('.online-prestige__viewed').remove();
             }
-          };
+}
           element.timeclear = function() {
             element.timeline.percent = 0;
             element.timeline.time = 0;
             element.timeline.duration = 0;
             Lampa.Timeline.update(element.timeline);
-          };
+}
           html.on('hover:enter', function() {
             if (object.movie.id) Lampa.Favorite.add('history', object.movie, 100);
             if (params.onEnter) params.onEnter(element, html, data);
@@ -989,12 +989,12 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
             if (episode.still_path) {
               img.onerror = function() {
                 img.src = './img/img_broken.svg';
-              };
+}
               img.onload = function() {
                 image.addClass('online-prestige__img--loaded');
                 loader.remove();
                 image.append('<div class="online-prestige__episode-number">' + ('0' + episode.episode_number).slice(-2) + '</div>');
-              };
+}
               img.src = Lampa.TMDB.image('t/p/w300' + episode.still_path);
               images.push(img);
             } else {
@@ -1016,7 +1016,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         }
         Lampa.Controller.enable('content');
       });
-    };
+}
     /**
      * Меню
      */
@@ -1152,7 +1152,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       }).on('hover:focus', function() {
         if (Lampa.Helper) Lampa.Helper.show('online_file', Lampa.Lang.translate('helper_online_file'), params.html);
       });
-    };
+}
     /**
      * Показать пустой результат
      */
@@ -1164,7 +1164,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.clear();
       scroll.append(html);
       this.loading(false);
-    };
+}
     this.noConnectToServer = function(er) {
       var html = Lampa.Template.get('lampac_does_not_answer', {});
       html.find('.online-empty__buttons').remove();
@@ -1173,7 +1173,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.clear();
       scroll.append(html);
       this.loading(false);
-    };
+}
     this.doesNotAnswer = function(er) {
       var _this9 = this;
       this.reset();
@@ -1206,14 +1206,14 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
           if (Lampa.Activity.active().activity == _this9.activity) _this9.changeBalanser(balanser);
         }
       }, 1000);
-    };
+}
     this.getLastEpisode = function(items) {
       var last_episode = 0;
       items.forEach(function(e) {
         if (typeof e.episode !== 'undefined') last_episode = Math.max(last_episode, parseInt(e.episode));
       });
       return last_episode;
-    };
+}
     /**
      * Начать навигацию по файлам
      */
@@ -1251,13 +1251,13 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         back: this.back.bind(this)
       });
       Lampa.Controller.toggle('content');
-    };
+}
     this.render = function() {
       return files.render();
-    };
+}
     this.back = function() {
       Lampa.Activity.backward();
-    };
+}
     this.pause = function() {};
     this.stop = function() {};
     this.destroy = function() {
@@ -1267,7 +1267,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.destroy();
       clearInterval(balanser_timer);
       clearTimeout(life_wait_timer);
-    };
+}
   }
   
   function addSourceSearch(spiderName, spiderUri) {
@@ -1436,7 +1436,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         return {
           name: Lampa.Lang.translate('lampac_watch'),
           description: ''
-        };
+}
       },
       onContextLauch: function onContextLauch(object) {
         resetTemplates();
@@ -1457,7 +1457,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
 		  clarification: all[id] ? true : false
         });
       }
-    };
+}
 	addSourceSearch('Spider', 'spider');
 	addSourceSearch('Anime', 'spider/anime');
     Lampa.Manifest.plugins = manifst;
