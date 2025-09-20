@@ -37,23 +37,10 @@ if (!Lampa.Storage.get('account_email', '')) {
     }, true);
   }
 
+  // 🔽 Компонент для онлайн
   function component(object) {
     var network = new Lampa.Reguest();
-    var extract = {};
     var results = [];
-    var balances = [];
-    var choice = {};
-    var favorite = Lampa.Favorite;
-    var video;
-
-    var filter_sources = [];
-    var filter_genres = [];
-    var filter_countries = [];
-
-    var sources = [];
-    var genres = [];
-    var countries = [];
-
     var last;
 
     this.create = function() {
@@ -88,6 +75,10 @@ if (!Lampa.Storage.get('account_email', '')) {
       this.draw(results);
     };
 
+    this.fail = function() {
+      this.empty();
+    };
+
     this.empty = function() {
       var empty = Lampa.Template.get('empty');
       this.activity.render().append(empty);
@@ -114,24 +105,9 @@ if (!Lampa.Storage.get('account_email', '')) {
   }
 
   function resetTemplates() {
-    // при повторном вызове очищаем предыдущие шаблоны
     Lampa.Template.cache = {};
   }
   
-  function addSourceSearch(spiderName, spiderUri) {
-    Lampa.Source.add(spiderName, {
-      title: spiderName,
-      search: function (query, callback) {
-        var url = Defined.localhost + spiderUri + '?title=' + encodeURIComponent(query);
-        Lampa.Api.request(url, '', function (data) {
-          callback(data || []);
-        }, function () {
-          callback([]);
-        });
-      }
-    });
-  }
-
   function startPlugin() {
     window.onlyskaz_plugin = true;
 
@@ -168,10 +144,10 @@ if (!Lampa.Storage.get('account_email', '')) {
       }
     };
 
-    addSourceSearch('Spider', 'spider');
-    addSourceSearch('Anime', 'spider/anime');
+    // ❌ Убрано addSourceSearch (чтобы не было ошибки)
     Lampa.Manifest.plugins = manifst;
 
+    // Переводы
     Lampa.Lang.add({
       lampac_watch: { ru: 'Смотреть онлайн', en: 'Watch online', uk: 'Дивитися онлайн', zh: '在线观看' },
       lampac_video: { ru: 'Видео', en: 'Video', uk: 'Відео', zh: '视频' },
