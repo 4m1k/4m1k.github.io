@@ -18,11 +18,10 @@ var randomUrl = vybor[randomIndex];
   
 var unic_id = Lampa.Storage.get('lampac_unic_id', '');
 if (!unic_id) {
-  // По умолчанию жёстко фиксируем uid, если он не задан пользователем
   unic_id = 'ofkrtxdg';
   Lampa.Storage.set('lampac_unic_id', unic_id);
 }
-// Установим email по умолчанию, если он не задан в storage
+
 if (!Lampa.Storage.get('account_email', '')) {
   Lampa.Storage.set('account_email', 'lisiyvirus@gmail.com');
 }
