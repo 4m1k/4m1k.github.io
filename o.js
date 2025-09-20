@@ -16,20 +16,16 @@ var randomUrl = vybor[randomIndex];
 
   var balansers_with_search;
   
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
+var unic_id = Lampa.Storage.get('lampac_unic_id', '');
 if (!unic_id) {
   unic_id = 'ofkrtxdg';
   Lampa.Storage.set('lampac_unic_id', unic_id);
 }
 
-// Email по умолчанию
 if (!Lampa.Storage.get('account_email', '')) {
   Lampa.Storage.set('account_email', 'lisiyvirus@gmail.com');
 }
-  if (!unic_id) {
-    unic_id = Lampa.Utils.uid(8).toLowerCase();
-    Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
+
   
   var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://', '');
 
@@ -1549,7 +1545,7 @@ else if (element.url) {
 
         Lampa.Activity.push({
           url: params.element.url,
-          title: '4m1K - ' + params.element.title,
+          title: 'Onlyskaz - ' + params.element.title,
           component: 'lampacskaz',
           movie: params.element,
           page: 1,
@@ -1596,7 +1592,7 @@ else if (element.url) {
             default: false,
         },
         field: {
-          name: 'Отображать 4m1K 2.0',
+          name: 'Отображать Onlyskaz 2.0',
 		  description: 'Онлайн с автовыбором источника, управление в плеере'
         }
 	  });
@@ -1608,7 +1604,7 @@ else if (element.url) {
             default: false,
         },
         field: {
-          name: 'Спрятать значок 4m1K 2.0',
+          name: 'Спрятать значок Onlyskaz 2.0',
 		  description: 'Позволяет скрыть значок с карточки фильма'
         },
         onChange: function (value) {
@@ -1619,7 +1615,7 @@ else if (element.url) {
     var manifst = {
       type: 'video',
       version: '',
-       name: '4m1K',
+       name: 'Onlyskaz',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampacskaz',
       onContextMenu: function onContextMenu(object) {
@@ -1815,5 +1811,8 @@ else if (element.url) {
   }
   if (!window.onlyskaz_plugin) startPlugin();
 	  $.getScript('http://skaz.tv/lampac-src-filter.js');
-	  if (Lampa.Storage.get('online_skaz2')==true)
+	  if (Lampa.Storage.get('online_skaz2')==true) {
+			$.getScript('http://skaz.tv/play.js');
+	}
 })();
+
