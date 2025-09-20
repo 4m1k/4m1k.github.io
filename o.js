@@ -268,7 +268,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       if (from.voice_name) to.voice_name = from.voice_name;
       this.saveChoice(to, balanser_name);
       Lampa.Activity.replace();
-};
+}
     this.requestParams = function(url) {
       var query = [];
       var card_source = object.movie.source || 'tmdb'; //Lampa.Storage.field('source')
@@ -294,7 +294,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       } else {
         return Lampa.Storage.get('online_balanser', filter_sources.length ? filter_sources[0] : '');
       }
-};
+}
     this.startSource = function(json) {
       return new Promise(function(resolve, reject) {
         json.forEach(function(j) {
@@ -343,7 +343,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               reject();
             }
           }
-};
+}
         var fin = function fin(call) {
           network.timeout(3000);
           network.silent(account(url), function(json) {
@@ -387,7 +387,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               life_wait_timer = setTimeout(fin, 1000);
             }
           });
-};
+}
         fin();
       });
 };
@@ -517,7 +517,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         timeline: file.timeline,
         subtitles: file.subtitles,
         callback: file.mark
-};
+}
       return play;
 };
     this.orUrlReserve = function(data) {
@@ -926,7 +926,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
               Lampa.Storage.remove('online_view', hash_behold);
               html.find('.online-prestige__viewed').remove();
             }
-};
+}
           element.timeclear = function() {
             element.timeline.percent = 0;
             element.timeline.time = 0;
@@ -1164,7 +1164,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.clear();
       scroll.append(html);
       this.loading(false);
-};
+}
     this.noConnectToServer = function(er) {
       var html = Lampa.Template.get('lampac_does_not_answer', {});
       html.find('.online-empty__buttons').remove();
@@ -1173,7 +1173,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.clear();
       scroll.append(html);
       this.loading(false);
-};
+}
     this.doesNotAnswer = function(er) {
       var _this9 = this;
       this.reset();
@@ -1251,7 +1251,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
         back: this.back.bind(this)
       });
       Lampa.Controller.toggle('content');
-};
+}
     this.render = function() {
       return files.render();
 }
@@ -1267,7 +1267,7 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
       scroll.destroy();
       clearInterval(balanser_timer);
       clearTimeout(life_wait_timer);
-};
+}
   }
   
   function addSourceSearch(spiderName, spiderUri) {
