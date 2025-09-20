@@ -19,6 +19,7 @@ var randomUrl = vybor[randomIndex];
   var balansers_with_search;
   
   var unic_id = 'ofkrtxdg';
+Lampa.Storage.set('lampac_unic_id', unic_id);
 var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://', '');
 
   if (!window.rch || !window.rch[hostkey]) {
