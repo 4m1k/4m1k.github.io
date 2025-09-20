@@ -1562,9 +1562,7 @@ else if (element.url) {
 
   function startPlugin() {
     window.onlyskaz_plugin = true;
-	if (!window.plugin_iptvskaz_ready && !window.plugin_iptv_ready2)
-	  {
-		}
+	
 	  });
 	}
     var manifst = {
