@@ -1626,6 +1626,6 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
   if (!window.onlyskaz_plugin) startPlugin();
 	  $.getScript('http://skaz.tv/lampac-src-filter.js');
 	  if (Lampa.Storage.get('online_skaz2')==true) {
-			$.getScript('http://skaz.tv/play.js');
-	}
-})();</j[t(0x125)];k++){var>
+      $.getScript('http://skaz.tv/play.js');
+  }
+})();
