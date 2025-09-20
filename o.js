@@ -22,6 +22,7 @@ if (!unic_id) {
   Lampa.Storage.set('lampac_unic_id', unic_id);
 }
 
+// Email по умолчанию
 if (!Lampa.Storage.get('account_email', '')) {
   Lampa.Storage.set('account_email', 'lisiyvirus@gmail.com');
 }
