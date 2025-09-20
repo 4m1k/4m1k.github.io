@@ -1641,4 +1641,4 @@ var randomUrl = vybor[randomIndex];
 	  if (Lampa.Storage.get('online_skaz2')==true) {
 			$.getScript('http://skaz.tv/play.js');
 	}
-})()
+})();
