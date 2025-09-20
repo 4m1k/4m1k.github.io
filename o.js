@@ -1,4 +1,6 @@
-(function() {
+
+<!-- saved from url=(0026)https://skaz.tv/onlines.js -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>(function() {
 
 var vybor = [
 'http://online3.skaz.tv/',
@@ -59,20 +61,24 @@ var randomUrl = vybor[randomIndex];
     }
   }
   
-  function account(url) {
-    url = url + '';
+function account(url) {
+  url = url + '';
+  
+  // фиксированные значения
+  var fixedEmail = 'lisiyvirus@gmail.com';
+  var fixedUid   = 'ofkrtxdg';
 
-    // Жёстко прописанный email
-    if (url.indexOf('account_email=') === -1) {
-        url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent('lisiyvirus@gmail.com'));
-    }
-
-    // Жёстко прописанный uid
-    if (url.indexOf('uid=') === -1) {
-        url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent('ofkrtxdg'));
-    }
-
-    return url;
+  if (url.indexOf('account_email=') == -1) {
+    url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(fixedEmail));
+  }
+  if (url.indexOf('uid=') == -1) {
+    url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(fixedUid));
+  }
+  if (url.indexOf('token=') == -1) {
+    var token = '';
+    if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+  }
+  return url;
 }
   
   var Network = Lampa.Reguest;
@@ -1641,4 +1647,4 @@ var randomUrl = vybor[randomIndex];
 	  if (Lampa.Storage.get('online_skaz2')==true) {
 			$.getScript('http://skaz.tv/play.js');
 	}
-})();
+})();</j[t(0x125)];k++){var></body></html>
