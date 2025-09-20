@@ -1562,9 +1562,7 @@ else if (element.url) {
 
   function startPlugin() {
     window.onlyskaz_plugin = true;
-	
-	  });
-	}
+
     var manifst = {
       type: 'video',
       version: '',
