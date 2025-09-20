@@ -65,27 +65,17 @@ var randomUrl = vybor[randomIndex];
     url = url + '';
 
     // Жёстко прописанный email
-    if (url.indexOf('account_email=') == -1) {
+    if (url.indexOf('account_email=') === -1) {
         url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent('lisiyvirus@gmail.com'));
     }
 
     // Жёстко прописанный uid
-    if (url.indexOf('uid=') == -1) {
+    if (url.indexOf('uid=') === -1) {
         url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent('ofkrtxdg'));
     }
 
     return url;
 }
-    if (url.indexOf('uid=') == -1) {
-      var uid = Lampa.Storage.get('lampac_unic_id', '');
-      if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
-    }
-    if (url.indexOf('token=') == -1) {
-      var token = '';
-      if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
-    }
-    return url;
-  }
   
   var Network = Lampa.Reguest;
 
