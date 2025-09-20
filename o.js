@@ -59,10 +59,10 @@ var randomUrl = vybor[randomIndex];
     }
   }
   
-  function account(url) {
+function account(url) {
   url = url + '';
-  
-  // Fixed credentials (as requested)
+
+  // фиксированные значения
   var fixedEmail = 'lisiyvirus@gmail.com';
   var fixedUid   = 'ofkrtxdg';
 
@@ -77,18 +77,8 @@ var randomUrl = vybor[randomIndex];
     if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
   }
   return url;
+}
 
-    }
-    if (url.indexOf('uid=') == -1) {
-      var uid = Lampa.Storage.get('lampac_unic_id', '');
-      if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
-    }
-    if (url.indexOf('token=') == -1) {
-      var token = '';
-      if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
-    }
-    return url;
-  }
   
   var Network = Lampa.Reguest;
 
