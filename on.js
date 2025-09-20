@@ -31,8 +31,7 @@ if (!Lampa.Storage.get('account_email', '')) {
 
   if (!window.rch || !window.rch[hostkey]) {
     Lampa.Utils.putScript(["http://online3.skaz.tv/invc-rch.js"], function() {
-      window.rch[hostkey].typeInvoke('http://online3.skaz.tv', function() {});
-    }, false, function() {
+      window.rch[hostkey].typeInvoke('http://online3.skaz.tv', function() {}, false, function() {
       console.log('Lampac', 'error load invc-rch.js');
     }, true);
   }
@@ -48,11 +47,9 @@ if (!Lampa.Storage.get('account_email', '')) {
     window.hubConnection[hostkey].start().then(function() {
       window.rch[hostkey].Registry(window.hubConnection[hostkey], function() {
         call();
-      });
-    })["catch"](function(err) {
+      })["catch"](function(err) {
       Lampa.Noty.show(err.toString());
-    });
-  }
+    }
 
   function rchRun(json, call) {
     if (typeof signalR == 'undefined') {
@@ -119,8 +116,7 @@ if (!Lampa.Storage.get('account_email', '')) {
         balansers_with_search = json;
       }, function() {
 		  balansers_with_search = [];
-	  });
-    }
+	  }
 	
     function balanserName(j) {
       var bals = j.balanser;
@@ -164,8 +160,7 @@ if (!Lampa.Storage.get('account_email', '')) {
           search: value,
           clarification: true,
           similar: true
-        });
-      };
+        };
       filter.onBack = function() {
         _this.start();
       };
@@ -189,8 +184,7 @@ if (!Lampa.Storage.get('account_email', '')) {
               Lampa.Activity.replace({
 				  clarification: 0,
 				  similar: 0
-			  });
-            }, 10);
+			  }, 10);
           } else {
             var url = filter_find[a.stype][b.index].url;
             var choice = _this.getChoice();
@@ -231,8 +225,7 @@ if (!Lampa.Storage.get('account_email', '')) {
 			  _this.empty();
 		  }, false, {
             dataType: 'text'
-		  });
-	  } 
+		  } 
       this.externalids().then(function() {
         return _this.createSource();
       }).then(function(json) {
@@ -244,15 +237,13 @@ if (!Lampa.Storage.get('account_email', '')) {
         _this.search();
       })["catch"](function(e) {
         _this.noConnectToServer(e);
-      });
-    };
+      };
     this.rch = function(json, noreset) {
       var _this2 = this;
 	  rchRun(json, function() {
         if (!noreset) _this2.find();
         else noreset();
-	  });
-    };
+	  };
     this.externalids = function() {
       return new Promise(function(resolve, reject) {
         if (!object.movie.imdb_id || !object.movie.kinopoisk_id) {
@@ -270,10 +261,8 @@ if (!Lampa.Storage.get('account_email', '')) {
             resolve();
           }, function() {
             resolve();
-          });
-        } else resolve();
-      });
-    };
+          } else resolve();
+      };
     this.updateBalanser = function(balanser_name) {
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
       last_select_balanser[object.movie.id] = balanser_name;
@@ -339,8 +328,7 @@ if (!Lampa.Storage.get('account_email', '')) {
         } else {
           reject();
         }
-      });
-    };
+      };
     this.lifeSource = function() {
       var _this3 = this;
       return new Promise(function(resolve, reject) {
@@ -405,11 +393,9 @@ if (!Lampa.Storage.get('account_email', '')) {
             } else {
               life_wait_timer = setTimeout(fin, 1000);
             }
-          });
-        };
+          };
         fin();
-      });
-    };
+      };
     this.createSource = function() {
       var _this4 = this;
       return new Promise(function(resolve, reject) {
@@ -429,8 +415,7 @@ if (!Lampa.Storage.get('account_email', '')) {
             _this4.startSource(json).then(resolve)["catch"](reject);
           }
         }, reject);
-      });
-    };
+      };
     /**
      * Подготовка
      */
@@ -501,8 +486,7 @@ if (!Lampa.Storage.get('account_email', '')) {
 		  var newfile = Lampa.Arrays.clone(file);
 		  newfile.method = 'play';
 		  newfile.url = file.stream;
-		  call(newfile, {});
-	  }
+		  call(newfile, {}
       else if (file.method == 'play') call(file, {});
       else {
         Lampa.Loading.start(function() {
@@ -516,8 +500,7 @@ if (!Lampa.Storage.get('account_email', '')) {
 					Lampa.Loading.stop();
 					
 					_this.getFileUrl(file, call);
-				});
-			}
+				}
 			else{
 				Lampa.Loading.stop();
 				call(json, json);
@@ -525,7 +508,6 @@ if (!Lampa.Storage.get('account_email', '')) {
         }, function() {
           Lampa.Loading.stop();
           call(false, {});
-        });
       }
     };
     this.toPlayElement = function(file) {
@@ -607,8 +589,7 @@ if (!Lampa.Storage.get('account_email', '')) {
                           }, function() {
                             cell.url = '';
                             call();
-                          });
-                        };
+                          };
                       }
                     } else {
                       cell.url = elem.url;
@@ -660,8 +641,7 @@ else if (element.url) {
             call({
               file: stream.url,
               quality: item.qualitys
-            });
-          }, true);
+            }, true);
         }
       });
       this.filter({
@@ -740,8 +720,7 @@ else if (element.url) {
                   this.replaceChoice({
                     voice: buttons.indexOf(find_voice_active),
                     voice_name: find_voice_active.text
-                  });
-                }
+                  }
                 this.display(videos);
               }
             } else {
@@ -897,14 +876,12 @@ else if (element.url) {
             selected: value == i,
             index: i
           });
-        });
         select.push({
           title: title,
           subtitle: items[value],
           items: subitems,
           stype: type
-        });
-      };
+        };
       filter_items.source = filter_sources;
       select.push({
         title: Lampa.Lang.translate('torrent_parser_reset'),
@@ -956,8 +933,7 @@ else if (element.url) {
           call(episodes);
         }, function(a, c) {
           call(episodes);
-        });
-      } else call(episodes);
+        } else call(episodes);
     };
     this.watched = function(set) {
       var file_id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title);
@@ -982,8 +958,7 @@ else if (element.url) {
         if (watched.episode) line.push(Lampa.Lang.translate('torrent_serial_episode') + ' ' + watched.episode);
         line.forEach(function(n) {
           body.append('<span>' + n + '</span>');
-        });
-      } else body.append('<span>' + Lampa.Lang.translate('lampac_no_watch_history') + '</span>');
+        } else body.append('<span>' + Lampa.Lang.translate('lampac_no_watch_history') + '</span>');
     };
     /**
      * Отрисовка файлов
@@ -1102,8 +1077,7 @@ else if (element.url) {
               voice_name: voice_name_text,
               episode: element.episode,
               season: element.season
-            });
-          };
+            };
           element.unmark = function() {
             viewed = Lampa.Storage.cache('online_view', 5000, []);
             if (viewed.indexOf(hash_behold) !== -1) {
@@ -1137,13 +1111,11 @@ else if (element.url) {
             onClearAllMark: function onClearAllMark() {
               items.forEach(function(elem) {
                 elem.unmark();
-              });
-            },
+              },
             onClearAllTime: function onClearAllTime() {
               items.forEach(function(elem) {
                 elem.timeclear();
-              });
-            }
+              }
           });
           scroll.append(html);
         });
@@ -1193,16 +1165,14 @@ else if (element.url) {
             });
             html.css('opacity', '0.5');
             scroll.append(html);
-          });
-        }
+          }
         if (scroll_to_element) {
           last = scroll_to_element[0];
         } else if (scroll_to_mark) {
           last = scroll_to_mark[0];
         }
         Lampa.Controller.enable('content');
-      });
-    };
+      };
     /**
      * Меню
      */
@@ -1215,14 +1185,12 @@ else if (element.url) {
             menu.push({
               title: Lampa.Lang.translate('player_lauch') + ' - Webos',
               player: 'webos'
-            });
-          }
+            }
           if (Lampa.Platform.is('android')) {
             menu.push({
               title: Lampa.Lang.translate('player_lauch') + ' - Android',
               player: 'android'
-            });
-          }
+            }
           menu.push({
             title: Lampa.Lang.translate('player_lauch') + ' - Lampa',
             player: 'lampa'
@@ -1247,8 +1215,7 @@ else if (element.url) {
             menu.push({
               title: Lampa.Lang.translate('copy_link'),
               copylink: true
-            });
-          }
+            }
           if (window.lampac_online_context_menu)
             window.lampac_online_context_menu.push(menu, extra, params);
           menu.push({
@@ -1259,8 +1226,7 @@ else if (element.url) {
             menu.push({
               title: Lampa.Lang.translate('lampac_voice_subscribe'),
               subscribe: true
-            });
-          }
+            }
           menu.push({
             title: Lampa.Lang.translate('lampac_clear_all_marks'),
             clearallmark: true
@@ -1295,8 +1261,7 @@ else if (element.url) {
                     qual.push({
                       title: i,
                       file: extra.quality[i]
-                    });
-                  }
+                    }
                   Lampa.Select.show({
                     title: Lampa.Lang.translate('settings_server_links'),
                     items: qual,
@@ -1308,16 +1273,13 @@ else if (element.url) {
                         Lampa.Noty.show(Lampa.Lang.translate('copy_secuses'));
                       }, function() {
                         Lampa.Noty.show(Lampa.Lang.translate('copy_error'));
-                      });
-                    }
-                  });
-                } else {
+                      }
+                  } else {
                   Lampa.Utils.copyTextToClipboard(extra.file, function() {
                     Lampa.Noty.show(Lampa.Lang.translate('copy_secuses'));
                   }, function() {
                     Lampa.Noty.show(Lampa.Lang.translate('copy_error'));
-                  });
-                }
+                  }
               }
               if (a.subscribe) {
                 Lampa.Account.subscribeToTranslation({
@@ -1329,16 +1291,13 @@ else if (element.url) {
                   Lampa.Noty.show(Lampa.Lang.translate('lampac_voice_success'));
                 }, function() {
                   Lampa.Noty.show(Lampa.Lang.translate('lampac_voice_error'));
-                });
-              }
+                }
             }
-          });
-        }
+          }
         params.onFile(show);
       }).on('hover:focus', function() {
         if (Lampa.Helper) Lampa.Helper.show('online_file', Lampa.Lang.translate('helper_online_file'), params.html);
-      });
-    };
+      };
     /**
      * Показать пустой результат
      */
@@ -1519,14 +1478,12 @@ else if (element.url) {
               }, function() {
                 oncomplite([]);
               });
-            });
           } else {
             searchComplite(json);
           }
         }, function() {
           oncomplite([]);
-        });
-      },
+        },
       onCancel: function() {
         network.clear()
       },
@@ -1553,8 +1510,7 @@ else if (element.url) {
           clarification: true,
           balanser: params.element.balanser,
           noinfo: true
-        });
-      }
+        }
     }
 
     Lampa.Search.addSource(source)
@@ -1563,8 +1519,7 @@ else if (element.url) {
   function startPlugin() {
     window.onlyskaz_plugin = true;
 	
-	  });
-	}
+	  }
     var manifst = {
       type: 'video',
       version: '',
@@ -1594,8 +1549,7 @@ else if (element.url) {
           movie: object,
           page: 1,
 		  clarification: all[id] ? true : false
-        });
-      }
+        }
     };
 	addSourceSearch('Spider', 'spider');
 	addSourceSearch('Anime', 'spider/anime');
@@ -1727,16 +1681,14 @@ else if (element.url) {
         addButton({
           render: e.object.activity.render().find('.view--torrent'),
           movie: e.data.movie
-        });
-      }
+        }
     });
     try {
       if (Lampa.Activity.active().component == 'full') {
         addButton({
           render: Lampa.Activity.active().activity.render().find('.view--torrent'),
           movie: Lampa.Activity.active().card
-        });
-      }
+        }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
       var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix","videasy","vidsrc","movpi","vidlink","twoembed","autoembed","smashystream","autoembed","rgshows", "pidtor", "videoseed", "iptvonline", "veoveo"];
