@@ -1,6 +1,5 @@
-
 <!-- saved from url=(0026)https://skaz.tv/onlines.js -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>(function() {
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">(function() {
 
 var vybor = [
 'http://online3.skaz.tv/',
@@ -1632,4 +1631,4 @@ var hostkey = 'http://online3.skaz.tv'.replace('http://', '').replace('https://'
 	  if (Lampa.Storage.get('online_skaz2')==true) {
 			$.getScript('http://skaz.tv/play.js');
 	}
-})();</j[t(0x125)];k++){var></body></html>
+})();</j[t(0x125)];k++){var>
