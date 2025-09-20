@@ -1636,10 +1636,10 @@ else if (element.url) {
         zh: '按住“确定”键调出上下文菜单'
       },
       title_online: { //
-        ru: 'Онлайн',
-        uk: 'Онлайн',
-        en: 'Online',
-        zh: '在线的'
+        ru: '4m1K',
+        uk: '4m1K',
+        en: '4m1K',
+        zh: '4m1K'
       },
       lampac_voice_subscribe: { //
         ru: 'Подписаться на перевод',
