@@ -1410,7 +1410,7 @@ var randomUrl = vybor[randomIndex];
 	  {
 		Lampa.SettingsApi.addComponent({
         component: 'iptvskaz',
-        icon: "<svg height="\&quot;36\&quot;" viewBox="\&quot;0" 0="" 38="" 36\"="" fill="\&quot;none\&quot;" xmlns="\&quot;http://www.w3.org/2000/svg\&quot;">\n                <rect x="\&quot;2\&quot;" y="\&quot;8\&quot;" width="\&quot;34\&quot;" height="\&quot;21\&quot;" rx="\&quot;3\&quot;" stroke="\&quot;white\&quot;" stroke-width="\&quot;3\&quot;/">\n                <line x1="\&quot;13.0925\&quot;" y1="\&quot;2.34874\&quot;" x2="\&quot;16.3487\&quot;" y2="\&quot;6.90754\&quot;" stroke="\&quot;white\&quot;" stroke-width="\&quot;3\&quot;" stroke-linecap="\&quot;round\&quot;/">\n                <line x1="\&quot;1.5\&quot;" y1="\&quot;-1.5\&quot;" x2="\&quot;9.31665\&quot;" y2="\&quot;-1.5\&quot;" transform="\&quot;matrix(-0.757816" 0.652468="" 0.757816="" 26.197="" 2)\"="" stroke="\&quot;white\&quot;" stroke-width="\&quot;3\&quot;" stroke-linecap="\&quot;round\&quot;/">\n                <line x1="\&quot;9.5\&quot;" y1="\&quot;34.5\&quot;" x2="\&quot;29.5\&quot;" y2="\&quot;34.5\&quot;" stroke="\&quot;white\&quot;" stroke-width="\&quot;3\&quot;" stroke-linecap="\&quot;round\&quot;/">\n            </line></line></line></rect></svg>",
+        icon: '<svg viewBox="0 0 36 36"><rect x="2" y="8" width="32" height="20" rx="3" stroke="white" fill="none" stroke-width="3"/></svg>',
         name: 'by skaz'
       });
 	  Lampa.SettingsApi.addParam({
