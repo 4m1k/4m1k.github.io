@@ -1714,27 +1714,11 @@ else if (element.url) {
     resetTemplates();
 
     function addButton(e) {
-      if (e.render.find('.lampac--button').length) return;
+      if (e.render.find('.4m1K--button').length) return;
       var btn = $(Lampa.Lang.translate(button));
-	  // //console.log(btn.clone().removeClass('focus').prop('outerHTML'))
       btn.on('hover:enter', function() {
         resetTemplates();
-        Lampa.Component.add('lampacskaz', component);
-		
-		var id = Lampa.Utils.hash(e.movie.number_of_seasons ? e.movie.original_name : e.movie.original_title);
-		var all = Lampa.Storage.get('clarification_search','{}');
-		
-        Lampa.Activity.push({
-          url: '',
-          title: Lampa.Lang.translate('title_online'),
-          component: 'lampacskaz',
-          search: all[id] ? all[id] : e.movie.title,
-          search_one: e.movie.title,
-          search_two: e.movie.original_title,
-          movie: e.movie,
-          page: 1,
-		  clarification: all[id] ? true : false
-        });
+        Lampa.Component.add('lampac', component);
       });
       e.render.after(btn);
     }
