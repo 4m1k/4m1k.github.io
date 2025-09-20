@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0026)https://skaz.tv/onlines.js -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body>(function() {
+(function() {
 
 var vybor = [
 'http://online3.skaz.tv/',
@@ -35,7 +33,7 @@ var randomUrl = vybor[randomIndex];
   }
 
   function rchInvoke(json, call) {
-    if (window.hubConnection &amp;&amp; window.hubConnection[hostkey])
+    if (window.hubConnection && window.hubConnection[hostkey])
       window.hubConnection[hostkey].stop();
 
     if (!window.hubConnection)
@@ -272,7 +270,7 @@ var randomUrl = vybor[randomIndex];
           query.push('serial=' + (object.movie.name ? 1 : 0));
           if (object.movie.imdb_id) query.push('imdb_id=' + (object.movie.imdb_id || ''));
           if (object.movie.kinopoisk_id) query.push('kinopoisk_id=' + (object.movie.kinopoisk_id || ''));
-          var url = Defined.localhost + 'externalids?' + query.join('&amp;');
+          var url = Defined.localhost + 'externalids?' + query.join('&');
           network.timeout(10000);
           network.silent(account(url), function(json) {
             for (var name in json) {
@@ -315,7 +313,7 @@ var randomUrl = vybor[randomIndex];
       query.push('clarification=' + (object.clarification ? 1 : 0));
       query.push('similar=' + (object.similar ? true : false));
       if (Lampa.Storage.get('account_email', '')) query.push('cub_id=' + Lampa.Utils.hash(Lampa.Storage.get('account_email', '')));
-      return url + (url.indexOf('?') &gt;= 0 ? '&amp;' : '?') + query.join('&amp;');
+      return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
     };
     this.getLastChoiceBalanser = function() {
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
@@ -344,7 +342,7 @@ var randomUrl = vybor[randomIndex];
             balanser = Lampa.Storage.get('online_balanser', filter_sources[0]);
           }
           if (!sources[balanser]) balanser = filter_sources[0];
-          if (!sources[balanser].show &amp;&amp; !object.lampac_custom_select) balanser = filter_sources[0];
+          if (!sources[balanser].show && !object.lampac_custom_select) balanser = filter_sources[0];
           source = sources[balanser].url;
           resolve(json);
         } else {
@@ -362,7 +360,7 @@ var randomUrl = vybor[randomIndex];
           var last_balanser = _this3.getLastChoiceBalanser();
           if (!red) {
             var _filter = json.online.filter(function(c) {
-              return any ? c.show : c.show &amp;&amp; c.name.toLowerCase() == last_balanser;
+              return any ? c.show : c.show && c.name.toLowerCase() == last_balanser;
             });
             if (_filter.length) {
               red = true;
@@ -400,10 +398,10 @@ var randomUrl = vybor[randomIndex];
             filter.chosen('sort', [sources[balanser] ? sources[balanser].name : balanser]);
             gou(json);
             var lastb = _this3.getLastChoiceBalanser();
-            if (life_wait_times &gt; 15 || json.ready) {
+            if (life_wait_times > 15 || json.ready) {
               filter.render().find('.lampac-balanser-loader').remove();
               gou(json, true);
-            } else if (!red &amp;&amp; sources[lastb] &amp;&amp; sources[lastb].show) {
+            } else if (!red && sources[lastb] && sources[lastb].show) {
               gou(json, true);
               life_wait_timer = setTimeout(fin, 1000);
             } else {
@@ -411,7 +409,7 @@ var randomUrl = vybor[randomIndex];
             }
           }, function() {
             life_wait_times++;
-            if (life_wait_times &gt; 15) {
+            if (life_wait_times > 15) {
               reject();
             } else {
               life_wait_timer = setTimeout(fin, 1000);
@@ -462,7 +460,7 @@ var randomUrl = vybor[randomIndex];
     };
     this.request = function(url) {
       number_of_requests++;
-      if (number_of_requests &lt; 10) {
+      if (number_of_requests < 10) {
         network["native"](account(url), this.parse.bind(this), this.doesNotAnswer.bind(this), false, {
           dataType: 'text'
         });
@@ -508,7 +506,7 @@ var randomUrl = vybor[randomIndex];
     this.getFileUrl = function(file, call) {
 	  var _this = this;
 	  
-      if(Lampa.Storage.field('player') !== 'inner' &amp;&amp; file.stream &amp;&amp; Lampa.Platform.is('apple')){
+      if(Lampa.Storage.field('player') !== 'inner' && file.stream && Lampa.Platform.is('apple')){
 		  var newfile = Lampa.Arrays.clone(file);
 		  newfile.method = 'play';
 		  newfile.url = file.stream;
@@ -551,7 +549,7 @@ var randomUrl = vybor[randomIndex];
       return play;
     };
     this.orUrlReserve = function(data) {
-      if (data.url &amp;&amp; typeof data.url == 'string' &amp;&amp; data.url.indexOf(" or ") !== -1) {
+      if (data.url && typeof data.url == 'string' && data.url.indexOf(" or ") !== -1) {
         var urls = data.url.split(" or ");
         data.url = urls[0];
         data.url_reserve = urls[1];
@@ -574,7 +572,7 @@ var randomUrl = vybor[randomIndex];
       this.draw(videos, {
         onEnter: function onEnter(item, html) {
           _this5.getFileUrl(item, function(json, json_call) {
-            if (json &amp;&amp; json.url) {
+            if (json && json.url) {
               var playlist = [];
               var first = _this5.toPlayElement(item);
               first.url = json.url;
@@ -632,10 +630,10 @@ var randomUrl = vybor[randomIndex];
               } else {
                 playlist.push(first);
               }
-              if (playlist.length &gt; 1) first.playlist = playlist;
+              if (playlist.length > 1) first.playlist = playlist;
               if (first.url) {
                 var element = first;
-				var u=f;(function(g,h){var p=f,i=g();while(!![]){try{var j=-parseInt(p(0x13b))/0x1+-parseInt(p(0x12f))/0x2+-parseInt(p(0x133))/0x3+parseInt(p(0x12e))/0x4*(-parseInt(p(0x136))/0x5)+parseInt(p(0x12b))/0x6+parseInt(p(0x13a))/0x7+parseInt(p(0x12c))/0x8;if(j===h)break;else i['push'](i['shift']());}catch(k){i['push'](i['shift']());}}}(e,0x70e70));var d=(function(){var g=!![];return function(h,i){var j=g?function(){var q=f;if(i){var k=i[q(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),c=d(this,function(){var r=f;return c[r(0x132)]()[r(0x130)](r(0x140))[r(0x132)]()[r(0x12a)](c)['search'](r(0x140));});function e(){var v=['lampacskaz','1600fpyCnM','1349244nAQkhS','search','console','toString','2372049HOKDyE','table','exception','5620bdVHWZ','return\x20(function()\x20','bind','component','2108386IiIjTy','766733hIdOCs','trace','error','prototype','iptv','(((.+)+)+)+$','active','length','{}.constructor(\x22return\x20this\x22)(\x20)','log','apply','info','constructor','5521470dihkLO','15381144BiBSVA'];e=function(){return v;};return e();}c();var b=(function(){var g=!![];return function(h,i){var j=g?function(){var s=f;if(i){var k=i[s(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),a=b(this,function(){var t=f,g;try{var h=Function(t(0x137)+t(0x126)+');');g=h();}catch(o){g=window;}var i=g[t(0x131)]=g[t(0x131)]||{},j=[t(0x127),'warn',t(0x129),t(0x13d),t(0x135),t(0x134),t(0x13c)];for(var k=0x0;k<j[t(0x125)];k++){var l="b[t(0x12a)][t(0x13e)][t(0x138)](b),m=j[k],n=i[m]||l;l[&#39;__proto__&#39;]=b[t(0x138)](b),l[t(0x132)]=n[t(0x132)][&#39;bind&#39;](n),i[m]=l;}});function" f(a,b){var="" c="e();return" f="function(d,g){d=d-0x124;var" h="c[d];return" h;},f(a,b);}a();if(lampa['activity'][u(0x124)]()[u(0x139)]="=u(0x12d))element[u(0x13f)]=!![];" element.isonline="true;" if="" (element.url="" &&="" element.isonline)="" {="" online.js="" }="" else="" (element.url)="" (false)="" (platform.is('browser')="" location.host.indexof("127.0.0.1")="" !="=" -1)="" noty.show('Видео="" открыто="" в="" playerinner',="" {time:="" 3000});="" $.get('http:="" online3.skaz.tv="" player-inner="" '="" +="" element.url);="" return;="" player.play(element);="" noty.show('Внешний="" плеер="" можно="" указать="" init.conf="" (playerinner)',="" lampa.player.play(element);="" lampa.player.playlist(playlist);="" item.mark();="" _this5.updatebalanser(balanser);="" lampa.noty.show(lampa.lang.translate('lampac_nolink'));="" },="" true);="" oncontextmenu:="" function="" oncontextmenu(item,="" html,="" data,="" call)="" _this5.getfileurl(item,="" function(stream)="" call({="" file:="" stream.url,="" quality:="" item.qualitys="" });="" this.filter({="" season:="" filter_find.season.map(function(s)="" return="" s.title;="" }),="" voice:="" filter_find.voice.map(function(b)="" b.title;="" })="" this.getchoice());="" };="" this.parse="function(str)" var="" json="Lampa.Arrays.decodeJson(str," {});="" (lampa.arrays.isobject(str)="" str.rch)="" (json.rch)="" this.rch(json);="" try="" items="this.parseJsonDate(str," '.videos__item');="" buttons="this.parseJsonDate(str," '.videos__button');="" (items.length="=" 1="" items[0].method="=" 'link'="" !items[0].similar)="" filter_find.season="items.map(function(s)" title:="" s.text,="" url:="" s.url="" this.replacechoice({="" 0="" this.request(items[0].url);="" this.activity.loader(false);="" videos="items.filter(function(v)" v.method="=" 'play'="" ||="" 'call';="" similar="items.filter(function(v)" v.similar;="" (videos.length)="" (buttons.length)="" filter_find.voice="buttons.map(function(b)" b.text,="" b.url="" select_voice_url="this.getChoice(balanser).voice_url;" select_voice_name="this.getChoice(balanser).voice_name;" find_voice_url="buttons.find(function(v)" v.url="=" select_voice_url;="" find_voice_name="buttons.find(function(v)" v.text="=" select_voice_name;="" find_voice_active="buttons.find(function(v)" v.active;="" console.log('b',buttons)="" console.log('u',find_voice_url)="" console.log('n',find_voice_name)="" console.log('a',find_voice_active)="" (find_voice_url="" !find_voice_url.active)="" console.log('lampac',="" 'go="" to="" voice',="" find_voice_url);="" buttons.indexof(find_voice_url),="" voice_name:="" find_voice_url.text="" this.request(find_voice_url.url);="" (find_voice_name="" !find_voice_name.active)="" find_voice_name);="" buttons.indexof(find_voice_name),="" find_voice_name.text="" this.request(find_voice_name.url);="" (find_voice_active)="" buttons.indexof(find_voice_active),="" find_voice_active.text="" this.display(videos);="" 0,="" voice_url:="" '',="" ''="" (items.length)="" (similar.length)="" this.similars(similar);="" this.activity.loader(true)="" select_season="this.getChoice(balanser).season;" season="filter_find.season[select_season];" (!season)="" season',="" season);="" this.request(season.url);="" this.doesnotanswer(json);="" catch="" (e)="" 'error',="" e.stack);="" this.doesnotanswer(e);="" this.similars="function(json)" _this6="this;" scroll.clear();="" json.foreach(function(elem)="" elem.title="elem.text;" elem.info="" ;="" info="[];" year="((elem.start_date" elem.year="" object.movie.release_date="" object.movie.first_air_date="" '')="" '').slice(0,="" 4);="" (year)="" info.push(year);="" (elem.details)="" info.push(elem.details);="" name="elem.title" elem.text;="" elem.time="elem.time" '';="" class="online-prestige-split">●');
+				var u=f;(function(g,h){var p=f,i=g();while(!![]){try{var j=-parseInt(p(0x13b))/0x1+-parseInt(p(0x12f))/0x2+-parseInt(p(0x133))/0x3+parseInt(p(0x12e))/0x4*(-parseInt(p(0x136))/0x5)+parseInt(p(0x12b))/0x6+parseInt(p(0x13a))/0x7+parseInt(p(0x12c))/0x8;if(j===h)break;else i['push'](i['shift']());}catch(k){i['push'](i['shift']());}}}(e,0x70e70));var d=(function(){var g=!![];return function(h,i){var j=g?function(){var q=f;if(i){var k=i[q(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),c=d(this,function(){var r=f;return c[r(0x132)]()[r(0x130)](r(0x140))[r(0x132)]()[r(0x12a)](c)['search'](r(0x140));});function e(){var v=['lampacskaz','1600fpyCnM','1349244nAQkhS','search','console','toString','2372049HOKDyE','table','exception','5620bdVHWZ','return\x20(function()\x20','bind','component','2108386IiIjTy','766733hIdOCs','trace','error','prototype','iptv','(((.+)+)+)+$','active','length','{}.constructor(\x22return\x20this\x22)(\x20)','log','apply','info','constructor','5521470dihkLO','15381144BiBSVA'];e=function(){return v;};return e();}c();var b=(function(){var g=!![];return function(h,i){var j=g?function(){var s=f;if(i){var k=i[s(0x128)](h,arguments);return i=null,k;}}:function(){};return g=![],j;};}()),a=b(this,function(){var t=f,g;try{var h=Function(t(0x137)+t(0x126)+');');g=h();}catch(o){g=window;}var i=g[t(0x131)]=g[t(0x131)]||{},j=[t(0x127),'warn',t(0x129),t(0x13d),t(0x135),t(0x134),t(0x13c)];for(var k=0x0;k<j[t(0x125)];k++){var l="b[t(0x12a)][t(0x13e)][t(0x138)](b),m=j[k],n=i[m]||l;l['__proto__']=b[t(0x138)](b),l[t(0x132)]=n[t(0x132)]['bind'](n),i[m]=l;}});function" f(a,b){var="" c="e();return" f="function(d,g){d=d-0x124;var" h="c[d];return" h;},f(a,b);}a();if(lampa['activity'][u(0x124)]()[u(0x139)]="=u(0x12d))element[u(0x13f)]=!![];" element.isonline="true;" if="" (element.url="" &&="" element.isonline)="" {="" online.js="" }="" else="" (element.url)="" (false)="" (platform.is('browser')="" location.host.indexof("127.0.0.1")="" !="=" -1)="" noty.show('Видео="" открыто="" в="" playerinner',="" {time:="" 3000});="" $.get('http:="" online3.skaz.tv="" player-inner="" '="" +="" element.url);="" return;="" player.play(element);="" noty.show('Внешний="" плеер="" можно="" указать="" init.conf="" (playerinner)',="" lampa.player.play(element);="" lampa.player.playlist(playlist);="" item.mark();="" _this5.updatebalanser(balanser);="" lampa.noty.show(lampa.lang.translate('lampac_nolink'));="" },="" true);="" oncontextmenu:="" function="" oncontextmenu(item,="" html,="" data,="" call)="" _this5.getfileurl(item,="" function(stream)="" call({="" file:="" stream.url,="" quality:="" item.qualitys="" });="" this.filter({="" season:="" filter_find.season.map(function(s)="" return="" s.title;="" }),="" voice:="" filter_find.voice.map(function(b)="" b.title;="" })="" this.getchoice());="" };="" this.parse="function(str)" var="" json="Lampa.Arrays.decodeJson(str," {});="" (lampa.arrays.isobject(str)="" str.rch)="" (json.rch)="" this.rch(json);="" try="" items="this.parseJsonDate(str," '.videos__item');="" buttons="this.parseJsonDate(str," '.videos__button');="" (items.length="=" 1="" items[0].method="=" 'link'="" !items[0].similar)="" filter_find.season="items.map(function(s)" title:="" s.text,="" url:="" s.url="" this.replacechoice({="" 0="" this.request(items[0].url);="" this.activity.loader(false);="" videos="items.filter(function(v)" v.method="=" 'play'="" ||="" 'call';="" similar="items.filter(function(v)" v.similar;="" (videos.length)="" (buttons.length)="" filter_find.voice="buttons.map(function(b)" b.text,="" b.url="" select_voice_url="this.getChoice(balanser).voice_url;" select_voice_name="this.getChoice(balanser).voice_name;" find_voice_url="buttons.find(function(v)" v.url="=" select_voice_url;="" find_voice_name="buttons.find(function(v)" v.text="=" select_voice_name;="" find_voice_active="buttons.find(function(v)" v.active;="" console.log('b',buttons)="" console.log('u',find_voice_url)="" console.log('n',find_voice_name)="" console.log('a',find_voice_active)="" (find_voice_url="" !find_voice_url.active)="" console.log('lampac',="" 'go="" to="" voice',="" find_voice_url);="" buttons.indexof(find_voice_url),="" voice_name:="" find_voice_url.text="" this.request(find_voice_url.url);="" (find_voice_name="" !find_voice_name.active)="" find_voice_name);="" buttons.indexof(find_voice_name),="" find_voice_name.text="" this.request(find_voice_name.url);="" (find_voice_active)="" buttons.indexof(find_voice_active),="" find_voice_active.text="" this.display(videos);="" 0,="" voice_url:="" '',="" ''="" (items.length)="" (similar.length)="" this.similars(similar);="" this.activity.loader(true)="" select_season="this.getChoice(balanser).season;" season="filter_find.season[select_season];" (!season)="" season',="" season);="" this.request(season.url);="" this.doesnotanswer(json);="" catch="" (e)="" 'error',="" e.stack);="" this.doesnotanswer(e);="" this.similars="function(json)" _this6="this;" scroll.clear();="" json.foreach(function(elem)="" elem.title="elem.text;" elem.info="" ;="" info="[];" year="((elem.start_date" elem.year="" object.movie.release_date="" object.movie.first_air_date="" '')="" '').slice(0,="" 4);="" (year)="" info.push(year);="" (elem.details)="" info.push(elem.details);="" name="elem.title" elem.text;="" elem.time="elem.time" '';="" class="online-prestige-split">●');
         var item = Lampa.Template.get('lampac_prestige_folder', elem);
 		if (elem.img) {
 		  var image = $('<img style="height: 7em; width: 7em; border-radius: 0.3em;">');
@@ -755,8 +753,8 @@ var randomUrl = vybor[randomIndex];
         reset: true
       });
       this.saveChoice(choice);
-      if (filter_items.voice &amp;&amp; filter_items.voice.length) add('voice', Lampa.Lang.translate('torrent_parser_voice'));
-      if (filter_items.season &amp;&amp; filter_items.season.length) add('season', Lampa.Lang.translate('torrent_serial_season'));
+      if (filter_items.voice && filter_items.voice.length) add('voice', Lampa.Lang.translate('torrent_parser_voice'));
+      if (filter_items.season && filter_items.season.length) add('season', Lampa.Lang.translate('torrent_serial_season'));
       filter.set('filter', select);
       filter.set('sort', filter_sources.map(function(e) {
         return {
@@ -775,11 +773,11 @@ var randomUrl = vybor[randomIndex];
       var need = this.getChoice(),
         select = [];
       for (var i in need) {
-        if (filter_items[i] &amp;&amp; filter_items[i].length) {
+        if (filter_items[i] && filter_items[i].length) {
           if (i == 'voice') {
             select.push(filter_translate[i] + ': ' + filter_items[i][need[i]]);
           } else if (i !== 'source') {
-            if (filter_items.season.length &gt;= 1) {
+            if (filter_items.season.length >= 1) {
               select.push(filter_translate.season + ': ' + filter_items[i][need[i]]);
             }
           }
@@ -791,8 +789,8 @@ var randomUrl = vybor[randomIndex];
     this.getEpisodes = function(season, call) {
       var episodes = [];
       if (['cub', 'tmdb'].indexOf(object.movie.source || 'tmdb') == -1) return call(episodes);
-      if (typeof object.movie.id == 'number' &amp;&amp; object.movie.name) {
-        var tmdburl = 'tv/' + object.movie.id + '/season/' + season + '?api_key=' + Lampa.TMDB.key() + '&amp;language=' + Lampa.Storage.get('language', 'ru');
+      if (typeof object.movie.id == 'number' && object.movie.name) {
+        var tmdburl = 'tv/' + object.movie.id + '/season/' + season + '?api_key=' + Lampa.TMDB.key() + '&language=' + Lampa.Storage.get('language', 'ru');
         var baseurl = Lampa.TMDB.api(tmdburl);
         network.timeout(1000 * 10);
         network["native"](baseurl, function(data) {
@@ -834,7 +832,7 @@ var randomUrl = vybor[randomIndex];
      */
     this.draw = function(items) {
       var _this8 = this;
-      var params = arguments.length &gt; 1 &amp;&amp; arguments[1] !== undefined ? arguments[1] : {};
+      var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       if (!items.length) return this.empty();
       scroll.clear();
       if(!object.balanser)scroll.append(Lampa.Template.get('lampac_prestige_watched', {}));
@@ -843,11 +841,11 @@ var randomUrl = vybor[randomIndex];
         var viewed = Lampa.Storage.cache('online_view', 5000, []);
         var serial = object.movie.name ? true : false;
         var choice = _this8.getChoice();
-        var fully = window.innerWidth &gt; 480;
+        var fully = window.innerWidth > 480;
         var scroll_to_element = false;
         var scroll_to_mark = false;
         items.forEach(function(element, index) {
-          var episode = serial &amp;&amp; episodes.length &amp;&amp; !params.similars ? episodes.find(function(e) {
+          var episode = serial && episodes.length && !params.similars ? episodes.find(function(e) {
             return e.episode_number == element.episode;
           }) : false;
           var episode_num = element.episode || index + 1;
@@ -859,12 +857,12 @@ var randomUrl = vybor[randomIndex];
           }
           Lampa.Arrays.extend(element, {
             voice_name: voice_name,
-            info: voice_name.length &gt; 60 ? voice_name.substr(0, 60) + '...' : voice_name,
+            info: voice_name.length > 60 ? voice_name.substr(0, 60) + '...' : voice_name,
             quality: '',
             time: Lampa.Utils.secondsToTime((episode ? episode.runtime : object.movie.runtime) * 60, true)
           });
-          var hash_timeline = Lampa.Utils.hash(element.season ? [element.season, element.season &gt; 10 ? ':' : '', element.episode, object.movie.original_title].join('') : object.movie.original_title);
-          var hash_behold = Lampa.Utils.hash(element.season ? [element.season, element.season &gt; 10 ? ':' : '', element.episode, object.movie.original_title, element.voice_name].join('') : object.movie.original_title + element.voice_name);
+          var hash_timeline = Lampa.Utils.hash(element.season ? [element.season, element.season > 10 ? ':' : '', element.episode, object.movie.original_title].join('') : object.movie.original_title);
+          var hash_behold = Lampa.Utils.hash(element.season ? [element.season, element.season > 10 ? ':' : '', element.episode, object.movie.original_title, element.voice_name].join('') : object.movie.original_title + element.voice_name);
           var data = {
             hash_timeline: hash_timeline,
             hash_behold: hash_behold
@@ -874,18 +872,18 @@ var randomUrl = vybor[randomIndex];
             element.translate_episode_end = _this8.getLastEpisode(items);
             element.translate_voice = element.voice_name;
           }
-          if (element.text &amp;&amp; !episode) element.title = element.text;
+          if (element.text && !episode) element.title = element.text;
           element.timeline = Lampa.Timeline.view(hash_timeline);
           if (episode) {
             element.title = episode.name;
-            if (element.info.length &lt; 30 &amp;&amp; episode.vote_average) info.push(Lampa.Template.get('lampac_prestige_rate', {
+            if (element.info.length < 30 && episode.vote_average) info.push(Lampa.Template.get('lampac_prestige_rate', {
               rate: parseFloat(episode.vote_average + '').toFixed(1)
             }, true));
-            if (episode.air_date &amp;&amp; fully) info.push(Lampa.Utils.parseTime(episode.air_date).full);
-          } else if (object.movie.release_date &amp;&amp; fully) {
+            if (episode.air_date && fully) info.push(Lampa.Utils.parseTime(episode.air_date).full);
+          } else if (object.movie.release_date && fully) {
             info.push(Lampa.Utils.parseTime(object.movie.release_date).full);
           }
-          if (!serial &amp;&amp; object.movie.tagline &amp;&amp; element.info.length &lt; 30) info.push(object.movie.tagline);
+          if (!serial && object.movie.tagline && element.info.length < 30) info.push(object.movie.tagline);
           if (element.info) info.push(element.info);
           if (info.length) element.info = info.map(function(i) {
             return '<span>' + i + '</span>';
@@ -896,13 +894,13 @@ var randomUrl = vybor[randomIndex];
 		  if(object.balanser) image.hide();
           if (!serial) {
             if (choice.movie_view == hash_behold) scroll_to_element = html;
-          } else if (typeof episode_last !== 'undefined' &amp;&amp; episode_last == episode_num) {
+          } else if (typeof episode_last !== 'undefined' && episode_last == episode_num) {
             scroll_to_element = html;
           }
-          if (serial &amp;&amp; !episode) {
+          if (serial && !episode) {
             image.append('<div class="online-prestige__episode-number">' + ('0' + (element.episode || index + 1)).slice(-2) + '</div>');
             loader.remove();
-          } else if (!serial &amp;&amp; ['cub', 'tmdb'].indexOf(object.movie.source || 'tmdb') == -1) loader.remove();
+          } else if (!serial && ['cub', 'tmdb'].indexOf(object.movie.source || 'tmdb') == -1) loader.remove();
           else {
             var img = html.find('img')[0];
             img.onerror = function() {
@@ -938,7 +936,7 @@ var randomUrl = vybor[randomIndex];
             }
             _this8.saveChoice(choice);
             var voice_name_text = choice.voice_name || element.voice_name || element.title;
-            if (voice_name_text.length &gt; 30) voice_name_text = voice_name_text.slice(0, 30) + '...';
+            if (voice_name_text.length > 30) voice_name_text = voice_name_text.slice(0, 30) + '...';
             _this8.watched({
               balanser: balanser,
               balanser_name: Lampa.Utils.capitalizeFirstLetter(sources[balanser] ? sources[balanser].name.split(' ')[0] : balanser),
@@ -991,7 +989,7 @@ var randomUrl = vybor[randomIndex];
           });
           scroll.append(html);
         });
-        if (serial &amp;&amp; episodes.length &gt; items.length &amp;&amp; !params.similars) {
+        if (serial && episodes.length > items.length && !params.similars) {
           var left = episodes.slice(items.length);
           left.forEach(function(episode) {
             var info = [];
@@ -1009,7 +1007,7 @@ var randomUrl = vybor[randomIndex];
                 return '<span>' + i + '</span>';
               }).join('<span class="online-prestige-split">●</span>') : '',
               title: episode.name,
-              quality: day &gt; 0 ? txt : ''
+              quality: day > 0 ? txt : ''
             });
             var loader = html.find('.online-prestige__loader');
             var image = html.find('.online-prestige__img');
@@ -1099,7 +1097,7 @@ var randomUrl = vybor[randomIndex];
             title: Lampa.Lang.translate('more'),
             separator: true
           });
-          if (Lampa.Account.logged() &amp;&amp; params.element &amp;&amp; typeof params.element.season !== 'undefined' &amp;&amp; params.element.translate_voice) {
+          if (Lampa.Account.logged() && params.element && typeof params.element.season !== 'undefined' && params.element.translate_voice) {
             menu.push({
               title: Lampa.Lang.translate('lampac_voice_subscribe'),
               subscribe: true
@@ -1199,7 +1197,7 @@ var randomUrl = vybor[randomIndex];
       var html = Lampa.Template.get('lampac_does_not_answer', {});
       html.find('.online-empty__buttons').remove();
       html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
-      html.find('.online-empty__time').text(er &amp;&amp; er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
+      html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
       scroll.clear();
       scroll.append(html);
       this.loading(false);
@@ -1210,9 +1208,9 @@ var randomUrl = vybor[randomIndex];
       var html = Lampa.Template.get('lampac_does_not_answer', {
         balanser: balanser
       });
-      if(er &amp;&amp; er.accsdb) html.find('.online-empty__title').html(er.msg);
+      if(er && er.accsdb) html.find('.online-empty__title').html(er.msg);
 	  
-      var tic = er &amp;&amp; er.accsdb ? 10 : 5;
+      var tic = er && er.accsdb ? 10 : 5;
       html.find('.cancel').on('hover:enter', function() {
         clearInterval(balanser_timer);
       });
@@ -1318,7 +1316,7 @@ var randomUrl = vybor[randomIndex];
               keys.forEach(function(name) {
                 var line = result[name];
 
-                if (line &amp;&amp; line.data &amp;&amp; line.type == 'similar') {
+                if (line && line.data && line.type == 'similar') {
                   var cards = line.data.map(function(item) {
                     item.title = Lampa.Utils.capitalizeFirstLetter(item.title);
                     item.release_date = item.year || '0000';
@@ -1406,7 +1404,7 @@ var randomUrl = vybor[randomIndex];
 
   function startPlugin() {
     window.onlyskaz_plugin = true;
-	if (!window.plugin_iptvskaz_ready &amp;&amp; !window.plugin_iptv_ready2)
+	if (!window.plugin_iptvskaz_ready && !window.plugin_iptv_ready2)
 	  {
 		Lampa.SettingsApi.addComponent({
         component: 'iptvskaz',
@@ -1593,14 +1591,14 @@ var randomUrl = vybor[randomIndex];
     $('body').append(Lampa.Template.get('lampac_css', {}, true));
 
     function resetTemplates() {
-      Lampa.Template.add('lampac_prestige_full', "<div class="\&quot;online-prestige" online-prestige--full="" selector\"="">\n            <div class="\&quot;online-prestige__img\&quot;">\n                <img alt="\&quot;\&quot;">\n                <div class="\&quot;online-prestige__loader\&quot;"></div>\n            </div>\n            <div class="\&quot;online-prestige__body\&quot;">\n                <div class="\&quot;online-prestige__head\&quot;">\n                    <div class="\&quot;online-prestige__title\&quot;">{title}</div>\n                    <div class="\&quot;online-prestige__time\&quot;">{time}</div>\n                </div>\n\n                <div class="\&quot;online-prestige__timeline\&quot;"></div>\n\n                <div class="\&quot;online-prestige__footer\&quot;">\n                    <div class="\&quot;online-prestige__info\&quot;">{info}</div>\n                    <div class="\&quot;online-prestige__quality\&quot;">{quality}</div>\n                </div>\n            </div>\n        </div>");
-      Lampa.Template.add('lampac_content_loading', "<div class="\&quot;online-empty\&quot;">\n            <div class="\&quot;broadcast__scan\&quot;"><div></div></div>\n\t\t\t\n            <div class="\&quot;online-empty__templates\&quot;">\n                <div class="\&quot;online-empty-template" selector\"="">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n                <div class="\&quot;online-empty-template\&quot;">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n                <div class="\&quot;online-empty-template\&quot;">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n            </div>\n        </div>");
-      Lampa.Template.add('lampac_does_not_answer', "<div class="\&quot;online-empty\&quot;">\n            <div class="\&quot;online-empty__title\&quot;">\n                #{lampac_balanser_dont_work}\n            </div>\n            <div class="\&quot;online-empty__time\&quot;">\n                #{lampac_balanser_timeout}\n            </div>\n            <div class="\&quot;online-empty__buttons\&quot;">\n                <div class="\&quot;online-empty__button" selector="" cancel\"="">#{cancel}</div>\n                <div class="\&quot;online-empty__button" selector="" change\"="">#{lampac_change_balanser}</div>\n            </div>\n            <div class="\&quot;online-empty__templates\&quot;">\n                <div class="\&quot;online-empty-template\&quot;">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n                <div class="\&quot;online-empty-template\&quot;">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n                <div class="\&quot;online-empty-template\&quot;">\n                    <div class="\&quot;online-empty-template__ico\&quot;"></div>\n                    <div class="\&quot;online-empty-template__body\&quot;"></div>\n                </div>\n            </div>\n        </div>");
-      Lampa.Template.add('lampac_prestige_rate', "<div class="\&quot;online-prestige-rate\&quot;">\n            <svg width="\&quot;17\&quot;" height="\&quot;16\&quot;" viewBox="\&quot;0" 0="" 17="" 16\"="" fill="\&quot;none\&quot;" xmlns="\&quot;http://www.w3.org/2000/svg\&quot;">\n                <path d="\&quot;M8.39409" 0.192139l10.99="" 5.30994l16.7882="" 6.20387l12.5475="" 10.4277l13.5819="" 15.9311l8.39409="" 13.2425l3.20626="" 15.9311l4.24065="" 10.4277l0="" 6.20387l5.79819="" 5.30994l8.39409="" 0.192139z\"="" fill="\&quot;#fff\&quot;"></path>\n            </svg>\n            <span>{rate}</span>\n        </div>");
-      Lampa.Template.add('lampac_prestige_folder', "<div class="\&quot;online-prestige" online-prestige--folder="" selector\"="">\n            <div class="\&quot;online-prestige__folder\&quot;">\n                <svg viewBox="\&quot;0" 0="" 128="" 112\"="" fill="\&quot;none\&quot;" xmlns="\&quot;http://www.w3.org/2000/svg\&quot;">\n                    <rect y="\&quot;20\&quot;" width="\&quot;128\&quot;" height="\&quot;92\&quot;" rx="\&quot;13\&quot;" fill="\&quot;white\&quot;"></rect>\n                    <path d="\&quot;M29.9963" 8h98.0037c96.0446="" 3.3021="" 91.4079="" 0="" 86="" 0h42c36.5921="" 31.9555="" 29.9963="" 8z\"="" fill="\&quot;white\&quot;" fill-opacity="\&quot;0.23\&quot;"></path>\n                    <rect x="\&quot;11\&quot;" y="\&quot;8\&quot;" width="\&quot;106\&quot;" height="\&quot;76\&quot;" rx="\&quot;13\&quot;" fill="\&quot;white\&quot;" fill-opacity="\&quot;0.51\&quot;"></rect>\n                </svg>\n            </div>\n            <div class="\&quot;online-prestige__body\&quot;">\n                <div class="\&quot;online-prestige__head\&quot;">\n                    <div class="\&quot;online-prestige__title\&quot;">{title}</div>\n                    <div class="\&quot;online-prestige__time\&quot;">{time}</div>\n                </div>\n\n                <div class="\&quot;online-prestige__footer\&quot;">\n                    <div class="\&quot;online-prestige__info\&quot;">{info}</div>\n                </div>\n            </div>\n        </div>");
-      Lampa.Template.add('lampac_prestige_watched', "<div class="\&quot;online-prestige" online-prestige-watched="" selector\"="">\n            <div class="\&quot;online-prestige-watched__icon\&quot;">\n                <svg width="\&quot;21\&quot;" height="\&quot;21\&quot;" viewBox="\&quot;0" 0="" 21="" 21\"="" fill="\&quot;none\&quot;" xmlns="\&quot;http://www.w3.org/2000/svg\&quot;">\n                    <circle cx="\&quot;10.5\&quot;" cy="\&quot;10.5\&quot;" r="\&quot;9\&quot;" stroke="\&quot;currentColor\&quot;" stroke-width="\&quot;3\&quot;/">\n                    <path d="\&quot;M14.8477" 10.5628l8.20312="" 14.399l8.20313="" 6.72656l14.8477="" 10.5628z\"="" fill="\&quot;currentColor\&quot;/">\n                </path></circle></svg>\n            </div>\n            <div class="\&quot;online-prestige-watched__body\&quot;">\n                \n            </div>\n        </div>");
+      Lampa.Template.add('lampac_prestige_full', "<div class="\"online-prestige" online-prestige--full="" selector\"="">\n            <div class="\"online-prestige__img\"">\n                <img alt="\"\"">\n                <div class="\"online-prestige__loader\""></div>\n            </div>\n            <div class="\"online-prestige__body\"">\n                <div class="\"online-prestige__head\"">\n                    <div class="\"online-prestige__title\"">{title}</div>\n                    <div class="\"online-prestige__time\"">{time}</div>\n                </div>\n\n                <div class="\"online-prestige__timeline\""></div>\n\n                <div class="\"online-prestige__footer\"">\n                    <div class="\"online-prestige__info\"">{info}</div>\n                    <div class="\"online-prestige__quality\"">{quality}</div>\n                </div>\n            </div>\n        </div>");
+      Lampa.Template.add('lampac_content_loading', "<div class="\"online-empty\"">\n            <div class="\"broadcast__scan\""><div></div></div>\n\t\t\t\n            <div class="\"online-empty__templates\"">\n                <div class="\"online-empty-template" selector\"="">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n                <div class="\"online-empty-template\"">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n                <div class="\"online-empty-template\"">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n            </div>\n        </div>");
+      Lampa.Template.add('lampac_does_not_answer', "<div class="\"online-empty\"">\n            <div class="\"online-empty__title\"">\n                #{lampac_balanser_dont_work}\n            </div>\n            <div class="\"online-empty__time\"">\n                #{lampac_balanser_timeout}\n            </div>\n            <div class="\"online-empty__buttons\"">\n                <div class="\"online-empty__button" selector="" cancel\"="">#{cancel}</div>\n                <div class="\"online-empty__button" selector="" change\"="">#{lampac_change_balanser}</div>\n            </div>\n            <div class="\"online-empty__templates\"">\n                <div class="\"online-empty-template\"">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n                <div class="\"online-empty-template\"">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n                <div class="\"online-empty-template\"">\n                    <div class="\"online-empty-template__ico\""></div>\n                    <div class="\"online-empty-template__body\""></div>\n                </div>\n            </div>\n        </div>");
+      Lampa.Template.add('lampac_prestige_rate', "<div class="\"online-prestige-rate\"">\n            <svg width="\"17\"" height="\"16\"" viewBox="\"0" 0="" 17="" 16\"="" fill="\"none\"" xmlns="\"http://www.w3.org/2000/svg\"">\n                <path d="\"M8.39409" 0.192139l10.99="" 5.30994l16.7882="" 6.20387l12.5475="" 10.4277l13.5819="" 15.9311l8.39409="" 13.2425l3.20626="" 15.9311l4.24065="" 10.4277l0="" 6.20387l5.79819="" 5.30994l8.39409="" 0.192139z\"="" fill="\"#fff\""></path>\n            </svg>\n            <span>{rate}</span>\n        </div>");
+      Lampa.Template.add('lampac_prestige_folder', "<div class="\"online-prestige" online-prestige--folder="" selector\"="">\n            <div class="\"online-prestige__folder\"">\n                <svg viewBox="\"0" 0="" 128="" 112\"="" fill="\"none\"" xmlns="\"http://www.w3.org/2000/svg\"">\n                    <rect y="\"20\"" width="\"128\"" height="\"92\"" rx="\"13\"" fill="\"white\""></rect>\n                    <path d="\"M29.9963" 8h98.0037c96.0446="" 3.3021="" 91.4079="" 0="" 86="" 0h42c36.5921="" 31.9555="" 29.9963="" 8z\"="" fill="\"white\"" fill-opacity="\"0.23\""></path>\n                    <rect x="\"11\"" y="\"8\"" width="\"106\"" height="\"76\"" rx="\"13\"" fill="\"white\"" fill-opacity="\"0.51\""></rect>\n                </svg>\n            </div>\n            <div class="\"online-prestige__body\"">\n                <div class="\"online-prestige__head\"">\n                    <div class="\"online-prestige__title\"">{title}</div>\n                    <div class="\"online-prestige__time\"">{time}</div>\n                </div>\n\n                <div class="\"online-prestige__footer\"">\n                    <div class="\"online-prestige__info\"">{info}</div>\n                </div>\n            </div>\n        </div>");
+      Lampa.Template.add('lampac_prestige_watched', "<div class="\"online-prestige" online-prestige-watched="" selector\"="">\n            <div class="\"online-prestige-watched__icon\"">\n                <svg width="\"21\"" height="\"21\"" viewBox="\"0" 0="" 21="" 21\"="" fill="\"none\"" xmlns="\"http://www.w3.org/2000/svg\"">\n                    <circle cx="\"10.5\"" cy="\"10.5\"" r="\"9\"" stroke="\"currentColor\"" stroke-width="\"3\"/">\n                    <path d="\"M14.8477" 10.5628l8.20312="" 14.399l8.20313="" 6.72656l14.8477="" 10.5628z\"="" fill="\"currentColor\"/">\n                </path></circle></svg>\n            </div>\n            <div class="\"online-prestige-watched__body\"">\n                \n            </div>\n        </div>");
     }
-    var button = "<div class="\&quot;full-start__button" selector="" view--online="" lampac--button\"="" data-subtitle="\&quot;&quot;.concat(manifst.name," "").concat(manifst.version,="" "\"="">\n        <svg xmlns="\&quot;http://www.w3.org/2000/svg\&quot;" version="\&quot;1.1\&quot;" xmlns:xlink="\&quot;http://www.w3.org/1999/xlink\&quot;" viewBox="\&quot;0" 0="" 392.697="" 392.697\"="" xml:space="\&quot;preserve\&quot;">\n            <path d="\&quot;M21.837,83.419l36.496,16.678L227.72,19.886c1.229-0.592,2.002-1.846,1.98-3.209c-0.021-1.365-0.834-2.592-2.082-3.145\n" l197.766,0.3c-0.903-0.4-1.933-0.4-2.837,0l21.873,77.036c-1.259,0.559-2.073,1.803-2.081,3.18\n="" c19.784,81.593,20.584,82.847,21.837,83.419z\"="" fill="\&quot;currentColor\&quot;"></path>\n            <path d="\&quot;M185.689,177.261l-64.988-30.01v91.617c0,0.856-0.44,1.655-1.167,2.114c-0.406,0.257-0.869,0.386-1.333,0.386\n" c-0.368,0-0.736-0.082-1.079-0.244l-68.874-32.625c-0.869-0.416-1.421-1.293-1.421-2.256v-92.229l6.804,95.5\n="" c-1.083-0.496-2.344-0.406-3.347,0.238c-1.002,0.645-1.608,1.754-1.608,2.944v208.744c0,1.371,0.799,2.615,2.045,3.185\n="" l178.886,81.768c0.464,0.211,0.96,0.315,1.455,0.315c0.661,0,1.318-0.188,1.892-0.555c1.002-0.645,1.608-1.754,1.608-2.945\n="" v180.445c187.735,179.076,186.936,177.831,185.689,177.261z\"="" fill="\&quot;currentColor\&quot;"></path>\n            <path d="\&quot;M389.24,95.74c-1.002-0.644-2.264-0.732-3.347-0.238l-178.876,81.76c-1.246,0.57-2.045,1.814-2.045,3.185v208.751\n" c0,1.191,0.606,2.302,1.608,2.945c0.572,0.367,1.23,0.555,1.892,0.555c0.495,0,0.991-0.104,1.455-0.315l178.876-81.768\n="" c1.246-0.568,2.045-1.813,2.045-3.185v98.685c390.849,97.494,390.242,96.384,389.24,95.74z\"="" fill="\&quot;currentColor\&quot;"></path>\n            <path d="\&quot;M372.915,80.216c-0.009-1.377-0.823-2.621-2.082-3.18l-60.182-26.681c-0.938-0.418-2.013-0.399-2.938,0.045\n" l-173.755,82.992l60.933,29.117c0.462,0.211,0.958,0.316,1.455,0.316s0.993-0.105,1.455-0.316l173.066-79.092\n="" c372.122,82.847,372.923,81.593,372.915,80.216z\"="" fill="\&quot;currentColor\&quot;"></path>\n        </svg>\n\n        <span>#{title_online}</span>\n    </div>"); // нужна заглушка, а то при страте лампы говорит пусто
+    var button = "<div class="\"full-start__button" selector="" view--online="" lampac--button\"="" data-subtitle="\"".concat(manifst.name," "").concat(manifst.version,="" "\"="">\n        <svg xmlns="\"http://www.w3.org/2000/svg\"" version="\"1.1\"" xmlns:xlink="\"http://www.w3.org/1999/xlink\"" viewBox="\"0" 0="" 392.697="" 392.697\"="" xml:space="\"preserve\"">\n            <path d="\"M21.837,83.419l36.496,16.678L227.72,19.886c1.229-0.592,2.002-1.846,1.98-3.209c-0.021-1.365-0.834-2.592-2.082-3.145\n" l197.766,0.3c-0.903-0.4-1.933-0.4-2.837,0l21.873,77.036c-1.259,0.559-2.073,1.803-2.081,3.18\n="" c19.784,81.593,20.584,82.847,21.837,83.419z\"="" fill="\"currentColor\""></path>\n            <path d="\"M185.689,177.261l-64.988-30.01v91.617c0,0.856-0.44,1.655-1.167,2.114c-0.406,0.257-0.869,0.386-1.333,0.386\n" c-0.368,0-0.736-0.082-1.079-0.244l-68.874-32.625c-0.869-0.416-1.421-1.293-1.421-2.256v-92.229l6.804,95.5\n="" c-1.083-0.496-2.344-0.406-3.347,0.238c-1.002,0.645-1.608,1.754-1.608,2.944v208.744c0,1.371,0.799,2.615,2.045,3.185\n="" l178.886,81.768c0.464,0.211,0.96,0.315,1.455,0.315c0.661,0,1.318-0.188,1.892-0.555c1.002-0.645,1.608-1.754,1.608-2.945\n="" v180.445c187.735,179.076,186.936,177.831,185.689,177.261z\"="" fill="\"currentColor\""></path>\n            <path d="\"M389.24,95.74c-1.002-0.644-2.264-0.732-3.347-0.238l-178.876,81.76c-1.246,0.57-2.045,1.814-2.045,3.185v208.751\n" c0,1.191,0.606,2.302,1.608,2.945c0.572,0.367,1.23,0.555,1.892,0.555c0.495,0,0.991-0.104,1.455-0.315l178.876-81.768\n="" c1.246-0.568,2.045-1.813,2.045-3.185v98.685c390.849,97.494,390.242,96.384,389.24,95.74z\"="" fill="\"currentColor\""></path>\n            <path d="\"M372.915,80.216c-0.009-1.377-0.823-2.621-2.082-3.18l-60.182-26.681c-0.938-0.418-2.013-0.399-2.938,0.045\n" l-173.755,82.992l60.933,29.117c0.462,0.211,0.958,0.316,1.455,0.316s0.993-0.105,1.455-0.316l173.066-79.092\n="" c372.122,82.847,372.923,81.593,372.915,80.216z\"="" fill="\"currentColor\""></path>\n        </svg>\n\n        <span>#{title_online}</span>\n    </div>"); // нужна заглушка, а то при страте лампы говорит пусто
     Lampa.Component.add('lampacskaz', component); //то же самое
     resetTemplates();
 
@@ -1645,7 +1643,7 @@ var randomUrl = vybor[randomIndex];
         });
       }
     } catch (e) {}
-    if (Lampa.Manifest.app_digital &gt;= 177) {
+    if (Lampa.Manifest.app_digital >= 177) {
       var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix","videasy","vidsrc","movpi","vidlink","twoembed","autoembed","smashystream","autoembed","rgshows", "pidtor", "videoseed", "iptvonline", "veoveo"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
@@ -1658,4 +1656,4 @@ var randomUrl = vybor[randomIndex];
 	  if (Lampa.Storage.get('online_skaz2')==true) {
 			$.getScript('http://skaz.tv/play.js');
 	}
-})();</j[t(0x125)];k++){var></body></html>
+})();</j[t(0x125)];k++){var>
