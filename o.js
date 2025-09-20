@@ -62,14 +62,23 @@ var randomUrl = vybor[randomIndex];
   function account(url) {
   url = url + '';
 
-  // fixed credentials
+  // Fixed credentials
   var fixedEmail = 'lisiyvirus@gmail.com';
   var fixedUid   = 'ofkrtxdg';
 
   if (url.indexOf('account_email=') == -1) {
     url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(fixedEmail));
   }
+  if (url.indexOf('uid=') == -1) {
+    url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(fixedUid));
+  }
+  if (url.indexOf('token=') == -1) {
+    var token = '';
+    if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+  }
+  return url;
 
+    }
     if (url.indexOf('uid=') == -1) {
       var uid = Lampa.Storage.get('lampac_unic_id', '');
       if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
@@ -1399,7 +1408,7 @@ var randomUrl = vybor[randomIndex];
 	  {
 		Lampa.SettingsApi.addComponent({
         component: 'iptvskaz',
-        icon: '<svg viewBox="0 0 36 36"><rect x="2" y="8" width="32" height="20" rx="3" stroke="white" fill="none" stroke-width="3"/></svg>',
+        icon: "<svg height="\"36\"" viewBox="\"0" 0="" 38="" 36\"="" fill="\"none\"" xmlns="\"http://www.w3.org/2000/svg\"">\n                <rect x="\"2\"" y="\"8\"" width="\"34\"" height="\"21\"" rx="\"3\"" stroke="\"white\"" stroke-width="\"3\"/">\n                <line x1="\"13.0925\"" y1="\"2.34874\"" x2="\"16.3487\"" y2="\"6.90754\"" stroke="\"white\"" stroke-width="\"3\"" stroke-linecap="\"round\"/">\n                <line x1="\"1.5\"" y1="\"-1.5\"" x2="\"9.31665\"" y2="\"-1.5\"" transform="\"matrix(-0.757816" 0.652468="" 0.757816="" 26.197="" 2)\"="" stroke="\"white\"" stroke-width="\"3\"" stroke-linecap="\"round\"/">\n                <line x1="\"9.5\"" y1="\"34.5\"" x2="\"29.5\"" y2="\"34.5\"" stroke="\"white\"" stroke-width="\"3\"" stroke-linecap="\"round\"/">\n            </line></line></line></rect></svg>",
         name: 'by skaz'
       });
 	  Lampa.SettingsApi.addParam({
