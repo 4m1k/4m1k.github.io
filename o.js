@@ -9,9 +9,8 @@ var randomIndex = Math.floor(Math.random() * vybor.length);
 var randomUrl = vybor[randomIndex];
 
   var Defined = {
-    api: 'lampac',
-    localhost: randomUrl,
     apn: 'https://apn.watch/'
+  };
 
   var balansers_with_search;
   
