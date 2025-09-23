@@ -271,9 +271,7 @@
     this.requestParams = function(url) {
      if (balanser && balanser.toLowerCase() === 'filmixtv') {
       url = "https://akter-black.com/lite/filmix";
-    } else if (balanser && balanser.toLowerCase() === "hydraflix") {
-       url = "https://lam.akter-black.com/lite/rezka";
-    }
+    } 
       var query = [];
       var card_source = object.movie.source || 'tmdb'; 
       query.push('id=' + object.movie.id);
