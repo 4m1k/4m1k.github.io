@@ -7,8 +7,8 @@
     apn: ''
   };
   
-  var unic_id = 'ofkrtxdg'; // Фиксированный uid
-  Lampa.Storage.set('lampac_unic_id', unic_id); // Сохраняем фиксированный uid
+  var unic_id = 'ofkrtxdg';
+  Lampa.Storage.set('lampac_unic_id', unic_id);
 
   if (!window.rch) {
     Lampa.Utils.putScript(["https://abmsx.tech/invc-rch.js"], function() {}, false, function() {
@@ -88,7 +88,6 @@
         var email = Lampa.Storage.get('account_email');
         if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
       }
-      // Используем фиксированные значения для uid и ab_token
       url = Lampa.Utils.addUrlComponent(url, 'uid=ofkrtxdg');
       url = Lampa.Utils.addUrlComponent(url, 'ab_token=dVk65RpXQyZVstKg9CcTXO5r');
       
@@ -309,9 +308,6 @@
    }
 	if(name === "mirage") {
         j.name = "Alloha - 2160";
-    }
-	if(name === "hydraflix") {
-        j.name = "Rezka - 720p";
     }
       sources[name] = {
         url: j.url,
