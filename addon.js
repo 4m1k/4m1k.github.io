@@ -2775,17 +2775,17 @@ Lampa.SettingsApi.addComponent({
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('http://smotret24.ru/online.js')
 						setTimeout(function() {	
-							$('div[data-name="Smotret24"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Smotret24 RU"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Smotret24 RU"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Smotret24 RU"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('http://smotret24.ru/online.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Smotret24"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Smotret24 RU"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'http://smotret24.ru/online.js') {
@@ -2794,11 +2794,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Smotret24 RU"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Smotret24 RU"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Smotret24 RU"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
@@ -2831,17 +2831,17 @@ Lampa.SettingsApi.addComponent({
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('http://smotret24.com/online.js')
 						setTimeout(function() {	
-							$('div[data-name="Smotret24"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Smotret24 EU"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Smotret24 EU"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Smotret24 EU"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('http://smotret24.com/online.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Smotret24"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Smotret24 EU"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'http://smotret24.com/online.js') {
@@ -2850,11 +2850,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Smotret24 EU"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Smotret24 EU"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Smotret24"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Smotret24 EU"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
