@@ -513,6 +513,65 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
+		    Lampa.SettingsApi.addParam({
+					component: 'add_interface_plugin',
+					param: {
+						name: 'filter_content',
+						type: 'select',
+						values: {
+							1:	'Установить',
+							2:	'Удалить',
+						},
+					//default: '1',
+						},
+					field: {
+						name: 'Фильтр контента',
+						description: 'Плагин позволяет фильтровать вывод карточек в приложении через настройки в разделе интерфейс - пункт Фильтр контента'
+					},
+					onChange: function(value) {
+						if (value == '1') {
+						       itemON('https://4m1k.github.io/filter_content.js', 'Фильтр Контента', '@lampa', 'filter_content');
+						}
+						if (value == '2') {
+							var pluginToRemoveUrl = "https://4m1k.github.io/filter_content.js";
+							deletePlugin(pluginToRemoveUrl);
+						}
+					},
+			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
+						/*var myResult = checkPlugin('https://4m1k.github.io/weather.js')
+						setTimeout(function() {	
+							$('div[data-name="filter_content"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('https://4m1k.github.io/filter_content.js');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="filter_content"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/filter_content.js') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);
+						    item.on("hover:enter", function (event) {
+                                                        nthChildIndex = focus_back(event); // Сохраняем элемент в переменной
+						    });
+					}
+		});
+
 				Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
