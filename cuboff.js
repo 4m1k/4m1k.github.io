@@ -62,6 +62,7 @@
     function initializeApp() {
       window.Account = window.Account || {};
       window.Account.hasPremium = () => true;
+      clearAdTimers();
       document.createElement = new Proxy(document.createElement, {
         apply(target, thisArg, args) {
           if (args[0] === "video") {
@@ -77,7 +78,6 @@
           return target.apply(thisArg, args);
         }
       });
-      clearAdTimers();
       // Добавление стилей для скрытия подписки
       var style = document.createElement('style');
       style.innerHTML = '.button--subscribe { display: none; }';
@@ -170,7 +170,6 @@
       initializeApp();
       observeDomChanges();
       removeAdsOnToggle();
-      document.addEventListener("DOMContentLoaded", clearAdTimers);
     } else {
       Lampa.Listener.follow('app', function (event) {
         if (event.type === 'ready') {
@@ -180,7 +179,6 @@
           $('[data-action="feed"]').eq(0).remove();
           $('[data-action="subscribes"]').eq(0).remove();
           $('[data-action="myperson"]').eq(0).remove();
-          document.addEventListener("DOMContentLoaded", clearAdTimers);
         }
       });
     }
