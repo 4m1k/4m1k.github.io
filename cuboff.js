@@ -62,7 +62,6 @@
     function initializeApp() {
       window.Account = window.Account || {};
       window.Account.hasPremium = () => true;
-      clearAdTimers();
       document.createElement = new Proxy(document.createElement, {
         apply(target, thisArg, args) {
           if (args[0] === "video") {
@@ -78,6 +77,7 @@
           return target.apply(thisArg, args);
         }
       });
+      document.addEventListener("DOMContentLoaded", clearAdTimers);
       // Добавление стилей для скрытия подписки
       var style = document.createElement('style');
       style.innerHTML = '.button--subscribe { display: none; }';
