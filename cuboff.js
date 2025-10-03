@@ -1,11 +1,8 @@
 (function () {
   'use strict';
-
   Lampa.Platform.tv();
-
   (function () {
     var isCardProcessed = 0;
-
     function removeAdsOnToggle() {
       Lampa.Controller.listener.follow('toggle', function (event) {
         if (event.name === 'select') {
@@ -22,7 +19,6 @@
         }
       });
     }
-
     function hideLockedItems() {
       setTimeout(function () {
         $('.selectbox-item__lock').parent().css('display', 'none');
@@ -31,7 +27,6 @@
         }
       }, 100);
     }
-
     function observeDomChanges() {
       var observer = new MutationObserver(function (mutations) {
         for (var i = 0; i < mutations.length; i++) {
@@ -57,9 +52,53 @@
         observer.disconnect();
       }, 10000);
     }
-
+    function clearAdTimers() {
+      let highestTimeout = setTimeout(() => {}, 0);
+      for (let i = 0; i <= highestTimeout; i++) {
+        clearTimeout(i);
+        clearInterval(i);
+      }
+    }
     function initializeApp() {
-      // Перехват fetch-запросов для блокировки рекламы
+      window.Account = window.Account || {};
+      window.Account.hasPremium = () => true;
+
+      clearAdTimers();
+
+      const originalCreateElement = document.createElement;
+      document.createElement = new Proxy(originalCreateElement, {
+        apply(target, thisArg, args) {
+          if (args[0] === "video") {
+            let fakeVideo = target.apply(thisArg, args);
+            const originalSetAttribute = fakeVideo.setAttribute;
+            fakeVideo.setAttribute = function(name, value) {
+              if (
+                name === 'src' &&
+                (value.includes('ads.betweendigital.com') ||
+                 value.includes('lbs-ru1.ads.betweendigital.com') ||
+                 value.includes('eye.targetads.io') ||
+                 value.includes('impressions.onelink.me') ||
+                 value.includes('data.ad-score.com') ||
+                 value.includes('tns-counter.ru') ||
+                 value.includes('lampa.mx'))
+              ) {
+                console.log('Blocked video source:', value);
+                return;
+              }
+              originalSetAttribute.call(this, name, value);
+            };
+            fakeVideo.play = function () {
+              setTimeout(() => {
+                fakeVideo.ended = true;
+                fakeVideo.dispatchEvent(new Event("ended"));
+              }, 500);
+            };
+            return fakeVideo;
+          }
+          return target.apply(thisArg, args);
+        }
+      });
+
       const originalFetch = window.fetch;
       window.fetch = async function(url, options) {
         if (
@@ -86,33 +125,6 @@
         return response;
       };
 
-      // Перехват создания видеоэлементов
-      const originalCreateElement = document.createElement;
-      document.createElement = function(tagName) {
-        const element = originalCreateElement.call(document, tagName);
-        if (tagName === 'video') {
-          const originalSetAttribute = element.setAttribute;
-          element.setAttribute = function(name, value) {
-            if (
-              name === 'src' &&
-              (value.includes('ads.betweendigital.com') ||
-               value.includes('lbs-ru1.ads.betweendigital.com') ||
-               value.includes('eye.targetads.io') ||
-               value.includes('impressions.onelink.me') ||
-               value.includes('data.ad-score.com') ||
-               value.includes('tns-counter.ru') ||
-               value.includes('lampa.mx'))
-            ) {
-              console.log('Blocked video source:', value);
-              return;
-            }
-            originalSetAttribute.call(element, name, value);
-          };
-        }
-        return element;
-      };
-
-      // Добавление стилей для скрытия подписки
       var style = document.createElement('style');
       style.innerHTML = '.button--subscribe { display: none; }';
       document.body.appendChild(style);
@@ -128,7 +140,7 @@
       $(document).ready(function () {
         var now = new Date();
         var timestamp = now.getTime();
-        localStorage.setItem('region', '{"code":"us","time":' + timestamp + '}');
+        localStorage.setItem('region', '{"code":"uk","time":' + timestamp + '}');
       });
 
       $('[data-action="tv"]').on('hover:enter hover:click hover:touch', function () {
@@ -144,7 +156,6 @@
         setTimeout(function () {
           clearInterval(adBotInterval);
         }, 10000);
-
         var cardTextInterval = setInterval(function () {
           if (document.querySelector('.card__textbox') !== null) {
             $('.card__textbox').parent().parent().remove();
@@ -208,6 +219,8 @@
         }
       });
     }
+
+    document.addEventListener("DOMContentLoaded", clearAdTimers);
 
     if (window.appready) {
       initializeApp();
