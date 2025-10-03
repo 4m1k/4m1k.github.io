@@ -52,6 +52,7 @@
         observer.disconnect();
       }, 10000);
     }
+    // ИЗ ВТОРОГО КОДА: Функция для очистки таймеров рекламы
     function clearAdTimers() {
       let highestTimeout = setTimeout(() => {}, 0);
       for (let i = 0; i <= highestTimeout; i++) {
@@ -60,45 +61,59 @@
       }
     }
     function initializeApp() {
+      // ИЗ ВТОРОГО КОДА: Имитация премиум-аккаунта
       window.Account = window.Account || {};
       window.Account.hasPremium = () => true;
 
+      // ИЗ ВТОРОГО КОДА: Вызов очистки таймеров (безопасно после инициализации)
       clearAdTimers();
 
-      const originalCreateElement = document.createElement;
-      document.createElement = new Proxy(originalCreateElement, {
-        apply(target, thisArg, args) {
-          if (args[0] === "video") {
-            let fakeVideo = target.apply(thisArg, args);
-            const originalSetAttribute = fakeVideo.setAttribute;
-            fakeVideo.setAttribute = function(name, value) {
-              if (
-                name === 'src' &&
-                (value.includes('ads.betweendigital.com') ||
-                 value.includes('lbs-ru1.ads.betweendigital.com') ||
-                 value.includes('eye.targetads.io') ||
-                 value.includes('impressions.onelink.me') ||
-                 value.includes('data.ad-score.com') ||
-                 value.includes('tns-counter.ru') ||
-                 value.includes('lampa.mx'))
-              ) {
-                console.log('Blocked video source:', value);
-                return;
-              }
-              originalSetAttribute.call(this, name, value);
-            };
-            fakeVideo.play = function () {
-              setTimeout(() => {
-                fakeVideo.ended = true;
-                fakeVideo.dispatchEvent(new Event("ended"));
-              }, 500);
-            };
-            return fakeVideo;
-          }
-          return target.apply(thisArg, args);
-        }
-      });
+      // ИЗ ВТОРОГО КОДА: Слушатель DOMContentLoaded (только если DOM готов)
+      if (document.readyState === 'loading') {
+        document.addEventListener("DOMContentLoaded", clearAdTimers);
+      } else {
+        clearAdTimers();
+      }
 
+      // Перехват создания видеоэлементов (слияние: блокировка src + переопределение play)
+      const originalCreateElement = document.createElement;
+      document.createElement = function(tagName) {
+        const element = originalCreateElement.call(document, tagName);
+        if (tagName === 'video') {
+          // Сохранена логика из первого кода: блокировка src для рекламы
+          const originalSetAttribute = element.setAttribute;
+          element.setAttribute = function(name, value) {
+            if (
+              name === 'src' &&
+              (value.includes('ads.betweendigital.com') ||
+               value.includes('lbs-ru1.ads.betweendigital.com') ||
+               value.includes('eye.targetads.io') ||
+               value.includes('impressions.onelink.me') ||
+               value.includes('data.ad-score.com') ||
+               value.includes('tns-counter.ru') ||
+               value.includes('lampa.mx'))
+            ) {
+              console.log('Blocked video source:', value);
+              return;
+            }
+            originalSetAttribute.call(element, name, value);
+          };
+          // ИЗ ВТОРОГО КОДА: Переопределение play() для быстрого завершения видео
+          const originalPlay = element.play;
+          element.play = function() {
+            setTimeout(() => {
+              element.ended = true;
+              element.dispatchEvent(new Event("ended"));
+            }, 500);
+            if (originalPlay) {
+              return originalPlay.call(element);
+            }
+          };
+        }
+        return element;
+      };
+
+      // Перехват fetch-запросов для блокировки рекламы (из первого кода, без изменений)
       const originalFetch = window.fetch;
       window.fetch = async function(url, options) {
         if (
@@ -125,6 +140,7 @@
         return response;
       };
 
+      // Добавление стилей для скрытия подписки
       var style = document.createElement('style');
       style.innerHTML = '.button--subscribe { display: none; }';
       document.body.appendChild(style);
@@ -140,7 +156,7 @@
       $(document).ready(function () {
         var now = new Date();
         var timestamp = now.getTime();
-        localStorage.setItem('region', '{"code":"uk","time":' + timestamp + '}');
+        localStorage.setItem('region', '{"code":"us","time":' + timestamp + '}');
       });
 
       $('[data-action="tv"]').on('hover:enter hover:click hover:touch', function () {
@@ -219,8 +235,6 @@
         }
       });
     }
-
-    document.addEventListener("DOMContentLoaded", clearAdTimers);
 
     if (window.appready) {
       initializeApp();
