@@ -68,7 +68,7 @@
             let fakeVideo = target.apply(thisArg, args);
             fakeVideo.play = function () {
               setTimeout(() => {
-                fakeVideo.ended = true;
+                fakeVideo.pause();
                 fakeVideo.dispatchEvent(new Event("ended"));
               }, 500);
             };
@@ -92,7 +92,7 @@
       $(document).ready(function () {
         var now = new Date();
         var timestamp = now.getTime();
-        localStorage.setItem('region', '{"code":"uk","time":' + timestamp + '}');
+        localStorage.setItem('region', '{"code":"us","time":' + timestamp + '}');
       });
       $('[data-action="tv"]').on('hover:enter hover:click hover:touch', function () {
         var adBotInterval = setInterval(function () {
