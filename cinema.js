@@ -7,64 +7,208 @@
     apn: ''
   };
 
+  var balansers_with_search;
+  
   var unic_id = Lampa.Storage.get('lampac_unic_id', '');
   if (!unic_id) {
-	unic_id = Lampa.Utils.uid(8).toLowerCase();
-	Lampa.Storage.set('lampac_unic_id', unic_id);
+    unic_id = Lampa.Utils.uid(8).toLowerCase();
+    Lampa.Storage.set('lampac_unic_id', unic_id);
   }
   
-  var uniqueId = Lampa.Storage.get("lampac_unic_id", "");
- if (uniqueId !== "tyusdt") {
-    Lampa.Storage.set("lampac_unic_id", "tyusdt");
-   }
   
-  if (window.rchtype == undefined) {
-    window.rchtype = 'web';
-    var check = function check(good) {
-      window.rchtype = Lampa.Platform.is('android') ? 'apk' : good ? 'cors' : 'web';
-    }
-
-    if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
-    else {
-      var net = new Lampa.Reguest();
-      net.silent('http://185.87.48.42:2627'.indexOf(location.host) >= 0 ? 'https://github.com/' : 'http://185.87.48.42:2627/cors/check', function() {
-        check(true);
-      }, function() {
-        check(false);
-      }, false, {
-        dataType: 'text'
-      });
+  function getAndroidVersion() {
+    if (Lampa.Platform.is('android')) {
+      try {
+        var current = AndroidJS.appVersion().split('-');
+        return parseInt(current.pop());
+      } catch (e) {
+        return 0;
+      }
+    } else {
+      return 0;
     }
   }
 
-  function BlazorNet() {
-    this.net = new Lampa.Reguest();
-    this.timeout = function(time) {
-      this.net.timeout(time);
+  var hostkey = 'http://185.87.48.42:2627'.replace('http://', '').replace('https://', '');
+
+  if (!window.rch_nws || !window.rch_nws[hostkey]) {
+    if (!window.rch_nws) window.rch_nws = {};
+
+    window.rch_nws[hostkey] = {
+      type: undefined,
+      startTypeInvoke: false,
+      rchRegistry: false,
+      apkVersion: getAndroidVersion()
     };
-    this.req = function(type, url, secuses, error, post) {
-      var params = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-      var path = url.split(Defined.localhost).pop().split('?');
-      if (path[0].indexOf('http') >= 0) return this.net[type](url, secuses, error, post, params);
-      DotNet.invokeMethodAsync("JinEnergy", path[0], path[1]).then(function(result) {
-        if (params.dataType == 'text') secuses(result);
-        else secuses(Lampa.Arrays.decodeJson(result, {}));
-      })["catch"](function(e) {
-        console.log('Blazor', 'error:', e);
-        error(e);
+
+    window.rch_nws[hostkey].typeInvoke = function rchtypeInvoke(host, call) {
+      if (window.rch_nws[hostkey].type == undefined) {
+        window.rch_nws[hostkey].startTypeInvoke = true;
+
+        var check = function check(good) {
+          window.rch_nws[hostkey].type = Lampa.Platform.is('android') ? 'apk' : good ? 'cors' : 'web';
+          call();
+        };
+
+        if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
+        else {
+          var net = new Lampa.Reguest();
+          net.silent('http://185.87.48.42:2627'.indexOf(location.host) >= 0 ? 'https://github.com/' : host + '/cors/check', function () {
+            check(true);
+          }, function () {
+            check(false);
+          }, false, {
+            dataType: 'text'
+          });
+        }
+      } else call();
+    };
+
+    window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection) {
+      window.rch_nws[hostkey].typeInvoke('http://185.87.48.42:2627', function () {
+		  
+        client.invoke("RchRegistry", JSON.stringify({
+          version: 148,
+          host: location.host,
+          rchtype: window.rch_nws[hostkey].type,
+          apkVersion: window.rch_nws[hostkey].apkVersion,
+          player: Lampa.Storage.field('player')
+        }));
+		
+		if (client._shouldReconnect && window.rch_nws[hostkey].rchRegistry){
+			if (startConnection) startConnection();
+			return;
+		}
+		
+		window.rch_nws[hostkey].rchRegistry = true;
+
+		client.on('RchRegistry', function (connectionId) {
+			if (startConnection) startConnection();
+        });
+
+        client.on("RchClient", function (rchId, url, data, headers, returnHeaders) {
+          var network = new Lampa.Reguest();
+
+          function result(html) {
+            if (Lampa.Arrays.isObject(html) || Lampa.Arrays.isArray(html)) {
+              html = JSON.stringify(html);
+            }
+
+            if (typeof CompressionStream !== 'undefined' && html && html.length > 1000) {
+              var compressionStream = new CompressionStream('gzip');
+              var encoder = new TextEncoder();
+              var readable = new ReadableStream({
+                start: function (controller) {
+                  controller.enqueue(encoder.encode(html));
+                  controller.close();
+                }
+              });
+              var compressedStream = readable.pipeThrough(compressionStream);
+              new Response(compressedStream).arrayBuffer()
+                .then(function (compressedBuffer) {
+                  var compressedArray = new Uint8Array(compressedBuffer);
+                  if (compressedArray.length > html.length) {
+                    client.invoke("RchResult", rchId, html);
+                  } else {
+                    $.ajax({
+                      url: 'http://185.87.48.42:2627/rch/gzresult?id=' + rchId,
+                      type: 'POST',
+                      data: compressedArray,
+                      async: true,
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                      success: function (j) { },
+                      error: function () {
+                        client.invoke("RchResult", rchId, html);
+                      }
+                    });
+                  }
+                })
+                .catch(function () {
+                  client.invoke("RchResult", rchId, html);
+                });
+
+            } else {
+              client.invoke("RchResult", rchId, html);
+            }
+          }
+
+          if (url == 'eval') {
+            console.log('RCH', url, data);
+            result(eval(data));
+          } else if (url == 'ping') {
+            result('pong');
+          } else {
+            console.log('RCH', url);
+            network["native"](url, result, function () {
+              console.log('RCH', 'result empty');
+              result('');
+            }, data, {
+              dataType: 'text',
+              timeout: 1000 * 8,
+              headers: headers,
+              returnHeaders: returnHeaders
+            });
+          }
+        });
+
+        client.on('Connected', function (connectionId) {
+          console.log('RCH', 'ConnectionId: ' + connectionId);
+        });
+        client.on('Closed', function () {
+          console.log('RCH', 'Connection closed');
+        });
+        client.on('Error', function (err) {
+          console.log('RCH', 'error:', err); 
+        });
       });
     };
-    this.silent = function(url, secuses, error, post) {
-      var params = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-      this.req('silent', url, secuses, error, post, params);
-    };
-    this["native"] = function(url, secuses, error, post) {
-      var params = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-      this.req('native', url, secuses, error, post, params);
-    };
-    this.clear = function() {
-      this.net.clear();
-    };
+  }
+
+  window.rch_nws[hostkey].typeInvoke('http://185.87.48.42:2627', function() {});
+
+  function rchInvoke(json, call) {
+    if (window.nwsClient && window.nwsClient[hostkey] && window.nwsClient[hostkey]._shouldReconnect) return;	
+    if (!window.nwsClient) window.nwsClient = {};
+    if (window.nwsClient[hostkey] && window.nwsClient[hostkey].socket)
+      window.nwsClient[hostkey].socket.close();
+    window.nwsClient[hostkey] = new NativeWsClient(json.nws, {
+      autoReconnect: false
+    });
+    window.nwsClient[hostkey].on('Connected', function(connectionId) {
+      window.rch_nws[hostkey].Registry(window.nwsClient[hostkey], function() {
+        call();
+      });
+    });
+    window.nwsClient[hostkey].connect();
+  }
+
+  function rchRun(json, call) {
+    if (typeof NativeWsClient == 'undefined') {
+      Lampa.Utils.putScript(["http://185.87.48.42:2627/js/nws-client-es5.js"], function() {}, false, function() {
+        rchInvoke(json, call);
+      }, true);
+    } else {
+      rchInvoke(json, call);
+    }
+  }
+
+  function account(url) {
+    url = url + '';
+    if (url.indexOf('account_email=') == -1) {
+      var email = Lampa.Storage.get('account_email');
+      if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
+    }
+    if (url.indexOf('uid=') == -1) {
+      var uid = Lampa.Storage.get('lampac_unic_id', '');
+      if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
+    }
+    if (url.indexOf('token=') == -1) {
+      var token = '';
+      if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+    }
+    return url;
   }
   
   var Network = Lampa.Reguest;
