@@ -2810,6 +2810,62 @@ Lampa.SettingsApi.addComponent({
 		   		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
+                                		name: 'Z1 Онлайн',
+						type: 'select',
+						values: {
+							1:	'Установить',
+							2:	'Удалить',
+					},
+					//default: '1',
+              				},
+					field: {
+						name: 'Z1 Онлайн',
+						description: 'Фильмы и сериалы онлайн'
+					},
+					onChange: function(value) {
+						if (value == '1') {
+							itemON('http://z01.online/live', 'Z1 Онлайн', '@z1', 'Z1 Онлайн');
+						}
+						if (value == '2') {
+							var pluginToRemoveUrl = "http://z01.online/live";
+							deletePlugin(pluginToRemoveUrl);
+						}
+					},
+					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
+						/*var myResult = checkPlugin('http://z01.online/live')
+						setTimeout(function() {	
+							$('div[data-name="Z1 Онлайн"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="Z1 Онлайн"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="Z1 Онлайн"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('http://z01.online/live');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="Z1 Онлайн"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'http://z01.online/live') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="Z1 Онлайн"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="Z1 Онлайн"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="Z1 Онлайн"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);
+					}
+        });
+	
+		   		Lampa.SettingsApi.addParam({
+					component: 'add_online_plugin',
+					param: {
                                 		name: 'Smotret24 RU',
 						type: 'select',
 						values: {
