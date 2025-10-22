@@ -277,25 +277,20 @@ var unicId = Lampa.Storage.get('lampac_unic_id', '');
 function clarificationSearchAdd(value) {
   var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title);
   var all = Lampa.Storage.get('clarification_search', '{}');
-
   all[id] = value;
-
   Lampa.Storage.set('clarification_search', all);
 }
 
 function clarificationSearchDelete() {
   var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title);
   var all = Lampa.Storage.get('clarification_search', '{}');
-
   delete all[id];
-
   Lampa.Storage.set('clarification_search', all);
 }
 
 function clarificationSearchGet() {
   var id = Lampa.Utils.hash(object.movie.number_of_seasons ? object.movie.original_name : object.movie.original_title);
   var all = Lampa.Storage.get('clarification_search', '{}');
-
   return all[id];
 }
 	
