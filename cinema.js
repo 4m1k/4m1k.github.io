@@ -16,7 +16,7 @@
   }
 
   var uniqueId = Lampa.Storage.get("lampac_unic_id", "");
-  if (uniqueId !== "tyusdt") {
+  if (uniqueId !== "") {
     Lampa.Storage.set("lampac_unic_id", "tyusdt");
   }
   
