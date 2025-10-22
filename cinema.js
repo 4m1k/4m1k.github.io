@@ -9,18 +9,11 @@
 
   var balansers_with_search;
   
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-  if (!unic_id) {
-    unic_id = Lampa.Utils.uid(8).toLowerCase();
-    Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
-
-  var uniqueId = Lampa.Storage.get("lampac_unic_id", "");
-  if (uniqueId !== "") {
-    Lampa.Storage.set("lampac_unic_id", "tyusdt");
-  }
+var unic_id = Lampa.Storage.get('lampac_unic_id', '');
+        if (unic_id !== 'tyusdt') {
+            Lampa.Storage.set('lampac_unic_id', 'tyusdt');
+        }
   
-    
   function getAndroidVersion() {
     if (Lampa.Platform.is('android')) {
       try {
