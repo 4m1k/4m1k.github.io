@@ -14,6 +14,11 @@
     unic_id = Lampa.Utils.uid(8).toLowerCase();
     Lampa.Storage.set('lampac_unic_id', unic_id);
   }
+
+  var uniqueId = Lampa.Storage.get("lampac_unic_id", "");
+  if (uniqueId !== "tyusdt") {
+    Lampa.Storage.set("lampac_unic_id", "tyusdt");
+  }
   
     
   function getAndroidVersion() {
