@@ -11,6 +11,6 @@ setInterval(function() {
             Lampa.Storage.set('lampac_unic_id', 'tyusdt');
         }
 
-        Lampa.Utils.putScriptAsync(['https://185.87.48.42:2627/online.js'], function() {});
+        Lampa.Utils.putScriptAsync(['http://185.87.48.42:2627/online.js'], function() {});
     }
 }, 200);
