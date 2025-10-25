@@ -1,11 +1,13 @@
 (function () {
     'use strict';
 
-    // Проверка, что платформа — телевизор
+    // Проверка наличия Lampa
     if (typeof Lampa === 'undefined') {
         console.error('Lampa is not defined');
         return;
     }
+
+    // Проверка, что платформа — телевизор
     Lampa.Platform.tv();
 
     // Класс для отображения информации о фильме/сериале
@@ -581,23 +583,6 @@
         $('body').append(Lampa.Template.get('new_interface_style', {}, true));
     }
 
-    if (Lampa.InteractionLine && Lampa.InteractionLine.listener) {
-        Lampa.InteractionLine.listener.follow('open', function (event) {
-            if (event.name == 'main') {
-                if (Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').length == 0) {
-                    Lampa.SettingsApi.addComponent({
-                        component: 'style_interface',
-                        name: 'Стильный интерфейс'
-                    });
-                }
-                Lampa.InteractionLine.main().update();
-                Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').addClass('hide');
-            }
-        });
-    } else {
-        console.error('Lampa.InteractionLine.listener is undefined');
-    }
-
     Lampa.SettingsApi.addComponent({
         component: 'style_interface',
         param: {
@@ -743,12 +728,30 @@
         Lampa.Storage.set('rat', 'true');
     }
 
-    let interval = setInterval(function () {
-        if (typeof Lampa !== 'undefined' && Lampa.InteractionLine && Lampa.InteractionLine.listener) {
-            clearInterval(interval);
-            if (Lampa.Storage.get('int_plug', 'false') !== 'false') {
-                initializeSettings();
+    document.addEventListener('DOMContentLoaded', function () {
+        let interval = setInterval(function () {
+            if (typeof Lampa !== 'undefined' && Lampa.InteractionLine && Lampa.InteractionLine.listener) {
+                clearInterval(interval);
+                if (Lampa.Storage.get('int_plug', 'false') !== 'false') {
+                    initializeSettings();
+                }
+                if (Lampa.InteractionLine && Lampa.InteractionLine.listener) {
+                    Lampa.InteractionLine.listener.follow('open', function (event) {
+                        if (event.name == 'main') {
+                            if (Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').length == 0) {
+                                Lampa.SettingsApi.addComponent({
+                                    component: 'style_interface',
+                                    name: 'Стильный интерфейс'
+                                });
+                            }
+                            Lampa.InteractionLine.main().update();
+                            Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').addClass('hide');
+                        }
+                    });
+                } else {
+                    console.error('Lampa.InteractionLine.listener is undefined');
+                }
             }
-        }
-    }, 200);
+        }, 200);
+    });
 })();
