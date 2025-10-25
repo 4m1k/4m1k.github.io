@@ -352,23 +352,27 @@
             return new new_interface(object);
         };
 
-        // Переопределение других возможных компонентов
-        if (Lampa.Interaction) {
-            console.log('startPlugin: Overriding Lampa.Interaction');
-            let old_interaction = Lampa.Interaction;
-            Lampa.Interaction = function (object) {
-                console.log('Interaction: Processing object', object);
-                return new new_interface(object);
-            };
-        }
+        // Отладка всех методов Lampa
+        Object.keys(Lampa).forEach(key => {
+            if (typeof Lampa[key] === 'function') {
+                let original = Lampa[key];
+                Lampa[key] = function (...args) {
+                    console.log(`Lampa.${key} called with:`, args);
+                    return original.apply(this, args);
+                };
+            }
+        });
 
-        if (Lampa.Component) {
-            console.log('startPlugin: Overriding Lampa.Component');
-            let old_component = Lampa.Component;
-            Lampa.Component = function (object) {
-                console.log('Component: Processing object', object);
-                return new new_interface(object);
-            };
+        // Принудительный вызов для текущей активности
+        if (Lampa.Activity && Lampa.Activity.active) {
+            console.log('startPlugin: Forcing CardList for active activity', Lampa.Activity.active);
+            let active = Lampa.Activity.active();
+            if (active.component && active.component !== 'style_interface') {
+                let cardList = new CardList(active);
+                cardList.build(active.items || []);
+                $('body').append(cardList.render());
+                console.log('startPlugin: Forced CardList rendered');
+            }
         }
 
         Lampa.Template.add('new_interface_style', `
