@@ -8,11 +8,12 @@
     }
 
     // Проверка, что платформа — телевизор
+    console.log('Checking platform: Lampa.Platform.tv()');
     Lampa.Platform.tv();
 
     // Класс для отображения информации о фильме/сериале
     function InfoCard(data) {
-        let card, request, cache = {};
+        let card, request = new Lampa.Reguest(), cache = {};
         let timeout;
 
         this.create = function () {
@@ -30,9 +31,9 @@
         this.update = function (movieData) {
             console.log('InfoCard: Updating with data', movieData);
             card.find('.new-interface-info__head,.new-interface-info__details').text('---');
-            card.find('.new-interface-info__title').text(movieData.title);
+            card.find('.new-interface-info__title').text(movieData.title || 'No title');
             card.find('.new-interface-info__description').text(movieData.overview || Lampa.Lang.translate('full_notext'));
-            Lampa.Background.change(Lampa.Api.img(movieData.backdrop_path, 'w200'));
+            Lampa.Background.change(Lampa.Api.img(movieData.backdrop_path, 'w200') || '');
             this.draw(movieData);
         };
 
@@ -42,8 +43,8 @@
             let rating = parseFloat((movieData.vote_average || 0) + '').toFixed(1);
             let head = [];
             let details = [];
-            let countries = Lampa.Api.sources.tmdb.parseCountries(movieData);
-            let pg = Lampa.Api.sources.tmdb.parsePG(movieData);
+            let countries = Lampa.Api.sources.tmdb.parseCountries(movieData) || [];
+            let pg = Lampa.Api.sources.tmdb.parsePG(movieData) || '';
 
             if (year !== '0000') head.push('<span>' + year + '</span>');
             if (countries.length > 0) head.push(countries.join(', '));
@@ -79,6 +80,8 @@
                 request.silent(url, function (response) {
                     cache[url] = response;
                     _this.draw(response);
+                }, function () {
+                    console.error('InfoCard: Failed to load data from', url);
                 });
             }, 300);
         };
@@ -87,7 +90,9 @@
             return card;
         };
 
-        this.empty = function () {};
+        this.empty = function () {
+            console.log('InfoCard: Empty called');
+        };
 
         this.destroy = function () {
             console.log('InfoCard: Destroying card');
@@ -146,6 +151,7 @@
                     Lampa.Layer.visible(items[active + 1].render(true));
                 }, function () {
                     _this.next_wait = false;
+                    console.log('CardList: Failed to load next items');
                 });
             }
         };
@@ -172,6 +178,7 @@
             item.onBack = this.back.bind(this);
             item.onToggle = function () {
                 active = items.indexOf(item);
+                console.log('CardList: Toggled item, active index:', active);
             };
             if (this.onMore) item.onMore = this.onMore.bind(this);
             item.onFocus = function (elem) {
@@ -196,6 +203,7 @@
         };
 
         this.down = function () {
+            console.log('CardList: Moving down, current active:', active);
             active++;
             active = Math.min(active, items.length - 1);
             if (!viewall) lezydata.slice(0, active + 2).forEach(this.append.bind(this));
@@ -204,6 +212,7 @@
         };
 
         this.up = function () {
+            console.log('CardList: Moving up, current active:', active);
             active--;
             if (active < 0) {
                 active = 0;
@@ -215,7 +224,7 @@
         };
 
         this.background = function (elem) {
-            let new_background = Lampa.Api.img(elem.backdrop_path, 'w1280');
+            let new_background = Lampa.Api.img(elem.backdrop_path, 'w1280') || '';
             clearTimeout(background_timer);
             if (new_background == background_last) return;
 
@@ -227,6 +236,7 @@
                 };
                 background_img[0].onerror = function () {
                     background_img.removeClass('loaded');
+                    console.error('CardList: Failed to load background', new_background);
                 };
                 background_last = new_background;
                 setTimeout(function () {
@@ -246,6 +256,7 @@
             html.append(scroll.render());
 
             if (newlampa) {
+                console.log('CardList: Applying newlampa features');
                 Lampa.Layer.update(html);
                 Lampa.Layer.visible(scroll.render(true));
                 scroll.onEnd = this.loadNext.bind(this);
@@ -268,6 +279,7 @@
                 toggle: function () {
                     if (_this4.activity.canRefresh()) return false;
                     if (items.length) {
+                        console.log('CardList: Toggling active item', active);
                         items[active].toggle();
                     }
                 },
@@ -292,6 +304,7 @@
         };
 
         this.refresh = function () {
+            console.log('CardList: Refreshing');
             this.activity.loader(true);
             this.activity.need_refresh = true;
         };
@@ -458,7 +471,6 @@
             </style>
         `);
         $('body').append(Lampa.Template.get('new_interface_style', {}, true));
-
         console.log('startPlugin: Styles added');
     }
 
@@ -466,7 +478,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         console.log('DOMContentLoaded: Checking Lampa initialization');
         let interval = setInterval(function () {
-            if (typeof Lampa !== 'undefined' && Lampa.InteractionLine && Lampa.InteractionLine.listener) {
+            if (typeof Lampa !== 'undefined') {
                 console.log('Lampa initialized, starting plugin');
                 clearInterval(interval);
                 if (!window.plugin_interface_ready) {
