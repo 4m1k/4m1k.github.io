@@ -362,6 +362,13 @@
     // Инициализация плагина
     function startPlugin() {
         console.log('startPlugin: Initializing');
+
+        // Защита console.log от переопределения
+        const originalConsoleLog = console.log;
+        console.log = function (...args) {
+            originalConsoleLog.apply(console, args);
+        };
+
         let old_interface = Lampa.InteractionMain;
         let new_interface = CardList;
 
@@ -382,57 +389,26 @@
             }
         });
 
-        // Привязка к событию рендеринга активности
+        // Привязка к событиям активности
         if (Lampa.Activity && Lampa.Activity.listener) {
-            console.log('startPlugin: Subscribing to Activity render event');
-            Lampa.Activity.listener.follow('render', function (activity) {
-                console.log('Activity render event:', activity);
-                if (activity && activity.component && activity.component !== 'style_interface') {
-                    console.log('startPlugin: Forcing CardList for activity', activity);
-                    let cardList = new CardList(activity);
-                    cardList.build(activity.items || []);
-                    $('body').append(cardList.render());
-                    console.log('startPlugin: Forced CardList rendered for activity');
-                } else {
-                    console.log('startPlugin: No valid activity or component for render event');
-                }
+            console.log('startPlugin: Subscribing to Activity events');
+            ['render', 'ready', 'open'].forEach(event => {
+                Lampa.Activity.listener.follow(event, function (activity) {
+                    console.log(`Activity ${event} event:`, activity);
+                    if (activity && activity.component && activity.component !== 'style_interface') {
+                        console.log(`startPlugin: Forcing CardList for ${event} event`, activity);
+                        let cardList = new CardList(activity);
+                        cardList.build(activity.items || []);
+                        $('body').append(cardList.render());
+                        console.log(`startPlugin: Forced CardList rendered for ${event} event`);
+                    } else {
+                        console.log(`startPlugin: No valid activity or component for ${event} event`);
+                    }
+                });
             });
         } else {
             console.log('startPlugin: Lampa.Activity.listener not available');
         }
-
-        // Ожидание инициализации активности
-        let attempts = 0;
-        const maxAttempts = 20;
-        let interval = setInterval(function () {
-            console.log('startPlugin: Checking active activity, attempt', attempts + 1);
-            if (Lampa.Activity && typeof Lampa.Activity.active === 'function') {
-                let active = Lampa.Activity.active();
-                console.log('startPlugin: Active activity', active);
-                if (active && active.component && active.component !== 'style_interface') {
-                    console.log('startPlugin: Forcing CardList for active activity', active);
-                    let cardList = new CardList(active);
-                    cardList.build(active.items || []);
-                    $('body').append(cardList.render());
-                    console.log('startPlugin: Forced CardList rendered');
-                    clearInterval(interval);
-                } else {
-                    console.log('startPlugin: No valid active activity or component');
-                    attempts++;
-                    if (attempts >= maxAttempts) {
-                        console.log('startPlugin: Max attempts reached, stopping');
-                        clearInterval(interval);
-                    }
-                }
-            } else {
-                console.log('startPlugin: Lampa.Activity.active not available');
-                attempts++;
-                if (attempts >= maxAttempts) {
-                    console.log('startPlugin: Max attempts reached, stopping');
-                    clearInterval(interval);
-                }
-            }
-        }, 1000);
 
         Lampa.Template.add('new_interface_style', `
             <style>
@@ -547,6 +523,6 @@
     }
 
     // Немедленный запуск плагина
-    console.log('interface.js: Starting plugin immediately');
+    console.log('interface.js: Script loaded and starting');
     startPlugin();
 })();
