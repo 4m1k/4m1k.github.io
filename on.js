@@ -1476,7 +1476,7 @@
     var manifst = {
       type: 'video',
       version: 'v 2',
-      name: '4m1K',
+      name: 'Онлайн',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1681,4 +1681,5 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
