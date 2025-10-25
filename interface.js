@@ -16,6 +16,7 @@
         let timeout;
 
         this.create = function () {
+            console.log('InfoCard: Creating card');
             card = $('<div class="new-interface-info">\n' +
                      '    <div class="new-interface-info__body">\n' +
                      '        <div class="new-interface-info__head"></div>\n' +
@@ -27,146 +28,57 @@
         };
 
         this.update = function (movieData) {
-            card.find('.new-interface-info__title').html('');
-
-            if (Lampa.Storage.get('logo_card_style') !== true) {
-                let type = movieData.name ? 'tv' : 'movie';
-                let apiKey = Lampa.TMDB.key();
-                let url = Lampa.TMDB.api(type + '/' + movieData.id + '/images?api_key=' + apiKey + '&language=' + Lampa.Storage.get('language'));
-
-                $.get(url, function (response) {
-                    if (response.logos && response.logos[0]) {
-                        let logo = response.logos[0].file_path;
-                        if (logo !== '') {
-                            if (Lampa.Storage.get('desc') !== true) {
-                                card.find('.new-interface-info__title').html(
-                                    '<img style="margin-top:0.3em; margin-bottom:0.1em; max-height:1.8em; max-width:6.8em" src="' +
-                                    Lampa.TMDB.image('t/p/w500' + logo.replace('.svg', '.png')) + '" />'
-                                );
-                            } else {
-                                card.find('.new-interface-info__title').html(
-                                    '<img style="margin-top:0.3em; margin-bottom:0.1em; max-height:2.8em; max-width:6.8em" src="' +
-                                    Lampa.TMDB.image('t/p/w500' + logo.replace('.svg', '.png')) + '" />'
-                                );
-                            }
-                        } else {
-                            card.find('.new-interface-info__title').html(movieData.title);
-                        }
-                    } else {
-                        card.find('.new-interface-info__title').html(movieData.title);
-                    }
-                });
-            } else {
-                card.find('.new-interface-info__title').html(movieData.title);
-            }
-
-            if (Lampa.Storage.get('desc') !== true) {
-                card.find('.new-interface-info__description').html(movieData.overview || Lampa.Lang.translate('full_notext'));
-            }
-
-            Lampa.Layer.update(Lampa.Api.img(movieData.backdrop_path, 'w200'));
-
+            console.log('InfoCard: Updating with data', movieData);
+            card.find('.new-interface-info__head,.new-interface-info__details').text('---');
+            card.find('.new-interface-info__title').text(movieData.title);
+            card.find('.new-interface-info__description').text(movieData.overview || Lampa.Lang.translate('full_notext'));
+            Lampa.Background.change(Lampa.Api.img(movieData.backdrop_path, 'w200'));
             this.draw(movieData);
         };
 
         this.draw = function (movieData) {
+            console.log('InfoCard: Drawing details', movieData);
             let year = ((movieData.release_date || movieData.first_air_date || '0000') + '').slice(0, 4);
             let rating = parseFloat((movieData.vote_average || 0) + '').toFixed(1);
-            let details = [];
             let head = [];
+            let details = [];
+            let countries = Lampa.Api.sources.tmdb.parseCountries(movieData);
+            let pg = Lampa.Api.sources.tmdb.parsePG(movieData);
 
-            let genres = Lampa.Api.genres.tmdb.genres(movieData);
-            let countries = Lampa.Api.genres.tmdb.parseCountries(movieData);
-
-            if (year !== '0000') {
-                head.push('<span class="full-start__pg" style="font-size: 0.9em;">' + year + '</span>');
+            if (year !== '0000') head.push('<span>' + year + '</span>');
+            if (countries.length > 0) head.push(countries.join(', '));
+            if (rating > 0) details.push('<div class="full-start__rate"><div>' + rating + '</div><div>TMDB</div></div>');
+            if (movieData.genres && movieData.genres.length > 0) {
+                details.push(movieData.genres.map(function (item) {
+                    return Lampa.Utils.capitalizeFirstLetter(item.name);
+                }).join(' | '));
             }
+            if (movieData.runtime) details.push(Lampa.Utils.secondsToTime(movieData.runtime * 60, true));
+            if (pg) details.push('<span class="full-start__pg" style="font-size: 0.9em;">' + pg + '</span>');
 
-            if (countries.length > 0) {
-                head.push(countries.join(', '));
-            }
-
-            if (Lampa.Storage.get('rat') !== true && rating > 0) {
-                details.push('<div class="full-start__rate"><div>' + rating + '</div><div>TMDB</div></div>');
-            }
-
-            if (Lampa.Storage.get('ganr') !== true && movieData.genres && movieData.genres.length > 0) {
-                details.push(movieData.genres.map(function (genre) {
-                    return Lampa.Lang.capitalizeFirstLetter(genre.name);
-                }).join('<span class="new-interface-info__split">&#9679;</span>'));
-            }
-
-            if (Lampa.Storage.get('vremya') !== true && movieData.runtime) {
-                details.push(Lampa.Lang.secondsToTime(movieData.runtime * 60, true));
-            }
-
-            if (Lampa.Storage.get('seas') !== true && movieData.number_of_seasons) {
-                details.push('<span class="full-start__pg" style="font-size: 0.9em;">Сезонов ' + movieData.number_of_seasons + '</span>');
-            }
-
-            if (Lampa.Storage.get('eps') !== true && movieData.number_of_episodes) {
-                details.push('<span class="full-start__pg" style="font-size: 0.9em;">Эпизодов ' + movieData.number_of_episodes + '</span>');
-            }
-
-            if (Lampa.Storage.get('year_ogr') !== true && countries) {
-                details.push('<span class="full-start__status" style="font-size: 0.9em;">' + countries + '</span>');
-            }
-
-            if (Lampa.Storage.get('status') !== true && movieData.status) {
-                let statusText = '';
-                switch (movieData.status.toLowerCase()) {
-                    case 'released':
-                        statusText = 'Выпущенный';
-                        break;
-                    case 'ended':
-                        statusText = 'Закончен';
-                        break;
-                    case 'returning series':
-                        statusText = 'Онгоинг';
-                        break;
-                    case 'in production':
-                        statusText = 'В производстве';
-                        break;
-                    case 'post production':
-                        statusText = 'Скоро';
-                        break;
-                    case 'planned':
-                        statusText = 'Запланировано';
-                        break;
-                    case 'canceled':
-                        statusText = 'Отменено';
-                        break;
-                    default:
-                        statusText = movieData.status;
-                        break;
-                }
-                if (statusText) {
-                    details.push('<span class="full-start__status" style="font-size: 0.9em;">' + statusText + '</span>');
-                }
-            }
-
-            card.find('.new-interface-info__head').html(head.join(', '));
+            card.find('.new-interface-info__head').empty().append(head.join(', '));
             card.find('.new-interface-info__details').html(details.join('<span class="new-interface-info__split">&#9679;</span>'));
         };
 
-        this.loadNext = function (movieData) {
-            let self = this;
+        this.load = function (movieData) {
+            let _this = this;
             clearTimeout(timeout);
-
             let url = Lampa.TMDB.api((movieData.name ? 'tv' : 'movie') + '/' + movieData.id +
-                '/images?api_key=' + Lampa.TMDB.key() + '&append_to_response=content_ratings,release_dates&language=' +
+                '?api_key=' + Lampa.TMDB.key() + '&append_to_response=content_ratings,release_dates&language=' +
                 Lampa.Storage.get('language'));
 
             if (cache[url]) {
+                console.log('InfoCard: Using cached data for', url);
                 return this.draw(cache[url]);
             }
 
             timeout = setTimeout(function () {
+                console.log('InfoCard: Loading data from', url);
                 request.clear();
                 request.timeout(5000);
                 request.silent(url, function (response) {
                     cache[url] = response;
-                    self.draw(response);
+                    _this.draw(response);
                 });
             }, 300);
         };
@@ -175,195 +87,269 @@
             return card;
         };
 
+        this.empty = function () {};
+
         this.destroy = function () {
+            console.log('InfoCard: Destroying card');
             card.remove();
             cache = {};
             card = null;
         };
     }
 
-    function CardList(data) {
+    // Класс для отображения списка карточек
+    function CardList(object) {
         let request = new Lampa.Reguest();
         let scroll = new Lampa.Scroll({ mask: true, over: true, scroll_by_item: true });
         let items = [];
-        let container = $('<div class="new-interface"><img class="full-start__background"></div>');
-        let index = 0;
-        let isNewVersion = Lampa.Manifest.app_digital >= 166;
-        let currentItems, infoCard;
-        let useWidePosters = Lampa.Storage.field('card_views_type') == 'wide_post' ||
-                             Lampa.Storage.field('wide_post') == 'true';
-        let background = container.find('.full-start__background');
-        let currentBackground = '';
-        let backgroundTimeout;
+        let html = $('<div class="new-interface"><img class="full-start__background"></div>');
+        let active = 0;
+        let newlampa = Lampa.Manifest.app_digital >= 166;
+        let info;
+        let lezydata;
+        let viewall = Lampa.Storage.field('card_views_type') == 'view' || Lampa.Storage.field('navigation_type') == 'mouse';
+        let background_img = html.find('.full-start__background');
+        let background_last = '';
+        let background_timer;
 
-        this.create = function () {};
+        this.create = function () {
+            console.log('CardList: Creating');
+        };
 
-        this.start = function () {
-            if (data.source == 'tmdb') {
-                let button = $('<div class="empty__footer"><div class="simple-button selector">' +
-                               Lampa.Lang.translate('empty') + '</div></div>');
+        this.empty = function () {
+            console.log('CardList: Empty state');
+            let button;
+            if (object.source == 'tmdb') {
+                button = $('<div class="empty__footer"><div class="simple-button selector">' +
+                           Lampa.Lang.translate('change_source_on_cub') + '</div></div>');
                 button.find('.selector').on('hover:enter', function () {
+                    console.log('CardList: Changing source to cub');
                     Lampa.Storage.set('source', 'cub');
-                    Lampa.Background.replace({ source: 'cub' });
+                    Lampa.Activity.replace({ source: 'cub' });
                 });
-
-                let info = new Lampa.InteractionLine();
-                container.append(info.render(button));
-                this.activity.listener.follow('ready', function () {});
-                this.activity.stop();
             }
+            let empty = new Lampa.Empty();
+            html.append(empty.render(button));
+            this.start = empty.start;
+            this.activity.loader(false);
+            this.activity.toggle();
         };
 
         this.loadNext = function () {
+            let _this = this;
             if (this.next && !this.next_wait && items.length) {
+                console.log('CardList: Loading next items');
                 this.next_wait = true;
-                this.next(function (results) {
-                    this.next_wait = false;
-                    results.forEach(this.append.bind(this));
-                    Lampa.Layer.visible(items[index + 1].render(true));
-                }.bind(this), function () {
-                    this.next_wait = false;
+                this.next(function (new_data) {
+                    _this.next_wait = false;
+                    new_data.forEach(_this.append.bind(_this));
+                    Lampa.Layer.visible(items[active + 1].render(true));
+                }, function () {
+                    _this.next_wait = false;
                 });
             }
         };
 
-        this.append = function (item) {
-            if (item.ready) return;
-            item.ready = true;
+        this.append = function (element) {
+            let _this3 = this;
+            if (element.ready) return;
+            element.ready = true;
 
-            let card = new Lampa.InteractionLine(item, {
-                url: item.url,
+            console.log('CardList: Appending element', element);
+            let item = new Lampa.InteractionLine(element, {
+                url: element.url,
                 card_small: true,
-                cardClass: item.cardClass,
-                genres: data.genres,
-                object: data,
-                card_wide: Lampa.Storage.field('wide_post'),
-                nomore: item.nomore
+                cardClass: element.cardClass,
+                genres: object.genres,
+                object: object,
+                card_wide: Lampa.Storage.field('navigation_type') == 'mouse',
+                nomore: element.nomore
             });
 
-            card.create();
-            card.onBack = this.onBack.bind(this);
-            card.onUp = this.up.bind(this);
-            card.onDown = this.down.bind(this);
-            card.onToggle = function () {
-                index = items.indexOf(card);
+            item.create();
+            item.onDown = this.down.bind(this);
+            item.onUp = this.up.bind(this);
+            item.onBack = this.back.bind(this);
+            item.onToggle = function () {
+                active = items.indexOf(item);
             };
-            if (this.onMore) card.onMore = this.onMore.bind(this);
-            card.onFocus = function (itemData) {
-                infoCard.update(itemData);
-                this.background(itemData);
-            }.bind(this);
-            card.onHover = function (itemData) {
-                infoCard.update(itemData);
-                this.background(itemData);
-            }.bind(this);
-            card.onEnd = infoCard.render.bind(infoCard);
+            if (this.onMore) item.onMore = this.onMore.bind(this);
+            item.onFocus = function (elem) {
+                console.log('CardList: Focusing on', elem);
+                info.update(elem);
+                _this3.background(elem);
+            };
+            item.onHover = function (elem) {
+                console.log('CardList: Hovering on', elem);
+                info.update(elem);
+                _this3.background(elem);
+            };
+            item.onFocusMore = info.empty.bind(info);
 
-            scroll.append(card.render());
-            items.push(card);
+            scroll.append(item.render());
+            items.push(item);
         };
 
-        this.onFocusMore = function () {};
-
-        this.onBack = function () {
+        this.back = function () {
+            console.log('CardList: Navigating back');
             Lampa.Activity.backward();
         };
 
         this.down = function () {
-            index++;
-            index = Math.min(index, items.length - 1);
-            if (!useWidePosters) {
-                currentItems.slice(0, index + 2).forEach(this.append.bind(this));
-            }
-            items[index].toggle();
-            scroll.update(items[index].render());
+            active++;
+            active = Math.min(active, items.length - 1);
+            if (!viewall) lezydata.slice(0, active + 2).forEach(this.append.bind(this));
+            items[active].toggle();
+            scroll.update(items[active].render());
         };
 
         this.up = function () {
-            index--;
-            if (index < 0) {
-                index = 0;
+            active--;
+            if (active < 0) {
+                active = 0;
                 Lampa.Controller.toggle('head');
             } else {
-                items[index].toggle();
-                scroll.update(items[index].render());
+                items[active].toggle();
+                scroll.update(items[active].render());
             }
         };
 
-        this.background = function (itemData) {
-            let imageUrl = Lampa.Api.img(itemData.backdrop_path, 'w1280');
-            clearTimeout(backgroundTimeout);
+        this.background = function (elem) {
+            let new_background = Lampa.Api.img(elem.backdrop_path, 'w1280');
+            clearTimeout(background_timer);
+            if (new_background == background_last) return;
 
-            if (imageUrl == currentBackground) return;
-
-            backgroundTimeout = setTimeout(function () {
-                background.removeClass('loaded');
-                background[0].onload = function () {
-                    background.addClass('loaded');
+            console.log('CardList: Updating background', new_background);
+            background_timer = setTimeout(function () {
+                background_img.removeClass('loaded');
+                background_img[0].onload = function () {
+                    background_img.addClass('loaded');
                 };
-                background[0].onerror = function () {
-                    background.removeClass('loaded');
+                background_img[0].onerror = function () {
+                    background_img.removeClass('loaded');
                 };
-                currentBackground = imageUrl;
+                background_last = new_background;
                 setTimeout(function () {
-                    background[0].src = currentBackground;
-                }, 50);
-            }, 100);
+                    background_img[0].src = background_last;
+                }, 300);
+            }, 1000);
         };
 
-        this.append = function (itemData) {
-            currentItems = itemData;
-            infoCard = new InfoCard(data);
-            infoCard.create();
-            scroll.minus(infoCard.render());
-            itemData.slice(0, useWidePosters ? itemData.length : 2).forEach(this.append.bind(this));
-            container.append(infoCard.render());
-            container.append(scroll.render());
+        this.build = function (data) {
+            console.log('CardList: Building with data', data);
+            lezydata = data;
+            info = new InfoCard(object);
+            info.create();
+            scroll.minus(info.render());
+            data.slice(0, viewall ? data.length : 2).forEach(this.append.bind(this));
+            html.append(info.render());
+            html.append(scroll.render());
 
-            if (isNewVersion) {
-                Lampa.Layer.update(container);
+            if (newlampa) {
+                Lampa.Layer.update(html);
                 Lampa.Layer.visible(scroll.render(true));
-                scroll.onWheel = this.loadNext.bind(this);
-                scroll.onFocusMore = function (direction) {
-                    if (!Lampa.Layer.enabled(this)) this.start();
-                    if (direction > 0) this.down();
-                    else if (index > 0) this.up();
+                scroll.onEnd = this.loadNext.bind(this);
+                scroll.onWheel = function (step) {
+                    if (!Lampa.Controller.own(this)) this.start();
+                    if (step > 0) this.down();
+                    else if (active > 0) this.up();
                 }.bind(this);
             }
 
-            this.activity.listener.follow('ready', function () {});
-            this.activity.stop();
+            this.activity.loader(false);
+            this.activity.toggle();
         };
 
+        this.start = function () {
+            let _this4 = this;
+            console.log('CardList: Starting');
+            Lampa.Controller.add('content', {
+                link: this,
+                toggle: function () {
+                    if (_this4.activity.canRefresh()) return false;
+                    if (items.length) {
+                        items[active].toggle();
+                    }
+                },
+                update: function () {},
+                left: function () {
+                    if (Navigator.canmove('left')) Navigator.move('left');
+                    else Lampa.Controller.toggle('menu');
+                },
+                right: function () {
+                    Navigator.move('right');
+                },
+                up: function () {
+                    if (Navigator.canmove('up')) Navigator.move('up');
+                    else Lampa.Controller.toggle('head');
+                },
+                down: function () {
+                    if (Navigator.canmove('down')) Navigator.move('down');
+                },
+                back: this.back
+            });
+            Lampa.Controller.toggle('content');
+        };
+
+        this.refresh = function () {
+            this.activity.loader(true);
+            this.activity.need_refresh = true;
+        };
+
+        this.pause = function () {};
+
+        this.stop = function () {};
+
         this.render = function () {
-            return container;
+            return html;
         };
 
         this.destroy = function () {
+            console.log('CardList: Destroying');
             request.clear();
-            Lampa.Arrays.remove(items);
+            Lampa.Arrays.destroy(items);
             scroll.destroy();
-            if (infoCard) infoCard.destroy();
-            container.remove();
+            if (info) info.destroy();
+            html.remove();
             items = null;
             request = null;
-            currentItems = null;
+            lezydata = null;
         };
     }
 
-    window.plugin_interface_ready = true;
-    let OriginalInteractionMain = Lampa.InteractionMain;
+    // Инициализация плагина
+    function startPlugin() {
+        console.log('startPlugin: Initializing');
+        window.plugin_interface_ready = true;
+        let old_interface = Lampa.InteractionMain;
+        let new_interface = CardList;
 
-    Lampa.InteractionMain = function (data) {
-        let InteractionClass = CardList;
-        if (window.innerWidth < 767) InteractionClass = OriginalInteractionMain;
-        if (Lampa.Manifest.app_digital < 153) InteractionClass = OriginalInteractionMain;
-        if (Lampa.Platform.screen('mobile')) InteractionClass = OriginalInteractionMain;
-        if (data.title === 'Избранное') InteractionClass = OriginalInteractionMain;
-        return new InteractionClass(data);
-    };
+        Lampa.InteractionMain = function (object) {
+            console.log('InteractionMain: Processing object', object);
+            let use = new_interface;
+            if (!(object.source == 'tmdb' || object.source == 'cub')) {
+                console.log('InteractionMain: Using old interface - invalid source', object.source);
+                use = old_interface;
+            }
+            if (window.innerWidth < 767) {
+                console.log('InteractionMain: Using old interface - window.innerWidth < 767');
+                use = old_interface;
+            }
+            if (Lampa.Manifest.app_digital < 153) {
+                console.log('InteractionMain: Using old interface - app_digital < 153', Lampa.Manifest.app_digital);
+                use = old_interface;
+            }
+            if (Lampa.Platform.screen('mobile')) {
+                console.log('InteractionMain: Using old interface - mobile device');
+                use = old_interface;
+            }
+            if (object.title === 'Избранное') {
+                console.log('InteractionMain: Using old interface - title is Избранное');
+                use = old_interface;
+            }
+            return new use(object);
+        };
 
-    if (Lampa.Storage.get('wide_post') == true) {
         Lampa.Template.add('new_interface_style', `
             <style>
                 .new-interface .card--small.card--wide {
@@ -372,7 +358,7 @@
                 .new-interface-info {
                     position: relative;
                     padding: 1.5em;
-                    height: 26em;
+                    height: 24em;
                 }
                 .new-interface-info__body {
                     width: 80%;
@@ -417,140 +403,31 @@
                     -ms-flex-wrap: wrap;
                     flex-wrap: wrap;
                     min-height: 1.9em;
-                    font-size: 1.3em;
+                    font-size: 1.1em;
                 }
                 .new-interface-info__split {
                     margin: 0 1em;
                     font-size: 0.7em;
                 }
                 .new-interface-info__description {
-                    font-size: 1.4em;
-                    font-weight: 310;
-                    line-height: 1.3;
+                    font-size: 1.2em;
+                    font-weight: 300;
+                    line-height: 1.5;
                     overflow: hidden;
                     -o-text-overflow: ".";
                     text-overflow: ".";
                     display: -webkit-box;
-                    -webkit-line-clamp: 3;
-                    line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                    width: 65%;
-                }
-                .new-interface .card-more__box {
-                    padding-bottom: 95%;
-                }
-                .new-interface .full-start__background {
-                    height: 108%;
-                    top: -5em;
-                }
-                .new-interface .full-start__rate {
-                    font-size: 1.3em;
-                    margin-right: 0;
-                }
-                .new-interface .card__promo {
-                    display: none;
-                }
-                .new-interface .card.card--wide+.card-more .card-more__box {
-                    padding-bottom: 95%;
-                }
-                .new-interface .card.card--wide .card-watched {
-                    display: none !important;
-                }
-                body.light--version .new-interface-info__body {
-                    width: 69%;
-                    padding-top: 1.5em;
-                }
-                body.light--version .new-interface-info {
-                    height: 25.3em;
-                }
-                body.advanced--animation:not(.no--animation) .new-interface .card--small.card--wide.focus .card__view {
-                    animation: animation-card-focus 0.2s;
-                }
-                body.advanced--animation:not(.no--animation) .new-interface .card--small.card--wide.animate-trigger-enter .card__view {
-                    animation: animation-trigger-enter 0.2s forwards;
-                }
-            </style>
-        `);
-        $('body').append(Lampa.Template.get('new_interface_style', {}, true));
-    } else {
-        Lampa.Template.add('new_interface_style', `
-            <style>
-                .new-interface .card--small.card--wide {
-                    width: 18.3em;
-                }
-                .new-interface-info {
-                    position: relative;
-                    padding: 1.5em;
-                    height: 20.4em;
-                }
-                .new-interface-info__body {
-                    width: 80%;
-                    padding-top: 0.2em;
-                }
-                .new-interface-info__head {
-                    color: rgba(255, 255, 255, 0.6);
-                    margin-bottom: 0.3em;
-                    font-size: 1.3em;
-                    min-height: 1em;
-                }
-                .new-interface-info__head span {
-                    color: #fff;
-                }
-                .new-interface-info__title {
-                    font-size: 4em;
-                    font-weight: 600;
-                    margin-bottom: 0.2em;
-                    overflow: hidden;
-                    -o-text-overflow: ".";
-                    text-overflow: ".";
-                    display: -webkit-box;
-                    -webkit-line-clamp: 1;
-                    line-clamp: 1;
-                    -webkit-box-orient: vertical;
-                    margin-left: -0.03em;
-                    line-height: 1.3;
-                }
-                .new-interface-info__details {
-                    margin-bottom: 1.6em;
-                    display: -webkit-box;
-                    display: -webkit-flex;
-                    display: -moz-box;
-                    display: -ms-flexbox;
-                    display: flex;
-                    -webkit-box-align: center;
-                    -webkit-align-items: center;
-                    -moz-box-align: center;
-                    -ms-flex-align: center;
-                    align-items: center;
-                    -webkit-flex-wrap: wrap;
-                    -ms-flex-wrap: wrap;
-                    flex-wrap: wrap;
-                    min-height: 1.9em;
-                    font-size: 1.3em;
-                }
-                .new-interface-info__split {
-                    margin: 0 1em;
-                    font-size: 0.7em;
-                }
-                .new-interface-info__description {
-                    font-size: 1.4em;
-                    font-weight: 310;
-                    line-height: 1.3;
-                    overflow: hidden;
-                    -o-text-overflow: ".";
-                    text-overflow: ".";
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
+                    -webkit-line-clamp: 4;
+                    line-clamp: 4;
                     -webkit-box-orient: vertical;
                     width: 70%;
                 }
                 .new-interface .card-more__box {
-                    padding-bottom: 150%;
+                    padding-bottom: 95%;
                 }
                 .new-interface .full-start__background {
                     height: 108%;
-                    top: -5em;
+                    top: -6em;
                 }
                 .new-interface .full-start__rate {
                     font-size: 1.3em;
@@ -581,176 +458,22 @@
             </style>
         `);
         $('body').append(Lampa.Template.get('new_interface_style', {}, true));
+
+        console.log('startPlugin: Styles added');
     }
 
-    Lampa.SettingsApi.addComponent({
-        component: 'style_interface',
-        param: {
-            name: 'style_interface',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Стильный интерфейс',
-            description: 'Стильный интерфейс'
-        },
-        onRender: function (element) {
-            setTimeout(function () {
-                $('.settings-param > div:contains("Стильный интерфейс")').parent().insertAfter($('div[data-name="interface_size"]'));
-            }, 20);
-            element.on('hover:enter', function () {
-                Lampa.InteractionLine.create('style_interface');
-                Lampa.Controller.enabled().controller.onBack = function () {
-                    Lampa.InteractionLine.create('style_interface');
-                };
-            });
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'wide_post',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Широкие постеры'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'desc',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать описание'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'status',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать статус фильма/сериала'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'seas',
-            type: 'trigger',
-            default: false
-        },
-        field: {
-            name: 'Показывать количество сезонов'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'eps',
-            type: 'trigger',
-            default: false
-        },
-        field: {
-            name: 'Показывать количество эпизодов'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'year_ogr',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать возрастное ограничение'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'vremya',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать время фильма'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'ganr',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать жанр фильма'
-        }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: 'style_interface',
-        param: {
-            name: 'rat',
-            type: 'trigger',
-            default: true
-        },
-        field: {
-            name: 'Показывать рейтинг фильма'
-        }
-    });
-
-    function initializeSettings() {
-        Lampa.Storage.set('int_plug', 'true');
-        Lampa.Storage.set('wide_post', 'true');
-        Lampa.Storage.set('desc', 'true');
-        Lampa.Storage.set('status', 'true');
-        Lampa.Storage.set('seas', 'false');
-        Lampa.Storage.set('eps', 'false');
-        Lampa.Storage.set('year_ogr', 'true');
-        Lampa.Storage.set('vremya', 'true');
-        Lampa.Storage.set('ganr', 'true');
-        Lampa.Storage.set('rat', 'true');
-    }
-
+    // Запуск плагина
     document.addEventListener('DOMContentLoaded', function () {
+        console.log('DOMContentLoaded: Checking Lampa initialization');
         let interval = setInterval(function () {
             if (typeof Lampa !== 'undefined' && Lampa.InteractionLine && Lampa.InteractionLine.listener) {
+                console.log('Lampa initialized, starting plugin');
                 clearInterval(interval);
-                if (Lampa.Storage.get('int_plug', 'false') !== 'false') {
-                    initializeSettings();
+                if (!window.plugin_interface_ready) {
+                    startPlugin();
                 }
-                if (Lampa.InteractionLine && Lampa.InteractionLine.listener) {
-                    Lampa.InteractionLine.listener.follow('open', function (event) {
-                        if (event.name == 'main') {
-                            if (Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').length == 0) {
-                                Lampa.SettingsApi.addComponent({
-                                    component: 'style_interface',
-                                    name: 'Стильный интерфейс'
-                                });
-                            }
-                            Lampa.InteractionLine.main().update();
-                            Lampa.InteractionLine.main().render().find('[data-component="style_interface"]').addClass('hide');
-                        }
-                    });
-                } else {
-                    console.error('Lampa.InteractionLine.listener is undefined');
-                }
+            } else {
+                console.log('Waiting for Lampa to initialize...');
             }
         }, 200);
     });
