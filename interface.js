@@ -340,7 +340,6 @@
     // Инициализация плагина
     function startPlugin() {
         console.log('startPlugin: Initializing');
-        window.plugin_interface_ready = true;
         let old_interface = Lampa.InteractionMain;
         let new_interface = CardList;
 
@@ -483,23 +482,7 @@
         console.log('startPlugin: Styles added');
     }
 
-    // Запуск плагина
-    console.log('interface.js: Waiting for DOMContentLoaded');
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log('interface.js: DOMContentLoaded fired');
-        let interval = setInterval(function () {
-            console.log('interface.js: Checking Lampa initialization');
-            if (typeof Lampa !== 'undefined') {
-                console.log('interface.js: Lampa initialized, starting plugin');
-                clearInterval(interval);
-                if (!window.plugin_interface_ready) {
-                    startPlugin();
-                } else {
-                    console.log('interface.js: Plugin already initialized (plugin_interface_ready is true)');
-                }
-            } else {
-                console.log('interface.js: Waiting for Lampa to initialize...');
-            }
-        }, 200);
-    });
+    // Немедленный запуск плагина
+    console.log('interface.js: Starting plugin immediately');
+    startPlugin();
 })();
