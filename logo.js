@@ -1,5 +1,273 @@
 (function () {
     'use strict';
-     Lampa.Platform.tv();
-    function _0x2ab8(_0xccddae,_0xbf8e9d){var _0x18c47e=_0x3939();return _0x2ab8=function(_0x3d0bd5,_0x5914ad){_0x3d0bd5=_0x3d0bd5-0x103;var _0x162bd1=_0x18c47e[_0x3d0bd5];return _0x162bd1;},_0x2ab8(_0xccddae,_0xbf8e9d);}(function(_0x15c7e8,_0x40b303){var _0x177cb8=_0x2ab8,_0x186e6d=_0x15c7e8();while(!![]){try{var _0x84b8b6=parseInt(_0x177cb8(0x12d))/0x1*(parseInt(_0x177cb8(0x149))/0x2)+-parseInt(_0x177cb8(0x150))/0x3*(parseInt(_0x177cb8(0x148))/0x4)+parseInt(_0x177cb8(0x123))/0x5+-parseInt(_0x177cb8(0x12f))/0x6*(-parseInt(_0x177cb8(0x122))/0x7)+parseInt(_0x177cb8(0x117))/0x8+parseInt(_0x177cb8(0x142))/0x9*(-parseInt(_0x177cb8(0x126))/0xa)+-parseInt(_0x177cb8(0x144))/0xb;if(_0x84b8b6===_0x40b303)break;else _0x186e6d['push'](_0x186e6d['shift']());}catch(_0x26192f){_0x186e6d['push'](_0x186e6d['shift']());}}}(_0x3939,0x482b2),(function(){var _0x203470=_0x2ab8,_0x1336b6=(function(){var _0x4e415=!![];return function(_0x51796d,_0x2139c6){var _0x25384f=_0x4e415?function(){var _0x3aead4=_0x2ab8;if(_0x2139c6){var _0x36933f=_0x2139c6[_0x3aead4(0x118)](_0x51796d,arguments);return _0x2139c6=null,_0x36933f;}}:function(){};return _0x4e415=![],_0x25384f;};}()),_0x29ee96=(function(){var _0xd8a3bf=!![];return function(_0x4836a8,_0x339628){var _0x25cedc=_0xd8a3bf?function(){var _0x25c7ad=_0x2ab8;if(_0x339628){var _0x426e3f=_0x339628[_0x25c7ad(0x118)](_0x4836a8,arguments);return _0x339628=null,_0x426e3f;}}:function(){};return _0xd8a3bf=![],_0x25cedc;};}());'use strict';function _0x1a14c8(){var _0x287c92=_0x203470,_0x3a2fdc=_0x1336b6(this,function(){var _0x4f560b=_0x2ab8;return _0x3a2fdc[_0x4f560b(0x138)]()[_0x4f560b(0x10a)](_0x4f560b(0x13e))[_0x4f560b(0x138)]()[_0x4f560b(0x103)](_0x3a2fdc)[_0x4f560b(0x10a)](_0x4f560b(0x13e));});_0x3a2fdc();var _0x35e602=_0x29ee96(this,function(){var _0x58edc3=_0x2ab8,_0x778563;try{var _0x136827=Function('return\x20(function()\x20'+_0x58edc3(0x113)+');');_0x778563=_0x136827();}catch(_0x5c9bae){_0x778563=window;}var _0x5a3af4=_0x778563[_0x58edc3(0x12e)]=_0x778563[_0x58edc3(0x12e)]||{},_0x5a5b63=[_0x58edc3(0x105),_0x58edc3(0x140),'info',_0x58edc3(0x139),_0x58edc3(0x12c),_0x58edc3(0x115),_0x58edc3(0x10e)];for(var _0x5993f1=0x0;_0x5993f1<_0x5a5b63[_0x58edc3(0x137)];_0x5993f1++){var _0x41bf2f=_0x29ee96['constructor'][_0x58edc3(0x14b)][_0x58edc3(0x132)](_0x29ee96),_0xe843d6=_0x5a5b63[_0x5993f1],_0xc46b53=_0x5a3af4[_0xe843d6]||_0x41bf2f;_0x41bf2f[_0x58edc3(0x13a)]=_0x29ee96[_0x58edc3(0x132)](_0x29ee96),_0x41bf2f[_0x58edc3(0x138)]=_0xc46b53['toString'][_0x58edc3(0x132)](_0xc46b53),_0x5a3af4[_0xe843d6]=_0x41bf2f;}});_0x35e602(),Lampa[_0x287c92(0x141)][_0x287c92(0x12b)]({'component':'interface','param':{'name':_0x287c92(0x130),'type':_0x287c92(0x11b),'default':!![]},'field':{'name':_0x287c92(0x112)},'onRender':function(_0x57fde1){setTimeout(function(){var _0x5deaaa=_0x2ab8;$('div[data-name=\x22logo_card\x22]')[_0x5deaaa(0x14f)]('div[data-name=\x22card_interfice_cover\x22]');},0x0);}}),Lampa['Listener'][_0x287c92(0x10b)](_0x287c92(0x109),function(_0x5601cd){var _0x16b0b4=_0x287c92;if(_0x5601cd[_0x16b0b4(0x11c)]==_0x16b0b4(0x106)&&Lampa[_0x16b0b4(0x125)][_0x16b0b4(0x104)](_0x16b0b4(0x130))!==![]){var _0x261159=_0x5601cd[_0x16b0b4(0x10f)]['activity'][_0x16b0b4(0x121)]();$(_0x16b0b4(0x13f),_0x261159)[_0x16b0b4(0x13b)](),$(_0x16b0b4(0x134),_0x261159)[_0x16b0b4(0x13b)](),$(_0x16b0b4(0x151),_0x261159)[_0x16b0b4(0x13b)](),$(_0x16b0b4(0x120),_0x261159)[_0x16b0b4(0x13b)]();var _0x2a96e9=_0x5601cd[_0x16b0b4(0x116)]['movie'],_0x46e48f=_0x2a96e9[_0x16b0b4(0x128)]?'tv':'movie',_0x481d0d=_0x16b0b4(0x131),_0x4363e5=_0x16b0b4(0x136),_0x97a994=_0x16b0b4(0x14e),_0x1d2bc5=_0x4363e5+_0x46e48f+'/'+_0x2a96e9['id']+_0x16b0b4(0x11e)+_0x481d0d+_0x16b0b4(0x14d)+Lampa[_0x16b0b4(0x125)]['get']('language');$['get'](_0x1d2bc5,function(_0x3336a3){var _0x42e612=_0x16b0b4;if(_0x3336a3[_0x42e612(0x108)]&&_0x3336a3[_0x42e612(0x108)][0x0]){var _0xbb862d=_0x3336a3[_0x42e612(0x108)][0x0][_0x42e612(0x147)];if(_0xbb862d!==''){$(_0x42e612(0x13f),_0x261159)[_0x42e612(0x143)](),$(_0x42e612(0x134),_0x261159)[_0x42e612(0x143)]();var _0xc8a3ee;if(window['innerWidth']>0x249){if(Lampa[_0x42e612(0x125)][_0x42e612(0x104)](_0x42e612(0x14a))===_0x42e612(0x10c)&&!$(_0x42e612(0x13d))[_0x42e612(0x137)])_0xc8a3ee=_0x42e612(0x11f)+_0x97a994+'t/p/w500'+_0xbb862d[_0x42e612(0x133)]('.svg',_0x42e612(0x135))+_0x42e612(0x146),$(_0x42e612(0x13f),_0x261159)[_0x42e612(0x114)](_0xc8a3ee);else{if(Lampa[_0x42e612(0x125)][_0x42e612(0x104)](_0x42e612(0x14a))===_0x42e612(0x10c)&&$(_0x42e612(0x13d))[_0x42e612(0x137)])_0xc8a3ee=_0x42e612(0x11a)+_0x97a994+'t/p/w500'+_0xbb862d['replace']('.svg','.png')+'\x22\x20/>',$(_0x42e612(0x13f),_0x261159)[_0x42e612(0x114)](_0xc8a3ee);else Lampa[_0x42e612(0x125)]['get'](_0x42e612(0x14a))===_0x42e612(0x127)&&!$(_0x42e612(0x13d))[_0x42e612(0x137)]&&(_0xc8a3ee='<img\x20style=\x22margin-top:\x200.3em;\x20margin-bottom:\x200.4em;\x20max-height:\x201.8em;\x22\x20src=\x22'+_0x97a994+_0x42e612(0x107)+_0xbb862d['replace']('.svg',_0x42e612(0x135))+'\x22\x20/>',$(_0x42e612(0x134),_0x261159)[_0x42e612(0x114)](_0xc8a3ee));}}else Lampa[_0x42e612(0x125)][_0x42e612(0x104)](_0x42e612(0x14a))==='new'?(_0xc8a3ee=_0x42e612(0x145)+_0x97a994+_0x42e612(0x107)+_0xbb862d['replace'](_0x42e612(0x110),'.png')+_0x42e612(0x146),$(_0x42e612(0x13f),_0x261159)['html'](_0xc8a3ee)):(_0xc8a3ee=_0x42e612(0x12a)+_0x97a994+_0x42e612(0x107)+_0xbb862d[_0x42e612(0x133)](_0x42e612(0x110),_0x42e612(0x135))+_0x42e612(0x146),$(_0x42e612(0x134),_0x261159)[_0x42e612(0x114)](_0xc8a3ee));}}else $(_0x42e612(0x13f),_0x261159)[_0x42e612(0x143)](),$(_0x42e612(0x134),_0x261159)['show'](),$(_0x42e612(0x151),_0x261159)[_0x42e612(0x143)](),$(_0x42e612(0x120),_0x261159)['show']();});}});}if(window[_0x203470(0x14c)])_0x1a14c8();else Lampa[_0x203470(0x111)][_0x203470(0x10b)](_0x203470(0x11d),function(_0x449555){var _0x311552=_0x203470;if(_0x449555[_0x311552(0x11c)]=='ready')_0x1a14c8();});}()));function _0x3939(){var _0x50fb82=['complite','t/p/w500','logos','full','search','follow','new','Noty','trace','object','.svg','Listener','Логотип\x20вместо\x20названия','{}.constructor(\x22return\x20this\x22)(\x20)','html','table','data','2835384iZjrQj','apply','bylampa','<img\x20style=\x22margin-top:\x200.6em;\x20margin-bottom:\x200.4em;\x20max-height:\x202.8em;\x20max-width:\x206.8em;\x22\x20src=\x22','trigger','type','app','/images?api_key=','<img\x20style=\x22margin-top:\x200.3em;\x20margin-bottom:\x200.1em;\x20max-height:\x201.8em;\x22\x20src=\x22','.full-start__title-original','render','140mqpkqj','1849900KBmqgW','Manifest','Storage','151430Xurdyt','old','name','origin','<img\x20style=\x22margin-top:\x200.3em;\x20margin-bottom:\x200.4em;\x20max-height:\x202.2em;\x22\x20src=\x22','addParam','exception','12282rnicAB','console','149406MKffDh','logo_card','4ef0d7355d9ffb5151e987764708ce96','bind','replace','.full-start__title','.png','http://tmdbapi.bylampa.online/3/','length','toString','error','__proto__','hide','Ошибка\x20доступа','.full-start-new.cardify','(((.+)+)+)+$','.full-start-new__title','warn','SettingsApi','117fkWLnr','show','8739049EsKHPM','<img\x20style=\x22margin-top:\x200.3em;\x20margin-bottom:\x200.1em;\x20max-height:\x202.8em;\x22\x20src=\x22','\x22\x20/>','file_path','4WbpMOI','28oNKDMI','card_interfice_type','prototype','appready','&language=','http://tmdbimg.bylampa.online/','insertAfter','322353etdKEA','.full-start-new__tagline','constructor','get','log'];_0x3939=function(){return _0x50fb82;};return _0x3939();}
+
+    // --- Регистрация настроек в разделе "Интерфейс" ---
+    if (window.Lampa && Lampa.SettingsApi) {
+        // Добавление заголовка "Логотип вместо названия"
+        Lampa.SettingsApi.addParam({
+            component: 'interface',
+            param: {
+                name: 'logo_settings_title',
+                type: 'title'
+            },
+            field: {
+                name: "Логотип вместо названия"
+            },
+            onRender: function () {
+                setTimeout(() => {
+                    $('.settings-param > div:contains("Логотип вместо названия")').parent().insertAfter($('div[data-name="interface_size"]'));
+                }, 0);
+            }
+        });
+
+        // Добавление переключателя для отображения логотипа вместо заголовка
+        Lampa.SettingsApi.addParam({
+            component: 'interface',
+            param: {
+                name: 'show_logo_instead_of_title',
+                type: 'select',
+                values: {
+                    'true': "Показать",
+                    'false': "Скрыть"
+                },
+                'default': 'true'
+            },
+            field: {
+                name: "Логотип вместо заголовка",
+                description: "Заменяет текстовый заголовок фильма логотипом"
+            },
+            onRender: function () {
+                setTimeout(() => {
+                    $('.settings-param > div:contains("Логотип вместо заголовка")').parent().insertAfter($('div[data-name="logo_settings_title"]'));
+                }, 0);
+            },
+            onChange: function(value) {
+                Lampa.Storage.set('show_logo_instead_of_title', value);
+            }
+        });
+
+        // Добавление настройки высоты логотипа
+        Lampa.SettingsApi.addParam({
+            component: 'interface',
+            param: {
+                name: 'info_panel_logo_max_height',
+                type: 'select',
+                values: {
+                    '50': '50px',
+                    '75': '75px',
+                    '100': '100px',
+                    '125': '125px',
+                    '150': '150px',
+                    '175': '175px',
+                    '200': '200px',
+                    '225': '225px',
+                    '250': '250px',
+                    '300': '300px',
+                    '350': '350px',
+                    '400': '400px',
+                    '450': '450px',
+                    '500': '500px'
+                },
+                'default': '100'
+            },
+            field: {
+                name: "Размер логотипа",
+                description: "Максимальная высота логотипа"
+            },
+            onRender: function () {
+                setTimeout(() => {
+                    $('.settings-param > div:contains("Размер логотипа")').parent().insertAfter($('div[data-name="show_logo_instead_of_title"]'));
+                }, 0);
+            },
+            onChange: function(value) {
+                Lampa.Storage.set('info_panel_logo_max_height', value);
+            }
+        });
+    }
+
+    // --- Экземпляр сети ---
+    var network = (window.Lampa && Lampa.Reguest) ? new Lampa.Reguest() : null;
+
+    // --- Функция create (обработчик информационной панели) ---
+    function create() {
+        var html;
+
+        this.create = function () {
+            html = $("<div class=\"new-interface-info\">\n            <div class=\"new-interface-info__body\">\n                <div class=\"new-interface-info__head\"></div>\n                <div class=\"new-interface-info__title\"></div>\n                <div class=\"new-interface-info__details\"></div>\n                <div class=\"new-interface-info__description\"></div>\n            </div>\n        </div>");
+        };
+
+        this.update = function(data) {
+            if (!html) {
+                return;
+            }
+            if (!data || !data.id || !data.title) {
+                return;
+            }
+
+            // Установка фонового изображения
+            Lampa.Background.change(Lampa.Api.img(data.backdrop_path, 'w200'));
+
+            // Определение настройки отображения логотипа
+            var storageKey = 'show_logo_instead_of_title';
+            var showLogos = (Lampa.Storage.get(storageKey, 'false') === 'true' || Lampa.Storage.get(storageKey, false) === true);
+
+            // Установка заголовка или логотипа
+            if (showLogos && data.method && data.title) {
+                this.displayLogoOrTitle(data);
+            } else if (data.title) {
+                html.find('.new-interface-info__title').text(data.title);
+            } else {
+                html.find('.new-interface-info__title').empty();
+            }
+        };
+
+        // Метод для отображения логотипа или заголовка
+        this.displayLogoOrTitle = function(movieData) {
+            if (!html) return;
+            var titleElement = html.find('.new-interface-info__title');
+            if (!titleElement.length) return;
+
+            if (!movieData || !movieData.id || !movieData.method || !movieData.title) {
+                titleElement.empty();
+                return;
+            }
+
+            var id = movieData.id;
+            titleElement.text(movieData.title);
+
+            if (!network) {
+                return;
+            }
+
+            var method = movieData.method;
+            var apiKey = Lampa.TMDB.key();
+            var language = Lampa.Storage.get('language');
+            var apiUrl = Lampa.TMDB.api((method === 'tv' ? 'tv/' : 'movie/') + id + '/images?api_key=' + apiKey + '&language=' + language);
+
+            network.clear();
+            network.timeout(7000);
+            network.silent(apiUrl, function (response) {
+                var logoPath = null;
+                if (response && response.logos && response.logos.length > 0) {
+                    var pngLogo = response.logos.find(logo => logo.file_path && !logo.file_path.endsWith('.svg'));
+                    logoPath = pngLogo ? pngLogo.file_path : response.logos[0].file_path;
+                }
+
+                var currentTitleElement = html ? html.find('.new-interface-info__title') : null;
+                if (currentTitleElement && currentTitleElement.length) {
+                    if (logoPath) {
+                        var selectedHeight = Lampa.Storage.get('info_panel_logo_max_height', '100');
+                        if (!/^\d+$/.test(selectedHeight)) {
+                            selectedHeight = '100';
+                        }
+
+                        var imageSize = 'original';
+                        var styleAttr = `max-height: ${selectedHeight}px; max-width: 100%; vertical-align: middle; margin-bottom: 0.1em;`;
+                        var imgUrl = Lampa.TMDB.image('/t/p/' + imageSize + logoPath);
+                        var imgTagHtml = `<img src="${imgUrl}" style="${styleAttr}" alt="${movieData.title} Logo" />`;
+                        currentTitleElement.empty().html(imgTagHtml);
+                    } else {
+                        currentTitleElement.text(movieData.title);
+                    }
+                }
+            }, function(xhr, status) {
+                var currentTitleElement = html ? html.find('.new-interface-info__title') : null;
+                if (currentTitleElement && currentTitleElement.length) {
+                    if (movieData && movieData.title) {
+                        currentTitleElement.text(movieData.title);
+                    } else {
+                        currentTitleElement.empty();
+                    }
+                }
+            });
+        };
+
+        this.render = function () {
+            return html;
+        };
+
+        this.destroy = function () {
+            html.remove();
+            html = null;
+        };
+    }
+
+    // --- Инициализация плагина ---
+    function startPlugin() {
+        if (!window.Lampa || !Lampa.Utils || !Lampa.Storage || !Lampa.TMDB || !Lampa.Reguest || !Lampa.Api) {
+            return;
+        }
+
+        window.plugin_interface_ready = true;
+
+        // Добавление слушателя для замены заголовка логотипом на карточке
+        if (Lampa.Listener && network) {
+            Lampa.Listener.follow("full", function(eventData) {
+                var storageKey = 'show_logo_instead_of_title';
+                try {
+                    var showLogos = (Lampa.Storage.get(storageKey, 'false') === 'true' || Lampa.Storage.get(storageKey, false) === true);
+                    if (eventData.type === 'complite' && showLogos) {
+                        var movie = eventData.data.movie;
+                        if (movie && movie.id && movie.title) {
+                            movie.method = movie.name ? 'tv' : 'movie';
+                            var id = movie.id;
+                            var initialTargetElement = $(eventData.object.activity.render()).find(".full-start-new__title");
+
+                            if (initialTargetElement.length > 0) {
+                                initialTargetElement.text(movie.title);
+                                if (!network) {
+                                    return;
+                                }
+
+                                var apiKey = Lampa.TMDB.key();
+                                var language = Lampa.Storage.get('language');
+                                var apiUrl = Lampa.TMDB.api((movie.method === 'tv' ? 'tv/' : 'movie/') + id + '/images?api_key=' + apiKey + '&language=' + language);
+
+                                network.clear();
+                                network.timeout(7000);
+                                network.silent(apiUrl, function (response) {
+                                    var logoPath = null;
+                                    if (response && response.logos && response.logos.length > 0) {
+                                        var pngLogo = response.logos.find(logo => logo.file_path && !logo.file_path.endsWith('.svg'));
+                                        logoPath = pngLogo ? pngLogo.file_path : response.logos[0].file_path;
+                                    }
+
+                                    var currentTitleElement = $(eventData.object.activity.render()).find(".full-start-new__title");
+                                    if (currentTitleElement && currentTitleElement.length) {
+                                        if (logoPath) {
+                                            var selectedHeight = Lampa.Storage.get('info_panel_logo_max_height', '60');
+                                            if (!/^\d+$/.test(selectedHeight)) {
+                                                selectedHeight = '75';
+                                            }
+                                            var imageSize = 'original';
+                                            var styleAttr = `margin-top: 5px; max-height: ${selectedHeight}px; max-width: 100%; vertical-align: middle;`;
+                                            var imgUrl = Lampa.TMDB.image('/t/p/' + imageSize + logoPath);
+                                            var imgTagHtml = `<img src="${imgUrl}" style="${styleAttr}" alt="${movie.title} Logo" />`;
+                                            currentTitleElement.empty().html(imgTagHtml);
+                                        } else {
+                                            currentTitleElement.text(movie.title);
+                                        }
+                                    }
+                                }, function(xhr, status) {
+                                    var currentTitleElement = $(eventData.object.activity.render()).find(".full-start-new__title");
+                                    if (currentTitleElement && currentTitleElement.length) {
+                                        currentTitleElement.text(movie.title);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                } catch (e) {}
+            });
+        }
+    }
+
+    // Запуск плагина при готовности приложения
+    if (window.appready) {
+        startPlugin();
+    } else {
+        Lampa.Listener.follow('app', (event) => {
+            if (event.type === 'ready') startPlugin();
+        });
+    }
 })();
