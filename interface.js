@@ -363,21 +363,38 @@
             }
         });
 
-        // Принудительный вызов для текущей активности
-        if (Lampa.Activity && typeof Lampa.Activity.active === 'function') {
-            console.log('startPlugin: Checking active activity');
-            let active = Lampa.Activity.active();
-            console.log('startPlugin: Active activity', active);
-            if (active && active.component && active.component !== 'style_interface') {
-                console.log('startPlugin: Forcing CardList for active activity', active);
-                let cardList = new CardList(active);
-                cardList.build(active.items || []);
-                $('body').append(cardList.render());
-                console.log('startPlugin: Forced CardList rendered');
+        // Ожидание инициализации активности
+        let attempts = 0;
+        const maxAttempts = 10;
+        let interval = setInterval(function () {
+            console.log('startPlugin: Checking active activity, attempt', attempts + 1);
+            if (Lampa.Activity && typeof Lampa.Activity.active === 'function') {
+                let active = Lampa.Activity.active();
+                console.log('startPlugin: Active activity', active);
+                if (active && active.component && active.component !== 'style_interface') {
+                    console.log('startPlugin: Forcing CardList for active activity', active);
+                    let cardList = new CardList(active);
+                    cardList.build(active.items || []);
+                    $('body').append(cardList.render());
+                    console.log('startPlugin: Forced CardList rendered');
+                    clearInterval(interval);
+                } else {
+                    console.log('startPlugin: No valid active activity or component');
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        console.log('startPlugin: Max attempts reached, stopping');
+                        clearInterval(interval);
+                    }
+                }
             } else {
-                console.log('startPlugin: No valid active activity or component');
+                console.log('startPlugin: Lampa.Activity.active not available');
+                attempts++;
+                if (attempts >= maxAttempts) {
+                    console.log('startPlugin: Max attempts reached, stopping');
+                    clearInterval(interval);
+                }
             }
-        }
+        }, 1000);
 
         Lampa.Template.add('new_interface_style', `
             <style>
