@@ -169,13 +169,13 @@
 
             console.log('CardList: Appending element', element);
             let item = new Lampa.InteractionLine(element, {
-                url: element.url,
+                url: element.url || '', // Значение по умолчанию
                 card_small: true,
-                cardClass: element.cardClass,
-                genres: object.genres,
+                cardClass: element.cardClass || '', // Значение по умолчанию
+                genres: object.genres || [],
                 object: object,
-                card_wide: true, // Устанавливаем card_wide = true для обхода настроек
-                nomore: element.nomore
+                card_wide: true,
+                nomore: element.nomore || false
             });
 
             item.create();
@@ -346,7 +346,6 @@
         Lampa.InteractionMain = function (object) {
             console.log('InteractionMain: Processing object', object);
             let use = new_interface;
-            // Упрощаем условия для активации CardList
             if (object.title === 'Избранное') {
                 console.log('InteractionMain: Using old interface - title is Избранное');
                 use = old_interface;
@@ -470,28 +469,4 @@
     // Немедленный запуск плагина
     console.log('interface.js: Starting plugin immediately');
     startPlugin();
-
-    // Тестовый вызов для проверки рендеринга
-    setTimeout(function () {
-        console.log('interface.js: Testing CardList build');
-        let testObject = {
-            source: 'tmdb',
-            title: 'Test',
-            genres: []
-        };
-        let testData = [
-            {
-                id: 1,
-                title: 'Test Movie',
-                release_date: '2023-01-01',
-                vote_average: 7.5,
-                genres: [{ name: 'Action' }],
-                runtime: 120,
-                backdrop_path: '/test.jpg'
-            }
-        ];
-        let testCardList = new CardList(testObject);
-        testCardList.build(testData);
-        console.log('interface.js: Test CardList rendered');
-    }, 5000);
 })();
