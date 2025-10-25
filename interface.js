@@ -121,7 +121,7 @@
         let newlampa = Lampa.Manifest.app_digital >= 166;
         let info;
         let lezydata;
-        let viewall = true; // Устанавливаем viewall = true для обхода отсутствия настроек
+        let viewall = true;
         let background_img = html.find('.full-start__background');
         let background_last = '';
         let background_timer;
@@ -364,14 +364,18 @@
         });
 
         // Принудительный вызов для текущей активности
-        if (Lampa.Activity && Lampa.Activity.active) {
-            console.log('startPlugin: Forcing CardList for active activity', Lampa.Activity.active);
+        if (Lampa.Activity && typeof Lampa.Activity.active === 'function') {
+            console.log('startPlugin: Checking active activity');
             let active = Lampa.Activity.active();
-            if (active.component && active.component !== 'style_interface') {
+            console.log('startPlugin: Active activity', active);
+            if (active && active.component && active.component !== 'style_interface') {
+                console.log('startPlugin: Forcing CardList for active activity', active);
                 let cardList = new CardList(active);
                 cardList.build(active.items || []);
                 $('body').append(cardList.render());
                 console.log('startPlugin: Forced CardList rendered');
+            } else {
+                console.log('startPlugin: No valid active activity or component');
             }
         }
 
