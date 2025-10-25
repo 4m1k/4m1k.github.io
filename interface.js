@@ -69,9 +69,9 @@
         this.load = function (movieData) {
             let _this = this;
             clearTimeout(timeout);
-            let url = Lampa.TMDB.api((movieData.name ? 'tv' : 'movie') + '/' + movieData.id +
+            let url = 'https://api.themoviedb.org/3/' + (movieData.name ? 'tv' : 'movie') + '/' + movieData.id +
                 '?api_key=' + Lampa.TMDB.key() + '&append_to_response=content_ratings,release_dates&language=' +
-                Lampa.Storage.get('language'));
+                Lampa.Storage.get('language');
 
             if (cache[url]) {
                 console.log('InfoCard: Using cached data for', url);
@@ -118,7 +118,7 @@
         let newlampa = Lampa.Manifest.app_digital >= 166;
         let info;
         let lezydata;
-        let viewall = Lampa.Storage.field('card_views_type') == 'view' || Lampa.Storage.field('navigation_type') == 'mouse';
+        let viewall = true; // Устанавливаем viewall = true для обхода отсутствия настроек
         let background_img = html.find('.full-start__background');
         let background_last = '';
         let background_timer;
@@ -174,7 +174,7 @@
                 cardClass: element.cardClass,
                 genres: object.genres,
                 object: object,
-                card_wide: Lampa.Storage.field('navigation_type') == 'mouse',
+                card_wide: true, // Устанавливаем card_wide = true для обхода настроек
                 nomore: element.nomore
             });
 
@@ -346,22 +346,7 @@
         Lampa.InteractionMain = function (object) {
             console.log('InteractionMain: Processing object', object);
             let use = new_interface;
-            if (!(object.source == 'tmdb' || object.source == 'cub')) {
-                console.log('InteractionMain: Using old interface - invalid source', object.source);
-                use = old_interface;
-            }
-            if (window.innerWidth < 767) {
-                console.log('InteractionMain: Using old interface - window.innerWidth < 767', window.innerWidth);
-                use = old_interface;
-            }
-            if (Lampa.Manifest.app_digital < 153) {
-                console.log('InteractionMain: Using old interface - app_digital < 153', Lampa.Manifest.app_digital);
-                use = old_interface;
-            }
-            if (Lampa.Platform.screen('mobile')) {
-                console.log('InteractionMain: Using old interface - mobile device');
-                use = old_interface;
-            }
+            // Упрощаем условия для активации CardList
             if (object.title === 'Избранное') {
                 console.log('InteractionMain: Using old interface - title is Избранное');
                 use = old_interface;
@@ -485,4 +470,28 @@
     // Немедленный запуск плагина
     console.log('interface.js: Starting plugin immediately');
     startPlugin();
+
+    // Тестовый вызов для проверки рендеринга
+    setTimeout(function () {
+        console.log('interface.js: Testing CardList build');
+        let testObject = {
+            source: 'tmdb',
+            title: 'Test',
+            genres: []
+        };
+        let testData = [
+            {
+                id: 1,
+                title: 'Test Movie',
+                release_date: '2023-01-01',
+                vote_average: 7.5,
+                genres: [{ name: 'Action' }],
+                runtime: 120,
+                backdrop_path: '/test.jpg'
+            }
+        ];
+        let testCardList = new CardList(testObject);
+        testCardList.build(testData);
+        console.log('interface.js: Test CardList rendered');
+    }, 5000);
 })();
