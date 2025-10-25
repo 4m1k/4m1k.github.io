@@ -2,13 +2,14 @@
     'use strict';
 
     // Проверка наличия Lampa
+    console.log('interface.js: Script loaded');
     if (typeof Lampa === 'undefined') {
-        console.error('Lampa is not defined');
+        console.error('interface.js: Lampa is not defined');
         return;
     }
 
-    // Проверка, что платформа — телевизор
-    console.log('Checking platform: Lampa.Platform.tv()');
+    // Проверка платформы
+    console.log('interface.js: Checking platform - Lampa.Platform.tv()');
     Lampa.Platform.tv();
 
     // Класс для отображения информации о фильме/сериале
@@ -33,7 +34,9 @@
             card.find('.new-interface-info__head,.new-interface-info__details').text('---');
             card.find('.new-interface-info__title').text(movieData.title || 'No title');
             card.find('.new-interface-info__description').text(movieData.overview || Lampa.Lang.translate('full_notext'));
-            Lampa.Background.change(Lampa.Api.img(movieData.backdrop_path, 'w200') || '');
+            let bgImage = Lampa.Api.img(movieData.backdrop_path, 'w200') || '';
+            console.log('InfoCard: Setting background', bgImage);
+            Lampa.Background.change(bgImage);
             this.draw(movieData);
         };
 
@@ -57,6 +60,8 @@
             if (movieData.runtime) details.push(Lampa.Utils.secondsToTime(movieData.runtime * 60, true));
             if (pg) details.push('<span class="full-start__pg" style="font-size: 0.9em;">' + pg + '</span>');
 
+            console.log('InfoCard: Head content', head);
+            console.log('InfoCard: Details content', details);
             card.find('.new-interface-info__head').empty().append(head.join(', '));
             card.find('.new-interface-info__details').html(details.join('<span class="new-interface-info__split">&#9679;</span>'));
         };
@@ -87,6 +92,7 @@
         };
 
         this.render = function () {
+            console.log('InfoCard: Rendering card');
             return card;
         };
 
@@ -314,6 +320,7 @@
         this.stop = function () {};
 
         this.render = function () {
+            console.log('CardList: Rendering');
             return html;
         };
 
@@ -345,7 +352,7 @@
                 use = old_interface;
             }
             if (window.innerWidth < 767) {
-                console.log('InteractionMain: Using old interface - window.innerWidth < 767');
+                console.log('InteractionMain: Using old interface - window.innerWidth < 767', window.innerWidth);
                 use = old_interface;
             }
             if (Lampa.Manifest.app_digital < 153) {
@@ -360,6 +367,7 @@
                 console.log('InteractionMain: Using old interface - title is Избранное');
                 use = old_interface;
             }
+            console.log('InteractionMain: Using interface', use === new_interface ? 'CardList' : 'Original');
             return new use(object);
         };
 
@@ -470,22 +478,27 @@
                 }
             </style>
         `);
+        console.log('startPlugin: Adding styles');
         $('body').append(Lampa.Template.get('new_interface_style', {}, true));
         console.log('startPlugin: Styles added');
     }
 
     // Запуск плагина
+    console.log('interface.js: Waiting for DOMContentLoaded');
     document.addEventListener('DOMContentLoaded', function () {
-        console.log('DOMContentLoaded: Checking Lampa initialization');
+        console.log('interface.js: DOMContentLoaded fired');
         let interval = setInterval(function () {
+            console.log('interface.js: Checking Lampa initialization');
             if (typeof Lampa !== 'undefined') {
-                console.log('Lampa initialized, starting plugin');
+                console.log('interface.js: Lampa initialized, starting plugin');
                 clearInterval(interval);
                 if (!window.plugin_interface_ready) {
                     startPlugin();
+                } else {
+                    console.log('interface.js: Plugin already initialized (plugin_interface_ready is true)');
                 }
             } else {
-                console.log('Waiting for Lampa to initialize...');
+                console.log('interface.js: Waiting for Lampa to initialize...');
             }
         }, 200);
     });
