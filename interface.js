@@ -8,6 +8,12 @@
         return;
     }
 
+    // Защита console.log от переопределения
+    const originalConsoleLog = console.log;
+    console.log = function (...args) {
+        originalConsoleLog.apply(console, args);
+    };
+
     // Проверка платформы
     console.log('interface.js: Checking platform - Lampa.Platform.tv()');
     Lampa.Platform.tv();
@@ -392,7 +398,7 @@
         // Привязка к событиям активности
         if (Lampa.Activity && Lampa.Activity.listener) {
             console.log('startPlugin: Subscribing to Activity events');
-            ['render', 'ready', 'open'].forEach(event => {
+            ['render', 'ready', 'open', 'load', 'push', 'active'].forEach(event => {
                 Lampa.Activity.listener.follow(event, function (activity) {
                     console.log(`Activity ${event} event:`, activity);
                     if (activity && activity.component && activity.component !== 'style_interface') {
