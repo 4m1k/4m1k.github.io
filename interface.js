@@ -24,7 +24,7 @@
         // Обновление информации о фильме/сериале
         this.update = function (movieData) {
             card.find('.new-interface-info__title').html('');
-            
+
             // Проверка настройки отображения логотипа
             if (Lampa.Storage.get('logo_card_style') !== true) {
                 let type = movieData.name ? 'tv' : 'movie';
@@ -760,33 +760,4 @@
             }
         }
     }, 200);
-
-    // Запуск плагина, если не установлен флаг
-    if (!window.plugin_interface_ready) {
-        (function () {
-            // Проверка регулярного выражения (для защиты от анализа)
-            (function () {
-                return this.toString().search('(((.+)+)+)+$').toString().constructor(this).search('(((.+)+)+)+$');
-            })();
-
-            // Перехват console
-            (function () {
-                let consoleObj;
-                try {
-                    consoleObj = Function('return (function() {}.constructor("return this")());')();
-                } catch (e) {
-                    consoleObj = window;
-                }
-                let console = consoleObj.console = consoleObj.console || {};
-                let methods = ['log', 'warn', 'error', 'info', 'debug', 'exception', 'trace'];
-                for (let i = 0; i < methods.length; i++) {
-                    let method = methods[i];
-                    let original = console[method] || function () {};
-                    original.__proto__ = (function () {}).bind(this);
-                    original.toString = original.toString.bind(original);
-                    console[method] = original;
-                }
-            })();
-        })();
-    }
 })();
