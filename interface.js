@@ -12,6 +12,9 @@
     console.log('interface.js: Checking platform - Lampa.Platform.tv()');
     Lampa.Platform.tv();
 
+    // Проверка доступных компонентов Lampa
+    console.log('interface.js: Lampa components:', Object.keys(Lampa));
+
     // Класс для отображения информации о фильме/сериале
     function InfoCard(data) {
         let card, request = new Lampa.Reguest(), cache = {};
@@ -169,9 +172,9 @@
 
             console.log('CardList: Appending element', element);
             let item = new Lampa.InteractionLine(element, {
-                url: element.url || '', // Значение по умолчанию
+                url: element.url || '',
                 card_small: true,
-                cardClass: element.cardClass || '', // Значение по умолчанию
+                cardClass: element.cardClass || '',
                 genres: object.genres || [],
                 object: object,
                 card_wide: true,
@@ -343,16 +346,30 @@
         let old_interface = Lampa.InteractionMain;
         let new_interface = CardList;
 
+        // Переопределение Lampa.InteractionMain
         Lampa.InteractionMain = function (object) {
             console.log('InteractionMain: Processing object', object);
-            let use = new_interface;
-            if (object.title === 'Избранное') {
-                console.log('InteractionMain: Using old interface - title is Избранное');
-                use = old_interface;
-            }
-            console.log('InteractionMain: Using interface', use === new_interface ? 'CardList' : 'Original');
-            return new use(object);
+            return new new_interface(object);
         };
+
+        // Переопределение других возможных компонентов
+        if (Lampa.Interaction) {
+            console.log('startPlugin: Overriding Lampa.Interaction');
+            let old_interaction = Lampa.Interaction;
+            Lampa.Interaction = function (object) {
+                console.log('Interaction: Processing object', object);
+                return new new_interface(object);
+            };
+        }
+
+        if (Lampa.Component) {
+            console.log('startPlugin: Overriding Lampa.Component');
+            let old_component = Lampa.Component;
+            Lampa.Component = function (object) {
+                console.log('Component: Processing object', object);
+                return new new_interface(object);
+            };
+        }
 
         Lampa.Template.add('new_interface_style', `
             <style>
