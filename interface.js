@@ -126,6 +126,19 @@
         let background_last = '';
         let background_timer;
 
+        // Инициализация activity
+        this.activity = {
+            loader: function (state) {
+                console.log('CardList.activity.loader:', state);
+            },
+            toggle: function () {
+                console.log('CardList.activity.toggle');
+            },
+            canRefresh: function () {
+                return false;
+            }
+        };
+
         this.create = function () {
             console.log('CardList: Creating');
         };
@@ -276,8 +289,12 @@
                 }.bind(this);
             }
 
-            this.activity.loader(false);
-            this.activity.toggle();
+            if (this.activity) {
+                this.activity.loader(false);
+                this.activity.toggle();
+            } else {
+                console.log('CardList: Activity not initialized');
+            }
         };
 
         this.start = function () {
@@ -314,8 +331,10 @@
 
         this.refresh = function () {
             console.log('CardList: Refreshing');
-            this.activity.loader(true);
-            this.activity.need_refresh = true;
+            if (this.activity) {
+                this.activity.loader(true);
+                this.activity.need_refresh = true;
+            }
         };
 
         this.pause = function () {};
@@ -363,9 +382,28 @@
             }
         });
 
+        // Привязка к событию рендеринга активности
+        if (Lampa.Activity && Lampa.Activity.listener) {
+            console.log('startPlugin: Subscribing to Activity render event');
+            Lampa.Activity.listener.follow('render', function (activity) {
+                console.log('Activity render event:', activity);
+                if (activity && activity.component && activity.component !== 'style_interface') {
+                    console.log('startPlugin: Forcing CardList for activity', activity);
+                    let cardList = new CardList(activity);
+                    cardList.build(activity.items || []);
+                    $('body').append(cardList.render());
+                    console.log('startPlugin: Forced CardList rendered for activity');
+                } else {
+                    console.log('startPlugin: No valid activity or component for render event');
+                }
+            });
+        } else {
+            console.log('startPlugin: Lampa.Activity.listener not available');
+        }
+
         // Ожидание инициализации активности
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 20;
         let interval = setInterval(function () {
             console.log('startPlugin: Checking active activity, attempt', attempts + 1);
             if (Lampa.Activity && typeof Lampa.Activity.active === 'function') {
