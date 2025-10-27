@@ -3,7 +3,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://akter-black.com/',
-    apn: ''
+    apn: 'http://apn.cfhttp.top/'
   };
  
   var unic_id = 'ofkrtxdg';
@@ -1631,4 +1631,5 @@ Lampa.Template.add('lampac_css', "\n <style>\n @charset 'UTF-8';.online-prestige
   }
   if (!window.lampac_plugin) startPlugin();
 })();
+
 
