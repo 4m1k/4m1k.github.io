@@ -3,7 +3,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://akter-black.com/',
-    apn: ''
+    apn: 'http://apn.cfhttp.top/'
   };
  
   var unic_id = 'ofkrtxdg';
