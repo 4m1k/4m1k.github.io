@@ -1,8 +1,5 @@
 (function () {
     'use strict';
-    Lampa.Platform.tv();
-
-    // Объединенный кэш
     const ratingCache = {
         caches: {},
         get(source, key) {
@@ -17,7 +14,7 @@
             return data;
         },
         set(source, key, value) {
-            if (value.kp === 0 && value.imdb === 0 || value.rating === '0.0') return value;
+            if (value.rating === 0 || value.rating === '0.0') return value;
             const cache = this.caches[source] || (this.caches[source] = Lampa.Storage.cache(source, 500, {}));
             value.timestamp = Date.now();
             cache[key] = value;
@@ -25,10 +22,32 @@
             return value;
         }
     };
-
     const CACHE_TIME = 24 * 60 * 60 * 1000;
-    let unifiedCache = {};
-
+    let taskQueue = [];
+    let isProcessing = false;
+    const taskInterval = 300;
+    let requestPool = [];
+    function getRequest() {
+        return requestPool.pop() || new Lampa.Reguest();
+    }
+    function releaseRequest(request) {
+        request.clear();
+        if (requestPool.length < 3) requestPool.push(request);
+    }
+    function processQueue() {
+        if (isProcessing || !taskQueue.length) return;
+        isProcessing = true;
+        const task = taskQueue.shift();
+        task.execute();
+        setTimeout(() => {
+            isProcessing = false;
+            processQueue();
+        }, taskInterval);
+    }
+    function addToQueue(task) {
+        taskQueue.push({ execute: task });
+        processQueue();
+    }
     function calculateLampaRating10(reactions) {
         let weightedSum = 0;
         let totalCount = 0;
@@ -57,327 +76,40 @@
         }
         return { rating: finalRating, medianReaction: medianReaction };
     }
-
     function fetchLampaRating(ratingKey) {
         return new Promise((resolve) => {
-            let xhr = new XMLHttpRequest();
+            const request = getRequest();
             let url = "https://cubnotrip.top/api/reactions/get/" + ratingKey;
-            xhr.open("GET", url, true);
-            xhr.timeout = 10000;
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        try {
-                            let data = JSON.parse(xhr.responseText);
-                            if (data && data.result && Array.isArray(data.result)) {
-                                let result = calculateLampaRating10(data.result);
-                                resolve(result);
-                            } else {
-                                resolve({ rating: 0, medianReaction: '' });
-                            }
-                        } catch {
-                            resolve({ rating: 0, medianReaction: '' });
-                        }
+            request.timeout(10000);
+            request.silent(url, (data) => {
+                try {
+                    if (data && data.result && Array.isArray(data.result)) {
+                        let result = calculateLampaRating10(data.result);
+                        resolve(result);
                     } else {
                         resolve({ rating: 0, medianReaction: '' });
                     }
+                } catch {
+                    resolve({ rating: 0, medianReaction: '' });
+                } finally {
+                    releaseRequest(request);
                 }
-            };
-            xhr.onerror = function() { resolve({ rating: 0, medianReaction: '' }); };
-            xhr.ontimeout = function() { resolve({ rating: 0, medianReaction: '' }); };
-            xhr.send();
+            }, () => {
+                releaseRequest(request);
+                resolve({ rating: 0, medianReaction: '' });
+            }, false);
         });
     }
-
     async function getLampaRating(ratingKey) {
-        let now = Date.now();
-        if (unifiedCache[ratingKey] && (now - unifiedCache[ratingKey].timestamp < CACHE_TIME)) {
-            return unifiedCache[ratingKey].value;
-        }
+        const cached = ratingCache.get('lampa_rating', ratingKey);
+        if (cached) return cached;
         try {
             let result = await fetchLampaRating(ratingKey);
-            unifiedCache[ratingKey] = { value: result, timestamp: now };
-            return result;
-        } catch (e) {
-            console.error('Rating Plugin: Lampa Rating Error:', e);
+            return ratingCache.set('lampa_rating', ratingKey, result);
+        } catch {
             return { rating: 0, medianReaction: '' };
         }
     }
-
-    let taskQueue = [];
-    let isProcessing = false;
-    const taskInterval = 300;
-
-    function processQueue() {
-        if (isProcessing || !taskQueue.length) return;
-        isProcessing = true;
-        const task = taskQueue.shift();
-        task.execute();
-        setTimeout(() => {
-            isProcessing = false;
-            processQueue();
-        }, taskInterval);
-    }
-
-    function addToQueue(task) {
-        taskQueue.push({ execute: task });
-        processQueue();
-    }
-
-    let requestPool = [];
-    function getRequest() {
-        return requestPool.pop() || new Lampa.Reguest();
-    }
-
-    function releaseRequest(request) {
-        request.clear();
-        if (requestPool.length < 3) requestPool.push(request);
-    }
-
-    const stringCache = {};
-    function normalizeString(str) {
-        if (stringCache[str]) return stringCache[str];
-        const normalized = str
-            .replace(/[\s.,:;''`!?]+/g, ' ')
-            .trim()
-            .toLowerCase()
-            .replace(/[\-\u2010-\u2015\u2E3A\u2E3B\uFE58\uFE63\uFF0D]+/g, '-')
-            .replace(/ё/g, 'е');
-        stringCache[str] = normalized;
-        return normalized;
-    }
-
-    function cleanString(str) {
-        return normalizeString(str)
-            .replace(/^[ \/\\]+/, '')
-            .replace(/[ \/\\]+$/, '')
-            .replace(/\+( *[+\/\\])+/g, '+')
-            .replace(/([+\/\\] *)+\+/g, '+')
-            .replace(/( *[\/\\]+ *)+/g, '+');
-    }
-
-    function matchStrings(str1, str2) {
-        return typeof str1 === 'string' && typeof str2 === 'string' && normalizeString(str1) === normalizeString(str2);
-    }
-
-    function containsString(str1, str2) {
-        return typeof str1 === 'string' && typeof str2 === 'string' && normalizeString(str1).indexOf(normalizeString(str2)) !== -1;
-    }
-
-    function getKinopoiskRating(item, callback) {
-        const cached = ratingCache.get('kp_rating', item.id);
-        if (cached) {
-            const source = Lampa.Storage.get('rating_source', 'tmdb');
-            const rating = source === 'kp' ? cached.kp : cached.imdb;
-            if (rating && rating > 0) {
-                callback(parseFloat(rating).toFixed(1));
-                return;
-            }
-        }
-        addToQueue(() => {
-            const request = getRequest();
-            const title = cleanString(item.title || item.name);
-            const releaseYear = parseInt(String(item.release_date || item.first_air_date || item.last_air_date || "0000").slice(0, 4));
-            const originalTitle = item.original_title || item.original_name;
-            const api = {
-                url: 'https://kinopoiskapiunofficial.tech/',
-                rating_url: 'api/v2.2/films/',
-                headers: { 'X-API-KEY': '2a4a0808-81a3-40ae-b0d3-e11335ede616' }
-            };
-            function searchMovies() {
-                let searchUrl = Lampa.Utils.addUrlComponent(api.url + 'api/v2.1/films/search-by-keyword', `keyword=${encodeURIComponent(title)}`);
-                if (item.imdb_id) {
-                    searchUrl = Lampa.Utils.addUrlComponent(api.url + 'api/v2.2/films', `imdbId=${encodeURIComponent(item.imdb_id)}`);
-                }
-                request.timeout(15000);
-                request.silent(searchUrl, (data) => {
-                    const results = data.films || data.items || [];
-                    processSearchResults(results);
-                }, () => {
-                    releaseRequest(request);
-                    callback('0.0');
-                }, false, { headers: api.headers });
-            }
-            function processSearchResults(results) {
-                if (!results || !results.length) {
-                    releaseRequest(request);
-                    callback('0.0');
-                    return;
-                }
-                results.forEach(result => {
-                    result.tmp_year = parseInt(String(result.year || result.start_date || "0000").slice(0, 4));
-                });
-                let filteredResults = results;
-                if (originalTitle) {
-                    const matched = results.filter(result =>
-                        containsString(result.orig_title || result.nameEn, originalTitle) ||
-                        containsString(result.en_title || result.nameOriginal, originalTitle) ||
-                        containsString(result.title || result.nameRu || result.name, originalTitle)
-                    );
-                    if (matched.length) filteredResults = matched;
-                }
-                if (filteredResults.length > 1 && releaseYear) {
-                    let yearMatched = filteredResults.filter(result => result.tmp_year == releaseYear);
-                    if (!yearMatched.length) {
-                        yearMatched = filteredResults.filter(result => result.tmp_year && result.tmp_year > releaseYear - 2 && result.tmp_year < releaseYear + 2);
-                    }
-                    if (yearMatched.length) filteredResults = yearMatched;
-                }
-                if (filteredResults.length >= 1) {
-                    const movieId = filteredResults[0].kp_id || filteredResults[0].kinopoisk_id || filteredResults[0].kinopoiskId || filteredResults[0].filmId;
-                    if (movieId) {
-                        request.timeout(15000);
-                        request.silent(`${api.url}${api.rating_url}${movieId}`, (data) => {
-                            const cachedData = ratingCache.set('kp_rating', item.id, {
-                                kp: data.ratingKinopoisk || 0,
-                                imdb: data.ratingImdb || 0,
-                                timestamp: Date.now()
-                            });
-                            const source = Lampa.Storage.get('rating_source', 'tmdb');
-                            const rating = source === 'kp' ? cachedData.kp : cachedData.imdb;
-                            releaseRequest(request);
-                            callback(rating ? parseFloat(rating).toFixed(1) : '0.0');
-                        }, () => {
-                            releaseRequest(request);
-                            callback('0.0');
-                        }, false, { headers: api.headers });
-                    } else {
-                        releaseRequest(request);
-                        callback('0.0');
-                    }
-                } else {
-                    releaseRequest(request);
-                    callback('0.0');
-                }
-            }
-            searchMovies();
-        });
-    }
-
-    function createRatingElement(card) {
-        const ratingElement = document.createElement('div');
-        ratingElement.className = 'card__vote';
-        ratingElement.style.cssText = `
-            line-height: 1;
-            font-family: "SegoeUI", sans-serif;
-            cursor: pointer;
-            box-sizing: border-box;
-            outline: none;
-            user-select: none;
-            position: absolute;
-            right: 0.3em;
-            bottom: 0.3em;
-            background: rgba(0, 0, 0, 0.5);
-            color: #fff;
-            padding: 0.2em 0.5em;
-            border-radius: 1em;
-            display: flex;
-            align-items: center;
-        `;
-        const parent = card.querySelector('.card__view') || card;
-        parent.appendChild(ratingElement);
-        return ratingElement;
-    }
-
-    function updateCardRating(item) {
-        const card = item.card || item;
-        if (!card || !card.querySelector || !document.body.contains(card)) {
-            console.log('Rating Plugin: Card not in DOM, ID:', item.data?.id || 'unknown');
-            return;
-        }
-        const data = card.card_data || item.data || {};
-        if (!data.id) {
-            console.log('Rating Plugin: No ID in card data');
-            return;
-        }
-        const source = Lampa.Storage.get('rating_source', 'tmdb');
-        let ratingElement = card.querySelector('.card__vote');
-        if (!ratingElement) ratingElement = createRatingElement(card);
-
-        ratingElement.dataset.source = source;
-        ratingElement.dataset.movieId = data.id.toString();
-        ratingElement.className = `card__vote rate--${source}`;
-        ratingElement.innerHTML = '';
-        ratingElement.style.display = '';
-
-        let label = '';
-        if (source === 'tmdb') label = 'TMDB';
-        else if (source === 'lampa') label = '';
-        else if (source === 'kp') label = 'KP';
-        else if (source === 'imdb') label = 'IMDB';
-
-        if (source === 'tmdb') {
-            const rating = data.vote_average ? data.vote_average.toFixed(1) : '0.0';
-            if (rating !== '0.0') {
-                ratingElement.innerHTML = `${rating} ${label}`;
-            } else {
-                ratingElement.style.display = 'none';
-            }
-            console.log('Rating Plugin: Updated TMDB card ID:', data.id, 'Rating:', rating);
-        } else if (source === 'lampa') {
-            let type = (data.seasons || data.first_air_date || data.original_name) ? 'tv' : 'movie';
-            let ratingKey = `${type}_${data.id}`;
-            getLampaRating(ratingKey).then(result => {
-                if (ratingElement.parentNode && ratingElement.dataset.movieId === data.id.toString()) {
-                    if (result.rating > 0) {
-                        let html = `${result.rating} ${label}`;
-                        if (result.medianReaction) {
-                            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                            html += ' <img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">';
-                        }
-                        ratingElement.innerHTML = html;
-                    } else {
-                        ratingElement.style.display = 'none';
-                    }
-                    console.log('Rating Plugin: Updated Lampa card ID:', data.id, 'Rating:', result.rating);
-                }
-            }).catch(e => console.error('Rating Plugin: Lampa Update Error for ID:', data.id, e));
-        } else if (source === 'kp' || source === 'imdb') {
-            getKinopoiskRating(data, (rating) => {
-                if (ratingElement.parentNode && ratingElement.dataset.movieId === data.id.toString()) {
-                    if (rating !== '0.0') {
-                        ratingElement.innerHTML = `${rating} ${label}`;
-                    } else {
-                        ratingElement.style.display = 'none';
-                    }
-                    console.log('Rating Plugin: Updated KP/IMDB card ID:', data.id, 'Rating:', rating);
-                }
-            });
-        }
-    }
-
-    window.refreshAllRatings = function() {
-        const allCards = document.querySelectorAll('.card');
-        allCards.forEach(card => {
-            const data = card.card_data;
-            if (data && data.id) {
-                const ratingElement = card.querySelector('.card__vote');
-                if (ratingElement) {
-                    delete ratingElement.dataset.source;
-                    delete ratingElement.dataset.movieId;
-                }
-                updateCardRating({ card, data });
-            }
-        });
-        console.log('Rating Plugin: Refreshed all cards, count:', allCards.length);
-    };
-
-    // Периодический опрос новых карточек
-    function pollCards() {
-        const allCards = document.querySelectorAll('.card');
-        allCards.forEach(card => {
-            const data = card.card_data;
-            if (data && data.id) {
-                const ratingElement = card.querySelector('.card__vote');
-                const source = Lampa.Storage.get('rating_source', 'tmdb');
-                if (!ratingElement || ratingElement.dataset.source !== source || ratingElement.dataset.movieId !== data.id.toString()) {
-                    updateCardRating({ card, data });
-                }
-            }
-        });
-        setTimeout(pollCards, 500); // Периодический вызов каждые 500 мс
-    }
-
     function insertLampaBlock(render) {
         if (!render) return false;
         let rateLine = $(render).find('.full-start-new__rate-line');
@@ -396,39 +128,93 @@
         }
         return true;
     }
-
-    function addSettings() {
-        Lampa.SettingsApi.addParam({
-            component: 'interface',
-            param: {
-                name: 'rating_source',
-                type: 'select',
-                values: {
-                    tmdb: 'TMDB',
-                    lampa: 'Lampa',
-                    kp: 'КиноПоиск',
-                    imdb: 'IMDB'
-                },
-                default: 'tmdb'
-            },
-            field: {
-                name: 'Источник рейтинга на карточках',
-                description: 'Выберите какой рейтинг отображать на карточках'
-            },
-            onRender: (value) => {
-                setTimeout(() => {
-                    $('.settings-param > div:contains("Источник рейтинга на карточках")').parent().insertAfter($('div[data-name="interface_size"]'));
-                }, 0);
-            },
-            onChange: (value) => {
-                Lampa.Storage.set('rating_source', value);
-                setTimeout(() => {
-                    window.refreshAllRatings();
-                }, 100);
+    function insertCardRating(card, event) {
+        let voteEl = card.querySelector('.card__vote');
+        if (!voteEl) {
+            voteEl = document.createElement('div');
+            voteEl.className = 'card__vote rate--lampa';
+            voteEl.style.cssText = `
+                line-height: 1;
+                font-family: "SegoeUI", sans-serif;
+                cursor: pointer;
+                box-sizing: border-box;
+                outline: none;
+                user-select: none;
+                position: absolute;
+                right: 0.3em;
+                bottom: 0.3em;
+                background: rgba(0, 0, 0, 0.5);
+                color: #fff;
+                padding: 0.2em 0.5em;
+                border-radius: 1em;
+                display: flex;
+                align-items: center;
+            `;
+            const parent = card.querySelector('.card__view') || card;
+            parent.appendChild(voteEl);
+            voteEl.innerHTML = '0.0';
+        } else {
+            voteEl.innerHTML = '';
+        }
+        let data = card.dataset || {};
+        let cardData = event.object.data || {};
+        let id = cardData.id || data.id || card.getAttribute('data-id') || (card.getAttribute('data-card-id') || '0').replace('movie_', '') || '0';
+        let type = 'movie';
+        if (cardData.seasons || cardData.first_air_date || cardData.original_name || data.seasons || data.firstAirDate || data.originalName) {
+            type = 'tv';
+        }
+        let ratingKey = type + "_" + id;
+        voteEl.dataset.movieId = id.toString();
+        const cached = ratingCache.get('lampa_rating', ratingKey);
+        if (cached && cached.rating !== 0 && cached.rating !== '0.0') {
+            let html = cached.rating;
+            if (cached.medianReaction) {
+                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
             }
+            voteEl.innerHTML = html;
+            return;
+        }
+        addToQueue(() => {
+            getLampaRating(ratingKey).then(result => {
+                if (voteEl.parentNode && voteEl.dataset.movieId === id.toString()) {
+                    let html = result.rating !== null ? result.rating : '0.0';
+                    if (result.medianReaction) {
+                        let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                        html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
+                    }
+                    voteEl.innerHTML = html;
+                    if (result.rating === 0 || result.rating === '0.0') {
+                        voteEl.style.display = 'none';
+                    }
+                }
+            });
         });
     }
-
+    function pollCards() {
+        const allCards = document.querySelectorAll('.card');
+        allCards.forEach(card => {
+            const data = card.card_data;
+            if (data && data.id) {
+                const ratingElement = card.querySelector('.card__vote');
+                if (!ratingElement || ratingElement.dataset.movieId !== data.id.toString()) {
+                    insertCardRating(card, { object: { data } });
+                } else {
+                    const ratingKey = (data.seasons || data.first_air_date || data.original_name) ? `tv_${data.id}` : `movie_${data.id}`;
+                    const cached = ratingCache.get('lampa_rating', ratingKey);
+                    if (cached && cached.rating !== 0 && cached.rating !== '0.0' && ratingElement.innerHTML === '') {
+                        let html = cached.rating;
+                        if (cached.medianReaction) {
+                            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                            html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
+                        }
+                        ratingElement.innerHTML = html;
+                    }
+                }
+            }
+        });
+        setTimeout(pollCards, 500);
+    }
     function setupCardListener() {
         if (window.lampa_listener_extensions) return;
         window.lampa_listener_extensions = true;
@@ -442,47 +228,70 @@
             }
         });
     }
-
     function initPlugin() {
-        addSettings();
-        setupCardListener();
-        pollCards(); // Запускаем периодический опрос
-        Lampa.Listener.follow('card', (event) => {
-            if (event.type === 'build' && event.object.card) {
-                const data = event.object.card.card_data;
-                if (data && data.id) {
-                    updateCardRating({ card: event.object.card, data });
+        const style = document.createElement('style');
+        style.type = 'text/css';
+        style.textContent = `
+            .card__vote {
+                display: flex;
+                align-items: center !important;
+            }
+            @media (max-width: 480px) and (orientation: portrait) {
+                .full-start__rate.rate--lampa {
+                    min-width: 80px;
                 }
             }
+        `;
+        document.head.appendChild(style);
+        setupCardListener();
+        pollCards();
+        Lampa.Listener.follow('card', (e) => {
+            if (e.type === 'build' && e.object.card) {
+                insertCardRating(e.object.card, e);
+            }
         });
-        Lampa.Listener.follow('full', (event) => {
-            if (event.type === 'complite') {
-                let render = event.object.activity.render();
+        Lampa.Listener.follow('full', (e) => {
+            if (e.type === 'complite') {
+                let render = e.object.activity.render();
                 if (render && insertLampaBlock(render)) {
-                    if (event.object.method && event.object.id) {
-                        let ratingKey = event.object.method + "_" + event.object.id;
-                        getLampaRating(ratingKey).then(result => {
-                            if (result.rating !== null && result.rating > 0) {
-                                $(render).find('.rate--lampa .rate-value').text(result.rating);
-                                if (result.medianReaction) {
-                                    let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                                    $(render).find('.rate--lampa .rate-icon').html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
-                                }
-                            } else {
-                                $(render).find('.rate--lampa').hide();
+                    if (e.object.method && e.object.id) {
+                        let ratingKey = e.object.method + "_" + e.object.id;
+                        const cached = ratingCache.get('lampa_rating', ratingKey);
+                        if (cached && cached.rating !== 0 && cached.rating !== '0.0') {
+                            let rateValue = $(render).find('.rate--lampa .rate-value');
+                            let rateIcon = $(render).find('.rate--lampa .rate-icon');
+                            rateValue.text(cached.rating);
+                            if (cached.medianReaction) {
+                                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                                rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
                             }
+                            return;
+                        }
+                        addToQueue(() => {
+                            getLampaRating(ratingKey).then(result => {
+                                let rateValue = $(render).find('.rate--lampa .rate-value');
+                                let rateIcon = $(render).find('.rate--lampa .rate-icon');
+                                if (result.rating !== null && result.rating > 0) {
+                                    rateValue.text(result.rating);
+                                    if (result.medianReaction) {
+                                        let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                                        rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
+                                    }
+                                } else {
+                                    $(render).find('.rate--lampa').hide();
+                                }
+                            });
                         });
                     }
                 }
             }
         });
     }
-
     if (window.appready) {
         initPlugin();
     } else {
-        Lampa.Listener.follow('app', (event) => {
-            if (event.type === 'ready') initPlugin();
+        Lampa.Listener.follow('app', (e) => {
+            if (e.type === 'ready') initPlugin();
         });
     }
 })();
