@@ -566,9 +566,6 @@ Lampa.SettingsApi.addComponent({
                                                           $('div[data-name="filter_content"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
-						    item.on("hover:enter", function (event) {
-                                                        nthChildIndex = focus_back(event); // Сохраняем элемент в переменной
-						    });
 					}
 		});
 
