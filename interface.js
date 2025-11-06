@@ -43,6 +43,7 @@
     }
     function shouldUseNewInterface(object) {
         if (!object) return false;
+        if (!(object.source === 'tmdb' || object.source === 'cub')) return false;
         if (window.innerWidth < 767) return false;
         return true;
     }
@@ -219,42 +220,6 @@
         line.__newInterfaceLine = true;
         const state = ensureState(main);
         const applyToCard = (card) => decorateCard(state, card);
-        const head = line.render(true).find('.items-line__title');
-        const headTitle = head.length ? head.text().trim() : '';
-        const network = new Lampa.Reguest();
-        if (headTitle === Lampa.Lang.translate('title_continue')) {
-            if (Array.isArray(line.items) && line.items.length) {
-                line.items.forEach(card => {
-                    card.params = card.params || {};
-                    card.params.style = card.params.style || {};
-                    card.params.style.name = 'wide';
-                    const cardElem = card.render(true);
-                    if (cardElem) {
-                        cardElem.addClass('card--wide');
-                        const img = cardElem.find('.card__img');
-                        if (img.length) {
-                            if (card.data && card.data.backdrop_path) {
-                                const newSrc = Lampa.Api.img(card.data.backdrop_path, 'w780');
-                                img.attr('src', newSrc);
-                            } else if (card.data && card.data.id) {
-                                const type = card.data.media_type === 'tv' || card.data.name ? 'tv' : 'movie';
-                                const language = Lampa.Storage.get('language');
-                                const url = Lampa.TMDB.api(`${type}/${card.data.id}?api_key=${Lampa.TMDB.key()}&language=${language}`);
-                                network.silent(url, (movie) => {
-                                    if (movie && movie.backdrop_path) {
-                                        card.data.backdrop_path = movie.backdrop_path;
-                                        const newSrc = Lampa.Api.img(movie.backdrop_path, 'w780');
-                                        img.attr('src', newSrc);
-                                    }
-                                });
-                            }
-                        }
-                        updateCardTitle(card);
-                    }
-                    decorateCard(state, card);
-                });
-            }
-        }
         line.use({
             onInstance(card) {
                 applyToCard(card);
@@ -437,10 +402,26 @@
             if (!data) return;
             if (!this.html) this.create();
             this.html.find('.new-interface-info__head,.new-interface-info__details').text('---');
-            this.html.find('.new-interface-info__title').text(data.title || data.name || '');
+            var titleElem = this.html.find('.new-interface-info__title');
+            titleElem.text(data.title || data.name || '');
             this.html.find('.new-interface-info__description').text(data.overview || Lampa.Lang.translate('full_notext'));
             Lampa.Background.change(Lampa.Utils.cardImgBackground(data));
+            if (Lampa.Storage.get('logo_glav') === '0') {
+                this.loadLogo(data, titleElem);
+            }
             this.load(data);
+        }
+        loadLogo(data, titleElem) {
+            if (!data || !data.id) return;
+            const type = data.media_type === 'tv' || data.name ? 'tv' : 'movie';
+            const url = Lampa.TMDB.api(`${type}/${data.id}/images?api_key=${Lampa.TMDB.key()}&language=${Lampa.Storage.get('language')}`);
+            this.network.silent(url, (response) => {
+                if (response.logos && response.logos.length > 0) {
+                    var logoPath = response.logos[0].file_path;
+                    var imgSrc = Lampa.TMDB.image('/t/p/w300' + logoPath.replace('.svg', '.png'));
+                    titleElem.html(`<img style="max-height:4em; margin-bottom:0.3em; margin-left:-0.03em;" src="${imgSrc}"/>`);
+                }
+            });
         }
         load(data) {
             if (!data || !data.id) return;
@@ -516,10 +497,25 @@
       };
       this.update = function (data) {
         html.find('.new-interface-info__head,.new-interface-info__details').text('---');
-        html.find('.new-interface-info__title').text(data.title);
+        var titleElem = html.find('.new-interface-info__title');
+        titleElem.text(data.title || data.name || '');
         html.find('.new-interface-info__description').text(data.overview || Lampa.Lang.translate('full_notext'));
         Lampa.Background.change(Lampa.Api.img(data.backdrop_path, 'w200'));
+        if (Lampa.Storage.get('logo_glav') === '0') {
+            this.loadLogo(data, titleElem);
+        }
         this.load(data);
+      };
+      this.loadLogo = function (data, titleElem) {
+        var url = Lampa.TMDB.api((data.name ? 'tv' : 'movie') + '/' + data.id + '/images?api_key=' + Lampa.TMDB.key() + '&language=' + Lampa.Storage.get('language'));
+        network.silent(url, function (response) {
+            if (response.logos && response.logos[0]) {
+                var logo = response.logos[0].file_path;
+                if (logo !== '') {
+                    titleElem.html('<img style="max-height:4em; margin-bottom:0.3em;" src="' + Lampa.TMDB.image('/t/p/w300' + logo.replace('.svg', '.png')) + '"/>');
+                }
+            }
+        });
       };
       this.draw = function (data) {
         var create = ((data.release_date || data.first_air_date || '0000') + '').slice(0, 4);
@@ -757,6 +753,7 @@
       var new_interface = component;
       Lampa.InteractionMain = function (object) {
         var use = new_interface;
+        if (!(object.source == 'tmdb' || object.source == 'cub')) use = old_interface;
         if (window.innerWidth < 767) use = old_interface;
         if (Lampa.Manifest.app_digital < 153) use = old_interface;
         return new use(object);
@@ -764,46 +761,46 @@
       Lampa.Template.add('new_interface_style', "\n <style>\n .new-interface .card--small.card--wide {\n width: 18.3em;\n }\n \n .new-interface-info {\n position: relative;\n padding: 1.5em;\n height: 24em;\n }\n \n .new-interface-info__body {\n width: 80%;\n padding-top: 1.1em;\n }\n \n .new-interface-info__head {\n color: rgba(255, 255, 255, 0.6);\n margin-bottom: 1em;\n font-size: 1.3em;\n min-height: 1em;\n }\n \n .new-interface-info__head span {\n color: #fff;\n }\n \n .new-interface-info__title {\n font-size: 4em;\n font-weight: 600;\n margin-bottom: 0.3em;\n overflow: hidden;\n -o-text-overflow: \".\";\n text-overflow: \".\";\n display: -webkit-box;\n -webkit-line-clamp: 1;\n line-clamp: 1;\n -webkit-box-orient: vertical;\n margin-left: -0.03em;\n line-height: 1.3;\n }\n \n .new-interface-info__details {\n margin-bottom: 1.6em;\n display: -webkit-box;\n display: -webkit-flex;\n display: -moz-box;\n display: -ms-flexbox;\n display: flex;\n -webkit-box-align: center;\n -webkit-align-items: center;\n -moz-box-align: center;\n -ms-flex-align: center;\n align-items: center;\n -webkit-flex-wrap: wrap;\n -ms-flex-wrap: wrap;\n flex-wrap: wrap;\n min-height: 1.9em;\n font-size: 1.1em;\n }\n \n .new-interface-info__split {\n margin: 0 1em;\n font-size: 0.7em;\n }\n \n .new-interface-info__description {\n font-size: 1.2em;\n font-weight: 300;\n line-height: 1.5;\n overflow: hidden;\n -o-text-overflow: \".\";\n text-overflow: \".\";\n display: -webkit-box;\n -webkit-line-clamp: 4;\n line-clamp: 4;\n -webkit-box-orient: vertical;\n width: 70%;\n }\n \n .new-interface .card-more__box {\n padding-bottom: 95%;\n }\n \n .new-interface .full-start__background {\n height: 108%;\n top: -6em;\n }\n \n .new-interface .full-start__rate {\n font-size: 1.3em;\n margin-right: 0;\n }\n \n .new-interface .card__promo {\n display: none;\n }\n \n .new-interface .card.card--wide+.card-more .card-more__box {\n padding-bottom: 95%;\n }\n \n .new-interface .card.card--wide .card-watched {\n display: none !important;\n }\n \n body.light--version .new-interface-info__body {\n width: 69%;\n padding-top: 1.5em;\n }\n \n body.light--version .new-interface-info {\n height: 25.3em;\n }\n\n body.advanced--animation:not(.no--animation) .new-interface .card--small.card--wide.focus .card__view{\n animation: animation-card-focus 0.2s\n }\n body.advanced--animation:not(.no--animation) .new-interface .card--small.card--wide.animate-trigger-enter .card__view{\n animation: animation-trigger-enter 0.2s forwards\n }\n </style>\n ");
       $('body').append(Lampa.Template.get('new_interface_style', {}, true));
     }
+    Lampa.SettingsApi.addParam({
+        component: 'interface',
+        param: {
+            name: 'logo_glav',
+            type: 'select',
+            values: {
+                '1': 'Скрыть',
+                '0': 'Отображать'
+            },
+            default: '0'
+        },
+        field: {
+            name: 'Логотипы вместо названий',
+            description: 'Отображает логотипы фильмов вместо текста'
+        }
+    });
     if (!window.plugin_interface_ready) startPlugin();
-    
-    // Дополнительный механизм для принудительного применения горизонтальных постеров в "Продолжить просмотр"
-    const network = new Lampa.Reguest();
-    function forceHorizontalPosters() {
-        const continueTitle = Lampa.Lang.translate('title_continue');
-        $('.items-line__title').each(function() {
-            const title = $(this).text().trim();
-            if (title === continueTitle) {
-                const line = $(this).closest('.items-line');
-                line.addClass('new-interface');
-                const cards = line.find('.card');
-                cards.addClass('card--wide');
-                cards.each(function() {
-                    const card = $(this);
-                    if (!card.data('horizontal-applied')) {
-                        card.data('horizontal-applied', true);
-                        const img = card.find('.card__img');
-                        const movieId = card.attr('data-movie-id');
-                        if (movieId) {
-                            const type = card.hasClass('card--tv') ? 'tv' : 'movie';
-                            const language = Lampa.Storage.get('language');
-                            const url = Lampa.TMDB.api(`${type}/${movieId}?api_key=${Lampa.TMDB.key()}&language=${language}`);
-                            network.silent(url, (movie) => {
-                                if (movie && movie.backdrop_path) {
-                                    const newSrc = Lampa.Api.img(movie.backdrop_path, 'w780');
-                                    img.attr('src', newSrc);
-                                }
-                            });
+    function startLogoPlugin() {
+        window.logoplugin = true;
+        Lampa.Listener.follow('full', function (e) {
+            if (e.type === 'complite' && Lampa.Storage.get('logo_glav') !== '1') {
+                var data = e.data.movie;
+                var type = data.name ? 'tv' : 'movie';
+                if (data.id !== '') {
+                    var url = Lampa.TMDB.api(type + '/' + data.id + '/images?api_key=' + Lampa.TMDB.key() + '&language=' + Lampa.Storage.get('language'));
+                    $.get(url, function (data) {
+                        if (data.logos && data.logos[0]) {
+                            var logo = data.logos[0].file_path;
+                            if (logo !== '') {
+                                e.object.activity.render()
+                                    .find('.full-start-new__title')
+                                    .html('<img style="margin-top:5px; max-height:125px;" src="' + Lampa.TMDB.image('/t/p/w300' + logo.replace('.svg', '.png')) + '"/>');
+                            }
                         }
-                        const titleElem = card.find('.card__title');
-                        if (titleElem.length) {
-                            const newTitle = $('<div class="new-interface-card-title"></div>');
-                            newTitle.text(titleElem.text());
-                            card.append(newTitle);
-                        }
-                    }
-                });
+                    });
+                }
             }
         });
     }
-    setInterval(forceHorizontalPosters, 500);
+    if (!window.logoplugin) {
+        startLogoPlugin();
+    }
 })();
