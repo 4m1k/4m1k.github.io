@@ -43,7 +43,6 @@
     }
     function shouldUseNewInterface(object) {
         if (!object) return false;
-        if (!(object.source === 'tmdb' || object.source === 'cub')) return false;
         if (window.innerWidth < 767) return false;
         return true;
     }
@@ -222,6 +221,7 @@
         const applyToCard = (card) => decorateCard(state, card);
         const head = line.render(true).find('.items-line__title');
         const headTitle = head.length ? head.text().trim() : '';
+        const network = new Lampa.Reguest();
         if (headTitle === Lampa.Lang.translate('title_continue')) {
             if (Array.isArray(line.items) && line.items.length) {
                 line.items.forEach(card => {
@@ -232,9 +232,22 @@
                     if (cardElem) {
                         cardElem.addClass('card--wide');
                         const img = cardElem.find('.card__img');
-                        if (img.length && card.data && card.data.backdrop_path) {
-                            const newSrc = Lampa.Api.img(card.data.backdrop_path, 'w780');
-                            img.attr('src', newSrc);
+                        if (img.length) {
+                            if (card.data && card.data.backdrop_path) {
+                                const newSrc = Lampa.Api.img(card.data.backdrop_path, 'w780');
+                                img.attr('src', newSrc);
+                            } else if (card.data && card.data.id) {
+                                const type = card.data.media_type === 'tv' || card.data.name ? 'tv' : 'movie';
+                                const language = Lampa.Storage.get('language');
+                                const url = Lampa.TMDB.api(`${type}/${card.data.id}?api_key=${Lampa.TMDB.key()}&language=${language}`);
+                                network.silent(url, (movie) => {
+                                    if (movie && movie.backdrop_path) {
+                                        card.data.backdrop_path = movie.backdrop_path;
+                                        const newSrc = Lampa.Api.img(movie.backdrop_path, 'w780');
+                                        img.attr('src', newSrc);
+                                    }
+                                });
+                            }
                         }
                         updateCardTitle(card);
                     }
