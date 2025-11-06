@@ -40,24 +40,26 @@
                     const originalUpdate = state.update;
                     state.update = function (data) {
                         originalUpdate.call(this, data);
-                        if (!data) return;
+                        if (!data || !data.id) return;
                         const infoElem = this.infoElement;
                         if (!infoElem) return;
                         const titleElem = $(infoElem).find('.new-interface-info__title');
-                        if (titleElem.length === 0 || titleElem.data('logo-loaded')) return;
+                        if (titleElem.length === 0) return;
+                        titleElem.removeData('logo-loaded');
+                        const currentId = data.id;
+                        titleElem.data('current-id', currentId);
                         const type = data.media_type === 'tv' || data.name ? 'tv' : 'movie';
-                        if (data.id) {
-                            const url = Lampa.TMDB.api(`${type}/${data.id}/images?api_key=${Lampa.TMDB.key()}&language=${Lampa.Storage.get('language')}`);
-                            const network = new Lampa.Reguest();
-                            network.silent(url, (response) => {
-                                if (response.logos && response.logos.length > 0) {
-                                    const logoPath = response.logos[0].file_path;
-                                    const imgSrc = Lampa.TMDB.image('/t/p/w300' + logoPath.replace('.svg', '.png'));
-                                    titleElem.html(`<img style="max-height:4em; margin-bottom:0.3em; margin-left:-0.03em;" src="${imgSrc}"/>`);
-                                    titleElem.data('logo-loaded', true);
-                                }
-                            }, () => {}, false, { retries: 1 });
-                        }
+                        const url = Lampa.TMDB.api(`${type}/${data.id}/images?api_key=${Lampa.TMDB.key()}&language=${Lampa.Storage.get('language')}`);
+                        const network = new Lampa.Reguest();
+                        network.silent(url, (response) => {
+                            if (titleElem.data('current-id') !== currentId) return;
+                            if (response.logos && response.logos.length > 0) {
+                                const logoPath = response.logos[0].file_path;
+                                const imgSrc = Lampa.TMDB.image('/t/p/w300' + logoPath.replace('.svg', '.png'));
+                                titleElem.html(`<img style="max-height:4em; margin-bottom:0.3em; margin-left:-0.03em;" src="${imgSrc}"/>`);
+                                titleElem.data('logo-loaded', true);
+                            }
+                        }, () => {}, false, { retries: 1 });
                     };
                 });
             }
