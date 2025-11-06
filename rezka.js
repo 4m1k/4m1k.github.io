@@ -6,25 +6,16 @@
         // Устанавливаем флаг, что плагин активирован
         window.logoplugin = true;
 
-        // Подписываемся на событие 'full' в Lampa.Listener для полного вида
+        // Подписываемся на событие 'full' в Lampa.Listener для полного вида (старый интерфейс)
         Lampa.Listener.follow('full', function (e) {
-            // Проверяем, что событие имеет тип 'complite' и параметр logo_glav не равен '1'
             if (e.type === 'complite' && Lampa.Storage.get('logo_glav') !== '1') {
                 var data = e.data.movie;
                 var type = data.name ? 'tv' : 'movie';
-
-                // Проверяем, что ID фильма не пустое
                 if (data.id !== '') {
-                    // Формируем URL для запроса к API TMDB
                     var url = Lampa.TMDB.api(type + '/' + data.id + '/images?api_key=' + Lampa.TMDB.key() + '&language=' + Lampa.Storage.get('language'));
-
-                    // Выполняем GET-запрос к API
                     $.get(url, function (response) {
-                        // Проверяем наличие логотипов в ответе
                         if (response.logos && response.logos[0]) {
                             var logo = response.logos[0].file_path;
-
-                            // Если логотип существует, заменяем текстовое название на изображение
                             if (logo !== '') {
                                 e.object.activity.render()
                                     .find('.full-start-new__title')
@@ -65,7 +56,7 @@
                                     titleElem.html(`<img style="max-height:4em; margin-bottom:0.3em; margin-left:-0.03em;" src="${imgSrc}"/>`);
                                     titleElem.data('logo-loaded', true);
                                 }
-                            });
+                            }, () => {}, false, { retries: 1 });
                         }
                     };
                 });
