@@ -757,7 +757,6 @@
       var new_interface = component;
       Lampa.InteractionMain = function (object) {
         var use = new_interface;
-        if (!(object.source == 'tmdb' || object.source == 'cub')) use = old_interface;
         if (window.innerWidth < 767) use = old_interface;
         if (Lampa.Manifest.app_digital < 153) use = old_interface;
         return new use(object);
@@ -766,4 +765,45 @@
       $('body').append(Lampa.Template.get('new_interface_style', {}, true));
     }
     if (!window.plugin_interface_ready) startPlugin();
+    
+    // Дополнительный механизм для принудительного применения горизонтальных постеров в "Продолжить просмотр"
+    const network = new Lampa.Reguest();
+    function forceHorizontalPosters() {
+        const continueTitle = Lampa.Lang.translate('title_continue');
+        $('.items-line__title').each(function() {
+            const title = $(this).text().trim();
+            if (title === continueTitle) {
+                const line = $(this).closest('.items-line');
+                line.addClass('new-interface');
+                const cards = line.find('.card');
+                cards.addClass('card--wide');
+                cards.each(function() {
+                    const card = $(this);
+                    if (!card.data('horizontal-applied')) {
+                        card.data('horizontal-applied', true);
+                        const img = card.find('.card__img');
+                        const movieId = card.attr('data-movie-id');
+                        if (movieId) {
+                            const type = card.hasClass('card--tv') ? 'tv' : 'movie';
+                            const language = Lampa.Storage.get('language');
+                            const url = Lampa.TMDB.api(`${type}/${movieId}?api_key=${Lampa.TMDB.key()}&language=${language}`);
+                            network.silent(url, (movie) => {
+                                if (movie && movie.backdrop_path) {
+                                    const newSrc = Lampa.Api.img(movie.backdrop_path, 'w780');
+                                    img.attr('src', newSrc);
+                                }
+                            });
+                        }
+                        const titleElem = card.find('.card__title');
+                        if (titleElem.length) {
+                            const newTitle = $('<div class="new-interface-card-title"></div>');
+                            newTitle.text(titleElem.text());
+                            card.append(newTitle);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    setInterval(forceHorizontalPosters, 500);
 })();
