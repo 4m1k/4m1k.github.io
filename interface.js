@@ -220,6 +220,28 @@
         line.__newInterfaceLine = true;
         const state = ensureState(main);
         const applyToCard = (card) => decorateCard(state, card);
+        const head = line.render(true).find('.items-line__title');
+        const headTitle = head.length ? head.text().trim() : '';
+        if (headTitle === Lampa.Lang.translate('title_continue')) {
+            if (Array.isArray(line.items) && line.items.length) {
+                line.items.forEach(card => {
+                    card.params = card.params || {};
+                    card.params.style = card.params.style || {};
+                    card.params.style.name = 'wide';
+                    const cardElem = card.render(true);
+                    if (cardElem) {
+                        cardElem.addClass('card--wide');
+                        const img = cardElem.find('.card__img');
+                        if (img.length && card.data && card.data.backdrop_path) {
+                            const newSrc = Lampa.Api.img(card.data.backdrop_path, 'w780');
+                            img.attr('src', newSrc);
+                        }
+                        updateCardTitle(card);
+                    }
+                    decorateCard(state, card);
+                });
+            }
+        }
         line.use({
             onInstance(card) {
                 applyToCard(card);
