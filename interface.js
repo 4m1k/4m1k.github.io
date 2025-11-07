@@ -417,7 +417,7 @@
             if (!Lampa.TMDB || typeof Lampa.TMDB.api !== 'function' || typeof Lampa.TMDB.key !== 'function') return;
             const type = data.media_type === 'tv' || data.name ? 'tv' : 'movie';
             const language = Lampa.Storage.get('language');
-            const url = Lampa.TMDB.api(`${type}/${data.id}?api_key=${Lampa.TMDB.key()}&append_to_response=content_ratings,release_dates&language=${language}`);
+            const url = Lampa.TMDB.api(`${type}/${data.id}?api_key=${Lampa.TMDB.key()}&append_to_response=content_ratings,release_dates,images&language=${language}`);
             this.currentUrl = url;
             if (this.loaded[url]) {
                 this.draw(this.loaded[url]);
@@ -454,6 +454,12 @@
             if (pg) details.push(`<span class="full-start__pg" style="font-size: 0.9em;">${pg}</span>`);
             this.html.find('.new-interface-info__head').empty().append(head.join(', '));
             this.html.find('.new-interface-info__details').html(details.join('<span class="new-interface-info__split">&#9679;</span>'));
+            if (movie.images && movie.images.logos && movie.images.logos.length > 0) {
+                var logoPath = movie.images.logos[0].file_path;
+                if (logoPath !== '') {
+                    this.html.find('.new-interface-info__title').html('<img style="margin-top: 0.3em; margin-bottom: 0.1em; max-height: 1.8em; max-width: 6.8em;" src="' + Lampa.TMDB.image('t/p/w500' + logoPath.slice(4, -4)) + '.svg" />');
+                }
+            }
         }
         empty() {
             if (!this.html) return;
