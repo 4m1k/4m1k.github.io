@@ -457,7 +457,7 @@
             if (movie.images && movie.images.logos && movie.images.logos.length > 0) {
                 var logoPath = movie.images.logos[0].file_path;
                 if (logoPath !== '') {
-                    this.html.find('.new-interface-info__title').html('<img style="margin-top: 0.3em; margin-bottom: 0.1em; max-height: 1.8em; max-width: 6.8em;" src="' + Lampa.TMDB.image('t/p/w500' + logoPath.slice(1, -4)) + '.png" />');
+                    this.html.find('.new-interface-info__title').html('<img style="margin-top: 0.3em; margin-bottom: 0.1em; max-height: 1.8em; max-width: 6.8em;" src="' + Lampa.TMDB.image('t/p/w500/' + logoPath.slice(1, -4) + '.png') + '" />');
                 }
             }
         }
