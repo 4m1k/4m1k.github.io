@@ -22,7 +22,7 @@
                             // Если логотип существует, заменяем текстовое название на изображение
                             if (logo !== '') {
                                 var renderElement = e.object.activity.render();
-                                renderElement.find('.full-start-new__title').html('<img style="margin-top:5px; max-height:125px;" src="' + Lampa.TMDB.image('/t/p/w300' + logo.replace('.svg', '.png')) + '"/>');
+                                renderElement.find('.full-start-new__title').html('<img style="margin-top:5px; max-height:125px;" src="' + Lampa.TMDB.image('/t/p/w500' + logo.replace('.svg', '.png')) + '"/>');
                                 
                                 // Удаляем элемент с теглайном для лучшей подгонки логотипа
                                 renderElement.find('.full-start-new__tagline').remove();
