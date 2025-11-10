@@ -1,4 +1,4 @@
-#EXTM3U url-tvg="http://skaztv.top/epg.xml.gz"
+#EXTM3U url-tvg="https://iptvx.one/epg/epg.xml.gz; http://skaztv.top/epg.xml.gz; https://iptvx.one/EPG"
 #EXTINF:-1 tvg-id="Первый HD" tvg-name="Первый HD" tvg-logo="http://s.skaz.tv/tvicon/1.png" group-title="Федеральные",Первый HD
 http://stream.skaztv.top/s/ch001/index.m3u8?cmail=c0iUqfEhjEe6sie30aDWCAJ3wHR3xPMApePVfvrKCFM%3D&cdn=2
 #EXTINF:-1 tvg-id="Первый HD orig" tvg-name="Первый HD orig" tvg-logo="http://s.skaz.tv/tvicon/1089.png" group-title="Федеральные",Первый HD orig
