@@ -1,4 +1,3 @@
-
 #EXTM3U url-tvg="https://iptvx.one/epg/epg.xml.gz; http://skaztv.top/epg.xml.gz"
 #EXTINF:-1 tvg-id="Первый HD" tvg-name="Первый HD" tvg-logo="http://s.skaz.tv/tvicon/1.png" group-title="Федеральные",Первый HD
 http://ru.byskaz.ru:14000/ch001/mono.m3u8?token=lampastream.q5PNovd7aB4uKIUa11YDMux-CYU3WCF4SMucAg-fmdD3sVlT084sRbsxf257LfQd
