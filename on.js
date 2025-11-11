@@ -2,7 +2,7 @@
   'use strict';
   var Defined = {
     api: 'lampac',
-    localhost: 'https://lam6.akter-black.com/',
+    localhost: 'https://lam9.akter-black.com/',
     apn: 'http://apn.cfhttp.top/'
   };
  
@@ -1631,6 +1631,7 @@ Lampa.Template.add('lampac_css', "\n <style>\n @charset 'UTF-8';.online-prestige
   }
   if (!window.lampac_plugin) startPlugin();
 })();
+
 
 
 
