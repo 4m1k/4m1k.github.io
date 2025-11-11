@@ -1,4 +1,3 @@
-The playlist has been updated by replacing all original URLs with their transformed equivalents, based on the provided examples and consistent pattern observed. The revised M3U file content is as follows:
 
 #EXTM3U url-tvg="https://iptvx.one/epg/epg.xml.gz; http://skaztv.top/epg.xml.gz"
 #EXTINF:-1 tvg-id="Первый HD" tvg-name="Первый HD" tvg-logo="http://s.skaz.tv/tvicon/1.png" group-title="Федеральные",Первый HD
