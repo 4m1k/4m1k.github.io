@@ -2821,15 +2821,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://skaz.tv/tv.js', 'skaz', '@skaz', 'skaz');
+							itemON('http://skaz.tv/onlines.js', 'skaz', '@skaz', 'skaz');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://skaz.tv/tv.js";
+							var pluginToRemoveUrl = "http://skaz.tv/onlines.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://skaz.tv/tv.js')
+						/*var myResult = checkPlugin('http://skaz.tv/onlines.js')
 						setTimeout(function() {	
 							$('div[data-name="skaz"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2838,13 +2838,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://skaz.tv/tv.js');
+						var myResult = checkPlugin('http://skaz.tv/onlines.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="skaz"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://skaz.tv/tv.js') {
+                                                          if (pluginsArray[i].url === 'http://skaz.tv/onlines.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
