@@ -6,12 +6,12 @@
 
     var plugin = {
         name: 'TMDB Proxy + Anti-DMCA + No Ads (Force)',
-        version: '1.0.5',
-        description: 'Прокси TMDB + отключение DMCA, обход блокировок + принудительное отключение всей рекламы'
+        version: '1.0.6',
+        description: 'Прокси TMDB + отключение DMCA, обход блокировок + принудительное отключение рекламы (даже от сервера)'
     };
 
     plugin.path_image = Lampa.Utils.protocol() + 'tmdbimage.abmsx.tech/';
-    plugin.path_api = Lampa.Utils.protocol() + 'tmdb.abmsx.tech/3/';
+    plugin.path_api = Lampa.Utils.protocol() + 'tmdbimage.abmsx.tech/3/';
 
     Lampa.TMDB.image = function (url) {
         var base = Lampa.Utils.protocol() + 'image.tmdb.org/' + url;
@@ -33,22 +33,29 @@
         // Отключаем DMCA полностью
         Lampa.Utils.dcma = function () { return undefined; };
 
-        // Принудительно отключаем рекламу — переопределяем загрузку настроек
-        var originalMain = Lampa.Settings.main;
-        Lampa.Settings.main = function () {
-            originalMain.call(this);
+        // Принудительно отключаем рекламу — переопределяем загрузку настроек с сервера
+        if (Lampa.Settings && Lampa.Settings.main) {
+            var originalMain = Lampa.Settings.main;
+            Lampa.Settings.main = function () {
+                originalMain.apply(this, arguments); // оригинальная загрузка
 
-            // После загрузки настроек с сервера принудительно выключаем рекламу
-            if (window.lampa_settings) {
-                if (window.lampa_settings.disable_features) {
-                    window.lampa_settings.disable_features.ads = true; // отключаем фичу ads
+                // После загрузки/синхронизации принудительно выключаем рекламу
+                if (window.lampa_settings) {
+                    if (!window.lampa_settings.disable_features) {
+                        window.lampa_settings.disable_features = {};
+                    }
+                    window.lampa_settings.disable_features.ads = true; // true = отключить рекламу
                 }
-                // Дополнительно, если есть основное поле ads — ставим false (нет рекламы)
-                if (window.lampa_settings.ads !== undefined) {
-                    window.lampa_settings.ads = false;
-                }
+            };
+        }
+
+        // Дополнительно ставим сразу (на случай, если настройки уже загружены)
+        if (window.lampa_settings) {
+            if (!window.lampa_settings.disable_features) {
+                window.lampa_settings.disable_features = {};
             }
-        };
+            window.lampa_settings.disable_features.ads = true;
+        }
 
         // Сохраняем дефолтный источник
         var defaultSource = Lampa.Storage.get('source', 'cub');
@@ -58,10 +65,12 @@
             if (event.data.blocked) {
                 window.lampa_settings.dcma = [];
                 var active = Lampa.Activity.active();
-                active.source = 'tmdb';
-                Lampa.Storage.set('source', 'tmdb', true);
-                Lampa.Activity.replace(active);
-                Lampa.Storage.set('source', defaultSource, true);
+                if (active) {
+                    active.source = 'tmdb';
+                    Lampa.Storage.set('source', 'tmdb', true);
+                    Lampa.Activity.replace(active);
+                    Lampa.Storage.set('source', defaultSource, true);
+                }
             }
         });
 
