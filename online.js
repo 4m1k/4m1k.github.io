@@ -4,7 +4,7 @@
   var Defined = {
     api: 'lampac',
     localhost: 'https://akter-black.com/',
-    apn: ''
+    apn: 'http://apn.cfhttp.top/'
   };
 
   var balansers_with_search;
@@ -1722,4 +1722,5 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
 
