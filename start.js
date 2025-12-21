@@ -5,9 +5,9 @@
     Lampa.Platform.tv();
 
     var plugin = {
-        name: 'TMDB Proxy + Anti-DMCA + No Ads',
-        version: '1.0.4',
-        description: 'Прокси TMDB через abmsx.tech + отключение DMCA, обход блокировок + полное отключение рекламы'
+        name: 'TMDB Proxy + Anti-DMCA + No Ads (Force)',
+        version: '1.0.5',
+        description: 'Прокси TMDB + отключение DMCA, обход блокировок + принудительное отключение всей рекламы'
     };
 
     plugin.path_image = Lampa.Utils.protocol() + 'tmdbimage.abmsx.tech/';
@@ -33,12 +33,22 @@
         // Отключаем DMCA полностью
         Lampa.Utils.dcma = function () { return undefined; };
 
-        // Полностью отключаем рекламу
-        if (window.lampa_settings && window.lampa_settings.disable_features) {
-            window.lampa_settings.disable_features.ads = true;
-        } else if (window.lampa_settings) {
-            window.lampa_settings.disable_features = { ads: true };
-        }
+        // Принудительно отключаем рекламу — переопределяем загрузку настроек
+        var originalMain = Lampa.Settings.main;
+        Lampa.Settings.main = function () {
+            originalMain.call(this);
+
+            // После загрузки настроек с сервера принудительно выключаем рекламу
+            if (window.lampa_settings) {
+                if (window.lampa_settings.disable_features) {
+                    window.lampa_settings.disable_features.ads = true; // отключаем фичу ads
+                }
+                // Дополнительно, если есть основное поле ads — ставим false (нет рекламы)
+                if (window.lampa_settings.ads !== undefined) {
+                    window.lampa_settings.ads = false;
+                }
+            }
+        };
 
         // Сохраняем дефолтный источник
         var defaultSource = Lampa.Storage.get('source', 'cub');
