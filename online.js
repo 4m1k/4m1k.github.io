@@ -3,7 +3,7 @@
 
   var Defined = {
     api: 'lampac',
-    localhost: '{localhost}/',
+    localhost: 'https://akter-black.com/',
     apn: ''
   };
 
@@ -1722,3 +1722,4 @@
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
