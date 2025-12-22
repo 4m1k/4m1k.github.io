@@ -7,6 +7,7 @@
   var KEY_ENABLED = 'snowfx_enabled';
   var KEY_DENSITY = 'snowfx_density'; // 0 auto, 1 low, 2 mid, 3 high
   var KEY_SETTLE  = 'snowfx_settle';  // 0 off, 1 on
+  var KEY_SHAKE   = 'snowfx_shake';   // 0 off, 1 on (shake to clear on mobile)
   // Menu icon (filled), behaves like native icons (color inherits from menu item)
   var SNOW_ICON =
     '<svg class="snowfx-menu-icon" width="88" height="83" viewBox="0 0 88 83" xmlns="http://www.w3.org/2000/svg">' +
@@ -25,8 +26,6 @@
         '<path d="M68 31H76V51H68Z"/>' +
       '</g>' +
     '</svg>';
-
-
 
   // --- platform detect ---
   function isTizen() {
@@ -836,6 +835,143 @@ function resetAccumulationSoft(reason) {
   }
 
 
+
+  // --- Shake to clear snow (mobile accelerometer) ---
+  // Работает на Android/Chrome обычно сразу. На iOS Safari может требовать разрешение (tap по экрану).
+  var shake_enabled = 0;
+  var motion_active = false;
+  var motion_ready = false;
+  var motion_ask_bound = false;
+
+  var last_shake_ts = 0;
+  var shake_hits = 0;
+  var shake_window_ts = 0;
+
+  function setShakeEnabled(v) {
+    v = v ? 1 : 0;
+    shake_enabled = v;
+
+    if (!shake_enabled) {
+      stopMotion();
+      return;
+    }
+
+    // только мобилки, не Tizen
+    if (cfg_tizen || !isMobileUA()) return;
+
+    ensureMotion();
+  }
+
+  function onDeviceMotion(e) {
+    if (!shake_enabled) return;
+    if (cfg_tizen) return;
+    if (!isMobileUA()) return;
+
+    // Нечего "стряхивать", если эффект сейчас выключен (настройки/плеер)
+    if (!running) return;
+
+    var acc = e && (e.accelerationIncludingGravity || e.acceleration);
+    if (!acc) return;
+
+    var x = acc.x || 0;
+    var y = acc.y || 0;
+    var z = acc.z || 0;
+
+    // magnitude
+    var mag = Math.sqrt(x * x + y * y + z * z);
+
+    // убираем "гравитацию"
+    var delta = Math.abs(mag - 9.81);
+
+    var now = Date.now();
+
+    // простая детекция: 2 удара за 450мс
+    var TH = 13.0;          // порог (м/с^2)
+    var WINDOW = 450;       // окно детекции
+    var COOLDOWN = 1100;    // антиспам
+
+    if (delta > TH) {
+      if (now - last_shake_ts < COOLDOWN) return;
+
+      if (!shake_window_ts || (now - shake_window_ts) > WINDOW) {
+        shake_window_ts = now;
+        shake_hits = 0;
+      }
+
+      shake_hits++;
+
+      if (shake_hits >= 2) {
+        last_shake_ts = now;
+        shake_hits = 0;
+        shake_window_ts = 0;
+
+        // "стряхиваем" оседание (мгновенно), без полос
+        resetAccumulationHard('shake');
+
+        // небольшой "порыв ветра" у падающего снега
+        try {
+          for (var i = 0; i < flakes.length; i++) {
+            flakes[i].vx += rand(-1.2, 1.2);
+            flakes[i].vy *= 0.75;
+          }
+        } catch (e2) {}
+      }
+    }
+  }
+
+  function startMotion() {
+    if (motion_active) return;
+    if (typeof window.DeviceMotionEvent === 'undefined') return;
+
+    try {
+      window.addEventListener('devicemotion', onDeviceMotion, false);
+      motion_active = true;
+    } catch (e) {}
+  }
+
+  function stopMotion() {
+    if (!motion_active) return;
+    try { window.removeEventListener('devicemotion', onDeviceMotion, false); } catch (e) {}
+    motion_active = false;
+  }
+
+  function ensureMotion() {
+    if (motion_ready) return;
+    if (!shake_enabled) return;
+
+    // iOS 13+ требует запрос разрешения только по пользовательскому действию
+    if (typeof window.DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+      if (motion_ask_bound) return;
+      motion_ask_bound = true;
+
+      var ask = function () {
+        // снимаем слушатели
+        try { document.removeEventListener('click', ask, true); } catch (e1) {}
+        try { document.removeEventListener('touchend', ask, true); } catch (e2) {}
+        motion_ask_bound = false;
+
+        try {
+          DeviceMotionEvent.requestPermission().then(function (res) {
+            if (res === 'granted') {
+              motion_ready = true;
+              startMotion();
+            }
+          }).catch(function () {});
+        } catch (e3) {}
+      };
+
+      // просим разрешение на первом тапе/клике
+      try { document.addEventListener('click', ask, true); } catch (e4) {}
+      try { document.addEventListener('touchend', ask, true); } catch (e5) {}
+      return;
+    }
+
+    // Android/Chrome и большинство WebView — сразу
+    motion_ready = true;
+    startMotion();
+  }
+
+
   // --- Settings UI ---
   function addSettingsUI() {
     injectSnowIconCSS();
@@ -889,6 +1025,21 @@ function resetAccumulationSoft(reason) {
           description: 'При прокрутке оседание сбрасывается. На Tizen принудительно Выкл.'
         }
       });
+      // Стряхивание на телефоне (акселерометр)
+      Lampa.SettingsApi.addParam({
+        component: 'snowfx',
+        param: {
+          name: KEY_SHAKE,
+          type: 'select',
+          values: { 0: 'Выкл', 1: 'Вкл' },
+          "default": 1
+        },
+        field: {
+          name: 'Стряхивание снегa',
+          description: 'На смартфоне можно стряхнуть снег потряхиванием (если браузер разрешает датчики)'
+        }
+      });
+
     } catch (e) {}
   }
 
@@ -946,6 +1097,7 @@ function resetAccumulationSoft(reason) {
   var last_enabled = null;
   var last_density = null;
   var last_settle = null;
+  var last_shake = null;
   var last_overlay = null;
 
   function startWatcher() {
@@ -960,11 +1112,17 @@ function resetAccumulationSoft(reason) {
       var se = num(storageGet(KEY_SETTLE, settleDefault), settleDefault) | 0;
       var ov = overlay_open ? 1 : 0;
 
-      if (en !== last_enabled || de !== last_density || se !== last_settle || ov !== last_overlay) {
+      var shakeDefault = (!tizen && isMobileUA()) ? 1 : 0;
+      var sh = num(storageGet(KEY_SHAKE, shakeDefault), shakeDefault) | 0;
+
+      if (en !== last_enabled || de !== last_density || se !== last_settle || sh !== last_shake || ov !== last_overlay) {
         last_enabled = en;
         last_density = de;
         last_settle = se;
+        last_shake = sh;
         last_overlay = ov;
+
+        setShakeEnabled(!!sh);
         applyConfigAndState(true);
       }
     }, 650);
@@ -996,6 +1154,13 @@ function resetAccumulationSoft(reason) {
 
     overlay_open = detectOverlayOpen();
     applyConfigAndState(false);
+
+    // enable shake (if supported)
+    try {
+      var t = isTizen();
+      var sd = (!t && isMobileUA()) ? 1 : 0;
+      setShakeEnabled(!!num(storageGet(KEY_SHAKE, sd), sd));
+    } catch (e) {}
 
     if (!window.Lampa && tries < 20) setTimeout(boot, 300);
   }
