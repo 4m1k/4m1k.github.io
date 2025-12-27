@@ -1,6 +1,5 @@
 (function () {
     'use strict';
-
     const ratingCache = {
         caches: {},
         get(source, key) {
@@ -23,21 +22,18 @@
             return value;
         }
     };
-
+    const CACHE_TIME = 24 * 60 * 60 * 1000;
     let taskQueue = [];
     let isProcessing = false;
     const taskInterval = 300;
     let requestPool = [];
-
     function getRequest() {
         return requestPool.pop() || new Lampa.Reguest();
     }
-
     function releaseRequest(request) {
         request.clear();
         if (requestPool.length < 3) requestPool.push(request);
     }
-
     function processQueue() {
         if (isProcessing || !taskQueue.length) return;
         isProcessing = true;
@@ -48,12 +44,10 @@
             processQueue();
         }, taskInterval);
     }
-
     function addToQueue(task) {
         taskQueue.push({ execute: task });
         processQueue();
     }
-
     function calculateLampaRating10(reactions) {
         let weightedSum = 0;
         let totalCount = 0;
@@ -82,7 +76,6 @@
         }
         return { rating: finalRating, medianReaction: medianReaction };
     }
-
     function fetchLampaRating(ratingKey) {
         return new Promise((resolve) => {
             const request = getRequest();
@@ -107,7 +100,6 @@
             }, false);
         });
     }
-
     async function getLampaRating(ratingKey) {
         const cached = ratingCache.get('lampa_rating', ratingKey);
         if (cached) return cached;
@@ -118,7 +110,6 @@
             return { rating: 0, medianReaction: '' };
         }
     }
-
     function insertLampaBlock(render) {
         if (!render) return false;
         let rateLine = $(render).find('.full-start-new__rate-line');
@@ -137,13 +128,18 @@
         }
         return true;
     }
-
     function insertCardRating(card, event) {
         let voteEl = card.querySelector('.card__vote');
         if (!voteEl) {
             voteEl = document.createElement('div');
             voteEl.className = 'card__vote rate--lampa';
             voteEl.style.cssText = `
+                line-height: 1;
+                font-family: "SegoeUI", sans-serif;
+                cursor: pointer;
+                box-sizing: border-box;
+                outline: none;
+                user-select: none;
                 position: absolute;
                 right: 0.3em;
                 bottom: 0.3em;
@@ -153,149 +149,72 @@
                 border-radius: 1em;
                 display: flex;
                 align-items: center;
-                font-size: 0.9em;
-                z-index: 10;
             `;
             const parent = card.querySelector('.card__view') || card;
             parent.appendChild(voteEl);
+            voteEl.innerHTML = '0.0';
         } else {
             voteEl.innerHTML = '';
         }
-
         let data = card.dataset || {};
         let cardData = event.object.data || {};
-        let id = cardData.id || data.id || card.getAttribute('data-id') || '0';
-        let type = (cardData.seasons || cardData.number_of_seasons || cardData.first_air_date) ? 'tv' : 'movie';
+        let id = cardData.id || data.id || card.getAttribute('data-id') || (card.getAttribute('data-card-id') || '0').replace('movie_', '') || '0';
+        let type = 'movie';
+        if (cardData.seasons || cardData.first_air_date || cardData.original_name || data.seasons || data.firstAirDate || data.originalName) {
+            type = 'tv';
+        }
         let ratingKey = type + "_" + id;
         voteEl.dataset.movieId = id.toString();
-
         const cached = ratingCache.get('lampa_rating', ratingKey);
-        if (cached && cached.rating > 0) {
-            updateVoteEl(voteEl, cached);
+        if (cached && cached.rating !== 0 && cached.rating !== '0.0') {
+            let html = cached.rating;
+            if (cached.medianReaction) {
+                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
+            }
+            voteEl.innerHTML = html;
             return;
         }
-
         addToQueue(() => {
             getLampaRating(ratingKey).then(result => {
-                if (voteEl.isConnected && voteEl.dataset.movieId === id.toString()) {
-                    if (result.rating > 0) {
-                        updateVoteEl(voteEl, result);
-                    } else {
+                if (voteEl.parentNode && voteEl.dataset.movieId === id.toString()) {
+                    let html = result.rating !== null ? result.rating : '0.0';
+                    if (result.medianReaction) {
+                        let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                        html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
+                    }
+                    voteEl.innerHTML = html;
+                    if (result.rating === 0 || result.rating === '0.0') {
                         voteEl.style.display = 'none';
                     }
                 }
             });
         });
     }
-
-    function updateVoteEl(el, result) {
-        let html = result.rating;
-        if (result.medianReaction) {
-            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-            html += ` <img style="width:1em;height:1em;margin-left:0.3em;vertical-align:middle;" src="${src}">`;
-        }
-        el.innerHTML = html;
-    }
-
-    // Замена рейтинга в explorer-карточках
-    function replaceExplorerRating(cardElement) {
-        let rateBlock = cardElement.querySelector('.explorer-card__head-rate');
-        if (!rateBlock) return;
-
-        let lampaEl = rateBlock.querySelector('.lampa-rating');
-        if (!lampaEl) {
-            lampaEl = document.createElement('div');
-            lampaEl.className = 'lampa-rating';
-            lampaEl.style.cssText = `
-                font-weight: bold;
-                font-size: 1.2em;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.4em;
-                color: #fff;
-                text-shadow: 0 0 5px rgba(0,0,0,0.8);
-                margin-left: 0.5em;
-            `;
-            rateBlock.appendChild(lampaEl);
-        }
-
-        // Скрываем оригинальный рейтинг только если есть Lampa
-        let originalSvg = rateBlock.querySelector('svg');
-        let originalSpan = rateBlock.querySelector('span');
-        if (originalSvg) originalSvg.style.display = '';
-        if (originalSpan) originalSpan.style.display = '';
-
-        // Получаем ID
-        let id = null;
-        let type = 'movie';
-
-        // 1. Из постера
-        let img = cardElement.querySelector('.explorer-card__head-img img');
-        if (img && img.src) {
-            let match = img.src.match(/\/(movie|tv)_(\d+)\.jpg/);
-            if (match) {
-                type = match[1] === 'movie' ? 'movie' : 'tv';
-                id = match[2];
-            }
-        }
-
-        // 2. Из data-json (fallback для новых версий)
-        if (!id) {
-            let jsonStr = cardElement.getAttribute('data-json') || cardElement.closest('[data-json]')?.getAttribute('data-json');
-            if (jsonStr) {
-                try {
-                    let data = JSON.parse(jsonStr);
-                    id = data.id || data.movie?.id || data.tv?.id;
-                    if (data.seasons || data.number_of_seasons || data.first_air_date) type = 'tv';
-                } catch (e) {}
-            }
-        }
-
-        if (!id) return;
-
-        let ratingKey = type + "_" + id;
-
-        const cached = ratingCache.get('lampa_rating', ratingKey);
-        if (cached && cached.rating > 0) {
-            updateVoteEl(lampaEl, cached);
-            if (originalSvg) originalSvg.style.display = 'none';
-            if (originalSpan) originalSpan.style.display = 'none';
-            return;
-        }
-
-        addToQueue(() => {
-            getLampaRating(ratingKey).then(result => {
-                if (lampaEl.isConnected && result.rating > 0) {
-                    updateVoteEl(lampaEl, result);
-                    if (originalSvg) originalSvg.style.display = 'none';
-                    if (originalSpan) originalSpan.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    // Наблюдатель за новыми карточками
-    const observer = new MutationObserver(() => {
-        document.querySelectorAll('.explorer-card').forEach(card => {
-            replaceExplorerRating(card);
-        });
-    });
-
     function pollCards() {
-        document.querySelectorAll('.card').forEach(card => {
-            const data = card.card_data || {};
+        const allCards = document.querySelectorAll('.card');
+        allCards.forEach(card => {
+            const data = card.card_data;
             if (data && data.id) {
-                insertCardRating(card, { object: { data } });
+                const ratingElement = card.querySelector('.card__vote');
+                if (!ratingElement || ratingElement.dataset.movieId !== data.id.toString()) {
+                    insertCardRating(card, { object: { data } });
+                } else {
+                    const ratingKey = (data.seasons || data.first_air_date || data.original_name) ? `tv_${data.id}` : `movie_${data.id}`;
+                    const cached = ratingCache.get('lampa_rating', ratingKey);
+                    if (cached && cached.rating !== 0 && cached.rating !== '0.0' && ratingElement.innerHTML === '') {
+                        let html = cached.rating;
+                        if (cached.medianReaction) {
+                            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                            html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
+                        }
+                        ratingElement.innerHTML = html;
+                    }
+                }
             }
         });
-
-        document.querySelectorAll('.explorer-card').forEach(card => {
-            replaceExplorerRating(card);
-        });
-
-        setTimeout(pollCards, 1000);
+        setTimeout(pollCards, 500);
     }
-
     function setupCardListener() {
         if (window.lampa_listener_extensions) return;
         window.lampa_listener_extensions = true;
@@ -309,64 +228,69 @@
             }
         });
     }
-
     function initPlugin() {
         const style = document.createElement('style');
+        style.type = 'text/css';
         style.textContent = `
-            .card__vote { display: flex; align-items: center !important; }
-            .explorer-card__head-rate { display: flex; align-items: center; gap: 0.5em; }
-            .lampa-rating img { filter: drop-shadow(0 0 4px rgba(0,0,0,0.8)); }
+            .card__vote {
+                display: flex;
+                align-items: center !important;
+            }
+            @media (max-width: 480px) and (orientation: portrait) {
+                .full-start__rate.rate--lampa {
+                    min-width: 80px;
+                }
+            }
         `;
         document.head.appendChild(style);
-
         setupCardListener();
         pollCards();
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        Lampa.Listener.follow('card', e => {
+        Lampa.Listener.follow('card', (e) => {
             if (e.type === 'build' && e.object.card) {
                 insertCardRating(e.object.card, e);
             }
         });
-
-        Lampa.Listener.follow('full', e => {
+        Lampa.Listener.follow('full', (e) => {
             if (e.type === 'complite') {
                 let render = e.object.activity.render();
                 if (render && insertLampaBlock(render)) {
                     if (e.object.method && e.object.id) {
                         let ratingKey = e.object.method + "_" + e.object.id;
                         const cached = ratingCache.get('lampa_rating', ratingKey);
-                        if (cached && cached.rating > 0) {
-                            $(render).find('.rate--lampa .rate-value').text(cached.rating);
+                        if (cached && cached.rating !== 0 && cached.rating !== '0.0') {
+                            let rateValue = $(render).find('.rate--lampa .rate-value');
+                            let rateIcon = $(render).find('.rate--lampa .rate-icon');
+                            rateValue.text(cached.rating);
                             if (cached.medianReaction) {
-                                let src = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
-                                $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
+                                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                                rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
                             }
-                        } else {
-                            addToQueue(() => {
-                                getLampaRating(ratingKey).then(result => {
-                                    if (result.rating > 0) {
-                                        $(render).find('.rate--lampa .rate-value').text(result.rating);
-                                        if (result.medianReaction) {
-                                            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                                            $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
-                                        }
-                                    } else {
-                                        $(render).find('.rate--lampa').hide();
-                                    }
-                                });
-                            });
+                            return;
                         }
+                        addToQueue(() => {
+                            getLampaRating(ratingKey).then(result => {
+                                let rateValue = $(render).find('.rate--lampa .rate-value');
+                                let rateIcon = $(render).find('.rate--lampa .rate-icon');
+                                if (result.rating !== null && result.rating > 0) {
+                                    rateValue.text(result.rating);
+                                    if (result.medianReaction) {
+                                        let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                                        rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
+                                    }
+                                } else {
+                                    $(render).find('.rate--lampa').hide();
+                                }
+                            });
+                        });
                     }
                 }
             }
         });
     }
-
     if (window.appready) {
         initPlugin();
     } else {
-        Lampa.Listener.follow('app', e => {
+        Lampa.Listener.follow('app', (e) => {
             if (e.type === 'ready') initPlugin();
         });
     }
