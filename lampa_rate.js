@@ -144,12 +144,6 @@
             voteEl = document.createElement('div');
             voteEl.className = 'card__vote rate--lampa';
             voteEl.style.cssText = `
-                line-height: 1;
-                font-family: "SegoeUI", sans-serif;
-                cursor: pointer;
-                box-sizing: border-box;
-                outline: none;
-                user-select: none;
                 position: absolute;
                 right: 0.3em;
                 bottom: 0.3em;
@@ -159,45 +153,33 @@
                 border-radius: 1em;
                 display: flex;
                 align-items: center;
+                font-size: 0.9em;
+                z-index: 10;
             `;
             const parent = card.querySelector('.card__view') || card;
             parent.appendChild(voteEl);
-            voteEl.innerHTML = '0.0';
         } else {
             voteEl.innerHTML = '';
         }
 
         let data = card.dataset || {};
         let cardData = event.object.data || {};
-        let id = cardData.id || data.id || card.getAttribute('data-id') || (card.getAttribute('data-card-id') || '0').replace('movie_', '') || '0';
-        let type = 'movie';
-        if (cardData.seasons || cardData.first_air_date || cardData.original_name || data.seasons || data.firstAirDate || data.originalName) {
-            type = 'tv';
-        }
+        let id = cardData.id || data.id || card.getAttribute('data-id') || '0';
+        let type = (cardData.seasons || cardData.number_of_seasons || cardData.first_air_date) ? 'tv' : 'movie';
         let ratingKey = type + "_" + id;
         voteEl.dataset.movieId = id.toString();
 
         const cached = ratingCache.get('lampa_rating', ratingKey);
         if (cached && cached.rating > 0) {
-            let html = cached.rating;
-            if (cached.medianReaction) {
-                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
-                html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
-            }
-            voteEl.innerHTML = html;
+            updateVoteEl(voteEl, cached);
             return;
         }
 
         addToQueue(() => {
             getLampaRating(ratingKey).then(result => {
-                if (voteEl.parentNode && voteEl.dataset.movieId === id.toString()) {
+                if (voteEl.isConnected && voteEl.dataset.movieId === id.toString()) {
                     if (result.rating > 0) {
-                        let html = result.rating;
-                        if (result.medianReaction) {
-                            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                            html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
-                        }
-                        voteEl.innerHTML = html;
+                        updateVoteEl(voteEl, result);
                     } else {
                         voteEl.style.display = 'none';
                     }
@@ -206,41 +188,44 @@
         });
     }
 
-    // Надёжная функция для explorer-карточек
+    function updateVoteEl(el, result) {
+        let html = result.rating;
+        if (result.medianReaction) {
+            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+            html += ` <img style="width:1em;height:1em;margin-left:0.3em;vertical-align:middle;" src="${src}">`;
+        }
+        el.innerHTML = html;
+    }
+
+    // === РЕЙТИНГ В EXPLORER-КАРТОЧКАХ ===
     function insertExplorerRating(cardElement) {
+        // Проверяем, не обработана ли уже карточка
+        if (cardElement.querySelector('.lampa-rating')) return;
+
         let rateBlock = cardElement.querySelector('.explorer-card__head-rate');
         if (!rateBlock) return;
 
-        // Создаём отдельный span для рейтинга Lampa
-        let lampaSpan = rateBlock.querySelector('.lampa-rating');
-        if (!lampaSpan) {
-            lampaSpan = document.createElement('span');
-            lampaSpan.className = 'lampa-rating';
-            lampaSpan.style.cssText = `
-                margin-left: 0.5em;
-                font-weight: bold;
-                font-size: 1.1em;
-                display: inline-flex;
-                align-items: center;
-                gap: 0.3em;
-                color: #fff;
-                text-shadow: 0 0 4px rgba(0,0,0,0.7);
-            `;
-            rateBlock.appendChild(lampaSpan);
-        }
+        // Создаём контейнер для рейтинга Lampa
+        let lampaContainer = document.createElement('div');
+        lampaContainer.className = 'lampa-rating';
+        lampaContainer.style.cssText = `
+            margin-left: 0.8em;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        `;
 
-        // Скрываем оригинальную звёздочку и рейтинг KP/IMDB (чтобы не дублировалось)
-        let originalSvg = rateBlock.querySelector('svg');
-        if (originalSvg) originalSvg.style.display = 'none';
-        let originalSpan = rateBlock.querySelector('span:not(.lampa-rating)');
-        if (originalSpan) originalSpan.style.display = 'none';
+        rateBlock.appendChild(lampaContainer);
 
-        // Получаем ID из постера
+        // Получаем постер
         let img = cardElement.querySelector('.explorer-card__head-img img');
         if (!img || !img.src) return;
 
-        let src = img.src;
-        let match = src.match(/\/(movie|tv)_(\d+)\.jpg/);
+        let match = img.src.match(/\/(movie|tv)_(\d+)\.jpg/);
         if (!match) return;
 
         let type = match[1] === 'movie' ? 'movie' : 'tv';
@@ -249,65 +234,46 @@
 
         const cached = ratingCache.get('lampa_rating', ratingKey);
         if (cached && cached.rating > 0) {
-            updateLampaSpan(lampaSpan, cached);
+            updateLampaContainer(lampaContainer, cached);
             return;
         }
 
         addToQueue(() => {
             getLampaRating(ratingKey).then(result => {
-                if (lampaSpan.isConnected) {
-                    if (result.rating > 0) {
-                        updateLampaSpan(lampaSpan, result);
-                    } else {
-                        lampaSpan.innerHTML = ''; // или '—'
-                    }
+                if (lampaContainer.isConnected && result.rating > 0) {
+                    updateLampaContainer(lampaContainer, result);
                 }
             });
         });
     }
 
-    function updateLampaSpan(span, result) {
+    function updateLampaContainer(container, result) {
         let html = result.rating;
         if (result.medianReaction) {
-            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-            html += ` <img style="width:1.1em;height:1.1em;vertical-align:middle;" src="${reactionSrc}" alt="${result.medianReaction}">`;
+            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+            html += ` <img style="width:1.2em;height:1.2em;vertical-align:middle;" src="${src}" alt="${result.medianReaction}">`;
         }
-        span.innerHTML = html;
+        container.innerHTML = html;
     }
 
     function pollCards() {
         // Обычные карточки
-        const allCards = document.querySelectorAll('.card');
-        allCards.forEach(card => {
-            const data = card.card_data;
+        document.querySelectorAll('.card').forEach(card => {
+            const data = card.card_data || {};
             if (data && data.id) {
-                const ratingElement = card.querySelector('.card__vote');
-                if (!ratingElement || ratingElement.dataset.movieId !== data.id.toString()) {
+                const voteEl = card.querySelector('.card__vote');
+                if (!voteEl || voteEl.dataset.movieId !== data.id.toString()) {
                     insertCardRating(card, { object: { data } });
-                } else {
-                    const ratingKey = (data.seasons || data.first_air_date || data.original_name) ? `tv_${data.id}` : `movie_${data.id}`;
-                    const cached = ratingCache.get('lampa_rating', ratingKey);
-                    if (cached && cached.rating > 0 && ratingElement.innerHTML.trim() === '') {
-                        let html = cached.rating;
-                        if (cached.medianReaction) {
-                            let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
-                            html += ` <img style="width:1em;height:1em;margin:0 0.2em;" src="${reactionSrc}">`;
-                        }
-                        ratingElement.innerHTML = html;
-                    }
                 }
             }
         });
 
-        // Explorer-карточки
-        const explorerCards = document.querySelectorAll('.explorer-card');
-        explorerCards.forEach(card => {
-            if (!card.querySelector('.lampa-rating') || card.querySelector('.lampa-rating').innerHTML.trim() === '') {
-                insertExplorerRating(card);
-            }
+        // Explorer-карточки — теперь надёжно
+        document.querySelectorAll('.explorer-card').forEach(card => {
+            insertExplorerRating(card);
         });
 
-        setTimeout(pollCards, 600);
+        setTimeout(pollCards, 800);
     }
 
     function setupCardListener() {
@@ -326,29 +292,20 @@
 
     function initPlugin() {
         const style = document.createElement('style');
-        style.type = 'text/css';
         style.textContent = `
-            .card__vote {
-                display: flex;
-                align-items: center !important;
+            .card__vote { display: flex; align-items: center !important; }
+            .explorer-card__head-rate { 
+                display: flex; 
+                align-items: center; 
+                flex-wrap: wrap;
+                gap: 0.5em;
             }
-            .explorer-card__head-rate {
-                display: flex;
-                align-items: center;
-                gap: 0.4em;
-                font-weight: bold;
-                position: relative;
-            }
-            .explorer-card__head-rate .lampa-rating img {
-                filter: drop-shadow(0 0 3px rgba(0,0,0,0.7));
+            .lampa-rating img {
+                filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
             }
             @media (max-width: 480px) and (orientation: portrait) {
-                .full-start__rate.rate--lampa {
-                    min-width: 80px;
-                }
-                .explorer-card__head-rate .lampa-rating {
-                    font-size: 1em;
-                }
+                .full-start__rate.rate--lampa { min-width: 80px; }
+                .lampa-rating { font-size: 1em; margin-left: 0.5em; }
             }
         `;
         document.head.appendChild(style);
@@ -356,13 +313,13 @@
         setupCardListener();
         pollCards();
 
-        Lampa.Listener.follow('card', (e) => {
+        Lampa.Listener.follow('card', e => {
             if (e.type === 'build' && e.object.card) {
                 insertCardRating(e.object.card, e);
             }
         });
 
-        Lampa.Listener.follow('full', (e) => {
+        Lampa.Listener.follow('full', e => {
             if (e.type === 'complite') {
                 let render = e.object.activity.render();
                 if (render && insertLampaBlock(render)) {
@@ -370,24 +327,20 @@
                         let ratingKey = e.object.method + "_" + e.object.id;
                         const cached = ratingCache.get('lampa_rating', ratingKey);
                         if (cached && cached.rating > 0) {
-                            let rateValue = $(render).find('.rate--lampa .rate-value');
-                            let rateIcon = $(render).find('.rate--lampa .rate-icon');
-                            rateValue.text(cached.rating);
+                            $(render).find('.rate--lampa .rate-value').text(cached.rating);
                             if (cached.medianReaction) {
-                                let reactionSrc = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
-                                rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
+                                let src = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
+                                $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
                             }
                             return;
                         }
                         addToQueue(() => {
                             getLampaRating(ratingKey).then(result => {
-                                let rateValue = $(render).find('.rate--lampa .rate-value');
-                                let rateIcon = $(render).find('.rate--lampa .rate-icon');
                                 if (result.rating > 0) {
-                                    rateValue.text(result.rating);
+                                    $(render).find('.rate--lampa .rate-value').text(result.rating);
                                     if (result.medianReaction) {
-                                        let reactionSrc = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                                        rateIcon.html('<img style="width:1em;height:1em;margin:0 0.2em;" src="' + reactionSrc + '">');
+                                        let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                                        $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
                                     }
                                 } else {
                                     $(render).find('.rate--lampa').hide();
@@ -403,7 +356,7 @@
     if (window.appready) {
         initPlugin();
     } else {
-        Lampa.Listener.follow('app', (e) => {
+        Lampa.Listener.follow('app', e => {
             if (e.type === 'ready') initPlugin();
         });
     }
