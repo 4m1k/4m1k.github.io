@@ -197,80 +197,106 @@
         el.innerHTML = html;
     }
 
-    // === РЕЙТИНГ В EXPLORER-КАРТОЧКАХ ===
-    function insertExplorerRating(cardElement) {
-        // Проверяем, не обработана ли уже карточка
-        if (cardElement.querySelector('.lampa-rating')) return;
-
+    // === ЗАМЕНА РЕЙТИНГА В EXPLORER-КАРТОЧКАХ НА LAMPA ===
+    function replaceExplorerRating(cardElement) {
         let rateBlock = cardElement.querySelector('.explorer-card__head-rate');
         if (!rateBlock) return;
 
-        // Создаём контейнер для рейтинга Lampa
-        let lampaContainer = document.createElement('div');
-        lampaContainer.className = 'lampa-rating';
-        lampaContainer.style.cssText = `
-            margin-left: 0.8em;
+        // Если уже заменили — выходим
+        if (rateBlock.dataset.lampaProcessed === 'true') return;
+
+        // Скрываем оригинальный рейтинг TMDB/KP
+        let originalSvg = rateBlock.querySelector('svg');
+        if (originalSvg) originalSvg.style.display = 'none';
+        let originalSpan = rateBlock.querySelector('span');
+        if (originalSpan) originalSpan.style.display = 'none';
+
+        // Создаём новый элемент для рейтинга Lampa
+        let lampaEl = document.createElement('div');
+        lampaEl.className = 'lampa-rating';
+        lampaEl.style.cssText = `
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.2em;
             display: inline-flex;
             align-items: center;
             gap: 0.4em;
             color: #fff;
             text-shadow: 0 0 5px rgba(0,0,0,0.8);
         `;
+        rateBlock.appendChild(lampaEl);
 
-        rateBlock.appendChild(lampaContainer);
+        // Помечаем как обработанный
+        rateBlock.dataset.lampaProcessed = 'true';
 
-        // Получаем постер
+        // === ПОЛУЧАЕМ ID ===
+        let id = null;
+        let type = 'movie';
+
+        // 1. Пытаемся из постера
         let img = cardElement.querySelector('.explorer-card__head-img img');
-        if (!img || !img.src) return;
+        if (img && img.src) {
+            let match = img.src.match(/\/(movie|tv)_(\d+)\.jpg/);
+            if (match) {
+                type = match[1] === 'movie' ? 'movie' : 'tv';
+                id = match[2];
+            }
+        }
 
-        let match = img.src.match(/\/(movie|tv)_(\d+)\.jpg/);
-        if (!match) return;
+        // 2. Fallback: из data-json (часто есть в explorer)
+        if (!id) {
+            let jsonAttr = cardElement.getAttribute('data-json');
+            if (jsonAttr) {
+                try {
+                    let data = JSON.parse(jsonAttr);
+                    id = data.id || data.movie?.id;
+                    if (data.seasons || data.number_of_seasons || data.first_air_date) type = 'tv';
+                } catch (e) {}
+            }
+        }
 
-        let type = match[1] === 'movie' ? 'movie' : 'tv';
-        let id = match[2];
+        if (!id) return;
+
         let ratingKey = type + "_" + id;
 
+        // Берём из кэша (может быть с другой страницы!)
         const cached = ratingCache.get('lampa_rating', ratingKey);
         if (cached && cached.rating > 0) {
-            updateLampaContainer(lampaContainer, cached);
+            updateLampaEl(lampaEl, cached);
             return;
         }
 
+        // Если нет — запрашиваем
         addToQueue(() => {
             getLampaRating(ratingKey).then(result => {
-                if (lampaContainer.isConnected && result.rating > 0) {
-                    updateLampaContainer(lampaContainer, result);
+                if (lampaEl.isConnected && result.rating > 0) {
+                    updateLampaEl(lampaEl, result);
                 }
             });
         });
     }
 
-    function updateLampaContainer(container, result) {
+    function updateLampaEl(el, result) {
         let html = result.rating;
         if (result.medianReaction) {
             let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-            html += ` <img style="width:1.2em;height:1.2em;vertical-align:middle;" src="${src}" alt="${result.medianReaction}">`;
+            html += ` <img style="width:1.3em;height:1.3em;vertical-align:middle;" src="${src}" alt="${result.medianReaction}">`;
         }
-        container.innerHTML = html;
+        el.innerHTML = html;
     }
 
     function pollCards() {
         // Обычные карточки
-        document.querySelectorAll('.card').forEach(card => {
+        document.querySelectorAll('.card:not([data-lampa-processed])').forEach(card => {
             const data = card.card_data || {};
             if (data && data.id) {
-                const voteEl = card.querySelector('.card__vote');
-                if (!voteEl || voteEl.dataset.movieId !== data.id.toString()) {
-                    insertCardRating(card, { object: { data } });
-                }
+                insertCardRating(card, { object: { data } });
+                card.dataset.lampaProcessed = 'true'; // чтобы не повторять
             }
         });
 
-        // Explorer-карточки — теперь надёжно
+        // Explorer-карточки — замена рейтинга
         document.querySelectorAll('.explorer-card').forEach(card => {
-            insertExplorerRating(card);
+            replaceExplorerRating(card);
         });
 
         setTimeout(pollCards, 800);
@@ -297,15 +323,11 @@
             .explorer-card__head-rate { 
                 display: flex; 
                 align-items: center; 
-                flex-wrap: wrap;
                 gap: 0.5em;
+                min-height: 1.5em;
             }
             .lampa-rating img {
                 filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
-            }
-            @media (max-width: 480px) and (orientation: portrait) {
-                .full-start__rate.rate--lampa { min-width: 80px; }
-                .lampa-rating { font-size: 1em; margin-left: 0.5em; }
             }
         `;
         document.head.appendChild(style);
@@ -332,21 +354,21 @@
                                 let src = 'https://cubnotrip.top/img/reactions/' + cached.medianReaction + '.svg';
                                 $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
                             }
-                            return;
-                        }
-                        addToQueue(() => {
-                            getLampaRating(ratingKey).then(result => {
-                                if (result.rating > 0) {
-                                    $(render).find('.rate--lampa .rate-value').text(result.rating);
-                                    if (result.medianReaction) {
-                                        let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-                                        $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
+                        } else {
+                            addToQueue(() => {
+                                getLampaRating(ratingKey).then(result => {
+                                    if (result.rating > 0) {
+                                        $(render).find('.rate--lampa .rate-value').text(result.rating);
+                                        if (result.medianReaction) {
+                                            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
+                                            $(render).find('.rate--lampa .rate-icon').html(`<img style="width:1em;height:1em;margin:0 0.2em;" src="${src}">`);
+                                        }
+                                    } else {
+                                        $(render).find('.rate--lampa').hide();
                                     }
-                                } else {
-                                    $(render).find('.rate--lampa').hide();
-                                }
+                                });
                             });
-                        });
+                        }
                     }
                 }
             }
