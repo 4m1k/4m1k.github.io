@@ -632,35 +632,53 @@
         $('head').append(style);
     }
 
-    /*** 5) ЦВЕТНЫЕ РЕЙТИНГИ И СТАТУСЫ ***/
-    function updateVoteColors() {
-        if (!InterFaceMod.settings.colored_ratings) return;
-        function apply(el) {
-            var m = $(el).text().match(/(\d+(\.\d+)?)/);
-            if (!m) return;
-            var v = parseFloat(m[0]);
-            var c = v <= 3 ? 'red'
-                  : v < 6  ? 'orange'
-                  : v < 8  ? 'cornflowerblue'
-                  : 'lawngreen';
-            $(el).css('color', c);
+/*** 5) ЦВЕТНЫЕ РЕЙТИНГИ И СТАТУСЫ ***/
+function updateVoteColors() {
+    if (!InterFaceMod.settings.colored_ratings) return;
+
+    function apply(el) {
+        // Ищем число с возможной запятой или точкой (например, 8.6 или 8,6)
+        var text = $(el).text().trim();
+        var m = text.match(/(\d+[\.,]\d+|\d+)/);
+        if (!m) return;
+        var v = parseFloat(m[0].replace(',', '.'));
+        if (isNaN(v)) return;
+
+        var c = v <= 3 ? 'red'
+              : v < 6  ? 'orange'
+              : v < 8  ? 'cornflowerblue'
+              : 'lawngreen';
+
+        $(el).css('color', c);
+    }
+
+    // Применяем ко всем элементам с рейтингом — старые + новые в explorer
+    $('.card__vote, .full-start__rate, .full-start-new__rate, .info__rate, .card__imdb-rate, .card__kinopoisk-rate, .explorer-card__head-rate span').each(function(){
+        apply(this);
+    });
+}
+
+function setupVoteColorsObserver() {
+    if (!InterFaceMod.settings.colored_ratings) return;
+
+    // Первичное применение
+    setTimeout(updateVoteColors, 500);
+
+    // Наблюдатель за новыми элементами (включая подгружаемые в explorer)
+    new MutationObserver(function(){
+        setTimeout(updateVoteColors, 100);
+    }).observe(document.body, { childList: true, subtree: true });
+}
+
+function setupVoteColorsForDetailPage() {
+    if (!InterFaceMod.settings.colored_ratings) return;
+
+    Lampa.Listener.follow('full', function (d) {
+        if (d.type === 'complite') {
+            setTimeout(updateVoteColors, 100);
         }
-        $('.card__vote').each(function(){ apply(this); });
-        $('.full-start__rate, .full-start-new__rate').each(function(){ apply(this); });
-        $('.info__rate, .card__imdb-rate, .card__kinopoisk-rate').each(function(){ apply(this); });
-    }
-    function setupVoteColorsObserver() {
-        if (!InterFaceMod.settings.colored_ratings) return;
-        setTimeout(updateVoteColors, 500);
-        new MutationObserver(function(){ setTimeout(updateVoteColors, 100); })
-            .observe(document.body, { childList: true, subtree: true });
-    }
-    function setupVoteColorsForDetailPage() {
-        if (!InterFaceMod.settings.colored_ratings) return;
-        Lampa.Listener.follow('full', function (d) {
-            if (d.type === 'complite') setTimeout(updateVoteColors, 100);
-        });
-    }
+    });
+}
 
     /*** 6) ЦВЕТНЫЕ ЭЛЕМЕНТЫ (СТАТУС, AGE) ***/
     function colorizeSeriesStatus() {
