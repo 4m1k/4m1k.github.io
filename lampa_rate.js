@@ -197,42 +197,39 @@
         el.innerHTML = html;
     }
 
-    // === ЗАМЕНА РЕЙТИНГА В EXPLORER-КАРТОЧКАХ НА LAMPA ===
+    // Замена рейтинга в explorer-карточках
     function replaceExplorerRating(cardElement) {
         let rateBlock = cardElement.querySelector('.explorer-card__head-rate');
         if (!rateBlock) return;
 
-        // Если уже заменили — выходим
-        if (rateBlock.dataset.lampaProcessed === 'true') return;
+        let lampaEl = rateBlock.querySelector('.lampa-rating');
+        if (!lampaEl) {
+            lampaEl = document.createElement('div');
+            lampaEl.className = 'lampa-rating';
+            lampaEl.style.cssText = `
+                font-weight: bold;
+                font-size: 1.2em;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4em;
+                color: #fff;
+                text-shadow: 0 0 5px rgba(0,0,0,0.8);
+                margin-left: 0.5em;
+            `;
+            rateBlock.appendChild(lampaEl);
+        }
 
-        // Скрываем оригинальный рейтинг TMDB/KP
+        // Скрываем оригинальный рейтинг только если есть Lampa
         let originalSvg = rateBlock.querySelector('svg');
-        if (originalSvg) originalSvg.style.display = 'none';
         let originalSpan = rateBlock.querySelector('span');
-        if (originalSpan) originalSpan.style.display = 'none';
+        if (originalSvg) originalSvg.style.display = '';
+        if (originalSpan) originalSpan.style.display = '';
 
-        // Создаём новый элемент для рейтинга Lampa
-        let lampaEl = document.createElement('div');
-        lampaEl.className = 'lampa-rating';
-        lampaEl.style.cssText = `
-            font-weight: bold;
-            font-size: 1.2em;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4em;
-            color: #fff;
-            text-shadow: 0 0 5px rgba(0,0,0,0.8);
-        `;
-        rateBlock.appendChild(lampaEl);
-
-        // Помечаем как обработанный
-        rateBlock.dataset.lampaProcessed = 'true';
-
-        // === ПОЛУЧАЕМ ID ===
+        // Получаем ID
         let id = null;
         let type = 'movie';
 
-        // 1. Пытаемся из постера
+        // 1. Из постера
         let img = cardElement.querySelector('.explorer-card__head-img img');
         if (img && img.src) {
             let match = img.src.match(/\/(movie|tv)_(\d+)\.jpg/);
@@ -242,13 +239,13 @@
             }
         }
 
-        // 2. Fallback: из data-json (часто есть в explorer)
+        // 2. Из data-json (fallback для новых версий)
         if (!id) {
-            let jsonAttr = cardElement.getAttribute('data-json');
-            if (jsonAttr) {
+            let jsonStr = cardElement.getAttribute('data-json') || cardElement.closest('[data-json]')?.getAttribute('data-json');
+            if (jsonStr) {
                 try {
-                    let data = JSON.parse(jsonAttr);
-                    id = data.id || data.movie?.id;
+                    let data = JSON.parse(jsonStr);
+                    id = data.id || data.movie?.id || data.tv?.id;
                     if (data.seasons || data.number_of_seasons || data.first_air_date) type = 'tv';
                 } catch (e) {}
             }
@@ -258,48 +255,45 @@
 
         let ratingKey = type + "_" + id;
 
-        // Берём из кэша (может быть с другой страницы!)
         const cached = ratingCache.get('lampa_rating', ratingKey);
         if (cached && cached.rating > 0) {
-            updateLampaEl(lampaEl, cached);
+            updateVoteEl(lampaEl, cached);
+            if (originalSvg) originalSvg.style.display = 'none';
+            if (originalSpan) originalSpan.style.display = 'none';
             return;
         }
 
-        // Если нет — запрашиваем
         addToQueue(() => {
             getLampaRating(ratingKey).then(result => {
                 if (lampaEl.isConnected && result.rating > 0) {
-                    updateLampaEl(lampaEl, result);
+                    updateVoteEl(lampaEl, result);
+                    if (originalSvg) originalSvg.style.display = 'none';
+                    if (originalSpan) originalSpan.style.display = 'none';
                 }
             });
         });
     }
 
-    function updateLampaEl(el, result) {
-        let html = result.rating;
-        if (result.medianReaction) {
-            let src = 'https://cubnotrip.top/img/reactions/' + result.medianReaction + '.svg';
-            html += ` <img style="width:1.3em;height:1.3em;vertical-align:middle;" src="${src}" alt="${result.medianReaction}">`;
-        }
-        el.innerHTML = html;
-    }
+    // Наблюдатель за новыми карточками
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll('.explorer-card').forEach(card => {
+            replaceExplorerRating(card);
+        });
+    });
 
     function pollCards() {
-        // Обычные карточки
-        document.querySelectorAll('.card:not([data-lampa-processed])').forEach(card => {
+        document.querySelectorAll('.card').forEach(card => {
             const data = card.card_data || {};
             if (data && data.id) {
                 insertCardRating(card, { object: { data } });
-                card.dataset.lampaProcessed = 'true'; // чтобы не повторять
             }
         });
 
-        // Explorer-карточки — замена рейтинга
         document.querySelectorAll('.explorer-card').forEach(card => {
             replaceExplorerRating(card);
         });
 
-        setTimeout(pollCards, 800);
+        setTimeout(pollCards, 1000);
     }
 
     function setupCardListener() {
@@ -320,20 +314,14 @@
         const style = document.createElement('style');
         style.textContent = `
             .card__vote { display: flex; align-items: center !important; }
-            .explorer-card__head-rate { 
-                display: flex; 
-                align-items: center; 
-                gap: 0.5em;
-                min-height: 1.5em;
-            }
-            .lampa-rating img {
-                filter: drop-shadow(0 0 4px rgba(0,0,0,0.8));
-            }
+            .explorer-card__head-rate { display: flex; align-items: center; gap: 0.5em; }
+            .lampa-rating img { filter: drop-shadow(0 0 4px rgba(0,0,0,0.8)); }
         `;
         document.head.appendChild(style);
 
         setupCardListener();
         pollCards();
+        observer.observe(document.body, { childList: true, subtree: true });
 
         Lampa.Listener.follow('card', e => {
             if (e.type === 'build' && e.object.card) {
