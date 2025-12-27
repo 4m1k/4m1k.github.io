@@ -11,10 +11,10 @@
             show_movie_type: true,
             theme: 'default',
             colored_ratings: true,
-            seasons_info_mode: 'aired',
+            seasons_info_mode: 'none',
             show_episodes_on_main: false,
             label_position: 'top-right',
-            show_buttons: true,
+            show_buttons: false,
             colored_elements: true
         }
     };
@@ -789,7 +789,7 @@
                     aired: 'Актуальная информация',
                     total: 'Полное количество'
                 },
-                default: 'aired'
+                default: 'none'
             },
             field: {
                 name: 'Информация о сериях',
@@ -830,7 +830,7 @@
         // показать все кнопки
         Lampa.SettingsApi.addParam({
             component: 'season_info',
-            param: { name: 'show_buttons', type: 'trigger', default: true },
+            param: { name: 'show_buttons', type: 'trigger', default: false },
             field: { name: 'Показывать все кнопки', description: 'Отображать все кнопки действий в карточке' },
             onChange: function (v) {
                 InterFaceMod.settings.show_buttons = v;
@@ -916,9 +916,9 @@
         });
 
         // загрузить сохранённые
-        InterFaceMod.settings.seasons_info_mode    = Lampa.Storage.get('seasons_info_mode', 'aired');
+        InterFaceMod.settings.seasons_info_mode    = Lampa.Storage.get('seasons_info_mode', 'none');
         InterFaceMod.settings.label_position       = Lampa.Storage.get('label_position', 'top-right');
-        InterFaceMod.settings.show_buttons         = Lampa.Storage.get('show_buttons', true);
+        InterFaceMod.settings.show_buttons         = Lampa.Storage.get('show_buttons', false);
         InterFaceMod.settings.show_movie_type      = Lampa.Storage.get('season_info_show_movie_type', true);
         InterFaceMod.settings.theme                = Lampa.Storage.get('theme_select', 'default');
         InterFaceMod.settings.colored_ratings      = Lampa.Storage.get('colored_ratings', true);
