@@ -21,7 +21,6 @@
         if (preroll && !preroll.dataset.customized) {
           preroll.dataset.customized = 'true';
 
-          // Текст → "Приятного просмотра"
           const textEl = preroll.querySelector('.ad-preroll__text');
           if (textEl) {
             textEl.textContent = 'Приятного просмотра';
@@ -31,16 +30,13 @@
             textEl.style.textShadow = '0 0 10px rgba(0,0,0,0.8)';
           }
 
-          // Красивый тёмный градиентный фон БЕЗ постера
           preroll.style.background = 'linear-gradient(135deg, rgba(0,0,0,0.85), rgba(10,20,40,0.95))';
           preroll.style.backgroundSize = 'cover';
           preroll.style.backgroundPosition = 'center';
 
-          // Скрываем стандартную серую анимацию
           const bgEl = preroll.querySelector('.ad-preroll__bg');
           if (bgEl) bgEl.style.opacity = '0';
 
-          // Дополнительно скрываем оверлей, если он мешает
           const overEl = preroll.querySelector('.ad-preroll__over');
           if (overEl) overEl.style.opacity = '0';
         }
@@ -50,7 +46,6 @@
     }
 
     function initializeApp() {
-      // Мгновенный пропуск pre-roll рекламы
       const origCreateElement = document.createElement;
       document.createElement = function(tag) {
         if (tag.toLowerCase() === 'video') {
@@ -70,7 +65,6 @@
         return origCreateElement.apply(this, arguments);
       };
 
-      // Стили для скрытия лишних элементов
       const style = document.createElement('style');
       style.innerHTML = `
         .button--subscribe,
@@ -90,12 +84,10 @@
       `;
       document.head.appendChild(style);
 
-      // Очистка баннеров
       setTimeout(() => {
         $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
       }, 1000);
 
-      // Кастомизация preroll-заставки
       customizePreroll();
     }
 
