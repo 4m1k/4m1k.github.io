@@ -714,55 +714,69 @@
         });
     }
 
-    function colorizeAgeRating() {
-        if (!InterFaceMod.settings.colored_elements) return;
-        var groups = {
-            kids:        ['G','TV-Y','0+','3+'],
-            children:    ['PG','TV-PG','6+','7+'],
-            teens:       ['PG-13','TV-14','12+','13+','14+'],
-            almostAdult: ['R','16+','17+'],
-            adult:       ['NC-17','18+','X']
-        };
-        var colors = {
-            kids:        { bg: '#2ecc71', text: 'white' },
-            children:    { bg: '#3498db', text: 'white' },
-            teens:       { bg: '#f1c40f', text: 'black' },
-            almostAdult: { bg: '#e67e22', text: 'white' },
-            adult:       { bg: '#e74c3c', text: 'white' }
-        };
-        function apply(el) {
-            var t = $(el).text().trim();
-            var grp = null;
-            for (var key in groups) {
-                groups[key].forEach(function (r) {
-                    if (t.includes(r)) grp = key;
-                });
-                if (grp) break;
-            }
-            if (grp) {
-                $(el).css({
-                    backgroundColor: colors[grp].bg,
-                    color: colors[grp].text,
-                    borderRadius: '0.3em'
-                });
-            }
-        }
-        $('.full-start__pg').each(function(){ apply(this); });
-        new MutationObserver(function (muts) {
-            muts.forEach(function (m) {
-                if (m.addedNodes) {
-                    $(m.addedNodes).find('.full-start__pg').each(function(){ apply(this); });
-                }
+function colorizeAgeRating() {
+    if (!InterFaceMod.settings.colored_elements) return;
+
+    var groups = {
+        kids:        ['G','TV-Y','0+','3+'],
+        children:    ['PG','TV-PG','6+','7+'],
+        teens:       ['PG-13','TV-14','12+','13+','14+'],
+        almostAdult: ['R','16+','17+'],
+        adult:       ['NC-17','18+','X']
+    };
+    var colors = {
+        kids:        { bg: '#2ecc71', text: 'white' },   // зелёный
+        children:    { bg: '#3498db', text: 'white' },   // синий
+        teens:       { bg: '#f1c40f', text: 'black' },    // жёлтый
+        almostAdult: { bg: '#e67e22', text: 'white' },   // оранжевый
+        adult:       { bg: '#e74c3c', text: 'white' }    // красный
+    };
+
+    function apply(el) {
+        var t = $(el).text().trim();
+        var grp = null;
+        for (var key in groups) {
+            groups[key].forEach(function (r) {
+                if (t.includes(r)) grp = key;
             });
-        }).observe(document.body, { childList: true, subtree: true });
-        Lampa.Listener.follow('full', function(d) {
-            if (d.type === 'complite') {
-                setTimeout(function(){
-                    $(d.object.activity.render()).find('.full-start__pg').each(function(){ apply(this); });
-                },100);
+            if (grp) break;
+        }
+        if (grp) {
+            $(el).css({
+                backgroundColor: colors[grp].bg,
+                color: colors[grp].text,
+                borderRadius: '0.3em',
+                padding: '0.2em 0.4em',          // небольшой отступ для красоты
+                display: 'inline-block'
+            });
+        }
+    }
+
+    // Применяем ко всем существующим элементам (как в full-card, так и в explorer)
+    $('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
+
+    // Наблюдатель за новыми элементами
+    new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+            if (m.addedNodes) {
+                $(m.addedNodes).find('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
+                // Также проверяем сам добавленный узел, если он сам является нужным элементом
+                if ($(m.addedNodes).hasClass('explorer-card__head-age') || $(m.addedNodes).hasClass('full-start__pg')) {
+                    apply(m.addedNodes);
+                }
             }
         });
-    }
+    }).observe(document.body, { childList: true, subtree: true });
+
+    // При открытии детальной карточки (на всякий случай)
+    Lampa.Listener.follow('full', function(d) {
+        if (d.type === 'complite') {
+            setTimeout(function(){
+                $(d.object.activity.render()).find('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
+            },100);
+        }
+    });
+}
 
     /*** 7) ИНИЦИАЛИЗАЦИЯ ***/
     function startPlugin() {
