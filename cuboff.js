@@ -1,4 +1,4 @@
-function () {
+(function () {
     'use strict';
     Lampa.Platform.tv();
 
@@ -45,7 +45,7 @@ function () {
         function blockPrerollViaPlayer() {
             function hookPlayer() {
                 if (window.Lampa && Lampa.Player && Lampa.Player.play) {
-                    var originalPlay = Lampa.Player.play;
+                    const originalPlay = Lampa.Player.play;
                     Lampa.Player.play = function (object) {
                         object.iptv = true;
                         if (object.vast_url) delete object.vast_url;
