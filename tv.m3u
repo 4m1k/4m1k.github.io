@@ -1,1 +1,3388 @@
-
+#EXTM3U
+#EXTINF:-1 group-title="Без категории",.Red HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2062/index.m3u8
+#EXTINF:-1 group-title="Без категории",12 КАНАЛ (ОМСК)
+#EXTGRP:Без категории
+https://12channel.bonus-tv.ru/cdn/12channel/playlist_hdhigh.m3u8
+#EXTINF:-1 group-title="Без категории",12 канал HD
+#EXTGRP:Без категории
+https://rt-sib-omsk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_OMSK_12CHANNEL/variant.m3u8
+#EXTINF:-1 group-title="Без категории",12 канал Череповец
+#EXTGRP:Без категории
+https://rt-nw-vol-htlive.cdn.ngenix.net/hls/CH_R01_12CHANNEL/variant.m3u8
+#EXTINF:-1 group-title="Без категории",1HD
+#EXTGRP:Без категории
+http://178.212.71.253:8000/play/60/index.m3u8
+#EXTINF:-1 group-title="Без категории",25 Регион (Приморье)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31919/index.m3u8
+#EXTINF:-1 group-title="Без категории",31 канал Челябинск
+#EXTGRP:Без категории
+https://rt-ural-chel-htlive.cdn.ngenix.net/hls/CH_R01_OTT_31TVK_CHEL/variant.m3u8
+#EXTINF:-1 group-title="Без категории",360 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2065/index.m3u8
+#EXTINF:-1 group-title="Без категории",360 Новости
+#EXTGRP:Без категории
+https://edge-tv-ll.facecast.io/evacoder_hls_hi/UBZfFgtKB1JwTwoDERNQVGGs/0.m3u8
+#EXTINF:-1 group-title="Без категории",360°
+#EXTGRP:Без категории
+https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-04-srt.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",360° Новости
+#EXTGRP:Без категории
+https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-03-srt.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",4 Kurd
+#EXTGRP:Без категории
+https://4kuhls.persiana.live/hls/stream.m3u8
+#EXTINF:-1 group-title="Без категории",4K travel
+#EXTGRP:Без категории
+https://d35j504z0x2vu2.cloudfront.net/v1/manifest/0bc8e8376bd8417a1b6761138aa41c26c7309312/4k-travel-tv/1967b0de-bf90-4339-a563-a5d06bba32ed/2.m3u8
+#EXTINF:-1 group-title="Без категории",4K Русское кино HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31925/index.m3u8
+#EXTINF:-1 group-title="Без категории",6 ТВ
+#EXTGRP:Без категории
+https://s97982.cdn.ngenix.net/hls/CH_R27_OTT_DV_HVSK_6TV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",7 канал Красноярск
+#EXTGRP:Без категории
+https://rt-sib-krsk-htlive.cdn.ngenix.net/hls/CH_R13_OTT_SIB_KRSK_RENTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",78 канал
+#EXTGRP:Без категории
+https://rt-nw-spb-htlive.cdn.ngenix.net/hls/CH_R02_KANAL78/variant.m3u8
+#EXTINF:-1 group-title="Без категории",7ТВ
+#EXTGRP:Без категории
+http://178.212.71.253:8000/play/381/index.m3u8
+#EXTINF:-1 group-title="Без категории",8 канал
+#EXTGRP:Без категории
+http://cdn-01.bonus-tv.ru:80/8kanal/tracks-v1a1/index.m3u8
+#EXTINF:-1 group-title="Без категории",AlMahom
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/46071.m3u8
+#EXTINF:-1 group-title="Без категории",Amedia 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2046/index.m3u8
+#EXTINF:-1 group-title="Без категории",Amedia Hit HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6010/index.m3u8
+#EXTINF:-1 group-title="Без категории",Amedia Premium HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/229/index.m3u8
+#EXTINF:-1 group-title="Без категории",Amedia premium HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/229/index.m3u8
+#EXTINF:-1 group-title="Без категории",Animal Planet HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/218/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Action HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11027/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Catastrophe HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11028/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Cinema HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11029/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Comedy HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11031/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Cosmo HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17021/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Criminal HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11048/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Fantastic HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11032/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU FilMystic HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11033/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Filmystic HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11033/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU History HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11034/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Kids 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17023/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Kids HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11035/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Kinorating HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11037/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Marvel HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11038/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Media HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11043/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Multserial HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11025/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Premiere 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11015/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Premiere 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11016/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Premiere 3 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11017/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Premiere HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11039/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Premiere Ultra 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15023/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Reality HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16082/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Romantic HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11040/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU RuSerial HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11046/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Ruserial HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11046/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Russian HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11041/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Stars HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11044/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Survival HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17019/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Ultra 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11045/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU VHS HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11042/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU СССР HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11026/index.m3u8
+#EXTINF:-1 group-title="Без категории",BCU Сваты HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11047/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Docu HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20153/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Fantasy HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20156/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Ghost HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20154/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX History 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31546/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Kosmo 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31548/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Mayday HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20159/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Music 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19282/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Premiere 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20157/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Relax 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19283/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Remast 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20158/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX SR Sport 1 Live 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31550/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX SR Sport 2 Live 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31551/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX SR Sport 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31455/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Serial 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31657/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX Stories HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20155/index.m3u8
+#EXTINF:-1 group-title="Без категории",BOX СССР 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31625/index.m3u8
+#EXTINF:-1 group-title="Без категории",BRIDGE Rock
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17043/index.m3u8
+#EXTINF:-1 group-title="Без категории",Benichimi
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/53637.m3u8
+#EXTINF:-1 group-title="Без категории",Best of Dance TV
+#EXTGRP:Без категории
+https://m1b2.worldcast.tv/dancetelevisionone/2/dancetelevisionone.m3u8
+#EXTINF:-1 group-title="Без категории",Bollywood HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/239/index.m3u8
+#EXTINF:-1 group-title="Без категории",Bridge Deluxe HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/236/index.m3u8
+#EXTINF:-1 group-title="Без категории",Bridge TV Deluxe
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/bridgedeluxetv.m3u8
+#EXTINF:-1 group-title="Без категории",Bridge TV Hits
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/bridgehitstv.m3u8
+#EXTINF:-1 group-title="Без категории",Bridge TV Русский хит
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/bridgerushittv.m3u8
+#EXTINF:-1 group-title="Без категории",CHD-TV RU Rock HD
+#EXTGRP:Без категории
+http://194.26.229.213/chdtv_ru_rock/index.m3u8
+#EXTINF:-1 group-title="Без категории",CHD-TV Rock
+#EXTGRP:Без категории
+http://194.26.229.213/chdtv_rock/index.m3u8
+#EXTINF:-1 group-title="Без категории",Cinema HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19233/index.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Anime
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Anime/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Asia
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Asia/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Gamefilm
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Gamefilm/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Netflix
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Netflix/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Космомир
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Kosmomir/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4K Ужасы
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Uzhasi/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4k Единоборства
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Edinoborstva/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clarity4k Концерт
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Clarity4K_Concert/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Clubbing TV HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2395/index.m3u8
+#EXTINF:-1 group-title="Без категории",DOCUBOX HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/968/index.m3u8
+#EXTINF:-1 group-title="Без категории",Deluxe Lounge HD
+#EXTGRP:Без категории
+https://d46c0ebf9ef94053848fdd7b1f2f6b90.mediatailor.eu-central-1.amazonaws.com/v1/master/81bfcafb76f9c947b24574657a9ce7fe14ad75c0/live-prod/9a087b26-8be4-11eb-a7de-bacfe1f83627/0/master.m3u8?country=DE&optout=0&uid=749544ec3d9a45d48c600d03cac91dfd&vendor=philips
+#EXTINF:-1 group-title="Без категории",DetectiveJam HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20209/index.m3u8
+#EXTINF:-1 group-title="Без категории",Dimpon HD
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/210470.m3u8
+#EXTINF:-1 group-title="Без категории",Discovery Channel HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/227/index.m3u8
+#EXTINF:-1 group-title="Без категории",Discovery channel HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/227/index.m3u8
+#EXTINF:-1 group-title="Без категории",DocuBox HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/968/index.m3u8
+#EXTINF:-1 group-title="Без категории",EDM Mainstage
+#EXTGRP:Без категории
+https://mbit1.worldcast.tv/dancetelevisionseven/stream_0.m3u8
+#EXTINF:-1 group-title="Без категории",Epic Drama
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/1048/index.m3u8
+#EXTINF:-1 group-title="Без категории",Eurosport 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/228/index.m3u8
+#EXTINF:-1 group-title="Без категории",Eurosport 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/234/index.m3u8
+#EXTINF:-1 group-title="Без категории",Eurosport 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31475/index.m3u8
+#EXTINF:-1 group-title="Без категории",FOX Life HD
+#EXTGRP:Без категории
+http://188.237.47.212:6008
+#EXTINF:-1 group-title="Без категории",FX Life HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14003/index.m3u8
+#EXTINF:-1 group-title="Без категории",FamilyJam HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20210/index.m3u8
+#EXTINF:-1 group-title="Без категории",Fan HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16021/index.m3u8
+#EXTINF:-1 group-title="Без категории",Fantastic Mistyc 1
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/187741.m3u8
+#EXTINF:-1 group-title="Без категории",Fashion TV
+#EXTGRP:Без категории
+https://flussonic.salomtv.uz/fashiontv/video.m3u8
+#EXTINF:-1 group-title="Без категории",Fashion TV HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2045/index.m3u8
+#EXTINF:-1 group-title="Без категории",FoodTime HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/918/index.m3u8
+#EXTINF:-1 group-title="Без категории",FoodTime HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10025/index.m3u8
+#EXTINF:-1 group-title="Без категории",Fox Life HD
+#EXTGRP:Без категории
+http://188.237.47.212:6008
+#EXTINF:-1 group-title="Без категории",Fresh HD AM
+#EXTGRP:Без категории
+https://freshtv-live.ru/FreshTV/tracks-v1a1/mono.m3u8?token=livestream
+#EXTINF:-1 group-title="Без категории",Futbol TV
+#EXTGRP:Без категории
+https://flussonic.salomtv.uz/FutbolTV/video.m3u8
+#EXTINF:-1 group-title="Без категории",GNC HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/955/index.m3u8
+#EXTINF:-1 group-title="Без категории",Galaxy HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5045/index.m3u8
+#EXTINF:-1 group-title="Без категории",Gameplay трейлеры
+#EXTGRP:Без категории
+https://fl1001.bozztv.com/ushba44/index.m3u8
+#EXTINF:-1 group-title="Без категории",Gametoon HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5049/index.m3u8
+#EXTINF:-1 group-title="Без категории",Good Fuck To You
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/2678.m3u8
+#EXTINF:-1 group-title="Без категории",HGTN
+#EXTGRP:Без категории
+https://v2.catcast.tv/content/34251/index.m3u8
+#EXTINF:-1 group-title="Без категории",HGTV HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6391/index.m3u8
+#EXTINF:-1 group-title="Без категории",HOLLYWOOD HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/209/index.m3u8
+#EXTINF:-1 group-title="Без категории",History 2 FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2033/index.m3u8
+#EXTINF:-1 group-title="Без категории",History HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/231/index.m3u8
+#EXTINF:-1 group-title="Без категории",Hollywood HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/209/index.m3u8
+#EXTINF:-1 group-title="Без категории",Home 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/4002/index.m3u8
+#EXTINF:-1 group-title="Без категории",Hot Beats TV HD
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/191858.m3u8
+#EXTINF:-1 group-title="Без категории",ICTV2
+#EXTGRP:Без категории
+http://2.57.217.85:8000/play/a00b/index.m3u8
+#EXTINF:-1 group-title="Без категории",IPTVPLAY ВЕДЬМАК
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYVEDMAK.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY Великая Отечественная HD
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYVOV.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY ДЕСЯТОЕ КОРОЛЕВСТВО
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAY10KOROLEVSTVO.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY МультСказки HD
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYMultSkazki.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY ПАМЯТЬ
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYPAMYAT.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY УЖАСТИК
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYUZHASTIK.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",IPTVPLAY ФАНТАСТИКА
+#EXTGRP:Без категории
+http://5.188.158.65:4040/IPTVPLAYFANTASTIKA.tv/video.m3u8?token=lqRGka5-YwwqF0
+#EXTINF:-1 group-title="Без категории",Investigation Discovery HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2102/index.m3u8
+#EXTINF:-1 group-title="Без категории",KHL HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/215/index.m3u8
+#EXTINF:-1 group-title="Без категории",KHL Prime HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10028/index.m3u8
+#EXTINF:-1 group-title="Без категории",KION Хит HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20211/index.m3u8
+#EXTINF:-1 group-title="Без категории",Kronehit TV
+#EXTGRP:Без категории
+http://bitcdn-kronehit.bitmovin.com/v2/hls/chunklist_b3128000.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty XX Век 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20173/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Аниме FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17029/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Бебимульт FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17027/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Дрим Воркс 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31661/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Занавес  HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17028/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Криминал 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31663/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Легенда 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19308/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty МиМ FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19306/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Мюзикл 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31662/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Наука FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19305/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Нетфликс 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19402/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Планета360 FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17026/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Планктон FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20140/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Сериалы 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31665/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Сказки FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19304/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Союз 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19307/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Турк Фильм 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19303/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Фантастика FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19403/index.m3u8
+#EXTINF:-1 group-title="Без категории",Liberty Шоу FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17030/index.m3u8
+#EXTINF:-1 group-title="Без категории",MIXM TV
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/181490.m3u8
+#EXTINF:-1 group-title="Без категории",MS Crime HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15136/index.m3u8
+#EXTINF:-1 group-title="Без категории",MTV HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2130/index.m3u8
+#EXTINF:-1 group-title="Без категории",MTV Live HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/221/index.m3u8
+#EXTINF:-1 group-title="Без категории",Magic Adventure HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20141/index.m3u8
+#EXTINF:-1 group-title="Без категории",Makon TV
+#EXTGRP:Без категории
+https://flussonic.salomtv.uz/Makon_TV/video.m3u8
+#EXTINF:-1 group-title="Без категории",Mega Radio
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/175789.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Гонг HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31503/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Спорт HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31612/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Футбол 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31483/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Футбол 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31505/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Футбол 3 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31504/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Футбол 4 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31613/index.m3u8
+#EXTINF:-1 group-title="Без категории",Megogo Футбол 5 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31614/index.m3u8
+#EXTINF:-1 group-title="Без категории",Minimal / Deep Tech
+#EXTGRP:Без категории
+https://mbit1.worldcast.tv/dancetelevisionsix/stream_0.m3u8
+#EXTINF:-1 group-title="Без категории",Moviee Toper
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/214749.m3u8
+#EXTINF:-1 group-title="Без категории",Museum 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14016/index.m3u8
+#EXTINF:-1 group-title="Без категории",MyTV
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19407/index.m3u8
+#EXTINF:-1 group-title="Без категории",MyZen 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5002/index.m3u8
+#EXTINF:-1 group-title="Без категории",Nat Geo Wild HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2067/index.m3u8
+#EXTINF:-1 group-title="Без категории",National Geographic HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14001/index.m3u8
+#EXTINF:-1 group-title="Без категории",Nickelodeon HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/223/index.m3u8
+#EXTINF:-1 group-title="Без категории",Nicktoons HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/849/index.m3u8
+#EXTINF:-1 group-title="Без категории",Niki junior
+#EXTGRP:Без категории
+http://2.57.217.85:8000/play/a08g/index.m3u8
+#EXTINF:-1 group-title="Без категории",O2TV
+#EXTGRP:Без категории
+http://77.232.131.211/O2TV/index.m3u8
+#EXTINF:-1 group-title="Без категории",OF-TV
+#EXTGRP:Без категории
+https://5864df9ceac85.streamlock.net/germanpictures-live/_definst_/mp4:streamschedule/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",P Boy Podpischik
+#EXTGRP:Без категории
+http://195.9.195.3:8080/manifest/40391_master.m3u8
+#EXTINF:-1 group-title="Без категории",PG Paradise HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11100/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Paradox HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11098/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Premiere HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11094/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Premium HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11095/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Serial HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11101/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Thriller HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11099/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG Victory HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11097/index.m3u8
+#EXTINF:-1 group-title="Без категории",PG РуКино HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11096/index.m3u8
+#EXTINF:-1 group-title="Без категории",Phoenix TV
+#EXTGRP:Без категории
+https://karapuztv.catcast.tv/content/33418/index.m3u8
+#EXTINF:-1 group-title="Без категории",Plan_B HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19249/index.m3u8
+#EXTINF:-1 group-title="Без категории",Power Dance
+#EXTGRP:Без категории
+https://listen.powerapp.com.tr/dance/dance.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Power Love
+#EXTGRP:Без категории
+https://listen.powerapp.com.tr/plove/love.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Power TV
+#EXTGRP:Без категории
+https://livetv.powerapp.com.tr/powerTV/powerhd.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",PowerTürk Akustik
+#EXTGRP:Без категории
+https://listen.powerapp.com.tr/pturkakustik/akustik.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",PowerTürk Slow
+#EXTGRP:Без категории
+https://listen.powerapp.com.tr/pturkslow/slow.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",PowerTürk TV
+#EXTGRP:Без категории
+https://livetv.powerapp.com.tr/powerturkTV/powerturkhd.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",PowerTürk Taptaze
+#EXTGRP:Без категории
+https://listen.powerapp.com.tr/pturktaptaze/taptaze.smil/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Primocanale Sport
+#EXTGRP:Без категории
+https://msh0203.stream.seeweb.it/live/flv:stream2.sdp/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Quadro 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19262/index.m3u8
+#EXTINF:-1 group-title="Без категории",RADIO ZETA HD TV
+#EXTGRP:Без категории
+https://streamcdnb1-dd782ed59e2a4e86aabf6fc508674b59.msvdn.net/live/S9346184/XEx1LqlYbNic/chunklist.m3u8
+#EXTINF:-1 group-title="Без категории",RT DOC HD
+#EXTGRP:Без категории
+http://95.66.188.74/RT_Doc_HD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",RT Doc HD
+#EXTGRP:Без категории
+http://95.66.188.74/RT_Doc_HD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",RT Documentary HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14157/index.m3u8
+#EXTINF:-1 group-title="Без категории",RTG HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/210/index.m3u8
+#EXTINF:-1 group-title="Без категории",RU TV HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19247/index.m3u8
+#EXTINF:-1 group-title="Без категории",RU.TV
+#EXTGRP:Без категории
+https://flussonic.salomtv.uz/rutv/video.m3u8
+#EXTINF:-1 group-title="Без категории",Radio Love FM
+#EXTGRP:Без категории
+https://56b50ada2d659.streamlock.net/LoveFM/livestream/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Rus Brony TV
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/156945.m3u8
+#EXTINF:-1 group-title="Без категории",Russia Today HD
+#EXTGRP:Без категории
+http://uiptv.do.am/1ufc/702424953/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Russian Extreme HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2077/index.m3u8
+#EXTINF:-1 group-title="Без категории",Setanta Qazaqstan HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2399/index.m3u8
+#EXTINF:-1 group-title="Без категории",Setanta Sports 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/271/index.m3u8
+#EXTINF:-1 group-title="Без категории",Setanta Sports 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/270/index.m3u8
+#EXTINF:-1 group-title="Без категории",Sky Sports News
+#EXTGRP:Без категории
+https://7pal.short.gy/ssportsnw
+#EXTINF:-1 group-title="Без категории",Sky Sports Premier League
+#EXTGRP:Без категории
+https://7pal.short.gy/ssportspl
+#EXTINF:-1 group-title="Без категории",Start Air HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18036/index.m3u8
+#EXTINF:-1 group-title="Без категории",Stingray Naturescape
+#EXTGRP:Без категории
+https://stream.ads.ottera.tv/cl/240211cn4j7g65sur7fq378vpg/1920x1080_5711200_3_f.m3u8
+#EXTINF:-1 group-title="Без категории",StrahTV Космо HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11065/index.m3u8
+#EXTINF:-1 group-title="Без категории",TBN BALTIA
+#EXTGRP:Без категории
+http://dc.tbnbaltia.eu:8088/dvr/tracks-v1a1/rewind-21600.m3u8
+#EXTINF:-1 group-title="Без категории",TBN Baltia
+#EXTGRP:Без категории
+http://dc.tbnbaltia.eu:8088/dvr/tracks-v1a1/rewind-21600.m3u8
+#EXTINF:-1 group-title="Без категории",TLC HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/232/index.m3u8
+#EXTINF:-1 group-title="Без категории",TV BRICS
+#EXTGRP:Без категории
+http://brics.bonus-tv.ru/cdn/brics/russian/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",TV4 HD
+#EXTGRP:Без категории
+https://dvr3.vokkavideo.xyz/TV4HD/index.m3u8
+#EXTINF:-1 group-title="Без категории",TV4 Русское Кино HD
+#EXTGRP:Без категории
+https://dvr3.vokkavideo.xyz/TV4RUKINO/index.m3u8
+#EXTINF:-1 group-title="Без категории",This is Bulgaria HD
+#EXTGRP:Без категории
+https://streamer103.neterra.tv/thisisbulgaria/thisisbulgaria_HD.m3u8
+#EXTINF:-1 group-title="Без категории",Trace Sport Stars HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14030/index.m3u8
+#EXTINF:-1 group-title="Без категории",Travel Channel HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/233/index.m3u8
+#EXTINF:-1 group-title="Без категории",TravelXP 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14026/index.m3u8
+#EXTINF:-1 group-title="Без категории",Tv Brics
+#EXTGRP:Без категории
+http://brics.bonus-tv.ru/cdn/brics/russian/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Ultra HD Cinema 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/4000/index.m3u8
+#EXTINF:-1 group-title="Без категории",VF Кино 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11114/index.m3u8
+#EXTINF:-1 group-title="Без категории",VF Король и Шут
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31555/index.m3u8
+#EXTINF:-1 group-title="Без категории",VF Сериал 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11115/index.m3u8
+#EXTINF:-1 group-title="Без категории",VHS кино
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/218531.m3u8
+#EXTINF:-1 group-title="Без категории",VIP Comedy HD
+#EXTGRP:Без категории
+https://stream2.somon.tv/vipcomedy/index.m3u8
+#EXTINF:-1 group-title="Без категории",VIP Premiere HD
+#EXTGRP:Без категории
+https://stream2.somon.tv/vippremiera/index.m3u8
+#EXTINF:-1 group-title="Без категории",VIP Serial HD
+#EXTGRP:Без категории
+https://stream2.somon.tv/vipserial/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viasat Explore
+#EXTGRP:Без категории
+http://188.208.197.173/viasat-explore/video.m3u8?token=tvon
+#EXTINF:-1 group-title="Без категории",Viasat History CEE HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/12019/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viasat Kino
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/12031/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viasat Kino Action
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/12024/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viasat Kino World HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31448/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viasat Nature
+#EXTGRP:Без категории
+http://188.208.197.173/viasat-nature/video.m3u8?token=tvon
+#EXTINF:-1 group-title="Без категории",Viju Explore HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6381/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viju History HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/203/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viju TV1000 Action HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6386/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viju TV1000 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6387/index.m3u8
+#EXTINF:-1 group-title="Без категории",Viju TV1000 Русское HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6388/index.m3u8
+#EXTINF:-1 group-title="Без категории",WORLD HD
+#EXTGRP:Без категории
+http://185.57.68.33/232/index.m3u8
+#EXTINF:-1 group-title="Без категории",Yosso TV 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16153/index.m3u8
+#EXTINF:-1 group-title="Без категории",Yosso TV 4K HDR
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31620/index.m3u8
+#EXTINF:-1 group-title="Без категории",Yosso TV Советские Фильмы 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19435/index.m3u8
+#EXTINF:-1 group-title="Без категории",Z!Serial HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15140/index.m3u8
+#EXTINF:-1 group-title="Без категории",Z!Sitcom HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15141/index.m3u8
+#EXTINF:-1 group-title="Без категории",Z!Smile HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15142/index.m3u8
+#EXTINF:-1 group-title="Без категории",ZeeTV Music Party
+#EXTGRP:Без категории
+http://thksmom.shop/zp1247/index.m3u8
+#EXTINF:-1 group-title="Без категории",Zоопарк HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9097/index.m3u8
+#EXTINF:-1 group-title="Без категории",alpha Cinema
+#EXTGRP:Без категории
+https://dvr3.vokkavideo.xyz/ALPHACINEMAHD/index.m3u8
+#EXTINF:-1 group-title="Без категории",alpha Funny
+#EXTGRP:Без категории
+https://dvr3.vokkavideo.xyz/ALPHAFUNNYHD/index.m3u8
+#EXTINF:-1 group-title="Без категории",alpha Moretime
+#EXTGRP:Без категории
+https://dvr3.vokkavideo.xyz/ALPHAMORETIMEHD/index.m3u8
+#EXTINF:-1 group-title="Без категории",alpha Onenite
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/205116.m3u8
+#EXTINF:-1 group-title="Без категории",tv4
+#EXTGRP:Без категории
+http://188.208.197.173/tv4/video.m3u8?token=tvon
+#EXTINF:-1 group-title="Без категории",АИСТ HD
+#EXTGRP:Без категории
+https://rt-sib-irk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_IRK_AIST/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Абаза ТВ
+#EXTGRP:Без категории
+https://public.apsny.camera/tv_abaza_tv_to_site/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Авто Плюс HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6369/index.m3u8
+#EXTINF:-1 group-title="Без категории",Аист ТВ
+#EXTGRP:Без категории
+https://live2-aisttv.cdnvideo.ru/aisttv2/aisttv.sdp/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Аппетитный HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9067/index.m3u8
+#EXTINF:-1 group-title="Без категории",Ариг Ус 24 HD
+#EXTGRP:Без категории
+https://rt-sib-uude-htlive.cdn.ngenix.net/hls/CH_R01_ARIGUS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Арктик-ТВ HD
+#EXTGRP:Без категории
+https://rt-nw-murm-htlive.cdn.ngenix.net/hls/CH_R03_ARCTIC/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Арсенал HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5044/index.m3u8
+#EXTINF:-1 group-title="Без категории",Архыз 24
+#EXTGRP:Без категории
+http://95.47.156.60:8000/play/a00w/index.m3u8
+#EXTINF:-1 group-title="Без категории",Архыз 24 HD (Черкесск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/1049/index.m3u8
+#EXTINF:-1 group-title="Без категории",Архыз-24 HD
+#EXTGRP:Без категории
+https://rt-sth-cherks-htlive.cdn.ngenix.net/hls/CH_R03_OTT_STH_CHERKS_ARKHIZ241/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Астрахань 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16149/index.m3u8
+#EXTINF:-1 group-title="Без категории",Афонтово (Красноярск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15423/index.m3u8
+#EXTINF:-1 group-title="Без категории",БСТ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2115/index.m3u8
+#EXTINF:-1 group-title="Без категории",БТК HD (Белорецк)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15371/index.m3u8
+#EXTINF:-1 group-title="Без категории",Башкортостан 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/832/index.m3u8
+#EXTINF:-1 group-title="Без категории",Беларусь 2 HD
+#EXTGRP:Без категории
+https://edge50.dc.beltelecom.by/ngtrk/smil:belarus2.smil/chunklist_b5160000_sleng.m3u8
+#EXTINF:-1 group-title="Без категории",Беларусь 24
+#EXTGRP:Без категории
+http://86.57.209.210/Belarus24/index.m3u8
+#EXTINF:-1 group-title="Без категории",Беларусь 3 HD
+#EXTGRP:Без категории
+https://edge50.dc.beltelecom.by/ngtrk/_definst_/smil:belarus3.smil/chunklist_w1684528521_b5160000_sleng.m3u8
+#EXTINF:-1 group-title="Без категории",Белсат HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10036/index.m3u8
+#EXTINF:-1 group-title="Без категории",Блокбастер HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2436/index.m3u8
+#EXTINF:-1 group-title="Без категории",Большая Азия HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2009/index.m3u8
+#EXTINF:-1 group-title="Без категории",Большой Эфир HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14012/index.m3u8
+#EXTINF:-1 group-title="Без категории",Брянская Губерния HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20132/index.m3u8
+#EXTINF:-1 group-title="Без категории",В мире животных HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2089/index.m3u8
+#EXTINF:-1 group-title="Без категории",ВОТтв HD
+#EXTGRP:Без категории
+https://rt-ct-lipetsk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_CT_LIPETSK_VOTTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ВТК 41 "Аргус"
+#EXTGRP:Без категории
+https://rt-ct-vrzh-htlive.cdn.ngenix.net/hls/CH_R01_ARGUS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Ветта 24 Пермь
+#EXTGRP:Без категории
+https://rt-ural-perm-htlive.cdn.ngenix.net/hls/CH_R01_OTT_VETTA24_PERM/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Ветта-24
+#EXTGRP:Без категории
+http://rt-ural-perm-htlive.cdn.ngenix.net/hls/CH_R01_OTT_VETTA24_PERM/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Волгоград 1
+#EXTGRP:Без категории
+http://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R06_OTT_STH_VGRAD_VOLGOGRAD1/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Волгоград 1 HD
+#EXTGRP:Без категории
+https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R06_OTT_STH_VGRAD_VOLGOGRAD1/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Волгоград-24 HD
+#EXTGRP:Без категории
+https://rt-sth-vgrad-htlive.cdn.ngenix.net/hls/CH_R01_OTT_STH_VGRAD_VOLGOGRAD24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Всё ТВ
+#EXTGRP:Без категории
+https://s72169.cdn.ngenix.net/hls/CH_VSETVHD/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Глазами Туриста 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15191/index.m3u8
+#EXTINF:-1 group-title="Без категории",Глазами Туриста HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2104/index.m3u8
+#EXTINF:-1 group-title="Без категории",Городской телеканал (Ярославль)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19349/index.m3u8
+#EXTINF:-1 group-title="Без категории",Губерния 33 HD
+#EXTGRP:Без категории
+http://rt-ct-vlad-htlive.cdn.ngenix.net/hls/CH_R02_OTT_CT_VLAD_GUBERNIA33/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ДОН 24 HD
+#EXTGRP:Без категории
+https://rt-sth-rd-htlive.cdn.ngenix.net/hls/CH_R02_OTT_STH_RD_DON24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Девятка ТВ
+#EXTGRP:Без категории
+https://rt-vlg-kirov-htlive.cdn.ngenix.net/hls/CH_R02_9TV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",День Победы HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5054/index.m3u8
+#EXTINF:-1 group-title="Без категории",Диалоги о рыбалке HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2394/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дикая охота HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2004/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дикая рыбалка HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2005/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дождь HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20083/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дом Кино Премиум HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/911/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дом кино премиум
+#EXTGRP:Без категории
+http://95.66.188.74/DomKinoPremiumHD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Домашний HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15116/index.m3u8
+#EXTINF:-1 group-title="Без категории",Дорама HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2131/index.m3u8
+#EXTINF:-1 group-title="Без категории",Драйв HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9068/index.m3u8
+#EXTINF:-1 group-title="Без категории",Душевное HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/914/index.m3u8
+#EXTINF:-1 group-title="Без категории",Евпатория 24
+#EXTGRP:Без категории
+http://195.26.83.96:7029/play/a009
+#EXTINF:-1 group-title="Без категории",Европа Плюс ТВ
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/europaplustv24.m3u8
+#EXTINF:-1 group-title="Без категории",Енисей (Красноярск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15418/index.m3u8
+#EXTINF:-1 group-title="Без категории",Енисей HD
+#EXTGRP:Без категории
+https://rt-sib-krsk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_KRSK_ENISEY/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Жара HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2129/index.m3u8
+#EXTINF:-1 group-title="Без категории",Живая природа HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2074/index.m3u8
+#EXTINF:-1 group-title="Без категории",Загородный int HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2124/index.m3u8
+#EXTINF:-1 group-title="Без категории",Зал Суда HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7141/index.m3u8
+#EXTINF:-1 group-title="Без категории",Звезда HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15115/index.m3u8
+#EXTINF:-1 group-title="Без категории",Звезда Плюс HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19230/index.m3u8
+#EXTINF:-1 group-title="Без категории",Звуки дождя 24/7
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/198378.m3u8
+#EXTINF:-1 group-title="Без категории",Импульс HD
+#EXTGRP:Без категории
+https://rt-ural-nbk-htlive.cdn.ngenix.net/hls/CH_R02_IMPULS_NBK/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Инфо 24 HD
+#EXTGRP:Без категории
+https://rt-ural-krg-htlive.cdn.ngenix.net/hls/CH_R04_OTT_SHINFO_URAL_KRG/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Информационная служба Югры
+#EXTGRP:Без категории
+https://rt-ural-sur-htlive.cdn.ngenix.net/hls/CH_R01_OTT_PERVIYSOVETSKIY/variant.m3u8
+#EXTINF:-1 group-title="Без категории",КИНОУЖАС HD
+#EXTGRP:Без категории
+http://85.88.175.48:2020/udp/239.4.10.47:2020
+#EXTINF:-1 group-title="Без категории",Камеди HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2441/index.m3u8
+#EXTINF:-1 group-title="Без категории",Камин ТВ
+#EXTGRP:Без категории
+https://rt-vlg-nn-htlive.cdn.ngenix.net/hls/CH_R05_KAMINTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Камчатка HD
+#EXTGRP:Без категории
+https://s14131.cdn.ngenix.net/hls/CH_R41_OTT_DV_KAM_KAMCHATKA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Кинеко HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9135/index.m3u8
+#EXTINF:-1 group-title="Без категории",Кино UHD 4K
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5004/index.m3u8
+#EXTINF:-1 group-title="Без категории",Кино ТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2097/index.m3u8
+#EXTINF:-1 group-title="Без категории",Кино и жизнь
+#EXTGRP:Без категории
+http://188.208.197.173/kinojizn/video.m3u8?token=Rblztg5NZwI9x2
+#EXTINF:-1 group-title="Без категории",КиноФраншизы 24/7
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/218193.m3u8
+#EXTINF:-1 group-title="Без категории",Киножелезо
+#EXTGRP:Без категории
+http://188.208.197.173/kinojelezo/video.m3u8?token=tvon
+#EXTINF:-1 group-title="Без категории",Кинолаффка
+#EXTGRP:Без категории
+http://188.208.197.173/kinolafka/video.m3u8?token=tvon
+#EXTINF:-1 group-title="Без категории",Кинопоказ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2439/index.m3u8
+#EXTINF:-1 group-title="Без категории",Кинопремьера HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/224/index.m3u8
+#EXTINF:-1 group-title="Без категории",Киносерия HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19229/index.m3u8
+#EXTINF:-1 group-title="Без категории",Киноужас HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2056/index.m3u8
+#EXTINF:-1 group-title="Без категории",Китай ТВ HD
+#EXTGRP:Без категории
+https://cdn.nexttvnet.ru/hlsl/provide/61394/ChinaTV2/china-tv_1920x1080/index.m3u8
+#EXTINF:-1 group-title="Без категории",Комедийное HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/912/index.m3u8
+#EXTINF:-1 group-title="Без категории",Краснодар
+#EXTGRP:Без категории
+https://live-tvkrasnodar.cdnvideo.ru/tvkrasnodar/tvkrasnodar.sdp/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Краснодар HD
+#EXTGRP:Без категории
+https://live-tvkrasnodar.cdnvideo.ru/tvkrasnodar/tvkrasnodar.sdp/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Крик-ТВ
+#EXTGRP:Без категории
+http://cdn-01.bonus-tv.ru:80/kriktv_edge/index.m3u8
+#EXTINF:-1 group-title="Без категории",Криминальное HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14033/index.m3u8
+#EXTINF:-1 group-title="Без категории",Кузбасс 1
+#EXTGRP:Без категории
+https://rt-sib-kem-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_KEM_GTRK/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Курай ТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2144/index.m3u8
+#EXTINF:-1 group-title="Без категории",ЛТВ HD (Люберцы)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31927/index.m3u8
+#EXTINF:-1 group-title="Без категории",Легендарный 24
+#EXTGRP:Без категории
+https://sevas.1tvcrimea.ru/legendarniy24.m3u8
+#EXTINF:-1 group-title="Без категории",Липецкое время HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15406/index.m3u8
+#EXTINF:-1 group-title="Без категории",Любимое HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2106/index.m3u8
+#EXTINF:-1 group-title="Без категории",Любимое HD orig
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/915/index.m3u8
+#EXTINF:-1 group-title="Без категории",Любимое Кино HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20014/index.m3u8
+#EXTINF:-1 group-title="Без категории",МИГ ТВ
+#EXTGRP:Без категории
+http://rt-ural-nbk-htlive.cdn.ngenix.net/hls/CH_R04_OTT_MIG_TV_URAL_YNF/variant.m3u8
+#EXTINF:-1 group-title="Без категории",МИР 24 HD
+#EXTGRP:Без категории
+http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mir24_2500/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",МИР HD
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/mirhdorig.m3u8
+#EXTINF:-1 group-title="Без категории",ММТВ
+#EXTGRP:Без категории
+http://95.47.156.60:8000/play/a014/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матур ТВ
+#EXTGRP:Без категории
+https://public.streaming.matur-tv.ru/hls/h264_aac/stream.m3u8
+#EXTINF:-1 group-title="Без категории",Матур ТВ HD (Башкортостан)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15352/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч HD
+#EXTGRP:Без категории
+https://bl.video.matchtv.ru/media/playlist/free_d46d0cf1712c0542ec7fd4f0808f600a_hd/17_89756005/1080/e6bef86de8a133cd7b27deb040758a00/4796141934.m3u8
+#EXTINF:-1 group-title="Без категории",Матч ТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/212/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч ТВ HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10020/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Арена HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/207/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Игра HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/225/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Игра HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10014/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Премьер HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/220/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/222/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 1 HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10015/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 2 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/211/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 2 HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10027/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 3 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/206/index.m3u8
+#EXTINF:-1 group-title="Без категории",Матч! Футбол 3 HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10016/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мегаполис HD (Югра)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16027/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мир 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2107/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мир HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15119/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мир Premium HD
+#EXTGRP:Без категории
+http://hls.mirtv.cdnvideo.ru/mirtv-parampublish/mirtv_2500/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Мир Белогорья HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20126/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мистер Бин
+#EXTGRP:Без категории
+https://fl1001.bozztv.com/ushba45/index.m3u8
+#EXTINF:-1 group-title="Без категории",Мода 4
+#EXTGRP:Без категории
+https://fl1001.bozztv.com/ushba-m8/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Моя Планета HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2090/index.m3u8
+#EXTINF:-1 group-title="Без категории",Моя планета HD
+#EXTGRP:Без категории
+http://95.66.188.74/MoyaPlanetaHD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Мужское Кино HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10045/index.m3u8
+#EXTINF:-1 group-title="Без категории",МузСоюз
+#EXTGRP:Без категории
+https://hls-tvsoyuz.cdnvideo.ru/tvsoyuz2/muzsoyuz.6fw0-58xp-acts-esy0/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Муравленко 24
+#EXTGRP:Без категории
+https://rt-ural-nbk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_MURAVLENKO_24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",НАНО ТВ HD
+#EXTGRP:Без категории
+http://194.143.148.28:8080/NanoTV/mpegts
+#EXTINF:-1 group-title="Без категории",НВК (Саха)
+#EXTGRP:Без категории
+https://s34351.cdn.ngenix.net/hls/CH_R03_OTT_DV_YKT_NVC_OTT/variant.m3u8
+#EXTINF:-1 group-title="Без категории",НВК Саха HD
+#EXTGRP:Без категории
+https://live-saha.cdnvideo.ru/saha/saha/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",НВК Саха HD (Якутия)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20125/index.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/213/index.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Балабол
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Balabol/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Невский
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Nevskiy/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Первый отдел
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Perviy_otdel/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Пять минут тишины
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/5_minut_tishiny/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Пёс
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Pes/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Скорая помощь
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Skoraja_pomosh/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Сериалы Шеф
+#EXTGRP:Без категории
+https://cdn-dvr.ntv.ru/Shef/tracks-v1a1/rewind-240.ts.m3u8
+#EXTINF:-1 group-title="Без категории",НТВ Хит HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16062/index.m3u8
+#EXTINF:-1 group-title="Без категории",НТК
+#EXTGRP:Без категории
+https://s97982.cdn.ngenix.net/hls/CH_R79_OTT_DV_HVSK_NTK/variant.m3u8
+#EXTINF:-1 group-title="Без категории",НТС HD
+#EXTGRP:Без категории
+https://peqk71plnjy.a.trbcdn.net/livemaster/w4kz7pki62_nts_tv/chunklist.m3u8
+#EXTINF:-1 group-title="Без категории",Нано ТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2135/index.m3u8
+#EXTINF:-1 group-title="Без категории",Национальное ТВ Чувашии
+#EXTGRP:Без категории
+https://rt-vlg-chr-htlive.cdn.ngenix.net/hls/CH_R01_NATIONALTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Наш Дом
+#EXTGRP:Без категории
+http://85.234.33.63/stream/c11.m3u8
+#EXTINF:-1 group-title="Без категории",Наш Кинопоказ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2434/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наш дом
+#EXTGRP:Без категории
+https://rt-vlg-penza-htlive.cdn.ngenix.net/hls/CH_R03_NASHDOM/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Наша Сибирь HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/4003/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наша Сибирь HD orig
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15145/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наша тема
+#EXTGRP:Без категории
+http://live-3.otcnet.ru/nashatema/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наше HD
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/Nashe_HD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Наше Мужское HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2440/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наше Новое Кино HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19231/index.m3u8
+#EXTINF:-1 group-title="Без категории",Наши города
+#EXTGRP:Без категории
+https://rt-ural-sur-htlive.cdn.ngenix.net/hls/CH_R04_OTT_NGOR_URAL_SUR/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Неизвестная Россия
+#EXTGRP:Без категории
+https://cdn.ntv.ru/unknown_russia/tracks-v1a1/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Новгородское областное телевидение
+#EXTGRP:Без категории
+https://rt-nw-novg-htlive.cdn.ngenix.net/hls/CH_R02_NOVGORODTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ОНТ HD
+#EXTGRP:Без категории
+https://edge53.dc.beltelecom.by/ont/_definst_/ont/chunklist_w741300442.m3u8
+#EXTINF:-1 group-title="Без категории",ОСН
+#EXTGRP:Без категории
+https://osnmedia.servicecdn.ru/streams/17603_88089/1080n/index.m3u8
+#EXTINF:-1 group-title="Без категории",ОТВ Челябинск
+#EXTGRP:Без категории
+https://rt-ural-chel-htlive.cdn.ngenix.net/hls/CH_R02_OTT_OTV_CHEL/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ОТВ-Владивосток
+#EXTGRP:Без категории
+https://s91030.cdn.ngenix.net/hls/CH_R25_OTT_DV_VLD_OTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ОТВ-Сахалин
+#EXTGRP:Без категории
+https://s14553.cdn.ngenix.net/hls/CH_R65_OTT_DV_SLIN_OTV_SLIN/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ОТР HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20018/index.m3u8
+#EXTINF:-1 group-title="Без категории",Обновление:14.12.2025
+#EXTGRP:Без категории
+http://194.26.229.213/zastavka/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 10
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31453/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 11
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31454/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 12
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31457/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 13
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31458/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 14
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31459/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 15
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31463/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 16
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31522/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 17
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31523/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 18
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31524/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 19
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31525/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 20
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31526/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 21
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31527/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 22
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31528/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 23
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31529/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 24
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31530/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 25
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31531/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 26
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31532/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 27
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31533/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 28
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31534/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 7
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31450/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 8
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31451/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Event 9
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31452/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Прайм Спорт
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20135/index.m3u8
+#EXTINF:-1 group-title="Без категории",Окко Спорт HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20138/index.m3u8
+#EXTINF:-1 group-title="Без категории",Осетия Ирыстон HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15402/index.m3u8
+#EXTINF:-1 group-title="Без категории",Остросюжетное HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/904/index.m3u8
+#EXTINF:-1 group-title="Без категории",Охотник и Рыболов HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/917/index.m3u8
+#EXTINF:-1 group-title="Без категории",ПЕРВЫЙ ТУЛЬСКИЙ
+#EXTGRP:Без категории
+http://5.164.24.83/tula/1tv_hi/index.m3u8
+#EXTINF:-1 group-title="Без категории",ПРНК
+#EXTGRP:Без категории
+http://95.47.156.60:8000/play/a013/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый Канал Европа
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/12023/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый Псковский
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19220/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый Тульский HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19362/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый городской (Киров)
+#EXTGRP:Без категории
+https://rt-vlg-kirov-htlive.cdn.ngenix.net/hls/CH_R03_PERVYGORODSKOY/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Первый информационный HD
+#EXTGRP:Без категории
+https://edge50.dc.beltelecom.by/ngtrk/_definst_/smil:informacionnyy.smil/chunklist_w868240704_b5160000_sleng.m3u8
+#EXTINF:-1 group-title="Без категории",Первый канал HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/204/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый космический HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/908/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый музыкальный HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14142/index.m3u8
+#EXTINF:-1 group-title="Без категории",Первый областной
+#EXTGRP:Без категории
+https://rt-ct-orl-htlive.cdn.ngenix.net/hls/CH_R01_PERVOBL/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Победа HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5052/index.m3u8
+#EXTINF:-1 group-title="Без категории",Премиальное HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10017/index.m3u8
+#EXTINF:-1 group-title="Без категории",Приключения HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/920/index.m3u8
+#EXTINF:-1 group-title="Без категории",Прима
+#EXTGRP:Без категории
+http://tele2dvrnat01-02.cdnvideo.ru:80/stream/NAT_Prima/hls/1920x1080@4504/playlist.m3u8
+#EXTINF:-1 group-title="Без категории",Прима HD (Красноярск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19361/index.m3u8
+#EXTINF:-1 group-title="Без категории",Прима-ТВ
+#EXTGRP:Без категории
+https://rt-sib-krsk-htlive.cdn.ngenix.net/hls/CH_R11_OTT_SIB_KRSK_STS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Про Любовь HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2430/index.m3u8
+#EXTINF:-1 group-title="Без категории",Про любовь
+#EXTGRP:Без категории
+http://hls127.freeott.top:8080/ProLubovHD/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Пятница! HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5031/index.m3u8
+#EXTINF:-1 group-title="Без категории",РГВК Дагестан
+#EXTGRP:Без категории
+https://dagestan.mediacdn.ru/cdn/dagestan/playlist_hdhigh.m3u8
+#EXTINF:-1 group-title="Без категории",РЕН ТВ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2024/index.m3u8
+#EXTINF:-1 group-title="Без категории",РОССИЯ 24
+#EXTGRP:Без категории
+http://77.232.131.211/Rossiya24/index.m3u8
+#EXTINF:-1 group-title="Без категории",РТС-Абакан
+#EXTGRP:Без категории
+https://rt-sib-abakan-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_ABAKAN_RTS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Ратник HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2119/index.m3u8
+#EXTINF:-1 group-title="Без категории",Регион 29
+#EXTGRP:Без категории
+https://rt-nw-arkh-htlive.cdn.ngenix.net/hls/CH_R02_PRAVDASEVERA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Резонанс ТВ
+#EXTGRP:Без категории
+http://95.47.156.60:8000/play/a015/index.m3u8
+#EXTINF:-1 group-title="Без категории",Романтичное HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5053/index.m3u8
+#EXTINF:-1 group-title="Без категории",Россия 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/205/index.m3u8
+#EXTINF:-1 group-title="Без категории",Россия 1 HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15133/index.m3u8
+#EXTINF:-1 group-title="Без категории",Россия 1 HD orig
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7252/index.m3u8
+#EXTINF:-1 group-title="Без категории",Русский Север
+#EXTGRP:Без категории
+https://rt-nw-vol-htlive.cdn.ngenix.net/hls/CH_R01_TV7/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Русский иллюзион HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2114/index.m3u8
+#EXTINF:-1 group-title="Без категории",Русский роман HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2076/index.m3u8
+#EXTINF:-1 group-title="Без категории",С1 Сургут HD
+#EXTGRP:Без категории
+https://sitv.ru/vgtrk/stv.m3u8
+#EXTINF:-1 group-title="Без категории",СТАРТ HD
+#EXTGRP:Без категории
+https://livetv.mylifeisgood.net.ru/channels/startlive.m3u8
+#EXTINF:-1 group-title="Без категории",СТС HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6303/index.m3u8
+#EXTINF:-1 group-title="Без категории",СТС Kids HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2001/index.m3u8
+#EXTINF:-1 group-title="Без категории",Самара 24
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31893/index.m3u8
+#EXTINF:-1 group-title="Без категории",Самара 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20120/index.m3u8
+#EXTINF:-1 group-title="Без категории",Самара ГИС HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19357/index.m3u8
+#EXTINF:-1 group-title="Без категории",Сапфир HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6389/index.m3u8
+#EXTINF:-1 group-title="Без категории",Саратов 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20119/index.m3u8
+#EXTINF:-1 group-title="Без категории",Саратов-24
+#EXTGRP:Без категории
+https://rt-vlg-saratov-htlive.cdn.ngenix.net/hls/CH_R01_SARATOV24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Саха
+#EXTGRP:Без категории
+http://s34351.cdn.ngenix.net/hls/CH_R03_OTT_DV_YKT_NVC_OTT/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Своё ТВ HD (Ставрополь)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20118/index.m3u8
+#EXTINF:-1 group-title="Без категории",Своё ТВ Ставрополь HD
+#EXTGRP:Без категории
+https://rt-sth-stavr-htlive.cdn.ngenix.net/hls/CH_R03_OTT_STH_STAVR_STV-PLUS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Север
+#EXTGRP:Без категории
+https://live2.mediacdn.ru/sr1/sever/playlist_hdhigh.m3u8
+#EXTINF:-1 group-title="Без категории",Север HD (Нарьян-Мар)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20116/index.m3u8
+#EXTINF:-1 group-title="Без категории",Симферополь 24
+#EXTGRP:Без категории
+https://simf.1tvcrimea.ru/simferopol24.m3u8
+#EXTINF:-1 group-title="Без категории",Сочи 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9040/index.m3u8
+#EXTINF:-1 group-title="Без категории",Сочи24 HD
+#EXTGRP:Без категории
+https://rt-sth-krdar-htlive.cdn.ngenix.net/hls/CH_R01_MAKS241/variant.m3u8
+#EXTINF:-1 group-title="Без категории",СоюзМультфильм
+#EXTGRP:Без категории
+http://194.26.229.213/souzmultfilm/index.m3u8
+#EXTINF:-1 group-title="Без категории",Спорт
+#EXTGRP:Без категории
+https://fl1001.bozztv.com/ushba46/tracks-v1a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Среда HD (Каспийск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16002/index.m3u8
+#EXTINF:-1 group-title="Без категории",Старт HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6384/index.m3u8
+#EXTINF:-1 group-title="Без категории",Суббота! HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15118/index.m3u8
+#EXTINF:-1 group-title="Без категории",Сургут 1 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19391/index.m3u8
+#EXTINF:-1 group-title="Без категории",Сургут 86 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19390/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТБВ
+#EXTGRP:Без категории
+http://95.47.156.60:8000/play/a012/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТВ-3 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5033/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТВ-7 Абакан
+#EXTGRP:Без категории
+https://rt-sib-abakan-htlive.cdn.ngenix.net/hls/CH_R01_TV7/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ТВ-Губерния
+#EXTGRP:Без категории
+https://rt-ct-vrzh-htlive.cdn.ngenix.net/hls/CH_R01_OTT_CT_VRZH_TVGUBERNIYA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ТВ-ИН-Магнитогорск
+#EXTGRP:Без категории
+https://rt-ural-chel-htlive.cdn.ngenix.net/hls/CH_R01_TVIN_MAGN/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ТВК HD (Красноярск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19388/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТВОЕ ТВ HD
+#EXTGRP:Без категории
+http://tvoetv.space:8080/tvoetv/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТВОЕ ТВ HD - ЮМОР
+#EXTGRP:Без категории
+http://tvoetv.space:8080/tvoetv_humor/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТВЦ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19222/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТЕО ТВ HD (Москва)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19382/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТКР Рязань
+#EXTGRP:Без категории
+https://rt-ct-ryaz-htlive.cdn.ngenix.net/hls/CH_R01_OTT_CT_RYAZ_TKP/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ТНР 24 HD (Нижневартовск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16028/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТНР24
+#EXTGRP:Без категории
+https://rt-ural-sur-htlive.cdn.ngenix.net/hls/CH_R01_OTT_TNR24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ТНТ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/237/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТНТ HD 50
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10024/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТНТ International HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15230/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТНТ4 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6370/index.m3u8
+#EXTINF:-1 group-title="Без категории",ТРК-555
+#EXTGRP:Без категории
+https://zabava-htlive.cdn.ngenix.net/hls/CH_TRK555HD/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Тивиком HD
+#EXTGRP:Без категории
+https://rt-sib-uude-htlive.cdn.ngenix.net/hls/CH_R01_TIVICOM/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Толк
+#EXTGRP:Без категории
+https://rt-sib-bul-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_BUL_TOLK/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Тольятти-24
+#EXTGRP:Без категории
+https://rt-vlg-samara-htlive.cdn.ngenix.net/hls/CH_R01_TOLYTTI24/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Томское время
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15299/index.m3u8
+#EXTINF:-1 group-title="Без категории",Томское время HD
+#EXTGRP:Без категории
+https://rt-sib-tomsk-htlive.cdn.ngenix.net/hls/CH_R01_OTT_SIB_TOMSK_TOMSKVREMIA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Точка.РФ FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/226/index.m3u8
+#EXTINF:-1 group-title="Без категории",Точка.РФ HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19251/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Боевики HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20172/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Последний мент
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6001/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 10
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15149/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 11
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15150/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 12
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15151/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 13
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15152/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 14
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15153/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 15
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15154/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 16
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15155/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 17
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15156/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 18
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15157/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 19
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15158/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 20
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15159/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 21
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15160/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 22
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15161/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 23
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15162/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Спорт 24
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15163/index.m3u8
+#EXTINF:-1 group-title="Без категории",Триколор Ужасы HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20178/index.m3u8
+#EXTINF:-1 group-title="Без категории",Туапсе 24 HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19380/index.m3u8
+#EXTINF:-1 group-title="Без категории",Тюменское время
+#EXTGRP:Без категории
+https://rt-ural-tum-htlive.cdn.ngenix.net/hls/CH_R01_OTT_TUMVR_URAL_TUM/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Удар FHD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2000/index.m3u8
+#EXTINF:-1 group-title="Без категории",Удмуртия
+#EXTGRP:Без категории
+https://rt-vlg-izhsk-htlive.cdn.ngenix.net/hls/CH_R03_MYUDMURTIA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Ул. Правда
+#EXTGRP:Без категории
+https://rt-vlg-ul-htlive.cdn.ngenix.net/hls/CH_R01_ULPRAVDA/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Усадьба HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9071/index.m3u8
+#EXTINF:-1 group-title="Без категории",Фильмы 24/7
+#EXTGRP:Без категории
+http://195.9.195.3:8080/hls/218251.m3u8
+#EXTINF:-1 group-title="Без категории",Хит HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2438/index.m3u8
+#EXTINF:-1 group-title="Без категории",Центр (Красноярск)
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15425/index.m3u8
+#EXTINF:-1 group-title="Без категории",Честный детектив
+#EXTGRP:Без категории
+https://live-vgtrksmotrim.cdnvideo.ru/vgtrksmotrim/smotrim-live-01.smil/tracks-v5a1/mono.m3u8
+#EXTINF:-1 group-title="Без категории",Чижик HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14034/index.m3u8
+#EXTINF:-1 group-title="Без категории",Чип и Дейл
+#EXTGRP:Без категории
+http://194.26.229.213/chip-n-dale-rescue-rangers/index.m3u8
+#EXTINF:-1 group-title="Без категории",Шокирующее HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6299/index.m3u8
+#EXTINF:-1 group-title="Без категории",Щелковское ТВ
+#EXTGRP:Без категории
+http://stream0.tv41.ru/live.m3u8
+#EXTINF:-1 group-title="Без категории",Экспресс HD
+#EXTGRP:Без категории
+https://rt-vlg-penza-htlive.cdn.ngenix.net/hls/CH_R01_EXPRESS/variant.m3u8
+#EXTINF:-1 group-title="Без категории",ЮТВ Чебоксары
+#EXTGRP:Без категории
+https://rt-vlg-chr-htlive.cdn.ngenix.net/hls/CH_R01_UTV/variant.m3u8
+#EXTINF:-1 group-title="Без категории",Ямал регион HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31897/index.m3u8
+#EXTINF:-1 group-title="Без категории",Ямал-Регион
+#EXTGRP:Без категории
+https://rt-ural-nbk-htlive.cdn.ngenix.net/hls/CH_R04_OTT_YAMREG_URAL_YNF/variant.m3u8
+#EXTINF:-1 group-title="Без категории",о2тв HD
+#EXTGRP:Без категории
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2141/index.m3u8
+#EXTINF:-1 group-title="Без категории",🔺 INFO 🔺Посмотри!!!
+#EXTGRP:Без категории
+https://github.com/Dimonovich/TV/releases/download/v1.0.0/1.mp4
+#EXTINF:-1 group-title="Детские",BCU Little HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19425/index.m3u8
+#EXTINF:-1 group-title="Детские",CineMan Cartoons 90
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11001/index.m3u8
+#EXTINF:-1 group-title="Детские",CineMan Cartoons Big
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11003/index.m3u8
+#EXTINF:-1 group-title="Детские",CineMan Cartoons Short
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11002/index.m3u8
+#EXTINF:-1 group-title="Детские",Duck TV HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/1031/index.m3u8
+#EXTINF:-1 group-title="Детские",Funny Kids HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31918/index.m3u8
+#EXTINF:-1 group-title="Детские",Kids TV HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20008/index.m3u8
+#EXTINF:-1 group-title="Детские",KinoKazka
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15019/index.m3u8
+#EXTINF:-1 group-title="Детские",Kinowood HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31817/index.m3u8
+#EXTINF:-1 group-title="Детские",Liberty Дисней FHD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15093/index.m3u8
+#EXTINF:-1 group-title="Детские",Liberty Мульт UKR FHD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31659/index.m3u8
+#EXTINF:-1 group-title="Детские",Liberty Пиксар FHD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15092/index.m3u8
+#EXTINF:-1 group-title="Детские",MYTV Kids
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19409/index.m3u8
+#EXTINF:-1 group-title="Детские",NickToons HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/849/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Disney Cartoon
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15027/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Ералаш
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14163/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Мультуб
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15520/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Новогодние мультфильмы
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15523/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Скуби-Ду
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17007/index.m3u8
+#EXTINF:-1 group-title="Детские",VF Союзмультфильм
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14238/index.m3u8
+#EXTINF:-1 group-title="Детские",VeleS Kids
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31646/index.m3u8
+#EXTINF:-1 group-title="Детские",Yosso TV Kids
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14173/index.m3u8
+#EXTINF:-1 group-title="Детские",Yosso TV Союзмульт
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14178/index.m3u8
+#EXTINF:-1 group-title="Детские",В гостях у сказки HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20005/index.m3u8
+#EXTINF:-1 group-title="Детские",Капитан Фантастика HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2098/index.m3u8
+#EXTINF:-1 group-title="Детские",Карусель HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20012/index.m3u8
+#EXTINF:-1 group-title="Детские",Лёва HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15098/index.m3u8
+#EXTINF:-1 group-title="Детские",Мульт HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/921/index.m3u8
+#EXTINF:-1 group-title="Детские",Мультиландия HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31910/index.m3u8
+#EXTINF:-1 group-title="Детские",Сказки Зайки HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14150/index.m3u8
+#EXTINF:-1 group-title="Детские",Смайл ТВ HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2157/index.m3u8
+#EXTINF:-1 group-title="Детские",СуперГерои HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15099/index.m3u8
+#EXTINF:-1 group-title="Детские",ТипТоп HD
+#EXTGRP:Детские
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14007/index.m3u8
+#EXTINF:-1 group-title="Кино",.black HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20019/index.m3u8
+#EXTINF:-1 group-title="Кино",.red HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2062/index.m3u8
+#EXTINF:-1 group-title="Кино",.sci-fi HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20020/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Comedy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15026/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Marvel HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15025/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Media HD OLD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15024/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Reality OLD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16083/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Romantic OLD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18052/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Russia 90s HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31658/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU Survival OLD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17020/index.m3u8
+#EXTINF:-1 group-title="Кино",BCU TruMotion HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17054/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Anime HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19276/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Apocalypse HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31655/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Cyber HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19421/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Franchise HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19274/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Game HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19284/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Gangster HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19277/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Hybrid HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19275/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX M.Serial HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19280/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Memory HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19279/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Metall HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31651/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Oscar HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19278/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Serial HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19281/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Spy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19285/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Travel HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19418/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Western HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19419/index.m3u8
+#EXTINF:-1 group-title="Кино",BOX Zombie HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19420/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11004/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Action
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11006/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Marvel
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11009/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan MiniSeries
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19437/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Thriller
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11007/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Top
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11005/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan VHS
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11012/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Катастрофы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15106/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Комедийные Сериалы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31628/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Комедия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11011/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Криминальные Сериалы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31626/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Лесник
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16065/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Мелодрама
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11008/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Ментовские войны
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16063/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan РуКино
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11013/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Сваты
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11014/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Симпсоны
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15101/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Скорая Помощь
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15100/index.m3u8
+#EXTINF:-1 group-title="Кино",CineMan Ужасы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11010/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Cartoon
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16050/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Comedy
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16151/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus History
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18139/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Holiday
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16089/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Inquest
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16152/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Live HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19436/index.m3u8
+#EXTINF:-1 group-title="Кино",Citrus Marvel
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16051/index.m3u8
+#EXTINF:-1 group-title="Кино",FAN HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16021/index.m3u8
+#EXTINF:-1 group-title="Кино",FX HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19216/index.m3u8
+#EXTINF:-1 group-title="Кино",FlixSnip HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10060/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Adventure
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19297/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Cinema
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19287/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Comedy
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19289/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Family
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19291/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Fantastic
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19294/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Horror
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19296/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Kids
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19288/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Premiere
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19290/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Rating
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19292/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Romantic
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19298/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Russian
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19299/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Series
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19295/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Soviet
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19301/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh Thriller
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19300/index.m3u8
+#EXTINF:-1 group-title="Кино",Fresh VHS
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19293/index.m3u8
+#EXTINF:-1 group-title="Кино",KinoJam 1 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7260/index.m3u8
+#EXTINF:-1 group-title="Кино",KinoJam 2 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7261/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty DC FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15087/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Боевики FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15096/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Индия 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18160/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Кино ENG 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17060/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Кино UKR 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18045/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Кино Микс 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15110/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Комедии FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16054/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Короткометражки FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15091/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Куб 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18161/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Марвел FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15090/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Мелодрамы FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15095/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Мульт 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18051/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Мульт ENG 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17061/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Мульт UKR 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18044/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty РусФильм 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18046/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Сваты FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15164/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Семейный 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18178/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Сериалы FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16055/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Симпсоны FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15111/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Триллеры 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15089/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Ужасы 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15088/index.m3u8
+#EXTINF:-1 group-title="Кино",Liberty Южный Парк FHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16053/index.m3u8
+#EXTINF:-1 group-title="Кино",MM 007 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13009/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Celebrity HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16084/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Classic HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16085/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Family Guy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19414/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Flip UHD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13057/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Honey HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13026/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Lesson HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13042/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Live Planet HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13095/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Love HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13010/index.m3u8
+#EXTINF:-1 group-title="Кино",MM NewFilm 1 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13011/index.m3u8
+#EXTINF:-1 group-title="Кино",MM NewFilm 2 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13012/index.m3u8
+#EXTINF:-1 group-title="Кино",MM NewFilm 3 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13013/index.m3u8
+#EXTINF:-1 group-title="Кино",MM NewFilm RU HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13014/index.m3u8
+#EXTINF:-1 group-title="Кино",MM OldSchool HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19413/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Rock HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13015/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Smile HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13043/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Tom and Jerry HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13016/index.m3u8
+#EXTINF:-1 group-title="Кино",MM UFO HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13017/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR 1941-1945 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13018/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Детектив HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13096/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Драма HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13022/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Комедия HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13019/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Мультфильм HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13020/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Приключения HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13060/index.m3u8
+#EXTINF:-1 group-title="Кино",MM USSR Сказки HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13021/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Walt Disney HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13064/index.m3u8
+#EXTINF:-1 group-title="Кино",MM World Hits HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13023/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Агата Кристи HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13024/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Боевик Classic HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13027/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Боевик HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13028/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Вестерн HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13029/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Воронины HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13031/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Грайндхаус HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13025/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Драма HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16086/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Затмение HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13032/index.m3u8
+#EXTINF:-1 group-title="Кино",MM История HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13033/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Катастрофа HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13034/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Квартирник HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13035/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Киберпанк HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13036/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Кинофестиваль HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31621/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Комедия Classic HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13037/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Комедия HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13038/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Криминал HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13039/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Крутые 90-е HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13040/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Кунг-Фу HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13041/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Мифология HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13044/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Нуар HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13045/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Погружение HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13047/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Полицейский с Рублёвки HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13049/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Приключения HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13048/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Роскино HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13050/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Сваты HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13051/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Семейный 1 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13097/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Семейный 2 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13098/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Синематограф HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13061/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Ситком 2.0 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13046/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Ситком HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13052/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Скорость HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13053/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Спорт HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13054/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Стивен Кинг HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13055/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Супергерои HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13056/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Триллер HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13058/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Ужастик HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13059/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Ужасы Classic HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14128/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Ужасы HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13099/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Фантастика HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13062/index.m3u8
+#EXTINF:-1 group-title="Кино",MM Фобия HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13063/index.m3u8
+#EXTINF:-1 group-title="Кино",MS Animated HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17024/index.m3u8
+#EXTINF:-1 group-title="Кино",MS Magic 4K
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16143/index.m3u8
+#EXTINF:-1 group-title="Кино",MS Prisons HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15137/index.m3u8
+#EXTINF:-1 group-title="Кино",MS Toons HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15138/index.m3u8
+#EXTINF:-1 group-title="Кино",MS Young Blood HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16147/index.m3u8
+#EXTINF:-1 group-title="Кино",MYTV
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19407/index.m3u8
+#EXTINF:-1 group-title="Кино",MYTV 2
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19408/index.m3u8
+#EXTINF:-1 group-title="Кино",MYTV 3
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19411/index.m3u8
+#EXTINF:-1 group-title="Кино",MYTV HIT
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19410/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Action HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18066/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Comedy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18063/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Disney HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18064/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Family HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18170/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Galaxy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18067/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Horror HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18068/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Karate HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18061/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Love HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18171/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Russian HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31630/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic Thriller HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18065/index.m3u8
+#EXTINF:-1 group-title="Кино",Magic VHS HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18062/index.m3u8
+#EXTINF:-1 group-title="Кино",NOW Series HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15102/index.m3u8
+#EXTINF:-1 group-title="Кино",PG USSR HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11102/index.m3u8
+#EXTINF:-1 group-title="Кино",PG VHS HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15000/index.m3u8
+#EXTINF:-1 group-title="Кино",Romance HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2037/index.m3u8
+#EXTINF:-1 group-title="Кино",START Air HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18036/index.m3u8
+#EXTINF:-1 group-title="Кино",Scream HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20021/index.m3u8
+#EXTINF:-1 group-title="Кино",Shot TV HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20022/index.m3u8
+#EXTINF:-1 group-title="Кино",StrahTV Кинодром HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31714/index.m3u8
+#EXTINF:-1 group-title="Кино",StrahTV Ольга HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31718/index.m3u8
+#EXTINF:-1 group-title="Кино",StrahTV Репка HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31719/index.m3u8
+#EXTINF:-1 group-title="Кино",StrahTV Страх 2.0 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31720/index.m3u8
+#EXTINF:-1 group-title="Кино",StrahTV Фантастика 2.0 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31722/index.m3u8
+#EXTINF:-1 group-title="Кино",Sumiko HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2163/index.m3u8
+#EXTINF:-1 group-title="Кино",Suspense HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2049/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP 80 S HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13002/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP BUDO HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13003/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP Cinema HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13004/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP MIX HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13006/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP USSR HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13005/index.m3u8
+#EXTINF:-1 group-title="Кино",TOP Великолепный Век HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13001/index.m3u8
+#EXTINF:-1 group-title="Кино",Trash HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6396/index.m3u8
+#EXTINF:-1 group-title="Кино",Tviksel Военное кино HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18072/index.m3u8
+#EXTINF:-1 group-title="Кино",Tviksel Кино 2 HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18070/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Adventure
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10000/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Anime
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10001/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Art house
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11119/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Cartoon
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10002/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Classic
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10054/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Comedy
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10003/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Comedy Woman
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18101/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Comics
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13092/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Detective
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11120/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Disney Movie
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15010/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Family
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10004/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Fantastic
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11121/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Fantasy
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10005/index.m3u8
+#EXTINF:-1 group-title="Кино",VF HBO
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19428/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Marvel
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10081/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Melodrama
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10006/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Mystic
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10007/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Netflix
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19427/index.m3u8
+#EXTINF:-1 group-title="Кино",VF New Year
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15522/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Premiere
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10052/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Series
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13085/index.m3u8
+#EXTINF:-1 group-title="Кино",VF TOP Series
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11116/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Thriller
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13089/index.m3u8
+#EXTINF:-1 group-title="Кино",VF VHS Cartoon
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11118/index.m3u8
+#EXTINF:-1 group-title="Кино",VF VHS MIX
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10009/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Ёлки
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14222/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Американская история ужасов
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17005/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Без цензуры
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17017/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Беларусьфильм
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18125/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Бесстыжие
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10075/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Боевик
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10087/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Вестерн
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31553/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Владимир Высоцкий
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10066/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Военные
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10082/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Воронины
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13083/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Гарри Поттер
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14230/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Городок
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18097/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Два с половиной человека
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10062/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Джеки Чан
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17009/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Доктор Хаус
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17016/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Друзья
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17006/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Игра престолов
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18119/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Индия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13090/index.m3u8
+#EXTINF:-1 group-title="Кино",VF История
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13091/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Карточный домик
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14221/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Катастрофы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10080/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Киностудия им. Горького
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18122/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Классика
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10053/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Клиника
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13094/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Комедия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10055/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Криминал
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13093/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Ленфильм
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18121/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Леонид Гайдай
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17004/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Луи де Фюнес
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17000/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Малыш
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11123/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Мосфильм
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10084/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Мультфильмы СССР
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10086/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Мыльные оперы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13088/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Наша победа
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10083/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Новогодний
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17035/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Одесская киностудия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18120/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Однажды в России
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19286/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Оскар
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/11122/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Премьера
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10051/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Привет из 90х
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17011/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Реальные пацаны
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17015/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Рижская киностудия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18123/index.m3u8
+#EXTINF:-1 group-title="Кино",VF С новым годом!
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15524/index.m3u8
+#EXTINF:-1 group-title="Кино",VF СашаТаня
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17008/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Сваты
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13080/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Свердловская киностудия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18124/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Секс в большом городе
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14224/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Сериал
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13087/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Сериалы Турции
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9123/index.m3u8
+#EXTINF:-1 group-title="Кино",VF След
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13086/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Солдаты
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13081/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Счастливы Вместе
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9242/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Тайны следствия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13082/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Теория большого взрыва
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15009/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Ужасы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10008/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Ужасы VHS
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10010/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Универ
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13084/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Универ новая общага
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17013/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Фильмы СССР
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10085/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Чернобыль
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17001/index.m3u8
+#EXTINF:-1 group-title="Кино",VF Эльдар Рязанов
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17012/index.m3u8
+#EXTINF:-1 group-title="Кино",VHS-ка HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5006/index.m3u8
+#EXTINF:-1 group-title="Кино",VHS-ка Сериал HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31931/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS 60fps
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31637/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Movie Hits
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31644/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Premiere
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31641/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Киноплёнка
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31638/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Киносерия
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31640/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Магнитофон
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31645/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS СССР
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31643/index.m3u8
+#EXTINF:-1 group-title="Кино",VeleS Страшное
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31642/index.m3u8
+#EXTINF:-1 group-title="Кино",Viasat Kino Comedy HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31764/index.m3u8
+#EXTINF:-1 group-title="Кино",Viasat Kino HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31765/index.m3u8
+#EXTINF:-1 group-title="Кино",Viasat Kino Megahit HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14141/index.m3u8
+#EXTINF:-1 group-title="Кино",Viasat Nature CEE HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31766/index.m3u8
+#EXTINF:-1 group-title="Кино",Viasat Serial HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17056/index.m3u8
+#EXTINF:-1 group-title="Кино",Viju TV1000 Новелла HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2002/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Adrenaline
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15105/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Adventure
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15510/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Best
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14236/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Best 60fps
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20165/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Disney
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20164/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Grand
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14171/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Music Hits
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14179/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Netflix
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20163/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV New Кино
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14177/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Oblivion
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15509/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Thriller
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15168/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV VHS
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14172/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Забавное
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14234/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Ковбойское
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14235/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Мелодрама
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19434/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Советские Фильмы
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14175/index.m3u8
+#EXTINF:-1 group-title="Кино",Yosso TV Трагичное
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14219/index.m3u8
+#EXTINF:-1 group-title="Кино",Госфильмофонд. Машина времени HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31929/index.m3u8
+#EXTINF:-1 group-title="Кино",КиноКульт HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31914/index.m3u8
+#EXTINF:-1 group-title="Кино",КиноСезон HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31889/index.m3u8
+#EXTINF:-1 group-title="Кино",Кинокомедия HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7248/index.m3u8
+#EXTINF:-1 group-title="Кино",Киномикс HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7249/index.m3u8
+#EXTINF:-1 group-title="Кино",Киносвидание HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7245/index.m3u8
+#EXTINF:-1 group-title="Кино",Киносемья HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7244/index.m3u8
+#EXTINF:-1 group-title="Кино",Кинохит HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7250/index.m3u8
+#EXTINF:-1 group-title="Кино",Лавстори HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2034/index.m3u8
+#EXTINF:-1 group-title="Кино",Мосфильм. Золотая коллекция HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7347/index.m3u8
+#EXTINF:-1 group-title="Кино",Премиальное HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7222/index.m3u8
+#EXTINF:-1 group-title="Кино",Советская киноклассика HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2146/index.m3u8
+#EXTINF:-1 group-title="Кино",Страшное HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7247/index.m3u8
+#EXTINF:-1 group-title="Кино",Твое ТВ HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14229/index.m3u8
+#EXTINF:-1 group-title="Кино",Феникс плюс Кино HD
+#EXTGRP:Кино
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16154/index.m3u8
+#EXTINF:-1 group-title="Музыка",1HD Music Television HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17038/index.m3u8
+#EXTINF:-1 group-title="Музыка",AIVA TV HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2156/index.m3u8
+#EXTINF:-1 group-title="Музыка",BOX RU.RAP HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20171/index.m3u8
+#EXTINF:-1 group-title="Музыка",Bridge Rock
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17043/index.m3u8
+#EXTINF:-1 group-title="Музыка",Bridge Rock HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19225/index.m3u8
+#EXTINF:-1 group-title="Музыка",Bridge Фрэш HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/9053/index.m3u8
+#EXTINF:-1 group-title="Музыка",Classic Music HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14009/index.m3u8
+#EXTINF:-1 group-title="Музыка",Europa Plus TV HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20029/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Concerts HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18091/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Dance HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18087/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Hits HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18084/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Lyrics HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18093/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Retro HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18092/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Rock Covers HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18089/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Rock HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18088/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Russian Rap HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18090/index.m3u8
+#EXTINF:-1 group-title="Музыка",FRESH Sad Music HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18086/index.m3u8
+#EXTINF:-1 group-title="Музыка",MM Relax HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/13030/index.m3u8
+#EXTINF:-1 group-title="Музыка",Mezzo Live HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/208/index.m3u8
+#EXTINF:-1 group-title="Музыка",NRJ Hits HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19199/index.m3u8
+#EXTINF:-1 group-title="Музыка",Sochi Music HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16070/index.m3u8
+#EXTINF:-1 group-title="Музыка",Trace Urban HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15107/index.m3u8
+#EXTINF:-1 group-title="Музыка",Tviksel Балет Опера HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18083/index.m3u8
+#EXTINF:-1 group-title="Музыка",Tviksel Музыка 1 HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18077/index.m3u8
+#EXTINF:-1 group-title="Музыка",VB Русская Попса 80х-90х
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14155/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Britney Spears
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14005/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Metal
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17033/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Michael Jackson
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31554/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Music
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15516/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Rap
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17034/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Rock
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15517/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Караоке
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15518/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Легенды Ретро ФМ
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10067/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Музсоюз
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15521/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Музыка
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15512/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Музыкальный Новый год!
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16140/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Русский рок
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17037/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Хит-парад
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17036/index.m3u8
+#EXTINF:-1 group-title="Музыка",VF Шансон
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15519/index.m3u8
+#EXTINF:-1 group-title="Музыка",VeleS Dj Set
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31639/index.m3u8
+#EXTINF:-1 group-title="Музыка",Viasat Kino Action HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31763/index.m3u8
+#EXTINF:-1 group-title="Музыка",Z!Music HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14138/index.m3u8
+#EXTINF:-1 group-title="Музыка",Z!Rock HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14139/index.m3u8
+#EXTINF:-1 group-title="Музыка",МузСоюз HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2137/index.m3u8
+#EXTINF:-1 group-title="Музыка",Радио LoveIsRadio.by HD
+#EXTGRP:Музыка
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16015/index.m3u8
+#EXTINF:-1 group-title="Новости",360 Новости HD
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18038/index.m3u8
+#EXTINF:-1 group-title="Новости",CGTN
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/830/index.m3u8
+#EXTINF:-1 group-title="Новости",Известия HD
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18039/index.m3u8
+#EXTINF:-1 group-title="Новости",Крик ТВ HD
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15012/index.m3u8
+#EXTINF:-1 group-title="Новости",РБК HD
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16075/index.m3u8
+#EXTINF:-1 group-title="Новости",РБК HD 50
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10029/index.m3u8
+#EXTINF:-1 group-title="Новости",Санкт-Петербург
+#EXTGRP:Новости
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/715/index.m3u8
+#EXTINF:-1 group-title="Познавательные",BOX AutoTrend HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31654/index.m3u8
+#EXTINF:-1 group-title="Познавательные",BOX Gurman HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31653/index.m3u8
+#EXTINF:-1 group-title="Познавательные",BOX Travel Premiere HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31652/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Big Planet HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20036/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Bridge Этно HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31922/index.m3u8
+#EXTINF:-1 group-title="Познавательные",CineMan Фитнес
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31629/index.m3u8
+#EXTINF:-1 group-title="Познавательные",English Class HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15190/index.m3u8
+#EXTINF:-1 group-title="Познавательные",History 2 HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/1052/index.m3u8
+#EXTINF:-1 group-title="Познавательные",History FHD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/837/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Liberty BBC FHD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15108/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Liberty Авто Гир FHD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15109/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Experiment HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19412/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Translation HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18196/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Макромир HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18194/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Мегамир HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18195/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Микромир HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18193/index.m3u8
+#EXTINF:-1 group-title="Познавательные",MM Открытия HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19415/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Museum TV HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20032/index.m3u8
+#EXTINF:-1 group-title="Познавательные",The Explorers HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16035/index.m3u8
+#EXTINF:-1 group-title="Познавательные",TravelXP 4K
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20031/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Авто
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15511/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Домашний повар
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15514/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Охота
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15513/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Путешествия
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15515/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Рыбалка
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16138/index.m3u8
+#EXTINF:-1 group-title="Познавательные",VF Стройка
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16139/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Viju Nature HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15225/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Yosso TV Food
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31616/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Yosso TV Nature
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31618/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Yosso TV Science
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31617/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Yosso TV Travel
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31619/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Z!Travel HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/17063/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Авто 24 HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20033/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Вкус HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31921/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Доктор HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20013/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Загородная Жизнь HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7348/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Конгресс ТВ HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2176/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Мир Вокруг HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15219/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Моя Стихия HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7349/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Мужской HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20035/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Наука HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2155/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Научпоп HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31924/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Наше Наследие HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31934/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Неизвестная Россия HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16087/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Первый Российский Национальный Канал HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31923/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Сибирь 24 HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16000/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Точка Отрыва HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20034/index.m3u8
+#EXTINF:-1 group-title="Познавательные",Югра Тревел HD
+#EXTGRP:Познавательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/5038/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",2x2 HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31913/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",BOX Lo-Fi HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31545/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Epic HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2054/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Fashion TV UHD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/4005/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",FashionBox HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20038/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",HOT Bidur FHD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31938/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Luxury HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2072/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",MyZen TV HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20011/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Баня
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18200/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF КВН
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14170/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Каламбур
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31557/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Концерты
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14159/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Кухня
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18199/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Маски Шоу
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31556/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Орел и решка
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31476/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",VF Уральские пельмени
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/18198/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Ключ HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20041/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Кухня HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15132/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",НТВ Стиль HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20037/index.m3u8
+#EXTINF:-1 group-title="Развлекательные",Плюс/Минус 16 HD
+#EXTGRP:Развлекательные
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31916/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX Be On Edge HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19424/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX Be On Edge Live 1 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19422/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX Be On Edge Live 2 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19423/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31650/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 1 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20166/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 2 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20167/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 3 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20168/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 4 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20169/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 5 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20170/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 6 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31648/index.m3u8
+#EXTINF:-1 group-title="Спорт",BOX SportCast Live 7 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31649/index.m3u8
+#EXTINF:-1 group-title="Спорт",Betking Live 1
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31679/index.m3u8
+#EXTINF:-1 group-title="Спорт",Betking Live 2
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31680/index.m3u8
+#EXTINF:-1 group-title="Спорт",CineMan Premium
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20112/index.m3u8
+#EXTINF:-1 group-title="Спорт",Extreme Sports HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20028/index.m3u8
+#EXTINF:-1 group-title="Спорт",FightBox HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20027/index.m3u8
+#EXTINF:-1 group-title="Спорт",KHL Prime HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19396/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 1
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20094/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 2
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20095/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 3
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20096/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 4
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20097/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 5
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20098/index.m3u8
+#EXTINF:-1 group-title="Спорт",Pimple TV 6
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31681/index.m3u8
+#EXTINF:-1 group-title="Спорт",Setanta Baltic 1 HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20081/index.m3u8
+#EXTINF:-1 group-title="Спорт",Setanta Moldova FHD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20074/index.m3u8
+#EXTINF:-1 group-title="Спорт",Setanta Sports 1 HD orig
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6541/index.m3u8
+#EXTINF:-1 group-title="Спорт",Setanta Sports 2 HD orig
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6542/index.m3u8
+#EXTINF:-1 group-title="Спорт",StrahTV MMA TIME HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31710/index.m3u8
+#EXTINF:-1 group-title="Спорт",ViP Sport 2
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20103/index.m3u8
+#EXTINF:-1 group-title="Спорт",ViP Sport 3
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20104/index.m3u8
+#EXTINF:-1 group-title="Спорт",ViP Sport 4
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20105/index.m3u8
+#EXTINF:-1 group-title="Спорт",Волейбол HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31920/index.m3u8
+#EXTINF:-1 group-title="Спорт",Живи Активно HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/15143/index.m3u8
+#EXTINF:-1 group-title="Спорт",Матч! Боец HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19221/index.m3u8
+#EXTINF:-1 group-title="Спорт",Матч! Страна HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19219/index.m3u8
+#EXTINF:-1 group-title="Спорт",Мир Баскетбола HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/20004/index.m3u8
+#EXTINF:-1 group-title="Спорт",Мяч HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10058/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 1
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14186/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 2
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14187/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 3
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14188/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 4
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14189/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 5
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14190/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Event 6
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14191/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Герои
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/31536/index.m3u8
+#EXTINF:-1 group-title="Спорт",Окко Футбол HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/6554/index.m3u8
+#EXTINF:-1 group-title="Спорт",Старт FHD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/2154/index.m3u8
+#EXTINF:-1 group-title="Спорт",Старт Триумф HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/16034/index.m3u8
+#EXTINF:-1 group-title="Спорт",ТВ Спорт HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10057/index.m3u8
+#EXTINF:-1 group-title="Спорт",Танцуй!
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/14023/index.m3u8
+#EXTINF:-1 group-title="Спорт",Триколор Спорт 1
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7360/index.m3u8
+#EXTINF:-1 group-title="Спорт",Триколор Спорт 2
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7361/index.m3u8
+#EXTINF:-1 group-title="Спорт",Триколор Спорт 3
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7362/index.m3u8
+#EXTINF:-1 group-title="Спорт",Триколор Спорт 4
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7363/index.m3u8
+#EXTINF:-1 group-title="Спорт",Триколор Спорт 5
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/7364/index.m3u8
+#EXTINF:-1 group-title="Спорт",Удар HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19246/index.m3u8
+#EXTINF:-1 group-title="Спорт",Футбол HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/19244/index.m3u8
+#EXTINF:-1 group-title="Спорт",Хоккей ТВ HD
+#EXTGRP:Спорт
+http://c3921155.edmonst.net/iptv/65C7UBRRW8GHQVYPH2MQT3SA/10039/index.m3u8
