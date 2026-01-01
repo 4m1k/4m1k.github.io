@@ -416,7 +416,7 @@
         window.__adv_full_hooked = true;
 
         Lampa.Listener.follow('full', e => {
-            if (e.type !== 'complete') return; // исправлено
+            if (e.type !== 'complite') return; // возвращено 'complite'
             const data = e.data && (e.data.movie || e.data);
             if (data) Logo.applyToFull(e.object.activity, data);
         });
