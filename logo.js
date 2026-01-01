@@ -1,1 +1,57 @@
-!function(){"use strict";Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_glav",type:"select",values:{1:"Скрыть",0:"Отображать"},default:"0"},field:{name:"Логотипы вместо названий",description:"Отображает логотипы фильмов вместо текста"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_lang",type:"select",values:{"":"Как в Lampa",ru:"Русский",en:"English",uk:"Українська",be:"Беларуская",kz:"Қазақша",pt:"Português",es:"Español",fr:"Français",de:"Deutsch",it:"Italiano"},default:""},field:{name:"Язык логотипа",description:"Приоритетный язык для поиска логотипа"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_size",type:"select",values:{w300:"w300",w500:"w500",w780:"w780",original:"Оригинал"},default:"original"},field:{name:"Размер логотипа",description:"Разрешение загружаемого изображения"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_animation_type",type:"select",values:{js:"JavaScript",css:"CSS"},default:"css"},field:{name:"Тип анимации логотипов",description:"Способ анимации логотипов"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_hide_year",type:"trigger",default:!0},field:{name:"Скрывать год и страну",description:"Скрывать информацию над логотипом"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_use_text_height",type:"trigger",default:!1},field:{name:"Логотип по высоте текста",description:"Размер логотипа равен высоте текста"}}),Lampa.SettingsApi.addParam({component:"interface",param:{name:"logo_clear_cache",type:"button"},field:{name:"Сбросить кеш логотипов",description:"Нажмите для очистки кеша изображений"},onChange:function(){Lampa.Select.show({title:"Сбросить кеш?",items:[{title:"Да",confirm:!0},{title:"Нет"}],onSelect:function(e){if(e.confirm){for(var t=[],n=0;n<localStorage.length;n++){var a=localStorage.key(n);-1!==a.indexOf("logo_cache_width_based_v1_")&&t.push(a)}t.forEach((function(e){localStorage.removeItem(e)})),window.location.reload()}else Lampa.Controller.toggle("settings_component")},onBack:function(){Lampa.Controller.toggle("settings_component")}})}}),window.logoplugin||function(){var e=300,t=400,n=400,a=Lampa.Storage.get("logo_hide_year",!0)?0:.3;function i(e,t,n,a,i){var o=null;requestAnimationFrame((function s(l){o||(o=l);var r=l-o,g=Math.min(r/a,1),c=1-Math.pow(1-g,3);e.style.opacity=t+(n-t)*c,r<a?requestAnimationFrame(s):i&&i()}))}function o(e,t,n,i){t&&(t.style.height="",t.style.overflow="",t.style.display="",t.style.transition="none",t.style.boxSizing=""),e.style.marginTop="0",e.style.marginLeft="0",e.style.paddingTop=a+"em";var o=.2;window.innerWidth<768&&n&&(o=.5),e.style.paddingBottom=o+"em",Lampa.Storage.get("logo_use_text_height",!1)&&i?(e.style.height=i+"px",e.style.width="auto",e.style.maxWidth="100%",e.style.maxHeight="none"):window.innerWidth<768?(e.style.width="100%",e.style.height="auto",e.style.maxWidth="100%",e.style.maxHeight="none"):(e.style.width="7em",e.style.height="auto",e.style.maxHeight="none",e.style.maxWidth="100%"),e.style.boxSizing="border-box",e.style.display="block",e.style.objectFit="contain",e.style.objectPosition="left bottom",e.style.opacity="1",e.style.transition="none"}window.logoplugin=!0,Lampa.Listener.follow("full",(function(a){if("complite"==a.type&&"1"!=Lampa.Storage.get("logo_glav")){var s=a.data.movie,l=s.name?"tv":"movie",r=a.object.activity.render().find(".full-start-new__title"),g=a.object.activity.render().find(".full-start-new__head"),c=a.object.activity.render().find(".full-start-new__details"),p=a.object.activity.render().find(".full-start-new__tagline"),m=p.length>0&&""!==p.text().trim(),d=r[0],f=Lampa.Storage.get("logo_lang",""),u=f||Lampa.Storage.get("language"),y=Lampa.Storage.get("logo_size","original"),h=function(e,t,n){return"logo_cache_width_based_v1_"+e+"_"+t+"_"+n}(l,s.id,u);function L(t,a){if(g.length&&c.length&&!(c.find(".logo-moved-head").length>0)&&Lampa.Storage.get("logo_hide_year",!0)){var o=g.html();if(o){var s=$('<span class="logo-moved-head">'+o+"</span>"),l=$('<span class="full-start-new__split logo-moved-separator">●</span>');t?(s.css({opacity:0,marginLeft:"0.6em",transition:"none"}),l.css({opacity:0,transition:"none"}),c.children().length>0&&c.append(l),c.append(s),"js"===a?(g.css("transition","none"),i(g[0],1,0,e,(function(){i(s[0],0,1,n),i(l[0],0,1,n)}))):(g.css({transition:"opacity 0.3s ease",opacity:"0"}),setTimeout((function(){s.css({transition:"opacity 0.4s ease",opacity:"1"}),l.css({transition:"opacity 0.4s ease",opacity:"1"})}),e))):(g.css("opacity","0"),c.children().length>0&&c.append(l),c.append(s))}}}function b(a,s){s&&Lampa.Storage.set(h,a);var l=new Image;l.src=a;var g=0;d&&(g=d.getBoundingClientRect().height),o(l,null,m,g),l.style.opacity="0",l.onload=function(){setTimeout((function(){d&&(g=d.getBoundingClientRect().height);var a=Lampa.Storage.get("logo_animation_type","css");L(!0,a),"js"===a?(r.css({transition:"none"}),i(d,1,0,e,(function(){r.empty(),r.append(l),r.css({opacity:"1",transition:"none"});var e,a,s,c,p,f,u=d.getBoundingClientRect().height;d.style.height=g+"px",d.style.display="block",d.style.overflow="hidden",d.style.boxSizing="border-box",d.offsetHeight,d.style.transition="none",e=d,a=g,s=u,c=t,p=function(){setTimeout((function(){o(l,d,m,g)}),450)},f=null,requestAnimationFrame((function t(n){f||(f=n);var i=n-f,o=Math.min(i/c,1),l=1-Math.pow(1-o,3);e.style.height=a+(s-a)*l+"px",i<c?requestAnimationFrame(t):p&&p()})),setTimeout((function(){l.style.transition="none",i(l,0,1,n)}),Math.max(0,300))}))):(r.css({transition:"opacity 0.3s ease",opacity:"0"}),setTimeout((function(){r.empty(),r.append(l),r.css({opacity:"1",transition:"none"});var e=d.getBoundingClientRect().height;d.style.height=g+"px",d.style.display="block",d.style.overflow="hidden",d.style.boxSizing="border-box",d.offsetHeight,d.style.transition="height 0.4s cubic-bezier(0.4, 0, 0.2, 1)",requestAnimationFrame((function(){d.style.height=e+"px",setTimeout((function(){l.style.transition="opacity 0.4s ease",l.style.opacity="1"}),Math.max(0,300)),setTimeout((function(){o(l,d,m,g)}),850)}))}),e))}),200)},l.onerror=function(){Lampa.Storage.set(h,"none"),r.css({opacity:"1",transition:"none"})}}var _=Lampa.Storage.get(h);if(_&&"none"!==_){var v=new Image;if(v.src=_,v.complete){var w=0;return d&&(w=d.getBoundingClientRect().height),o(v,null,m,w),r.empty().append(v),r.css({opacity:"1",transition:"none"}),void L(!1)}return void b(_,!1)}if(r.css({opacity:"1",transition:"none"}),""!=s.id){w=0;requestAnimationFrame((function(){d&&(w=d.getBoundingClientRect().height)}));var S=Lampa.TMDB.api(l+"/"+s.id+"/images?api_key="+Lampa.TMDB.key()+"&include_image_language="+u+",en,null");$.get(S,(function(e){var t=null;if(e.logos&&e.logos.length>0){for(var n=0;n<e.logos.length;n++)if(e.logos[n].iso_639_1==u){t=e.logos[n].file_path;break}if(!t)for(var a=0;a<e.logos.length;a++)if("en"==e.logos[a].iso_639_1){t=e.logos[a].file_path;break}t||(t=e.logos[0].file_path)}t?b(Lampa.TMDB.image("/t/p/"+y+t.replace(".svg",".png")),!0):Lampa.Storage.set(h,"none")})).fail((function(){}))}}}))}()}();
+(function () {
+    'use strict';
+    // Функция для запуска плагина
+    function startPlugin() {
+        // Устанавливаем флаг, что плагин активирован
+        window.logoplugin = true;
+        // Подписываемся на событие 'full' в Lampa.Listener
+        Lampa.Listener.follow('full', function (e) {
+            // Проверяем, что событие имеет тип 'complite' и параметр logo_glav не равен '1'
+            if (e.type === 'complite' && Lampa.Storage.get('logo_glav') !== '1') {
+                var data = e.data.movie;
+                var type = data.name ? 'tv' : 'movie';
+                // Проверяем, что ID фильма не пустое
+                if (data.id !== '') {
+                    // Формируем URL для запроса к API TMDB
+                    var url = Lampa.TMDB.api(type + '/' + data.id + '/images?api_key=' + Lampa.TMDB.key() + '&language=' + Lampa.Storage.get('language'));
+                    // Выполняем GET-запрос к API
+                    $.get(url, function (data) {
+                        // Проверяем наличие логотипов в ответе
+                        if (data.logos && data.logos[0]) {
+                            var logo = data.logos[0].file_path;
+                            // Если логотип существует, заменяем текстовое название на изображение
+                            if (logo !== '') {
+                                var renderElement = e.object.activity.render();
+                                renderElement.find('.full-start-new__title').html('<img style="margin-top:5px; max-height:125px;" src="' + Lampa.TMDB.image('/t/p/w500' + logo.replace('.svg', '.png')) + '"/>');
+                                
+                                // Удаляем элемент с теглайном для лучшей подгонки логотипа
+                                renderElement.find('.full-start-new__tagline').remove();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+    // Добавляем параметр в настройки Lampa
+    Lampa.SettingsApi.addParam({
+        component: 'interface',
+        param: {
+            name: 'logo_glav',
+            type: 'select',
+            values: {
+                '1': 'Скрыть',
+                '0': 'Отображать'
+            },
+            default: '0'
+        },
+        field: {
+            name: 'Логотипы вместо названий',
+            description: 'Отображает логотипы фильмов вместо текста'
+        }
+    });
+    // Запускаем плагин, если он еще не активирован
+    if (!window.logoplugin) {
+        startPlugin();
+    }
+})();
