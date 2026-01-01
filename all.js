@@ -30,7 +30,7 @@
         'https://4m1k.github.io/source.js',
         'https://4m1k.github.io/notrailer.js',
         'https://4m1k.github.io/qlty.js',
-        'https://4m1k.github.io/interface_mod',
+        'https://4m1k.github.io/interface_mod.js',
         'https://4m1k.github.io/lampa_rate.js'
         
     ];
@@ -92,6 +92,7 @@
         }
     });
 })();
+
 
 
 
