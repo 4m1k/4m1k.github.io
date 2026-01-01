@@ -6,8 +6,8 @@
         version: '1.0.3',
         description: 'Проксирование постеров и API сайта TMDB с отключением DMCA-фич и обходом блокировок'
     };
-    plugin.path_image = Lampa.Utils.protocol() + 'tmdbimage.abmsx.tech/';  //tmdbimg.bylampa.online/  tmdbimage.abmsx.tech/
-    plugin.path_api = Lampa.Utils.protocol() + 'tmdb.abmsx.tech/3/'; //tmdbapi.bylampa.online/3/   tmdb.abmsx.tech/3/
+    plugin.path_image = Lampa.Utils.protocol() + 'tmdbimage.abmsx.tech/';  //  tmdbimg.bylampa.online/  tmdbimage.abmsx.tech/
+    plugin.path_api = Lampa.Utils.protocol() + 'tmdb.abmsx.tech/3/'; //  tmdbapi.bylampa.online/3/   tmdb.abmsx.tech/3/
 
     Lampa.TMDB.image = function (url) {
         var base = Lampa.Utils.protocol() + 'image.tmdb.org/' + url;
