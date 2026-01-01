@@ -19,8 +19,6 @@
         return Lampa.Storage.field('proxy_tmdb') ? plugin.path_api + url : base;
     };
 
-    // Добавленная часть
-    // for Lampa.
     window.lampa_settings = window.lampa_settings || {};
     window.lampa_settings.dcma = false;
     window.lampa_settings.disable_features = window.lampa_settings.disable_features || {};
