@@ -30,14 +30,13 @@
                         var logo_path = null;
 
                         if (response.logos && response.logos.length > 0) {
-                            // Сначала ищем логотип на языке приложения
+                            // Приоритет: язык приложения → английский → любой
                             for (var i = 0; i < response.logos.length; i++) {
                                 if (response.logos[i].iso_639_1 === lang) {
                                     logo_path = response.logos[i].file_path;
                                     break;
                                 }
                             }
-                            // Если не нашли — английский
                             if (!logo_path) {
                                 for (var i = 0; i < response.logos.length; i++) {
                                     if (response.logos[i].iso_639_1 === 'en') {
@@ -46,7 +45,6 @@
                                     }
                                 }
                             }
-                            // Если и его нет — берём первый доступный
                             if (!logo_path) {
                                 logo_path = response.logos[0].file_path;
                             }
@@ -56,23 +54,20 @@
                         if (logo_path) {
                             var renderElement = e.object.activity.render();
 
-                            // Формируем правильный путь в зависимости от выбранного размера
-                            var logo_url;
-                            if (size === 'original') {
-                                logo_url = Lampa.TMDB.image('/t/p/original' + logo_path.replace('.svg', '.png'));
-                            } else {
-                                logo_url = Lampa.TMDB.image('/t/p/' + size + logo_path.replace('.svg', '.png'));
-                            }
+                            // Формируем URL логотипа с выбранным размером
+                            var logo_url = size === 'original'
+                                ? Lampa.TMDB.image('/t/p/original' + logo_path.replace('.svg', '.png'))
+                                : Lampa.TMDB.image('/t/p/' + size + logo_path.replace('.svg', '.png'));
 
-                            // Заменяем название на логотип
+                            // Заменяем название на логотип (без центрирования)
                             renderElement.find('.full-start-new__title').html(
                                 '<img style="margin-top:5px; max-height:125px;" src="' + logo_url + '"/>'
                             );
 
-                            // Удаляем теглайн
+                            // Удаляем теглайн (как в вашем оригинальном коде)
                             renderElement.find('.full-start-new__tagline').remove();
 
-                            // Перенос года и страны под логотип (опционально)
+                            // Перенос года и страны под логотип (если включена опция)
                             if (Lampa.Storage.get('logo_hide_year', true)) {
                                 var head = renderElement.find('.full-start-new__head');
                                 var details = renderElement.find('.full-start-new__details');
@@ -90,18 +85,9 @@
                                 }
                             }
                         }
+                    }).fail(function () {
+                        // Если запрос неудачный — ничего не меняем
                     });
-                }
-            }
-        });
-
-        // Добавляем listener на изменение настроек для мгновенного применения
-        Lampa.Storage.listener.follow('change', function (event) {
-            if (['logo_glav', 'logo_size', 'logo_hide_year'].includes(event.param)) {
-                var activity = Lampa.Activity.active();
-                if (activity && activity.component === 'full') {
-                    // Перезагружаем текущую карточку, чтобы применить новые настройки
-                    activity.reload();
                 }
             }
         });
@@ -145,7 +131,7 @@
         },
         field: {
             name: 'Скрывать год и страну над логотипом',
-            description: 'Переносит год выпуска и страну под логотип (иначе остаётся сверху)'
+            description: 'Переносит год выпуска и страну под логотип (выключите — останется сверху)'
         }
     });
 
