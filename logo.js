@@ -9,14 +9,8 @@
 
     Lampa.SettingsApi.addParam({
         component: "interface",
-        param: { name: "logo_lang", type: "select", values: { "": "Как в Lampa", ru: "Русский", en: "English", uk: "Українська", be: "Беларуская", kz: "Қазақша", pt: "Português", es: "Español", fr: "Français", de: "Deutsch", it: "Italiano" }, default: "" },
-        field: { name: "Язык логотипа", description: "Приоритетный язык для поиска логотипа" }
-    });
-
-    Lampa.SettingsApi.addParam({
-        component: "interface",
         param: { name: "logo_size", type: "select", values: { w300: "w300", w500: "w500", w780: "w780", original: "Оригинал" }, default: "w500" },
-        field: { name: "Размер логотипа", description: "Разрешение загружаемого изображения (по умолчанию w500)" }
+        field: { name: "Размер логотипа", description: "Разрешение загружаемого изображения" }
     });
 
     Lampa.SettingsApi.addParam({
@@ -28,7 +22,6 @@
     if (window.logoplugin) return;
     window.logoplugin = true;
 
-    // Мгновенное применение изменений настроек (особенно включения/выключения логотипов)
     Lampa.Storage.listener.follow('change', function (e) {
         if (['logo_glav', 'logo_lang', 'logo_size', 'logo_hide_year'].includes(e.param)) {
             var activity = Lampa.Activity.active();
@@ -86,13 +79,10 @@
                 if (logo_path) {
                     var logo_url = Lampa.TMDB.image("/t/p/" + (size === "original" ? "original" : size) + logo_path.replace(".svg", ".png"));
 
-                    // Замена названия на логотип (без центрирования)
                     title.html('<img style="margin-top:5px; max-height:125px;" src="' + logo_url + '"/>');
 
-                    // Удаление теглайна
                     tagline.remove();
 
-                    // Перенос года и страны под логотип (если включено)
                     if (Lampa.Storage.get("logo_hide_year", true)) {
                         if (head.length && details.length && details.find(".logo-moved-head").length === 0) {
                             var head_html = head.html().trim();
