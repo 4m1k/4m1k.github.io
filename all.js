@@ -28,7 +28,10 @@
         'https://4m1k.github.io/jackett.js',
         'https://4m1k.github.io/seaseps.js',
         'https://4m1k.github.io/source.js',
-        'http://llpp.in/ur/notrailer.js',
+        'https://4m1k.github.io/notrailer.js',
+        'https://4m1k.github.io/qlty.js',
+        'https://4m1k.github.io/interface_mod',
+        'https://4m1k.github.io/lampa_rate.js'
         
     ];
 
@@ -89,5 +92,6 @@
         }
     });
 })();
+
 
 
