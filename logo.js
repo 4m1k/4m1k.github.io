@@ -6,34 +6,38 @@
         // Устанавливаем флаг, что плагин активирован
         window.logoplugin = true;
 
-        // Подписываемся на событие 'full'
+        // Подписываемся на событие 'full' в Lampa.Listener
         Lampa.Listener.follow('full', function (e) {
-            // Проверяем, что событие complite и логотипы включены
+            // Проверяем, что событие имеет тип 'complite' и логотипы включены
             if (e.type === 'complite' && Lampa.Storage.get('logo_glav', '0') !== '1') {
                 var data = e.data.movie;
                 var type = data.name ? 'tv' : 'movie';
 
+                // Проверяем, что ID не пустое
                 if (data.id !== '') {
                     var lang = Lampa.Storage.get('language');
                     var size = Lampa.Storage.get('logo_size', 'w500'); // По умолчанию w500
 
+                    // Формируем URL с приоритетом языка логотипа
                     var url = Lampa.TMDB.api(
                         type + '/' + data.id + '/images?api_key=' + Lampa.TMDB.key() +
                         '&language=' + lang +
                         '&include_image_language=' + lang + ',en,null'
                     );
 
+                    // Выполняем GET-запрос к API
                     $.get(url, function (response) {
                         var logo_path = null;
 
                         if (response.logos && response.logos.length > 0) {
-                            // Приоритет: язык приложения → en → первый
+                            // Сначала ищем логотип на языке приложения
                             for (var i = 0; i < response.logos.length; i++) {
                                 if (response.logos[i].iso_639_1 === lang) {
                                     logo_path = response.logos[i].file_path;
                                     break;
                                 }
                             }
+                            // Если не нашли — английский
                             if (!logo_path) {
                                 for (var i = 0; i < response.logos.length; i++) {
                                     if (response.logos[i].iso_639_1 === 'en') {
@@ -42,20 +46,25 @@
                                     }
                                 }
                             }
+                            // Если и его нет — берём первый доступный
                             if (!logo_path) {
                                 logo_path = response.logos[0].file_path;
                             }
                         }
 
+                        // Если логотип найден — заменяем название
                         if (logo_path) {
                             var renderElement = e.object.activity.render();
 
-                            // Формируем URL с учётом размера
-                            var logo_url = size === 'original'
-                                ? Lampa.TMDB.image('/t/p/original' + logo_path.replace('.svg', '.png'))
-                                : Lampa.TMDB.image('/t/p/' + size + logo_path.replace('.svg', '.png'));
+                            // Формируем правильный путь в зависимости от выбранного размера
+                            var logo_url;
+                            if (size === 'original') {
+                                logo_url = Lampa.TMDB.image('/t/p/original' + logo_path.replace('.svg', '.png'));
+                            } else {
+                                logo_url = Lampa.TMDB.image('/t/p/' + size + logo_path.replace('.svg', '.png'));
+                            }
 
-                            // Заменяем название на логотип (без центрирования)
+                            // Заменяем название на логотип
                             renderElement.find('.full-start-new__title').html(
                                 '<img style="margin-top:5px; max-height:125px;" src="' + logo_url + '"/>'
                             );
@@ -63,7 +72,7 @@
                             // Удаляем теглайн
                             renderElement.find('.full-start-new__tagline').remove();
 
-                            // Перенос года и страны под логотип (если включено)
+                            // Перенос года и страны под логотип (опционально)
                             if (Lampa.Storage.get('logo_hide_year', true)) {
                                 var head = renderElement.find('.full-start-new__head');
                                 var details = renderElement.find('.full-start-new__details');
@@ -86,18 +95,19 @@
             }
         });
 
-        // Мгновенное применение изменений настроек: перезагружаем текущую карточку фильма
-        ['logo_glav', 'logo_size', 'logo_hide_year'].forEach(function(param) {
-            Lampa.Storage.listener.follow(param, function() {
-                var active = Lampa.Activity.active();
-                if (active && active.name === 'full') {  // или active.component === 'full_start' — если не сработает, уберите проверку
-                    active.reload();
+        // Добавляем listener на изменение настроек для мгновенного применения
+        Lampa.Storage.listener.follow('change', function (event) {
+            if (['logo_glav', 'logo_size', 'logo_hide_year'].includes(event.param)) {
+                var activity = Lampa.Activity.active();
+                if (activity && activity.component === 'full') {
+                    // Перезагружаем текущую карточку, чтобы применить новые настройки
+                    activity.reload();
                 }
-            });
+            }
         });
     }
 
-    // Параметры настроек
+    // Добавляем параметры в настройки Lampa
     Lampa.SettingsApi.addParam({
         component: 'interface',
         param: {
@@ -122,7 +132,7 @@
         },
         field: {
             name: 'Размер логотипа',
-            description: 'Разрешение изображения'
+            description: 'Разрешение загружаемого изображения'
         }
     });
 
@@ -135,11 +145,11 @@
         },
         field: {
             name: 'Скрывать год и страну над логотипом',
-            description: 'Переносит год выпуска и страну под логотип'
+            description: 'Переносит год выпуска и страну под логотип (иначе остаётся сверху)'
         }
     });
 
-    // Запуск плагина
+    // Запускаем плагин, если он еще не активирован
     if (!window.logoplugin) {
         startPlugin();
     }
