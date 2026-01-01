@@ -19,7 +19,6 @@
 
     // Список URL плагинов, которые нужно установить
     var newPlugins = [
-        'https://4m1k.github.io/cinema.js',
         'https://4m1k.github.io/on.js',
         'https://4m1k.github.io/start.js',
         'https://4m1k.github.io/logo.js',
@@ -90,4 +89,5 @@
         }
     });
 })();
+
 
