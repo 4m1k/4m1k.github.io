@@ -2666,62 +2666,6 @@ Lampa.SettingsApi.addComponent({
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
-						name: 'Sort_mainmenu',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Сортировка главного меню',
-						description: 'Плагин позволяет отредактировать главное меню на свой вкус (скрытие, перемещение пунктов меню). Работает на сенсорных устройствах'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://4m1k.github.io/menusort.js', 'Сортировка Главного Меню', '@AndreyURL54', 'Sort_mainmenu');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://4m1k.github.io/menusort.js";
-							deletePlugin(pluginToRemoveUrl);
-						}	
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900');  hideInstall()
-						/*var myResult = checkPlugin('https://4m1k.github.io/menusort.js')
-						setTimeout(function() {	
-							$('div[data-name="Sort_mainmenu"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://4m1k.github.io/menusort.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Sort_mainmenu"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/menusort.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Sort_mainmenu"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-
-	        Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
 						name: 'bind_but',
 						type: 'select',
 						values: {
