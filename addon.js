@@ -2121,19 +2121,19 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
                                     name: 'Выход',
-                                    description: 'Плагин добавляет пункт Выход в главное меню'
+                                    description: 'Плагин добавляет пункт Выход и Перезагрузка'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://tsynik.github.io/lampa/e.js', 'Выход', '@tsynik', 'Exit_Menu');
+							itemON('https://amikdn.github.io/exit.js', 'Выход', '@amikdn', 'Exit_Menu');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://tsynik.github.io/lampa/e.js";
+							var pluginToRemoveUrl = "https://amikdn.github.io/exit.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://tsynik.github.io/lampa/e.js')
+						/*var myResult = checkPlugin('https://amikdn.github.io/exit.js')
 						setTimeout(function() {	
 							$('div[data-name="Exit_Menu"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2142,13 +2142,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Exit_Menu"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://tsynik.github.io/lampa/e.js');
+						var myResult = checkPlugin('https://amikdn.github.io/exit.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Exit_Menu"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://tsynik.github.io/lampa/e.js') {
+                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/exit.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -2159,62 +2159,6 @@ Lampa.SettingsApi.addComponent({
                                                           $('div[data-name="Exit_Menu"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
                                                           $('div[data-name="Exit_Menu"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-       
-		Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
-						name: 'New_Version',
-						type: 'select',																																		
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Проверка новой версии',
-						description: 'Проверяет наличие новой версии приложения на Android TV от Nemiroff (в данный момент не поддерживается)'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://nemiroff.github.io/lampa/updater.js', 'Проверка Новой Версии', '@nemiroff', 'New_Version');
-							}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://nemiroff.github.io/lampa/updater.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://nemiroff.github.io/lampa/updater.js')
-						setTimeout(function() {	
-							$('div[data-name="New_Version"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="New_Version"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="New_Version"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://nemiroff.github.io/lampa/updater.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="New_Version"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://nemiroff.github.io/lampa/updater.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="New_Version"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="New_Version"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="New_Version"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
