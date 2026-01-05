@@ -2978,7 +2978,7 @@ Lampa.SettingsApi.addComponent({
 				Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                                		name: 'Онлайн_Cinema',
+                                		name: 'Онлайн_H',
 						type: 'select',
 						values: {
 							1:	'Установить',
@@ -2987,45 +2987,45 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
               				},
 					field: {
-						name: 'Онлайн Cinema',
+						name: 'Онлайн H',
 						description: 'Плагин для просмотра фильмов и сериалов в онлайн'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://4m1k.github.io/cinema.js', 'Онлайн Cinema', '@v42z', 'Онлайн_Cinema');
+							itemON('https://honeyxcat.github.io/plugins/oooo.js', 'Онлайн H', '@v42z', 'Онлайн_H');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://4m1k.github.io/cinema.js";
+							var pluginToRemoveUrl = "https://honeyxcat.github.io/plugins/oooo.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://4m1k.github.io/cinema.js')
+						/*var myResult = checkPlugin('https://honeyxcat.github.io/plugins/oooo.js')
 						setTimeout(function() {	
-							$('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Онлайн_H"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://4m1k.github.io/cinema.js');
+						var myResult = checkPlugin('https://honeyxcat.github.io/plugins/oooo.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="Онлайн_Cinema"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Онлайн_H"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://4m1k.github.io/cinema.js') {
+                                                          if (pluginsArray[i].url === 'https://honeyxcat.github.io/plugins/oooo.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="Онлайн_Cinema"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
