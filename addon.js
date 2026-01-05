@@ -2880,15 +2880,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://honeyxcat.github.io/plugins/oooo.js', 'Онлайн H', '@v42z', 'Онлайн_H');
+							itemON('https://lampadn.github.io/o.js', 'Онлайн H', '@v42z', 'Онлайн_H');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "https://honeyxcat.github.io/plugins/oooo.js";
+							var pluginToRemoveUrl = "https://lampadn.github.io/o.js";
 							deletePlugin(pluginToRemoveUrl);
 						}
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://honeyxcat.github.io/plugins/oooo.js')
+						/*var myResult = checkPlugin('https://lampadn.github.io/o.js')
 						setTimeout(function() {	
 							$('div[data-name="Онлайн_H"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -2897,13 +2897,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Онлайн_H"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('https://honeyxcat.github.io/plugins/oooo.js');
+						var myResult = checkPlugin('https://lampadn.github.io/o.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Онлайн_H"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://honeyxcat.github.io/plugins/oooo.js') {
+                                                          if (pluginsArray[i].url === 'https://lampadn.github.io/o.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
