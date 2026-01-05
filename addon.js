@@ -3450,7 +3450,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-		        Lampa.SettingsApi.addParam({
+	        Lampa.SettingsApi.addParam({
 					component: 'add_torrent_plugin',
 					param: {
 						name: 'free_torr',
@@ -3467,23 +3467,21 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://amikdn.github.io/freet.js', 'Free Torrserver', '@amik', 'free_torr', nthChildIndex);
-							// console.log("nthChildIndex, переданный в itemON:", nthChildIndex);
+							itemON('https://amikdn.github.io/freet.js', 'Free Torrserver', '@amik', 'free_torr');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://amikdn.github.io/freet.js";
-							deletePlugin(pluginToRemoveUrl, nthChildIndex);
-							// console.log("nthChildIndex, переданный в deletePlugin:", nthChildIndex);
+							deletePlugin(pluginToRemoveUrl);
                                                 }
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('https://amikdn.github.io/freet.js')
 						setTimeout(function() {	
-							$('div[data-name="free_torr"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="second_but_torrents"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="second_but_torrents"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="second_but_torrents"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://amikdn.github.io/freet.js');
@@ -3504,10 +3502,7 @@ Lampa.SettingsApi.addComponent({
                                                        } else {
                                                           $('div[data-name="free_torr"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
-                                                    }, 100);
-						    item.on("hover:enter", function (event) {
-                                                        nthChildIndex = focus_back(event); // Сохраняем элемент в переменной
-						    });
+                                                    }, 100);	
 					}
 		});
 
