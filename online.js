@@ -2,7 +2,7 @@
   'use strict';
   var Defined = {
     api: 'lampac',
-    localhost: 'https://akter-black.com/',
+    localhost: 'http://88.210.35.156:23000/',
     apn: 'http://apn.cfhttp.top/'
   };
  
@@ -1631,3 +1631,4 @@ Lampa.Template.add('lampac_css', "\n <style>\n @charset 'UTF-8';.online-prestige
   }
   if (!window.lampac_plugin) startPlugin();
 })();
+
