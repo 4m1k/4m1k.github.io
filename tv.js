@@ -455,7 +455,7 @@ function pluginPage(object) {
             _this.activity.toggle();
         };
         if (Object.keys(catalog).length) {
-            this.build(
+            _this.build(
                 !catalog[object.currentGroup]
                     ? (lists[object.id].groups.length > 1 && catalog[lists[object.id].groups[1].key]
                         ? catalog[lists[object.id].groups[1].key]['channels']
@@ -650,7 +650,7 @@ function pluginPage(object) {
                         };
                     }
                 }
-                this.build(
+                _this.build(
                     !catalog[object.currentGroup]
                         ? (lists[object.id].groups.length > 1 && !!catalog[lists[object.id].groups[1].key]
                             ? catalog[lists[object.id].groups[1].key]['channels']
