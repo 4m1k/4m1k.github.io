@@ -16,23 +16,24 @@ var UID = '';
 var chNumber = '';
 var chTimeout = null;
 var stopRemoveChElement = false;
-var chPanel = $(
-    "<div class=\"player-info info--visible js-ch-PLUGIN\" style=\"top: 9em;right: auto;z-index: 1000;\">\n" +
+
+var chPanelHtml = "<div class=\"player-info info--visible js-ch-PLUGIN\" style=\"top: 9em;right: auto;z-index: 1000;\">\n" +
     " <div class=\"player-info__body\">\n" +
     " <div class=\"player-info__line\">\n" +
     " <div class=\"player-info__name\">&nbsp;</div>\n" +
     " </div>\n" +
     " </div>\n" +
-    "</div>".replace(/PLUGIN/g, plugin.component)
-).hide().fadeOut(0);
-var chHelper = $(
-    "<div class=\"player-info info--visible js-ch-PLUGIN\" style=\"top: 14em;right: auto;z-index: 1000;\">\n" +
+    "</div>".replace(/PLUGIN/g, plugin.component);
+var chPanel = $(chPanelHtml).hide().fadeOut(0);
+
+var chHelperHtml = "<div class=\"player-info info--visible js-ch-PLUGIN\" style=\"top: 14em;right: auto;z-index: 1000;\">\n" +
     " <div class=\"player-info__body\">\n" +
     " <div class=\"tv-helper\"></div>\n" +
     " </div>\n" +
-    "</div>".replace(/PLUGIN/g, plugin.component)
-).hide().fadeOut(0);
-var epgTemplate = $($('<div id="PLUGIN_epg">\n' +
+    "</div>".replace(/PLUGIN/g, plugin.component);
+var chHelper = $(chHelperHtml).hide().fadeOut(0);
+
+var epgTemplateHtml = '<div id="PLUGIN_epg">\n' +
     '<h2 class="js-epgChannel"></h2>\n' +
     '<div class="PLUGIN-details__program-body js-epgNow">\n' +
     ' <div class="PLUGIN-details__program-title">Сейчас</div>\n' +
@@ -52,25 +53,31 @@ var epgTemplate = $($('<div id="PLUGIN_epg">\n' +
     ' <div class="PLUGIN-program__list js-epgList">' +
     ' </div>\n' +
     '</div>' +
-    '</div>').replace(/PLUGIN/g, plugin.component)
-);
-var epgItemTeplate = $(
-    '<div class="PLUGIN-program selector">\n' +
+    '</div>'.replace(/PLUGIN/g, plugin.component);
+var epgTemplate = $(epgTemplateHtml);
+
+var epgItemTemplateHtml = '<div class="PLUGIN-program selector">\n' +
     ' <div class="PLUGIN-program__time js-epgTime">XX:XX</div>\n' +
     ' <div class="PLUGIN-program__body">\n' +
     ' <div class="PLUGIN-program__title js-epgTitle"> </div>\n' +
     ' </div>\n' +
-    '</div>'.replace(/PLUGIN/g, plugin.component)
-);
+    '</div>'.replace(/PLUGIN/g, plugin.component);
+var epgItemTeplate = $(epgItemTemplateHtml);
+
 var chHelpEl = chHelper.find('.tv-helper');
 var chNumEl = chPanel.find('.player-info__name');
 var encoder = $('<div/>');
+
 function isPluginPlaylist(playlist) {
     return !(!playlist.length || !playlist[0].tv || !playlist[0].plugin || playlist[0].plugin !== plugin.component);
 }
+
 Lampa.PlayerPlaylist.listener.follow('select', function(e) {
-    if (e.item.plugin && e.item.plugin === plugin.component && Lampa.Player.runas) Lampa.Player.runas(Lampa.Storage.field('player_iptv'));
+    if (e.item.plugin && e.item.plugin === plugin.component && Lampa.Player.runas) {
+        Lampa.Player.runas(Lampa.Storage.field('player_iptv'));
+    }
 });
+
 function channelSwitch(dig, isChNum) {
     if (!Lampa.Player.opened()) return false;
     var playlist = Lampa.PlayerPlaylist.get();
@@ -103,7 +110,11 @@ function channelSwitch(dig, isChNum) {
         var chSwitch = function () {
             var pos = number - 1;
             if (Lampa.PlayerPlaylist.position() !== pos) {
-                Lampa.PlayerPlaylist.listener.send('select', {playlist: playlist, position: pos, item: playlist[pos]});
+                Lampa.PlayerPlaylist.listener.send('select', {
+                    playlist: playlist,
+                    position: pos,
+                    item: playlist[pos]
+                });
                 Lampa.Player.runas && Lampa.Player.runas(Lampa.Storage.field('player_iptv'));
             }
             chPanel.delay(1000).fadeOut(500, function(){stopRemoveChElement || chPanel.remove()});
@@ -123,6 +134,7 @@ function channelSwitch(dig, isChNum) {
     }
     return true;
 }
+
 var cacheVal = {};
 function cache(name, value, timeout) {
     var time = (new Date()) * 1;
@@ -136,11 +148,13 @@ function cache(name, value, timeout) {
     delete (cacheVal[name]);
     return value;
 }
+
 var timeOffset = 0;
 var timeOffsetSet = false;
 function unixtime() {
     return Math.floor((new Date().getTime() + timeOffset)/1000);
 }
+
 function toLocaleTimeString(time) {
     var date = new Date(),
         ofst = parseInt(Lampa.Storage.get('time_offset', 'n0').replace('n',''));
@@ -148,6 +162,7 @@ function toLocaleTimeString(time) {
     date = new Date(time + (ofst * 1000 * 60 * 60));
     return ('0' + date.getHours()).substr(-2) + ':' + ('0' + date.getMinutes()).substr(-2);
 }
+
 function toLocaleDateString(time) {
     var date = new Date(),
         ofst = parseInt(Lampa.Storage.get('time_offset', 'n0').replace('n',''));
@@ -155,6 +170,7 @@ function toLocaleDateString(time) {
     date = new Date(time + (ofst * 1000 * 60 * 60));
     return date.toLocaleDateString();
 }
+
 var utils = {
     uid: function() {return UID},
     timestamp: unixtime,
@@ -162,16 +178,19 @@ var utils = {
     hash: Lampa.Utils.hash,
     hash36: function(s) {return (this.hash(s) * 1).toString(36)}
 };
+
 function generateSigForString(string) {
     var sigTime = unixtime();
     return sigTime.toString(36) + ':' + utils.hash36((string || '') + sigTime + utils.uid());
 }
+
 function strReplace(str, key2val) {
     for (var key in key2val) {
         str = str.replace(new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), key2val[key]);
     }
     return str;
 }
+
 function tf(t, format, u, tz) {
     format = format || '';
     tz = parseInt(tz || '0');
@@ -182,6 +201,7 @@ function tf(t, format, u, tz) {
     var r = {yyyy:d.getUTCFullYear(),MM:('0'+(d.getUTCMonth()+1)).substr(-2),dd:('0'+d.getUTCDate()).substr(-2),HH:('0'+d.getUTCHours()).substr(-2),mm:('0'+d.getUTCMinutes()).substr(-2),ss:('0'+d.getUTCSeconds()).substr(-2),UTF:t*6e4};
     return strReplace(format, r);
 }
+
 function prepareUrl(url, epg) {
     var m = [], val = '', r = {start:unixtime,offset:0};
     if (epg && epg.length) {
@@ -211,6 +231,7 @@ function prepareUrl(url, epg) {
     }
     return url;
 }
+
 function catchupUrl(url, type, source) {
     type = (type || '').toLowerCase();
     source = source || '';
@@ -257,6 +278,7 @@ function catchupUrl(url, type, source) {
     if (newUrl.indexOf('${') < 0) return catchupUrl(newUrl,'shift');
     return newUrl;
 }
+
 function keydown(e) {
     var code = e.code;
     if (Lampa.Player.opened() && !$('body.selectbox--open').length) {
@@ -283,6 +305,7 @@ function keydown(e) {
         }
     }
 }
+
 function bulkWrapper(func, bulk) {
     var bulkCnt = 1, timeout = 1, queueEndCallback, queueStepCallback, emptyFn = function(){};
     if (typeof bulk === 'object') {
@@ -329,6 +352,7 @@ function bulkWrapper(func, bulk) {
         runner();
     }
 }
+
 function getEpgSessCache(epgId, t) {
     var key = ['epg', epgId].join('\t');
     var epg = sessionStorage.getItem(key);
@@ -341,10 +365,12 @@ function getEpgSessCache(epgId, t) {
     }
     return epg;
 }
+
 function setEpgSessCache(epgId, epg) {
     var key = ['epg', epgId].join('\t');
     sessionStorage.setItem(key, JSON.stringify(epg));
 }
+
 function networkSilentSessCache(url, success, fail, param) {
     var context = this;
     var key = ['cache', url, param ? utils.hash36(JSON.stringify(param)) : ''].join('\t');
@@ -369,6 +395,7 @@ function networkSilentSessCache(url, success, fail, param) {
         );
     }
 }
+
 Lampa.Template.add(plugin.component + '_style', '<style>#PLUGIN_epg{margin-right:1em}.PLUGIN-program__desc{font-size:0.9em;margin:0.5em;text-align:justify;max-height:15em;overflow:hidden;}.PLUGIN.category-full{padding-bottom:10em}.PLUGIN div.card__view{position:relative;background-color:#353535;background-color:#353535a6;border-radius:1em;cursor:pointer;padding-bottom:60%}.PLUGIN.square_icons div.card__view{padding-bottom:100%}.PLUGIN img.card__img,.PLUGIN div.card__img{background-color:unset;border-radius:unset;max-height:100%;max-width:100%;height:auto;width:auto;position:absolute;top:50%;left:50%;-moz-transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);font-size:2em}.PLUGIN.contain_icons img.card__img{height:95%;width:95%;object-fit:contain}.PLUGIN .card__title{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.PLUGIN .card__age{padding:0;border:1px #3e3e3e solid;margin-top:0.3em;border-radius:0.3em;position:relative;display:none}.PLUGIN .card__age .card__epg-progress{position:absolute;background-color:#3a3a3a;top:0;left:0;width:0%;max-width:100%;height:100%}.PLUGIN .card__age .card__epg-title{position:relative;padding:0.4em 0.2em;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}.PLUGIN.category-full .card__icons {top:0.3em;right:0.3em;justify-content:right;}#PLUGIN{float:right;padding: 1.2em 0;width: 30%;}.PLUGIN-details__group{font-size:1.3em;margin-bottom:.9em;opacity:.5}.PLUGIN-details__title{font-size:4em;font-weight:700}.PLUGIN-details__program{padding-top:4em}.PLUGIN-details__program-title{font-size:1.2em;padding-left:4.9em;margin-top:1em;margin-bottom:1em;opacity:.5}.PLUGIN-details__program-list>div+div{margin-top:1em}.PLUGIN-details__program>div+div{margin-top:2em}.PLUGIN-program{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;font-size:1.2em;font-weight:300}.PLUGIN-program__time{-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0;width:5em;position:relative}.PLUGIN-program.focus .PLUGIN-program__time::after{content:\'\';position:absolute;top:.5em;right:.9em;width:.4em;background-color:#fff;height:.4em;-webkit-border-radius:100%;-moz-border-radius:100%;border-radius:100%;margin-top:-0.1em;font-size:1.2em}.PLUGIN-program__progressbar{width:10em;height:0.3em;border:0.05em solid #fff;border-radius:0.05em;margin:0.5em 0.5em 0 0}.PLUGIN-program__progress{height:0.25em;border:0.05em solid #fff;background-color:#fff;max-width:100%}.PLUGIN .card__icon.icon--timeshift{background-image:ur[](https://epg.rootu.top/img/icon/timeshift.svg);}' +
 '.info.layer--width{display:flex !important;align-items:center;width:auto !important;max-width:100%;padding-right:1em;}' +
 '.info__left{flex:1 1 auto;overflow:hidden;min-width:0;}' +
@@ -377,6 +404,19 @@ Lampa.Template.add(plugin.component + '_style', '<style>#PLUGIN_epg{margin-right
 '.full-start__button.view--category{white-space:nowrap;}' +
 '</style>'.replace(/PLUGIN/g, plugin.component));
 $('body').append(Lampa.Template.get(plugin.component + '_style', {}, true));
+
+function getStorage(name, defaultValue) {
+    return Lampa.Storage.get(plugin.component + '_' + name, defaultValue);
+}
+
+function setStorage(name, val, noListen) {
+    return Lampa.Storage.set(plugin.component + '_' + name, val, noListen);
+}
+
+function getSettings(name) {
+    return Lampa.Storage.field(plugin.component + '_' + name);
+}
+
 function pluginPage(object) {
     if (object.id !== curListId) {
         catalog = {};
@@ -703,7 +743,7 @@ function pluginPage(object) {
                 i++;
                 enableCardEpg = true;
                 p = Math.round((unixtime() - e[0] * 60) * 100 / (e[1] * 60 || 60));
-                cId = e[0] + '_' +epgEl.length;
+                cId = e[0] + '_' + epgEl.length;
                 cIdEl = epgEl.data('cId') || '';
                 if (cIdEl !== cId) {
                     epgEl.data('cId', cId);
@@ -789,7 +829,7 @@ function pluginPage(object) {
                 ;
                 fl = fl.replace(/([UF]?HD|4k|\+\d+)$/i, '<sup>$1</sup>');
                 var hex = (Lampa.Utils.hash(channel.Title) * 1).toString(16);
-                while (hex.length < 6) hex+=hex;
+                while (hex.length < 6) hex += hex;
                 hex = hex.substring(0,6);
                 var r = parseInt(hex.slice(0, 2), 16),
                     g = parseInt(hex.slice(2, 4), 16),
@@ -1112,7 +1152,7 @@ function pluginPage(object) {
         },
         {
             bulk: 18,
-            onEnd: function (last, total, left) {
+            onEnd: function () {
                 _this2.activity.loader(false);
                 _this2.activity.toggle();
             }
@@ -1123,16 +1163,17 @@ function pluginPage(object) {
         });
     };
     this.build = function (data) {
-        var _this2 = this;
         Lampa.Background.change();
-        Lampa.Template.add(plugin.component + '_button_category', "<style>@media screen and (max-width: 2560px) {." + plugin.component + " .card--collection {width: 16.6%!important;}}@media screen and (max-width: 800px) {." + plugin.component + " .card--collection {width: 24.6%!important;}}@media screen and (max-width: 500px) {." + plugin.component + " .card--collection {width: 33.3%!important;}}</style><div class=\"full-start__button selector view--category\"><svg style=\"enable-background:new 0 0 512 512;\" version=\"1.1\" viewBox=\"0 0 24 24\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g><g id=\"info\"/><g id=\"icons\"><g id=\"menu\"><path d=\"M20,10H4c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2C22,10.9,21.1,10,20,10z\" fill=\"currentColor\"/><path d=\"M4,8h12c1.1,0,2-0.9,2-2c0-1.1-0.9-2-2-2H4C2.9,4,2,4.9,2,6C2,7.1,2.9,8,4,8z\" fill=\"currentColor\"/><path d=\"M16,16H4c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2C18,16.9,17.1,16,16,16z\" fill=\"currentColor\"/></g></g></svg><span>" + langGet('categories') + "</span>\n </div>");
-        Lampa.Template.add(plugin.component + '_info_radio', '<div class="info layer--width"><div class="info__left"><div class="info__title"></div><div class="info__title-original"></div><div class="info__create"></div></div><div class="info__right" style="display: flex !important;"> <div id="stantion_filtr"></div></div></div>');
+        var buttonCategoryHtml = "<style>@media screen and (max-width: 2560px) {." + plugin.component + " .card--collection {width: 16.6%!important;}}@media screen and (max-width: 800px) {." + plugin.component + " .card--collection {width: 24.6%!important;}}@media screen and (max-width: 500px) {." + plugin.component + " .card--collection {width: 33.3%!important;}}</style><div class=\"full-start__button selector view--category\"><svg style=\"enable-background:new 0 0 512 512;\" version=\"1.1\" viewBox=\"0 0 24 24\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><g><g id=\"info\"/><g id=\"icons\"><g id=\"menu\"><path d=\"M20,10H4c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2C22,10.9,21.1,10,20,10z\" fill=\"currentColor\"/><path d=\"M4,8h12c1.1,0,2-0.9,2-2c0-1.1-0.9-2-2-2H4C2.9,4,2,4.9,2,6C2,7.1,2.9,8,4,8z\" fill=\"currentColor\"/><path d=\"M16,16H4c-1.1,0-2,0.9-2,2c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2C18,16.9,17.1,16,16,16z\" fill=\"currentColor\"/></g></g></svg><span>" + langGet('categories') + "</span></div>";
+        Lampa.Template.add(plugin.component + '_button_category', buttonCategoryHtml);
+        var infoRadioHtml = '<div class="info layer--width"><div class="info__left"><div class="info__title"></div><div class="info__title-original"></div><div class="info__create"></div></div><div class="info__right" style="display: flex !important;"> <div id="stantion_filtr"></div></div></div>';
+        Lampa.Template.add(plugin.component + '_info_radio', infoRadioHtml);
         var btn = Lampa.Template.get(plugin.component + '_button_category');
         info = Lampa.Template.get(plugin.component + '_info_radio');
         info.find('#stantion_filtr').append(btn);
         info.find('.view--category').on('hover:enter hover:click', function () {
-            _this2.selectGroup();
-        });
+            this.selectGroup();
+        }.bind(this));
         info.find('.info__title-original').text(!catalog[object.currentGroup] ? '' : catalog[object.currentGroup].title);
         info.find('.info__title').text('');
         html.append(info);
@@ -1175,21 +1216,20 @@ function pluginPage(object) {
     };
     this.start = function () {
         if (Lampa.Activity.active().activity !== this.activity) return;
-        var _this = this;
         Lampa.Controller.add('content', {
-            toggle: function toggle() {
+            toggle: function () {
                 Lampa.Controller.collectionSet(scroll.render());
                 Lampa.Controller.collectionFocus(last || false, scroll.render());
             },
-            left: function left() {
+            left: function () {
                 if (Navigator.canmove('left')) Navigator.move('left');
                 else Lampa.Controller.toggle('menu');
             },
-            right: function right() {
+            right: function () {
                 if (Navigator.canmove('right')) Navigator.move('right');
-                else _this.selectGroup();
-            },
-            up: function up() {
+                else this.selectGroup();
+            }.bind(this),
+            up: function () {
                 if (Navigator.canmove('up')) {
                     Navigator.move('up');
                 } else {
@@ -1199,13 +1239,13 @@ function pluginPage(object) {
                     } else Lampa.Controller.toggle('head');
                 }
             },
-            down: function down() {
+            down: function () {
                 if (Navigator.canmove('down')) Navigator.move('down');
                 else if (info.find('.view--category').hasClass('focus')) {
                     Lampa.Controller.toggle('content');
                 }
             },
-            back: function back() {
+            back: function () {
                 Lampa.Activity.backward();
             }
         });
@@ -1235,17 +1275,19 @@ function pluginPage(object) {
         info = null;
     };
 }
+
 if (!Lampa.Lang) {
     var lang_data = {};
     Lampa.Lang = {
-        add: function add(data) {
+        add: function (data) {
             lang_data = data;
         },
-        translate: function translate(key) {
+        translate: function (key) {
             return lang_data[key] ? lang_data[key].ru : key;
         }
     };
 }
+
 var langData = {};
 function langAdd(name, values) {
     langData[plugin.component + '_' + name] = values;
@@ -1253,6 +1295,7 @@ function langAdd(name, values) {
 function langGet(name) {
     return Lampa.Lang.translate(plugin.component + '_' + name);
 }
+
 langAdd('default_playlist', {ru: 'https://4m1k.github.io/tv.m3u', uk: 'https://raw.githubusercontent.com/blackbirdstudiorus/LoganetXIPTV/main/LoganetXAll.m3u', be: 'https://raw.githubusercontent.com/blackbirdstudiorus/LoganetXIPTV/main/LoganetXAll.m3u', en: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8', zh: 'https://raw.iqiq.io/Free-TV/IPTV/master/playlist.m3u8'});
 langAdd('default_playlist_cat', {ru: 'Russia', uk: 'Ukraine', be: 'Belarus', en: 'VOD Movies (EN)', zh: 'China'});
 langAdd('settings_playlist_num_group', {ru: 'Плейлист ', uk: 'Плейлист ', be: 'Плэйліст ', en: 'Playlist ', zh: '播放列表 '});
@@ -1278,19 +1321,13 @@ langAdd('epg_title', {ru: 'Телепрограмма', uk: 'Телепрогр�
 langAdd('square_icons', {ru: 'Квадратные лого каналов', uk: 'Квадратні лого каналів', be: 'Квадратныя лога каналаў', en: 'Square channel logos', zh: '方形通道標誌'});
 langAdd('contain_icons', {ru: 'Коррекция размера логотипа телеканала', uk: 'Виправлення розміру логотипу телеканалу', be: 'Карэкцыя памеру лагатыпа тэлеканала', en: 'TV channel logo size correction', zh: '電視頻道標誌尺寸校正'});
 langAdd('contain_icons_desc', {ru: 'Может некорректно работать на старых устройствах', uk: 'Може некоректно працювати на старих пристроях', be: 'Можа некарэктна працаваць на старых прыладах', en: 'May not work correctly on older devices.', zh: '可能无法在较旧的设备上正常工作。'});
+
 Lampa.Lang.add(langData);
+
 function favID(title) {
     return title.toLowerCase().replace(/[\s!-\/:-@\[-`{-~]+/g, '')
 }
-function getStorage(name, defaultValue) {
-    return Lampa.Storage.get(plugin.component + '_' + name, defaultValue);
-}
-function setStorage(name, val, noListen) {
-    return Lampa.Storage.set(plugin.component + '_' + name, val, noListen);
-}
-function getSettings(name) {
-    return Lampa.Storage.field(plugin.component + '_' + name);
-}
+
 function addSettings(type, param) {
     var data = {
         component: plugin.component,
@@ -1310,6 +1347,7 @@ function addSettings(type, param) {
     if (!!param.onRender) data.onRender = param.onRender;
     Lampa.SettingsApi.addParam(data);
 }
+
 function configurePlaylist(i) {
     addSettings('title', {title: langGet('settings_playlist_num_group') + (i+1)});
     var defName = 'list ' + (i+1);
@@ -1381,11 +1419,14 @@ function configurePlaylist(i) {
     lists.push({activity: activity, menuEl: menuEl, groups: []});
     return !activity.url ? i + 1 : i;
 }
+
 Lampa.Component.add(plugin.component, pluginPage);
 Lampa.SettingsApi.addComponent(plugin);
 addSettings('trigger', {title: langGet('square_icons'), name: 'square_icons', default: false, onChange: function(v){$('.my_iptv2.category-full').toggleClass('square_icons', v === 'true');}});
 addSettings('trigger', {title: langGet('contain_icons'), description: langGet('contain_icons_desc'), name: 'contain_icons', default: true, onChange: function(v){$('.my_iptv2.category-full').toggleClass('contain_icons', v === 'true');}});
+
 for (var i=0; i <= lists.length; i++) i = configurePlaylist(i);
+
 UID = getStorage('uid', '');
 if (!UID) {
     UID = Lampa.Utils.uid(10).toUpperCase().replace(/(.{4})/g, '$1-');
@@ -1396,6 +1437,7 @@ if (!UID) {
 }
 addSettings('title', {title: langGet('uid')});
 addSettings('static', {title: UID, description: langGet('unique_id')});
+
 Lampa.Settings.listener.follow('open', function (e) {
     if (e.name == 'main') {
         setTimeout(function() {
@@ -1403,12 +1445,14 @@ Lampa.Settings.listener.follow('open', function (e) {
         }, 0)
     }
 });
+
 function pluginStart() {
     if (!!window['plugin_' + plugin.component + '_ready']) return;
     window['plugin_' + plugin.component + '_ready'] = true;
     var menu = $('.menu .menu__list').eq(0);
     for (var i=0; i < lists.length; i++) menu.append(lists[i].menuEl);
 }
+
 if (!!window.appready) pluginStart();
 else Lampa.Listener.follow('app', function(e){if (e.type === 'ready') pluginStart()});
 })();
