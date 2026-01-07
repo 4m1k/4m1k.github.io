@@ -513,7 +513,7 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-							Lampa.SettingsApi.addParam({
+				Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
 						name: 'Snow',
@@ -639,7 +639,7 @@ Lampa.SettingsApi.addComponent({
 						},
 					field: {
 						name: 'PersonalHub',
-						description: 'Плагин добавляет источник Personal Hub, в котором можно сортировать/изменять разделы и карточки на свой вкус'
+						description: 'Плагин добавляет источник Custom, в котором можно сортировать/изменять разделы и карточки на свой вкус'
                             },
 					onChange: function(value) {
 						if (value == '1') {
@@ -1076,6 +1076,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
@@ -1131,6 +1132,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
@@ -1186,6 +1188,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
@@ -1241,6 +1244,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
@@ -1296,6 +1300,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 	        			component: 'add_interface_plugin',
 					param: {
@@ -1351,6 +1356,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		  });
+	
 	          Lampa.SettingsApi.addParam({
 						component: 'add_interface_plugin',
 						param: {
@@ -1406,6 +1412,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 						}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 						component: 'add_interface_plugin',
 						param: {
@@ -1966,7 +1973,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
@@ -2078,7 +2084,6 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
-
 
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
@@ -2224,62 +2229,6 @@ Lampa.SettingsApi.addComponent({
 		Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
-                               			name: 'Hot_Buttons',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-					},
-                            		field: {
-                                    		name: 'Горячие кнопки',
-                                    		description: 'Плагин вызывает меню плеера лампы по кнопкам пульта: 5 - плейлист, 8 - аудиодорожки, 0 - субтитры, channel+/- следующий/предыдущий файл в плейлисте'
-                            		},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://nnmdd.github.io/lampa_hotkeys/hotkeys.js', 'Горячие Кнопки', '@nnmd', 'Hot_Buttons');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://nnmdd.github.io/lampa_hotkeys/hotkeys.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://nnmdd.github.io/lampa_hotkeys/hotkeys.js')
-						setTimeout(function() {	
-							$('div[data-name="Hot_Buttons"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Hot_Buttons"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Hot_Buttons"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://nnmdd.github.io/lampa_hotkeys/hotkeys.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Hot_Buttons"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://nnmdd.github.io/lampa_hotkeys/hotkeys.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Hot_Buttons"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Hot_Buttons"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Hot_Buttons"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-       
-		Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
 						name: 'DLNA',
 						type: 'select',
 						values: {
@@ -2332,6 +2281,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
@@ -2387,6 +2337,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
@@ -2442,6 +2393,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
@@ -2497,6 +2449,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
@@ -2553,63 +2506,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 
-            
-	        Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
-						name: 'setprotect',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-						name: 'Доступ к настройкам',
-						description: 'Плагин закрывает доступ к настройкам через введенный пароль при активации соответствующего пункта в меню настроек родительского контроля'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('http://193.233.134.21/plugins/setprotect', 'Доступ к настройкам', '@AndreyURL54', 'setprotect');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "http://193.233.134.21/plugins/setprotect";
-							deletePlugin(pluginToRemoveUrl);
-						}	
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900');  hideInstall()
-						/*var myResult = checkPlugin('http://193.233.134.21/plugins/setprotect')
-						setTimeout(function() {	
-							$('div[data-name="setprotect"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('http://193.233.134.21/plugins/setprotect');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="setprotect"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://193.233.134.21/plugins/setprotect') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="setprotect"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-
 	        Lampa.SettingsApi.addParam({
 					component: 'add_management_plugin',
 					param: {
@@ -2661,63 +2557,6 @@ Lampa.SettingsApi.addComponent({
                                                           $('div[data-name="bind_but"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
                                                           $('div[data-name="bind_but"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);
-					}
-		});
-
-
-                Lampa.SettingsApi.addParam({
-					component: 'add_management_plugin',
-					param: {
-						name: 'infuse_save',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-						},
-					field: {
-                                    		name: 'Infuse save',
-                                    		description: 'Плагин для сохранения торрентов, через Torrserver в Infuse. Поставляется как есть, настроек нет. Вызывается долгим тапом в списке файлов'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-						       itemON('https://lampame.github.io/main/infuseSave.js', 'Infuse Save', '@lme', 'infuse_save');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://lampame.github.io/main/infuseSave.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://lampame.github.io/main/infuseSave.js')
-						setTimeout(function() {	
-							$('div[data-name="infuse_save"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://lampame.github.io/main/infuseSave.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="infuse_save"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://lampame.github.io/main/infuseSave.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="infuse_save"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
@@ -3358,15 +3197,15 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://193.233.134.21/plugins/checker.js', 'Поиск Локального TorrServera', '@AndreyURL54', 'Check_server');
+							itemON('https://amikdn.github.io/checker.js', 'Поиск Локального TorrServera', '@AndreyURL54', 'Check_server');
 						}
 						if (value == '2') {
-							var pluginToRemoveUrl = "http://193.233.134.21/plugins/checker.js";
+							var pluginToRemoveUrl = "https://amikdn.github.io/checker.js";
 							deletePlugin(pluginToRemoveUrl);
                                                 }
 					},
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('http://193.233.134.21/plugins/checker.js')
+						/*var myResult = checkPlugin('https://amikdn.github.io/checker.js')
 						setTimeout(function() {	
 							$('div[data-name="Check_server"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
@@ -3375,13 +3214,13 @@ Lampa.SettingsApi.addComponent({
 								$('div[data-name="Check_server"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
-						var myResult = checkPlugin('http://193.233.134.21/plugins/checker.js');
+						var myResult = checkPlugin('https://amikdn.github.io/checker.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
                                                        $('div[data-name="Check_server"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'http://193.233.134.21/plugins/checker.js') {
+                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/checker.js') {
                                                              pluginStatus = pluginsArray[i].status;
                                                              break;
                                                           }
@@ -4099,7 +3938,6 @@ Lampa.SettingsApi.addComponent({
 					}
 		});
 	
-
 	 Lampa.Settings.listener.follow('open', function(e) {
 	    if (e.name == 'add_plugin') {
                 setTimeout(function() {
@@ -4116,8 +3954,8 @@ Lampa.SettingsApi.addComponent({
             }
 	    
         });
-
-} // /* addonStart */
+	
+} 
 
 if (!!window.appready) addonStart();
 else Lampa.Listener.follow('app', function(e){if (e.type === 'ready') addonStart()});	
