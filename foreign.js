@@ -45,7 +45,7 @@
         name: 'foreign_movie_view',
         type: 'select',
         values: { grid: 'Сетка', list: 'Список' },
-        default: 'grid'
+        default: 'Сетка'
       },
       field: {
         name: 'Зарубежное: Интерфейс',
