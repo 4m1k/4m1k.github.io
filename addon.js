@@ -3704,63 +3704,7 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);	
 					}
 		});
-	        Lampa.SettingsApi.addParam({
-					component: 'add_tv_plugin',
-					param: {
-						name: 'Hack_TV',
-						type: 'select',
-						values: {
-							1:	'Установить',
-							2:	'Удалить',
-						},
-					//default: '1',
-					},
-					field: {
-							name: 'Hack TV',
-							description: 'Плагин для просмотра IPTV каналов'
-					},
-					onChange: function(value) {
-						if (value == '1') {
-							itemON('https://amikdn.github.io/ip_tv.js', 'Hack TV', '@lampa', 'Hack_TV');
-						}
-						if (value == '2') {
-							var pluginToRemoveUrl = "https://amikdn.github.io/ip_tv.js";
-							deletePlugin(pluginToRemoveUrl);
-						}
-					},
-					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
-						/*var myResult = checkPlugin('https://amikdn.github.io/ip_tv.js')
-						setTimeout(function() {	
-							$('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>')
-							if (myResult) {
-								$('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
-							} else {
-								$('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
-							}
-						}, 100);*/
-						var myResult = checkPlugin('https://amikdn.github.io/ip_tv.js');
-                                                var pluginsArray = Lampa.Storage.get('plugins');
-                                                    setTimeout(function() {
-                                                       $('div[data-name="Hack_TV"]').append('<div class="settings-param__status one"></div>');
-                                                       var pluginStatus = null;
-                                                       for (var i = 0; i < pluginsArray.length; i++) {
-                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/ip_tv.js') {
-                                                             pluginStatus = pluginsArray[i].status;
-                                                             break;
-                                                          }
-                                                       }
-                                                       if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error').addClass('active');
-                                                       } else if (pluginStatus === 0) {
-                                                          $('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-                                                       } else {
-                                                          $('div[data-name="Hack_TV"]').find('.settings-param__status').removeClass('active error').addClass('error');
-                                                       }
-                                                    }, 100);	
-					}
-		});
-			   
-	
+
 		Lampa.Settings.listener.follow('open', function (e) {
 					if (e.name == 'main') {
 						Lampa.SettingsApi.addComponent({
