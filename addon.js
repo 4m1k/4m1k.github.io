@@ -964,6 +964,63 @@ Lampa.SettingsApi.addComponent({
                                                     }, 100);
 					}
 		});
+
+	        Lampa.SettingsApi.addParam({
+					component: 'add_interface_plugin',
+					param: {
+						name: 'CollectionsPrisma',
+						type: 'select',
+						values: {
+							1:	'Установить',
+							2:	'Удалить',
+						},
+					//default: '1',
+						},
+					field: {
+						name: 'Подборки Prisma',
+						description: 'Подборки фильмов и сериалов в главном меню приложения от Prisma.'
+					},
+					onChange: function(value) {
+						if (value == '1') {
+						       itemON('https://levende.github.io/lampa-plugins/prisma_collections.js', 'Подборки Prisma', '@lampa', 'CollectionsPrisma');
+						}
+						if (value == '2') {
+							var pluginToRemoveUrl = "https://levende.github.io/lampa-plugins/prisma_collections.js";
+							deletePlugin(pluginToRemoveUrl);
+						}
+					},
+			                onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall()
+						/*var myResult = checkPlugin('https://levende.github.io/lampa-plugins/prisma_collections.js')
+						setTimeout(function() {	
+							$('div[data-name="Collections"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="Collections"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="Collections"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('https://levende.github.io/lampa-plugins/prisma_collections.js');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="CollectionsPrisma"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'https://levende.github.io/lampa-plugins/prisma_collections.js') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="CollectionsPrisma"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="CollectionsPrisma"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="CollectionsPrisma"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);
+					}
+		});
+	
 	        Lampa.SettingsApi.addParam({
 					component: 'add_interface_plugin',
 					param: {
