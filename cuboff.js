@@ -3,21 +3,6 @@
     Lampa.Platform.tv();
 
     (function () {
-        function hideLastAddedSection() {
-            const titles = document.querySelectorAll('.items-line__title');
-            let found = false;
-            titles.forEach(function(title) {
-                if (title.textContent.trim() === 'Последнее добавление') {
-                    const itemsLine = title.closest('.items-line');
-                    if (itemsLine && itemsLine.parentNode) {
-                        itemsLine.remove();
-                        found = true;
-                    }
-                }
-            });
-            return found;
-        }
-
         function hideUnneededContent() {
             const style = document.createElement('style');
             style.innerHTML = `
@@ -34,7 +19,8 @@
                 .ad-bot,
                 .full-start__button.button--options,
                 .new-year__button,
-                .notice--icon {
+                .notice--icon,
+                .items-line {
                     display: none !important;
                 }
             `;
@@ -42,37 +28,7 @@
 
             setTimeout(() => {
                 $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
-                // Удаляем секцию "Последнее добавление" через jQuery для консистентности
-                $('.items-line__title').each(function() {
-                    if ($(this).text().trim() === 'Последнее добавление') {
-                        $(this).closest('.items-line').remove();
-                    }
-                });
             }, 1000);
-
-            // Скрываем секцию "Последнее добавление" при изменениях DOM
-            hideLastAddedSection();
-            
-            var checkTimeout;
-            function debouncedHide() {
-                clearTimeout(checkTimeout);
-                checkTimeout = setTimeout(hideLastAddedSection, 100);
-            }
-            
-            if (window.MutationObserver && document.body) {
-                var observer = new MutationObserver(debouncedHide);
-                observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            } else {
-                // Fallback: редкая проверка, только если MutationObserver недоступен
-                var hideInterval = setInterval(function() {
-                    if (hideLastAddedSection()) {
-                        clearInterval(hideInterval);
-                    }
-                }, 1500);
-            }
         }
 
         function removeAdsOnToggle() {
