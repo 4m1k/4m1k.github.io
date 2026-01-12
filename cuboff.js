@@ -47,14 +47,8 @@
         .ad-bot,
         .full-start__button.button--options,
         .new-year__button,
-        .notice--icon,
-        [class*="torrserver"] [class*="qr"],
-        [class*="torrent-server"] [class*="qr"],
-        [class*="torrentserver"] [class*="qr"],
-        [class*="sync"] [class*="qr"]:not([class*="sync"]),
-        [class*="synchronization"] [class*="qr"],
-        [class*="qr"][class*="ad"],
-        [class*="qrcode"][class*="ad"] { display: none !important; }
+        .notice--icon
+        { display: none !important; }
       `;
       document.head.appendChild(style);
 
