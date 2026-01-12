@@ -31,6 +31,30 @@
       });
     }
 
+    function removeQRCodeAds() {
+      const observer = new MutationObserver(function () {
+        // Удаление QR-кода в торрсервере
+        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"], img[src*="qr"], canvas').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
+        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"]').remove();
+        
+        // Удаление QR-кода в синхронизации
+        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"], img[src*="qr"], canvas').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
+        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"]').remove();
+        
+        // Общее удаление QR-кодов в рекламных блоках
+        $('[class*="qr"], [class*="qrcode"]').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+      
+      // Также удаляем при загрузке
+      setTimeout(function() {
+        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"]').remove();
+        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"]').remove();
+        $('[class*="qr"], [class*="qrcode"]').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
+      }, 500);
+    }
+
     function initializeApp() {
       const style = document.createElement('style');
       style.innerHTML = `
@@ -47,7 +71,14 @@
         .ad-bot,
         .full-start__button.button--options,
         .new-year__button,
-        .notice--icon { display: none !important; }
+        .notice--icon,
+        [class*="torrserver"] [class*="qr"],
+        [class*="torrent-server"] [class*="qr"],
+        [class*="torrentserver"] [class*="qr"],
+        [class*="sync"] [class*="qr"]:not([class*="sync"]),
+        [class*="synchronization"] [class*="qr"],
+        [class*="qr"][class*="ad"],
+        [class*="qrcode"][class*="ad"] { display: none !important; }
       `;
       document.head.appendChild(style);
 
@@ -61,11 +92,13 @@
     if (window.appready) {
       initializeApp();
       removeAdsOnToggle();
+      removeQRCodeAds();
     } else {
       Lampa.Listener.follow('app', function (event) {
         if (event.type === 'ready') {
           initializeApp();
           removeAdsOnToggle();
+          removeQRCodeAds();
           $('[data-action="feed"], [data-action="subscribes"], [data-action="myperson"]').remove();
         }
       });
