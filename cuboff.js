@@ -19,8 +19,7 @@
                 .ad-bot,
                 .full-start__button.button--options,
                 .new-year__button,
-                .notice--icon,
-                .items-line {
+                .notice--icon {
                     display: none !important;
                 }
             `;
@@ -28,6 +27,13 @@
 
             setTimeout(() => {
                 $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
+                
+                // Скрываем секцию "Последнее добавление"
+                $('.items-line__title').each(function() {
+                    if ($(this).text().trim() === 'Последнее добавление') {
+                        $(this).closest('.items-line').hide();
+                    }
+                });
             }, 1000);
         }
 
