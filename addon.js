@@ -541,11 +541,11 @@ Lampa.SettingsApi.addComponent({
 						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('https://amikdn.github.io/torrents_styles.js')
 						setTimeout(function() {	
-							$('div[data-name="torrents_styles"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Torrents Styles"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="torrents_styles"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Torrents Styles"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="torrents_styles"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Torrents Styles"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('https://amikdn.github.io/torrents_styles.js');
@@ -565,6 +565,63 @@ Lampa.SettingsApi.addComponent({
                                                           $('div[data-name="Torrents Styles"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
                                                           $('div[data-name="Torrents Styles"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                       }
+                                                    }, 100);
+					}
+		});
+
+						Lampa.SettingsApi.addParam({
+					component: 'add_interface_plugin',
+					param: {
+						name: 'ContinueWatching',
+						type: 'select',
+						values: {
+							1:	'Установить',
+							2:	'Удалить',
+						},
+                    			//default: '1',
+						},
+					field: {
+						name: 'ContinueWatching',
+						description: 'Кнопка продолжить просмотрт для торрентов'
+                            },
+					onChange: function(value) {
+						if (value == '1') {
+							itemON('https://amikdn.github.io/ContinueWatching.js', 'ContinueWatching', '@lampa', 'ContinueWatching');
+						}
+						if (value == '2') {
+							var pluginToRemoveUrl = "https://amikdn.github.io/ContinueWatching.js";
+							deletePlugin(pluginToRemoveUrl);
+						}
+					},
+					onRender: function (item) {
+						$('.settings-param__name', item).css('color','f3d900'); hideInstall();
+						/*var myResult = checkPlugin('https://amikdn.github.io/ContinueWatching.js')
+						setTimeout(function() {	
+							$('div[data-name="ContinueWatching"]').append('<div class="settings-param__status one"></div>')
+							if (myResult) {
+								$('div[data-name="ContinueWatching"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+							} else {
+								$('div[data-name="ContinueWatching"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+							}
+						}, 100);*/
+						var myResult = checkPlugin('https://amikdn.github.io/ContinueWatching.js');
+                                                var pluginsArray = Lampa.Storage.get('plugins');
+                                                    setTimeout(function() {
+                                                       $('div[data-name="ContinueWatching"]').append('<div class="settings-param__status one"></div>');
+                                                       var pluginStatus = null;
+                                                       for (var i = 0; i < pluginsArray.length; i++) {
+                                                          if (pluginsArray[i].url === 'https://amikdn.github.io/ContinueWatching.js') {
+                                                             pluginStatus = pluginsArray[i].status;
+                                                             break;
+                                                          }
+                                                       }
+                                                       if (myResult && pluginStatus !== 0) {
+                                                          $('div[data-name="ContinueWatching"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                       } else if (pluginStatus === 0) {
+                                                          $('div[data-name="ContinueWatching"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                       } else {
+                                                          $('div[data-name="ContinueWatching"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
