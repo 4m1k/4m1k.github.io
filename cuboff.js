@@ -19,7 +19,8 @@
                 .ad-bot,
                 .full-start__button.button--options,
                 .new-year__button,
-                .notice--icon {
+                .notice--icon,
+                .items-line {
                     display: none !important;
                 }
             `;
