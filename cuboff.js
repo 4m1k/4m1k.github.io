@@ -20,9 +20,6 @@
                 .full-start__button.button--options,
                 .new-year__button,
                 .notice--icon,
-                .items-line {
-                    display: none !important;
-                }
             `;
             document.head.appendChild(style);
 
