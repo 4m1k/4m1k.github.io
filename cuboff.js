@@ -9,8 +9,8 @@
             titles.forEach(function(title) {
                 if (title.textContent.trim() === 'Последнее добавление') {
                     const itemsLine = title.closest('.items-line');
-                    if (itemsLine && itemsLine.style.display !== 'none') {
-                        itemsLine.style.display = 'none';
+                    if (itemsLine && itemsLine.parentNode) {
+                        itemsLine.remove();
                         found = true;
                     }
                 }
@@ -42,6 +42,12 @@
 
             setTimeout(() => {
                 $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
+                // Удаляем секцию "Последнее добавление" через jQuery для консистентности
+                $('.items-line__title').each(function() {
+                    if ($(this).text().trim() === 'Последнее добавление') {
+                        $(this).closest('.items-line').remove();
+                    }
+                });
             }, 1000);
 
             // Скрываем секцию "Последнее добавление" при изменениях DOM
