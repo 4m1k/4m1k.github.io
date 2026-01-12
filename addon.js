@@ -2651,7 +2651,7 @@ Lampa.SettingsApi.addComponent({
 			   		Lampa.SettingsApi.addParam({
 					component: 'add_online_plugin',
 					param: {
-                                		name: 'skaz',
+                                		name: 'Skaz Online',
 						type: 'select',
 						values: {
 							1:	'Установить',
@@ -2660,12 +2660,12 @@ Lampa.SettingsApi.addComponent({
 					//default: '1',
               				},
 					field: {
-						name: 'skaz',
+						name: 'Skaz Online',
 						description: 'Фильмы и сериалы онлайн платный плагин'
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('http://skaz.tv/onlines.js', 'skaz', '@skaz', 'skaz');
+							itemON('http://skaz.tv/onlines.js', 'Skaz Online', '@skaz', 'Skaz Online');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "http://skaz.tv/onlines.js";
@@ -2675,17 +2675,17 @@ Lampa.SettingsApi.addComponent({
 					onRender: function (item) {$('.settings-param__name', item).css('color','f3d900'); hideInstall();
 						/*var myResult = checkPlugin('http://skaz.tv/onlines.js')
 						setTimeout(function() {	
-							$('div[data-name="skaz"]').append('<div class="settings-param__status one"></div>')
+							$('div[data-name="Skaz Online"]').append('<div class="settings-param__status one"></div>')
 							if (myResult) {
-								$('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
+								$('div[data-name="Skaz Online"]').find('.settings-param__status').removeClass('active error wait').addClass('active')
 							} else {
-								$('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
+								$('div[data-name="Skaz Online"]').find('.settings-param__status').removeClass('active error wait').addClass('error')
 							}
 						}, 100);*/
 						var myResult = checkPlugin('http://skaz.tv/onlines.js');
                                                 var pluginsArray = Lampa.Storage.get('plugins');
                                                     setTimeout(function() {
-                                                       $('div[data-name="skaz"]').append('<div class="settings-param__status one"></div>');
+                                                       $('div[data-name="Skaz Online"]').append('<div class="settings-param__status one"></div>');
                                                        var pluginStatus = null;
                                                        for (var i = 0; i < pluginsArray.length; i++) {
                                                           if (pluginsArray[i].url === 'http://skaz.tv/onlines.js') {
@@ -2694,11 +2694,11 @@ Lampa.SettingsApi.addComponent({
                                                           }
                                                        }
                                                        if (myResult && pluginStatus !== 0) {
-                                                          $('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error').addClass('active');
+                                                          $('div[data-name="Skaz Online"]').find('.settings-param__status').removeClass('active error').addClass('active');
                                                        } else if (pluginStatus === 0) {
-                                                          $('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
+                                                          $('div[data-name="Skaz Online"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
                                                        } else {
-                                                          $('div[data-name="skaz"]').find('.settings-param__status').removeClass('active error').addClass('error');
+                                                          $('div[data-name="Skaz Online"]').find('.settings-param__status').removeClass('active error').addClass('error');
                                                        }
                                                     }, 100);
 					}
