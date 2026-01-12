@@ -31,30 +31,6 @@
       });
     }
 
-    function removeQRCodeAds() {
-      const observer = new MutationObserver(function () {
-        // Удаление QR-кода в торрсервере
-        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"], img[src*="qr"], canvas').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
-        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"]').remove();
-        
-        // Удаление QR-кода в синхронизации
-        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"], img[src*="qr"], canvas').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
-        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"]').remove();
-        
-        // Общее удаление QR-кодов в рекламных блоках
-        $('[class*="qr"], [class*="qrcode"]').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-      
-      // Также удаляем при загрузке
-      setTimeout(function() {
-        $('[class*="torrserver"], [class*="torrent-server"], [class*="torrentserver"]').find('[class*="qr"], [class*="qrcode"]').remove();
-        $('[class*="sync"], [class*="synchronization"]').find('[class*="qr"], [class*="qrcode"]').remove();
-        $('[class*="qr"], [class*="qrcode"]').closest('[class*="ad"], [class*="promo"], [class*="banner"]').remove();
-      }, 500);
-    }
-
     function initializeApp() {
       const style = document.createElement('style');
       style.innerHTML = `
