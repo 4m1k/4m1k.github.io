@@ -3,6 +3,18 @@
     Lampa.Platform.tv();
 
     (function () {
+        function hideLastAddedSection() {
+            const titles = document.querySelectorAll('.items-line__title');
+            titles.forEach(function(title) {
+                if (title.textContent.trim() === 'Последнее добавление') {
+                    const itemsLine = title.closest('.items-line');
+                    if (itemsLine) {
+                        itemsLine.style.display = 'none';
+                    }
+                }
+            });
+        }
+
         function hideUnneededContent() {
             const style = document.createElement('style');
             style.innerHTML = `
@@ -27,14 +39,25 @@
 
             setTimeout(() => {
                 $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
-                
-                // Скрываем секцию "Последнее добавление"
-                $('.items-line__title').each(function() {
-                    if ($(this).text().trim() === 'Последнее добавление') {
-                        $(this).closest('.items-line').hide();
-                    }
-                });
             }, 1000);
+
+            // Скрываем секцию "Последнее добавление" сразу и периодически
+            hideLastAddedSection();
+            setTimeout(hideLastAddedSection, 500);
+            setTimeout(hideLastAddedSection, 1000);
+            setTimeout(hideLastAddedSection, 2000);
+            setTimeout(hideLastAddedSection, 3000);
+
+            // Отслеживаем появление новых элементов
+            if (window.MutationObserver) {
+                const observer = new MutationObserver(function() {
+                    hideLastAddedSection();
+                });
+                observer.observe(document.body || document.documentElement, {
+                    childList: true,
+                    subtree: true
+                });
+            }
         }
 
         function removeAdsOnToggle() {
