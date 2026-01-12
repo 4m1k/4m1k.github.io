@@ -62,13 +62,11 @@
     if (window.appready) {
       initializeApp();
       removeAdsOnToggle();
-      removeQRCodeAds();
     } else {
       Lampa.Listener.follow('app', function (event) {
         if (event.type === 'ready') {
           initializeApp();
           removeAdsOnToggle();
-          removeQRCodeAds();
           $('[data-action="feed"], [data-action="subscribes"], [data-action="myperson"]').remove();
         }
       });
