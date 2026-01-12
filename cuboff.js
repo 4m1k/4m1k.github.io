@@ -5,14 +5,17 @@
     (function () {
         function hideLastAddedSection() {
             const titles = document.querySelectorAll('.items-line__title');
+            let found = false;
             titles.forEach(function(title) {
                 if (title.textContent.trim() === 'Последнее добавление') {
                     const itemsLine = title.closest('.items-line');
-                    if (itemsLine) {
+                    if (itemsLine && itemsLine.style.display !== 'none') {
                         itemsLine.style.display = 'none';
+                        found = true;
                     }
                 }
             });
+            return found;
         }
 
         function hideUnneededContent() {
@@ -41,22 +44,28 @@
                 $('.open--feed, .open--premium, .open--notice, .icon--blink, [class*="friday"], [class*="christmas"]').remove();
             }, 1000);
 
-            // Скрываем секцию "Последнее добавление" сразу и периодически
+            // Скрываем секцию "Последнее добавление" при изменениях DOM
             hideLastAddedSection();
-            setTimeout(hideLastAddedSection, 500);
-            setTimeout(hideLastAddedSection, 1000);
-            setTimeout(hideLastAddedSection, 2000);
-            setTimeout(hideLastAddedSection, 3000);
-
-            // Отслеживаем появление новых элементов
-            if (window.MutationObserver) {
-                const observer = new MutationObserver(function() {
-                    hideLastAddedSection();
-                });
-                observer.observe(document.body || document.documentElement, {
+            
+            var checkTimeout;
+            function debouncedHide() {
+                clearTimeout(checkTimeout);
+                checkTimeout = setTimeout(hideLastAddedSection, 100);
+            }
+            
+            if (window.MutationObserver && document.body) {
+                var observer = new MutationObserver(debouncedHide);
+                observer.observe(document.body, {
                     childList: true,
                     subtree: true
                 });
+            } else {
+                // Fallback: редкая проверка, только если MutationObserver недоступен
+                var hideInterval = setInterval(function() {
+                    if (hideLastAddedSection()) {
+                        clearInterval(hideInterval);
+                    }
+                }, 1500);
             }
         }
 
