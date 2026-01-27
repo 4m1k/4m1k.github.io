@@ -9,6 +9,49 @@
         history_filter_enabled: false
     };
 
+    // Функция проверки, является ли элемент медиа-контентом
+    function isMediaContent(item) {
+        if (!item) return false;
+        
+        // Если это явно расширение/плагин по типу
+        if (item.type && typeof item.type === 'string') {
+            var typeLower = item.type.toLowerCase();
+            if (typeLower === 'plugin' || 
+                typeLower === 'extension' || 
+                typeLower === 'theme' ||
+                typeLower === 'addon') {
+                return false;
+            }
+        }
+        
+        // Если есть явные поля расширений (и нет медиа-полей)
+        var hasExtensionFields = (item.plugin !== undefined || 
+                                 item.extension !== undefined ||
+                                 (item.type && item.type === 'extension') ||
+                                 (item.type && item.type === 'plugin'));
+        
+        // Медиа-контент должен иметь специфичные поля для фильмов/сериалов
+        // Проверяем наличие характерных медиа-полей
+        var hasMediaFields = 
+            item.original_language !== undefined ||
+            item.vote_average !== undefined ||
+            item.media_type !== undefined ||
+            item.first_air_date !== undefined ||
+            item.release_date !== undefined ||
+            item.original_title !== undefined ||
+            item.original_name !== undefined ||
+            (item.genre_ids && Array.isArray(item.genre_ids)) ||
+            (item.genres && Array.isArray(item.genres));
+        
+        // Если есть поля расширений, но нет медиа-полей - это не медиа-контент
+        if (hasExtensionFields && !hasMediaFields) return false;
+        
+        // Если нет медиа-полей вообще, это не медиа-контент
+        if (!hasMediaFields) return false;
+        
+        return true;
+    }
+
     // Процессор фильтров
     var filterProcessor = {
         filters: [
@@ -16,6 +59,8 @@
             function (items) {
                 if (!settings.asian_filter_enabled) return items;
                 return items.filter(function (item) {
+                    // Пропускаем элементы, которые не являются медиа-контентом
+                    if (!isMediaContent(item)) return true;
                     if (!item || !item.original_language) return true;
                     var lang = item.original_language.toLowerCase();
                     var asianLangs = ['ja', 'ko', 'zh', 'th', 'vi', 'hi', 'ta', 'te', 'ml', 'kn', 'bn', 'ur', 'pa', 'gu', 'mr', 'ne', 'si', 'my', 'km', 'lo', 'mn', 'ka', 'hy', 'az', 'kk', 'ky', 'tg', 'tk', 'uz'];
@@ -27,6 +72,8 @@
             function (items) {
                 if (!settings.language_filter_enabled) return items;
                 return items.filter(function (item) {
+                    // Пропускаем элементы, которые не являются медиа-контентом
+                    if (!isMediaContent(item)) return true;
                     if (!item) return true;
                     var defaultLang = Lampa.Storage.get('language') || 'ru';
                     var original = item.original_title || item.original_name;
@@ -41,6 +88,8 @@
             function (items) {
                 if (!settings.rating_filter_enabled) return items;
                 return items.filter(function (item) {
+                    // Пропускаем элементы, которые не являются медиа-контентом
+                    if (!isMediaContent(item)) return true;
                     if (!item) return true;
 
                     var isSpecial = 
@@ -63,6 +112,8 @@
                 var timeline = Lampa.Storage.cache('timetable', 300, []);
 
                 return items.filter(function (item) {
+                    // Пропускаем элементы, которые не являются медиа-контентом
+                    if (!isMediaContent(item)) return true;
                     if (!item || !item.id) return true;
 
                     var mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
@@ -298,10 +349,43 @@
 
         // Применение фильтров
         Lampa.Listener.follow('request_secuses', function (e) {
-            if (e.data && Array.isArray(e.data.results)) {
-                e.data.original_length = e.data.results.length;
-                e.data.results = filterProcessor.apply(e.data.results);
+            if (!e.data || !Array.isArray(e.data.results)) return;
+            
+            // Проверяем URL на наличие ключевых слов расширений/магазина
+            var url = e.url || (e.data && e.data.url) || '';
+            var urlStr = typeof url === 'string' ? url.toLowerCase() : '';
+            if (urlStr.indexOf('extension') !== -1 ||
+                urlStr.indexOf('plugin') !== -1 ||
+                urlStr.indexOf('store') !== -1 ||
+                urlStr.indexOf('market') !== -1 ||
+                urlStr.indexOf('магазин') !== -1) {
+                return; // Не применяем фильтры к расширениям/магазину
             }
+            
+            // Проверяем компонент - расширения/магазин могут иметь специфичные компоненты
+            var component = e.component || (e.data && e.data.component) || '';
+            var componentStr = typeof component === 'string' ? component.toLowerCase() : '';
+            if (componentStr.indexOf('extension') !== -1 ||
+                componentStr.indexOf('plugin') !== -1 ||
+                componentStr.indexOf('store') !== -1 ||
+                componentStr.indexOf('market') !== -1) {
+                return; // Не применяем фильтры к расширениям/магазину
+            }
+            
+            // Если массив пустой, пропускаем (может быть расширения/магазин)
+            if (e.data.results.length === 0) return;
+            
+            // Проверяем, содержит ли массив хотя бы один элемент медиа-контента
+            // Если все элементы не являются медиа-контентом, не применяем фильтры
+            var hasMediaContent = e.data.results.some(function(item) {
+                return isMediaContent(item);
+            });
+            
+            // Если это не медиа-контент (расширения/магазин), не применяем фильтры
+            if (!hasMediaContent) return;
+            
+            e.data.original_length = e.data.results.length;
+            e.data.results = filterProcessor.apply(e.data.results);
         });
     }
 
