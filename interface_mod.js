@@ -313,6 +313,11 @@
 
         function addLabel(card) {
             if (!InterFaceMod.settings.show_movie_type) return;
+            // ИСПРАВЛЕНИЕ: Не добавляем лейблы внутри окна онлайн/эксплорера
+            if ($(card).closest('.explorer, .layer--online, .select-box').length) {
+                $(card).find('.content-label').remove();
+                return;
+            }
             if ($(card).find('.content-label').length) return;
             var view = $(card).find('.card__view');
             if (!view.length) return;
@@ -347,12 +352,11 @@
                 else if ($(card).find('.card__type, .card__temp').text().match(/(сезон|серия|эпизод|ТВ|TV)/i)) isTV = true;
             }
 
+            // ИСПРАВЛЕНИЕ: Если это не сериал (фильм), выходим и не добавляем лейбл
+            if (!isTV) return;
+
             var lbl = $('<div class="content-label"></div>');
-            if (isTV) {
-                lbl.addClass('serial-label').text('Сериал').data('type', 'serial');
-            } else {
-                lbl.addClass('movie-label').text('Фильм').data('type', 'movie');
-            }
+            lbl.addClass('serial-label').text('Сериал').data('type', 'serial');
             view.append(lbl);
         }
 
@@ -369,17 +373,17 @@
                 var isTV = m.number_of_seasons > 0 || m.seasons || m.type === 'tv';
                 if (InterFaceMod.settings.show_movie_type) {
                     poster.find('.content-label').remove();
-                    var lbl = $('<div class="content-label"></div>').css({
-                        position: 'absolute', top: '1.4em', left: '-0.8em',
-                        color: 'white', padding: '0.4em', borderRadius: '0.3em',
-                        fontSize: '0.8em', zIndex: 10
-                    });
+                    
+                    // ИСПРАВЛЕНИЕ: Добавляем лейбл только если это сериал
                     if (isTV) {
+                        var lbl = $('<div class="content-label"></div>').css({
+                            position: 'absolute', top: '1.4em', left: '-0.8em',
+                            color: 'white', padding: '0.4em', borderRadius: '0.3em',
+                            fontSize: '0.8em', zIndex: 10
+                        });
                         lbl.addClass('serial-label').text('Сериал').css('backgroundColor', '#3498db');
-                    } else {
-                        lbl.addClass('movie-label').text('Фильм').css('backgroundColor', '#2ecc71');
+                        poster.css('position', 'relative').append(lbl);
                     }
-                    poster.css('position', 'relative').append(lbl);
                 }
             }
         });
@@ -527,7 +531,7 @@
                 }
                 .head__action.focus, .head__action.hover {
                     background: linear-gradient(45deg, #ff6e7f, #bfe9ff);
-                    color: #2d1f3d;
+                    color: '#2d1f3d';
                 }
                 .full-start__background {
                     opacity: 0.8;
@@ -637,7 +641,9 @@ function updateVoteColors() {
     if (!InterFaceMod.settings.colored_ratings) return;
 
     function apply(el) {
-        // Ищем число с возможной запятой или точкой (например, 8.6 или 8,6)
+        // ИСПРАВЛЕНИЕ: ИСПРАВЛЕНИЕ: Не красим explorer-card (окно выбора серий)
+        if ($(el).closest('.explorer').length) return;
+        
         var text = $(el).text().trim();
         var m = text.match(/(\d+[\.,]\d+|\d+)/);
         if (!m) return;
@@ -652,8 +658,8 @@ function updateVoteColors() {
         $(el).css('color', c);
     }
 
-    // Применяем ко всем элементам с рейтингом — старые + новые в explorer
-    $('.card__vote, .full-start__rate, .full-start-new__rate, .info__rate, .card__imdb-rate, .card__kinopoisk-rate, .explorer-card__head-rate span').each(function(){
+    // ИСПРАВЛЕНИЕ: Убрали .explorer-card__head-rate span из списка селекторов
+    $('.card__vote, .full-start__rate, .full-start-new__rate, .info__rate, .card__imdb-rate, .card__kinopoisk-rate').each(function(){
         apply(this);
     });
 }
@@ -661,10 +667,8 @@ function updateVoteColors() {
 function setupVoteColorsObserver() {
     if (!InterFaceMod.settings.colored_ratings) return;
 
-    // Первичное применение
     setTimeout(updateVoteColors, 500);
 
-    // Наблюдатель за новыми элементами (включая подгружаемые в explorer)
     new MutationObserver(function(){
         setTimeout(updateVoteColors, 100);
     }).observe(document.body, { childList: true, subtree: true });
@@ -751,6 +755,9 @@ function colorizeAgeRating() {
     };
 
     function apply(el) {
+        // ИСПРАВЛЕНИЕ: Не красим элементы внутри explorer (окно выбора серий)
+        if ($(el).closest('.explorer').length) return;
+
         var t = $(el).text().trim();
         var grp = null;
         for (var key in groups) {
@@ -764,22 +771,22 @@ function colorizeAgeRating() {
                 backgroundColor: colors[grp].bg,
                 color: colors[grp].text,
                 borderRadius: '0.3em',
-                padding: '0.2em 0.4em',          // небольшой отступ для красоты
+                padding: '0.2em 0.4em',
                 display: 'inline-block'
             });
         }
     }
 
-    // Применяем ко всем существующим элементам (как в full-card, так и в explorer)
-    $('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
+    // ИСПРАВЛЕНИЕ: Убрали .explorer-card__head-age из селекторов
+    $('.full-start__pg').each(function(){ apply(this); });
 
     // Наблюдатель за новыми элементами
     new MutationObserver(function (muts) {
         muts.forEach(function (m) {
             if (m.addedNodes) {
-                $(m.addedNodes).find('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
-                // Также проверяем сам добавленный узел, если он сам является нужным элементом
-                if ($(m.addedNodes).hasClass('explorer-card__head-age') || $(m.addedNodes).hasClass('full-start__pg')) {
+                // ИСПРАВЛЕНИЕ: Убрали .explorer-card__head-age
+                $(m.addedNodes).find('.full-start__pg').each(function(){ apply(this); });
+                if ($(m.addedNodes).hasClass('full-start__pg')) {
                     apply(m.addedNodes);
                 }
             }
@@ -790,7 +797,7 @@ function colorizeAgeRating() {
     Lampa.Listener.follow('full', function(d) {
         if (d.type === 'complite') {
             setTimeout(function(){
-                $(d.object.activity.render()).find('.full-start__pg, .explorer-card__head-age').each(function(){ apply(this); });
+                $(d.object.activity.render()).find('.full-start__pg').each(function(){ apply(this); });
             },100);
         }
     });
