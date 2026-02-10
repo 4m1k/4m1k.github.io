@@ -2890,7 +2890,7 @@ Lampa.SettingsApi.addComponent({
 					},
 					onChange: function(value) {
 						if (value == '1') {
-							itemON('https://lampadn.github.io/o.js', 'Онлайн H', '@v42z', 'Онлайн_H');
+							itemON('https://lampadn.github.io/o.js', 'Онлайн H', '@lampadn', 'Онлайн_H');
 						}
 						if (value == '2') {
 							var pluginToRemoveUrl = "https://lampadn.github.io/o.js";
