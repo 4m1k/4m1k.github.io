@@ -305,6 +305,8 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       'ukrain',
       'махно',
 	  'filmix',
+	  'filmixtv',
+	  'rc/filmix',
       'kinoflix',
 	  'geosaitebi',
       'укр'
