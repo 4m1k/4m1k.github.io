@@ -296,6 +296,10 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
     var hiddenBalanserTerms = [
       'kinoukr',
       'filmix',
+      'filmixtv',
+      'filmix.tv',
+      'rc/filmix',
+      'филмикс',
       'uaflix',
       'uafilme',
       'uafilmme',
@@ -350,6 +354,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       var nextSources = {};
       (list || []).forEach(function(j) {
         var name = balanserName(j);
+        if (isUkrainianBalanser(j) || isUkrainianBalanser(name)) return;
         nextSources[name] = {
           url: j.url,
           name: j.name,
@@ -363,6 +368,8 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
     function sanitizeStoredBalanser() {
       var stored = Lampa.Storage.get('online_balanser', '');
       if (stored && isUkrainianBalanser(stored)) Lampa.Storage.set('online_balanser', filter_sources.length ? filter_sources[0] : '');
+      var active = Lampa.Storage.get('active_balanser', '');
+      if (active && isUkrainianBalanser(active)) Lampa.Storage.set('active_balanser', filter_sources.length ? filter_sources[0] : '');
       var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
       if (last_select_balanser[object.movie.id] && isUkrainianBalanser(last_select_balanser[object.movie.id])) {
         delete last_select_balanser[object.movie.id];
@@ -476,6 +483,11 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       Lampa.Controller.enable('content');
       this.loading(false);
 	  if(object.balanser){
+		  if (isUkrainianBalanser(object.balanser) || isUkrainianBalanser(object)) {
+			  files.render().find('.torrent-filter').remove();
+			  _this.empty();
+			  return;
+		  }
 		  files.render().find('.filter--search').remove();
 		  sources = {};
 		  sources[object.balanser] = {name: object.balanser};
@@ -2009,7 +2021,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
-        var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix", "videasy", "vidsrc", "movpi", "vidlink", "twoembed", "autoembed", "smashystream", "autoembed", "rgshows", "pidtor", "videoseed", "iptvonline", "veoveo", "kinoflix"];
+        var balansers_sync = ["fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix", "videasy", "vidsrc", "movpi", "vidlink", "twoembed", "autoembed", "smashystream", "autoembed", "rgshows", "pidtor", "videoseed", "iptvonline", "veoveo", "kinoflix"];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
