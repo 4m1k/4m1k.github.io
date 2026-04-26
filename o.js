@@ -2019,3 +2019,4 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
   if (!window.lampac_plugin) startPlugin();
 
 })();
+
