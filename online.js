@@ -295,6 +295,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 
     var hiddenBalanserTerms = [
       'kinoukr',
+      'filmix',
       'uaflix',
       'uafilme',
       'uafilmme',
@@ -304,9 +305,6 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       'ukrkino',
       'ukrain',
       'махно',
-	  'filmix',
-	  'filmixtv',
-	  'rc/filmix',
       'kinoflix',
 	  'geosaitebi',
       'укр'
