@@ -49,6 +49,15 @@
       lang: 'lg',
     },
     {
+      id: 'tribal',
+      name: 'Tribal',
+      baseUrl: '11.307407.xyz',
+      protocol: 'https://',
+      key: '',
+      interview: 'all',
+      lang: 'lg',
+    },
+    {
       id: 'freebie_tom_ru',
       name: 'Freebie',
       baseUrl: 'jacred.freebie.tom.ru',
@@ -56,15 +65,15 @@
       interview: 'all',
       lang: 'lg',
     },
+  //  {
+  //    id: 'jac_black',
+  //    name: 'Jac Black',
+  //    baseUrl: 'jacblack.ru:9117',
+  //    key: '',
+  //    interview: 'all',
+  //    lang: 'lg',
+  //  },
     {
-      id: 'jac_black',
-      name: 'Jac Black',
-      baseUrl: 'jacblack.ru:9117',
-      key: '',
-      interview: 'all',
-      lang: 'lg',
-    },
-        {
       id: 'Myjacket',
       name: 'Myjacket',
       baseUrl: 'lampac.fun:8117',
@@ -73,6 +82,10 @@
       lang: 'lg',
     },
   ];
+
+  function getServerUrl(server) {
+    return (server.protocol || '') + server.baseUrl;
+  }
 
   // Применение конфигурации выбранного сервера
   function applyServerConfig() {
@@ -89,7 +102,7 @@
 
     var server = servers.find(s => s.id === selected);
     if (server) {
-      Lampa.Storage.set('jackett_url', server.baseUrl);
+      Lampa.Storage.set('jackett_url', getServerUrl(server));
       Lampa.Storage.set('jackett_key', server.key);
       Lampa.Storage.set('jackett_interview', server.interview);
       Lampa.Storage.set('parse_in_search', true);
@@ -97,13 +110,13 @@
     }
   }
 
-  // Проверка статуса сервера (freebie_tom_ru всегда считается рабочим)
+  // Проверка статуса сервера (freebie_tom_ru и Myjacket всегда считаются рабочими)
   function checkServerStatus(server, callback) {
-    if (server.id === 'freebie_tom_ru') {
+    if (server.id === 'freebie_tom_ru' || server.id === 'Myjacket') {
       callback(server, true, 200);
       return;
     }
-    var protocol = server.baseUrl === 'jr.maxvol.pro' ? 'https://' : 'http://';
+    var protocol = server.protocol || (server.baseUrl === 'jr.maxvol.pro' ? 'https://' : 'http://');
     var url = `${protocol}${server.baseUrl}/api/v2.0/indexers/status:healthy/results?apikey=${server.key}`;
 
     var xhr = new XMLHttpRequest();
@@ -128,7 +141,7 @@
         var element = $(selector);
 
         if (element.text().trim() === server.name) {
-          if (server.id === 'freebie_tom_ru') {
+          if (server.id === 'freebie_tom_ru' || server.id === 'Myjacket') {
             element.html('✓&nbsp;&nbsp;' + server.name).css('color', '64e364');
             return;
           }
@@ -265,7 +278,7 @@
     return server ? server.name : 'Не выбран';
   }
 
-  // Проверка статуса всех серверов для меню (freebie_tom_ru всегда зелёный)
+  // Проверка статуса всех серверов для меню (freebie_tom_ru и Myjacket всегда зелёные)
   async function checkAllServers() {
     return Promise.all(servers.map(server =>
       new Promise(resolve => {
@@ -283,7 +296,7 @@
   function getServerSelectItem(s, overrideTitle) {
     return {
       title: overrideTitle !== undefined ? overrideTitle : (s.title || s.name),
-      url: s.baseUrl,
+      url: getServerUrl(s),
       url_two: s.id,
       jac_key: s.key,
       jac_int: s.interview,
