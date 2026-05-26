@@ -15,19 +15,6 @@
         return list && list.length ? Math.floor(Math.random() * list.length) : 0;
     }
 
-    function shuffledIndices(list) {
-        var result = [];
-        var i;
-        for (i = 0; i < (list ? list.length : 0); i++) result.push(i);
-        for (i = result.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = result[i];
-            result[i] = result[j];
-            result[j] = temp;
-        }
-        return result;
-    }
-
     // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
     var connection_source = 'skaz'; // ПАТЧ: по умолчанию skaz
 
@@ -113,9 +100,6 @@
                 { email: secret([163,212,249,224,223,157,185,180,190,98,26,107,200,248,159,190,251,188,205,208,52,4], 192), uid: secret([137,251,236,224], 184) }
             ],
             currentIndex: 0,
-            accountOrder: [],
-            orderIndex: 0,
-            validated: false,
             getHost: function() { return randomUrl; },
             getSubtitle: function() { return randomUrl; },
             auth: function(url, cfg) {
@@ -144,14 +128,6 @@
     function rotateAccount(source) {
         var cfg = SERVER_CONFIG[source];
         if (!cfg) return false;
-        if (source === 'skaz' && cfg.accountOrder && cfg.accountOrder.length) {
-            if (cfg.orderIndex < cfg.accountOrder.length - 1) {
-                cfg.orderIndex++;
-                cfg.currentIndex = cfg.accountOrder[cfg.orderIndex];
-                return true;
-            }
-            return false;
-        }
         var list = cfg.accounts || cfg.uids || cfg.tokens || cfg.mirrors;
         if (!list) return false;
         if (cfg.currentIndex < list.length - 1) {
@@ -162,15 +138,7 @@
     }
 
     function getCurrentSkazAccount() {
-        return SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex] || SERVER_CONFIG.skaz.accounts[0];
-    }
-
-    function resetSkazAccountOrder() {
-        var cfg = SERVER_CONFIG.skaz;
-        cfg.accountOrder = shuffledIndices(cfg.accounts);
-        cfg.orderIndex = 0;
-        cfg.currentIndex = cfg.accountOrder.length ? cfg.accountOrder[0] : 0;
-        cfg.validated = false;
+        return SERVER_CONFIG.skaz.accounts[0];
     }
 
     function getServerFilterItems() {
@@ -207,7 +175,7 @@
     }
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
-    resetSkazAccountOrder();
+    SERVER_CONFIG.skaz.currentIndex = 0;
 
     // Helper для получения текущего хоста
     function getHost() {
@@ -854,10 +822,7 @@
                         'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
                     };
 
-                    network["native"](account(url), function(result) {
-                        if (connection_source === 'skaz') SERVER_CONFIG.skaz.validated = true;
-                        _this.parse(result);
-                    }, function(e) {
+                    network["native"](account(url), _this.parse.bind(_this), function(e) {
                         if (rotateAccount(connection_source)) {
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
@@ -882,7 +847,6 @@
                 var wake_url = 'http://online' + dd + '3.skaz.tv/lite/filmix?title=' + encodeURIComponent(wake_title);
                 // account(wake_url) добавит текущий uid/email из ротации
                 network.silent(account(wake_url), function() {
-                    SERVER_CONFIG.skaz.validated = true;
                     runRequest();
                 }, function() {
                     if (rotateAccount('skaz')) {
