@@ -1,4 +1,12 @@
 (function() {
+    function decodeHidden(input) {
+        try {
+            return decodeURIComponent(escape(atob(input)));
+        } catch (e) {
+            return atob(input);
+        }
+    }
+
     function unpackHidden(data, salt) {
         var out = '';
         for (var i = 0; i < data.length; i++) {
@@ -92,12 +100,12 @@
         skaz: {
             label: 'Skaz',
             accounts: [
-                { email: secret([91,107,0,229,175,176,128,64,123,40,51,10,248,236,208,225,181,184,136,42], 53), uid: secret([149,230,239,253,198,140,175,186], 231) },
-                { email: secret([159,197,219,212,209,111,109,37,51,75,164,154,155,175,188,219], 252), uid: secret([58,7,14], 92) },
-                { email: secret([29,54,15,40,247,195,144,166,178,81,69,108,195,208,241,15,64,86], 104), uid: secret([156,253,228,226,216,131,177], 250) },
-                { email: secret([40,27,12,241,171,185,132,140,91,126,48,8,240,238,205,141,204,211,245,223,152,161,83,40,62,52,28], 91), uid: secret([101,15,13,23,112,42,40,11], 3) },
-                { email: secret([183,221,245,231,216,185,133,171,173,112,25,100,213,181,135,177,161,161,200,218,37,19,1,111], 214), uid: secret([109,91,66,2], 92) },
-                { email: secret([163,212,249,224,223,157,185,180,190,98,26,107,200,248,159,190,251,188,205,208,52,4], 192), uid: secret([137,251,236,224], 184) }
+                { email: decodeHidden('bmF6YS0tLXJvdjZAZ21haWwuY29t'), uid: decodeHidden('cm5lbXR2ajM=') },
+                { email: decodeHidden('Y2VudHQwNEBnbWFpbC5jb20='), uid: decodeHidden('Znh6') },
+                { email: decodeHidden('dW5pb252b2luQG1haWwucnU='), uid: decodeHidden('ZnJlaWQ1cQ==') },
+                { email: decodeHidden('c29sbmNlLS12LS1rZXBrZUB5YW5kZXgucnU='), uid: decodeHidden('Zm9ydDMxaGc=') },
+                { email: decodeHidden('YWZlbmtpbnNlcmdlakBnbWFpbC5jb20='), uid: decodeHidden('MTEwMg==') },
+                { email: decodeHidden('Y29ya2luaWdvckBnbWFpbC5jb20='), uid: decodeHidden('MTEwMQ==') }
             ],
             currentIndex: 0,
             getHost: function() { return randomUrl; },
@@ -1361,7 +1369,7 @@
                 }
             }
             filter.chosen('filter', select);
-            filter.chosen('sort', [sources[balanser].name]);
+            filter.chosen('sort', [sources[balanser] ? sources[balanser].name : (balanser || '')]);
         };
         this.getEpisodes = function(season, call) {
             var episodes = [];
