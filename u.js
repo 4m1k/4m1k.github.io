@@ -23,6 +23,19 @@
         return list && list.length ? Math.floor(Math.random() * list.length) : 0;
     }
 
+    function shuffledIndices(list) {
+        var result = [];
+        var i;
+        for (i = 0; i < (list ? list.length : 0); i++) result.push(i);
+        for (i = result.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = result[i];
+            result[i] = result[j];
+            result[j] = temp;
+        }
+        return result;
+    }
+
     // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
     var connection_source = 'skaz'; // ПАТЧ: по умолчанию skaz
 
@@ -80,13 +93,13 @@
         showy: {
             label: 'Showy',
             mirrors: [
-                secret([198,134,135,143,154,223,154,86,80,76,1,127,99,49,34,26,214,212,234,243,146,129,87,46,38], 174),
-                secret([96,62,38,33,50,29,2,220,220,196,131,177,174,152,64,122,101], 8),
-                secret([126,68,78,89,108,67,72,242,238,202,162,141,178,171,72,104,99,126,53], 22)
+                decodeHidden('aHR0cDovLzE4NS4xMjEuMjM1LjEyNDoxMTE3Ni8='),
+                decodeHidden('aHR0cDovL3Nob3d5cHJvLmNvbS8='),
+                decodeHidden('aHR0cDovL3Ntb3RyZXRrLmNvbS8=')
             ],
             currentIndex: 0,
-            uid: secret([83,77,96,92,29,36,244,227], 58),
-            showyToken: secret([215,199,185,190,249,183,200,152,168,162,139,142,106,98,75,79,3,6,34,33,193,155,228,238,219,217,133,183,130,231,157,155,161,161,228,181], 177),
+            uid: decodeHidden('aThuYWI5dnc='),
+            showyToken: decodeHidden('ZjgzNzcwNTctOTBlYi00ZDc2LTkzYzktNzYwNTk1MmEwOTZs'),
             getHost: function() { return this.mirrors[this.currentIndex]; },
             getSubtitle: function() { return this.mirrors[this.currentIndex]; },
             auth: function(url, cfg) {
@@ -108,6 +121,8 @@
                 { email: decodeHidden('Y29ya2luaWdvckBnbWFpbC5jb20='), uid: decodeHidden('MTEwMQ==') }
             ],
             currentIndex: 0,
+            accountOrder: [],
+            orderIndex: 0,
             getHost: function() { return randomUrl; },
             getSubtitle: function() { return randomUrl; },
             auth: function(url, cfg) {
@@ -121,8 +136,8 @@
         },
         okeantv: {
             label: 'OkeanTV',
-            host: secret([190,242,241,237,230,197,210,22,34,38,72,110,111,79,30,44,156,132,175,146,235,253,221,207,246,201], 214),
-            uid: secret([64,117,116,124,73], 39),
+            host: decodeHidden('aHR0cDovLzE0OC4xMzUuMjA3LjE3NDoxMjM1OS8='),
+            uid: decodeHidden('Z3Vlc3Q='),
             getHost: function() { return this.host; },
             getSubtitle: function() { return 'cdn.okeantv.fun'; },
             auth: function(url, cfg) {
@@ -136,6 +151,14 @@
     function rotateAccount(source) {
         var cfg = SERVER_CONFIG[source];
         if (!cfg) return false;
+        if (source === 'skaz' && cfg.accountOrder && cfg.accountOrder.length) {
+            if (cfg.orderIndex < cfg.accountOrder.length - 1) {
+                cfg.orderIndex++;
+                cfg.currentIndex = cfg.accountOrder[cfg.orderIndex];
+                return true;
+            }
+            return false;
+        }
         var list = cfg.accounts || cfg.uids || cfg.tokens || cfg.mirrors;
         if (!list) return false;
         if (cfg.currentIndex < list.length - 1) {
@@ -146,7 +169,14 @@
     }
 
     function getCurrentSkazAccount() {
-        return SERVER_CONFIG.skaz.accounts[0];
+        return SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex] || SERVER_CONFIG.skaz.accounts[0];
+    }
+
+    function resetSkazAccountOrder() {
+        var cfg = SERVER_CONFIG.skaz;
+        cfg.accountOrder = shuffledIndices(cfg.accounts);
+        cfg.orderIndex = 0;
+        cfg.currentIndex = cfg.accountOrder.length ? cfg.accountOrder[0] : 0;
     }
 
     function getServerFilterItems() {
@@ -183,7 +213,7 @@
     }
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
-    SERVER_CONFIG.skaz.currentIndex = 0;
+    resetSkazAccountOrder();
 
     // Helper для получения текущего хоста
     function getHost() {
