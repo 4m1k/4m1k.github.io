@@ -15,6 +15,19 @@
         return list && list.length ? Math.floor(Math.random() * list.length) : 0;
     }
 
+    function shuffledIndices(list) {
+        var result = [];
+        var i;
+        for (i = 0; i < (list ? list.length : 0); i++) result.push(i);
+        for (i = result.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = result[i];
+            result[i] = result[j];
+            result[j] = temp;
+        }
+        return result;
+    }
+
     // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
     var connection_source = 'skaz'; // ПАТЧ: по умолчанию skaz
 
@@ -100,10 +113,11 @@
                 { email: secret([163,212,249,224,223,157,185,180,190,98,26,107,200,248,159,190,251,188,205,208,52,4], 192), uid: secret([137,251,236,224], 184) }
             ],
             currentIndex: 0,
+            accountOrder: [],
+            orderIndex: 0,
+            validated: false,
             getHost: function() { return randomUrl; },
             getSubtitle: function() { return randomUrl; },
-            registryEmail: secret([89,107,0,229,175,176,128,64,123,40,51,10,248,236,208,225,181,184], 53),
-            registryUid: secret([149,230,239,253,198,140,175,186], 231),
             auth: function(url, cfg) {
                 var acc = cfg.accounts[cfg.currentIndex];
                 if (url.indexOf('account_email=') == -1)
@@ -130,6 +144,14 @@
     function rotateAccount(source) {
         var cfg = SERVER_CONFIG[source];
         if (!cfg) return false;
+        if (source === 'skaz' && cfg.accountOrder && cfg.accountOrder.length) {
+            if (cfg.orderIndex < cfg.accountOrder.length - 1) {
+                cfg.orderIndex++;
+                cfg.currentIndex = cfg.accountOrder[cfg.orderIndex];
+                return true;
+            }
+            return false;
+        }
         var list = cfg.accounts || cfg.uids || cfg.tokens || cfg.mirrors;
         if (!list) return false;
         if (cfg.currentIndex < list.length - 1) {
@@ -137,6 +159,18 @@
             return true;
         }
         return false;
+    }
+
+    function getCurrentSkazAccount() {
+        return SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex] || SERVER_CONFIG.skaz.accounts[0];
+    }
+
+    function resetSkazAccountOrder() {
+        var cfg = SERVER_CONFIG.skaz;
+        cfg.accountOrder = shuffledIndices(cfg.accounts);
+        cfg.orderIndex = 0;
+        cfg.currentIndex = cfg.accountOrder.length ? cfg.accountOrder[0] : 0;
+        cfg.validated = false;
     }
 
     function getServerFilterItems() {
@@ -173,7 +207,7 @@
     }
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
-    SERVER_CONFIG.skaz.currentIndex = pickRandomIndex(SERVER_CONFIG.skaz.accounts);
+    resetSkazAccountOrder();
 
     // Helper для получения текущего хоста
     function getHost() {
@@ -191,7 +225,7 @@
     var balansers_with_search;
 
     // Текущий UID для Skaz
-    var unic_id = SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex].uid;
+    var unic_id = getCurrentSkazAccount().uid;
 
     function getAndroidVersion() {
         if (Lampa.Platform.is('android')) {
@@ -245,14 +279,15 @@
     window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection) {
         window.rch_nws[hostkey].typeInvoke('http://online' + dd + '3.skaz.tv', function() {
 
+            var skazAccount = getCurrentSkazAccount();
             client.invoke("RchRegistry", {
                 version: 154,
                 host: location.host,
                 rchtype: Lampa.Platform.is('android') ? 'apk' : Lampa.Platform.is('tizen') ? 'cors' : (window.rch_nws[hostkey].type || 'web'),
                 apkVersion: window.rch_nws[hostkey].apkVersion,
                 player: Lampa.Storage.field('player'),
-                account_email: SERVER_CONFIG.skaz.registryEmail,
-                unic_id: SERVER_CONFIG.skaz.registryUid,
+                account_email: skazAccount.email,
+                unic_id: skazAccount.uid,
                 profile_id: Lampa.Storage.get('lampac_profile_id', ''),
                 token: ''
             });
@@ -819,7 +854,10 @@
                         'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
                     };
 
-                    network["native"](account(url), _this.parse.bind(_this), function(e) {
+                    network["native"](account(url), function(result) {
+                        if (connection_source === 'skaz') SERVER_CONFIG.skaz.validated = true;
+                        _this.parse(result);
+                    }, function(e) {
                         if (rotateAccount(connection_source)) {
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
@@ -844,9 +882,9 @@
                 var wake_url = 'http://online' + dd + '3.skaz.tv/lite/filmix?title=' + encodeURIComponent(wake_title);
                 // account(wake_url) добавит текущий uid/email из ротации
                 network.silent(account(wake_url), function() {
+                    SERVER_CONFIG.skaz.validated = true;
                     runRequest();
                 }, function() {
-                    // Если пробуждающий запрос не прошел, сразу пробуем следующий аккаунт или выполняем запрос
                     if (rotateAccount('skaz')) {
                         _this.request(url);
                     } else {
