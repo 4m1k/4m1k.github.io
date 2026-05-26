@@ -70,13 +70,13 @@
         ab2024: {
             label: 'AB2024',
             tokens: [
-                secret([61,197,186,173,12,194,159,147,4,253,130,137], 205),
-                secret([44,60,79,94,143,204,157,175,138,67,50,2,80,37,210,130,182,47,89,116,237,243,207,214,213], 120),
-                secret([205,206,190,171,192,132,184,190,194,235,149,156,214,231,242,128,172,136], 61),
-                secret([53,214,184,176,5,200,149,147,76,130,174,139], 205)
+                decodeHidden('0LzQsNGALjMx'),
+                decodeHidden('VG90YWzhuLThv1VLMFBSSU1FVEVBTQ=='),
+                decodeHidden('0YHQtdC90YLRj9Cx0YDRjA=='),
+                decodeHidden('0LjRjtC90Yw5OQ==')
             ],
             currentIndex: 0,
-            uid: secret([253,7,77,94,140,230,194,208], 201),
+            uid: decodeHidden('NGV6dTgzN28='),
             getHost: function() { return 'https://ab2024.ru/'; },
             getSubtitle: function() { return 'https://ab2024.ru'; },
             auth: function(url, cfg) {
@@ -121,6 +121,7 @@
                 { email: decodeHidden('Y29ya2luaWdvckBnbWFpbC5jb20='), uid: decodeHidden('MTEwMQ==') }
             ],
             currentIndex: 0,
+            startupIndex: 0,
             accountOrder: [],
             orderIndex: 0,
             getHost: function() { return randomUrl; },
@@ -168,15 +169,19 @@
         return false;
     }
 
-    function getCurrentSkazAccount() {
-        return SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex] || SERVER_CONFIG.skaz.accounts[0];
+    function setSkazStartupAccount() {
+        var cfg = SERVER_CONFIG.skaz;
+        cfg.startupIndex = pickRandomIndex(cfg.accounts);
+        cfg.currentIndex = cfg.startupIndex;
+        cfg.accountOrder = [cfg.startupIndex];
+        for (var i = 0; i < cfg.accounts.length; i++) {
+            if (i !== cfg.startupIndex) cfg.accountOrder.push(i);
+        }
+        cfg.orderIndex = 0;
     }
 
-    function resetSkazAccountOrder() {
-        var cfg = SERVER_CONFIG.skaz;
-        cfg.accountOrder = shuffledIndices(cfg.accounts);
-        cfg.orderIndex = 0;
-        cfg.currentIndex = cfg.accountOrder.length ? cfg.accountOrder[0] : 0;
+    function getCurrentSkazAccount() {
+        return SERVER_CONFIG.skaz.accounts[SERVER_CONFIG.skaz.currentIndex] || SERVER_CONFIG.skaz.accounts[0];
     }
 
     function getServerFilterItems() {
@@ -213,7 +218,7 @@
     }
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
-    resetSkazAccountOrder();
+    setSkazStartupAccount();
 
     // Helper для получения текущего хоста
     function getHost() {
