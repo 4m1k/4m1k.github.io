@@ -37,7 +37,7 @@
     }
 
     // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
-    var connection_source = 'skaz'; // ПАТЧ: по умолчанию skaz
+    var connection_source = Lampa.Storage.get('connection_source', 'skaz');
 
     // ПАТЧ: численная оценка качества (4K/UHD считаются как 2160)
     function qualityScore(k) {
@@ -557,6 +557,7 @@
                     // --- ОБРАБОТКА ВЫБОРА СЕРВЕРА ---
                     if (a.stype == 'connection') {
                         connection_source = b.source || 'skaz';
+                        Lampa.Storage.set('connection_source', connection_source);
                         balanser = '';
                         source = '';
                         sources = {};
