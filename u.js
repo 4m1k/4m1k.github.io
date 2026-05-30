@@ -146,6 +146,18 @@
                     url = Lampa.Utils.addUrlComponent(url, 'uid=' + cfg.uid);
                 return url;
             }
+        },
+        lampavip: {
+            label: 'Lampa VIP',
+            host: decodeHidden('aHR0cHM6Ly9sYW1wYS52aXAv'),
+            uid: decodeHidden('Z3Vlc3Q='),
+            getHost: function() { return this.host; },
+            getSubtitle: function() { return 'https://lampa.vip'; },
+            auth: function(url, cfg) {
+                if (url.indexOf('uid=') === -1)
+                    url = Lampa.Utils.addUrlComponent(url, 'uid=' + cfg.uid);
+                return url;
+            }
         }
     };
 
