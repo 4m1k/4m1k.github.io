@@ -1507,9 +1507,10 @@
             })
         }));
         try {
-            "full" == Lampa.Activity.active().component && i({
-                render: Lampa.Activity.active().activity.render().find(".view--torrent"),
-                movie: Lampa.Activity.active().card
+            var n = Lampa.Activity.active();
+            n && "full" == n.component && n.activity && n.activity.render && i({
+                render: n.activity.render().find(".view--torrent"),
+                movie: n.card
             })
         } catch (e) {
             console.error(e)
