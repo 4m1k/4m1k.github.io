@@ -204,6 +204,27 @@
         return items;
     }
 
+    function resetConnectionSourceState(source) {
+        var cfg = SERVER_CONFIG[source];
+        if (!cfg) return;
+        if (source === 'skaz') setSkazStartupAccount();
+        else if (typeof cfg.currentIndex !== 'undefined') cfg.currentIndex = 0;
+    }
+
+    function getNextConnectionSource(exclude) {
+        var keys = Object.keys(SERVER_CONFIG);
+        if (keys.length < 2) return null;
+        var current = keys.indexOf(connection_source);
+        if (current < 0) current = 0;
+
+        for (var i = 1; i < keys.length; i++) {
+            var source = keys[(current + i) % keys.length];
+            if (!exclude || !exclude[source]) return source;
+        }
+
+        return null;
+    }
+
     // Skaz (Инициализация зеркал)
     var cf = Lampa.Storage.get('skazonline_servers');
     if (cf == true) {
@@ -466,11 +487,13 @@
         var balanser;
         var initialized;
         var balanser_timer;
+        var connection_switch_timer;
         var images = [];
         var number_of_requests = 0;
         var number_of_requests_timer;
         var life_wait_times = 0;
         var life_wait_timer;
+        var unavailable_connection_sources = {};
         var filter_sources = {};
         var filter_translate = {
             season: Lampa.Lang.translate('torrent_serial_season'),
@@ -549,8 +572,11 @@
                 if (type == 'filter') {
                     // --- ОБРАБОТКА ВЫБОРА СЕРВЕРА ---
                     if (a.stype == 'connection') {
+                        clearInterval(connection_switch_timer);
+                        unavailable_connection_sources = {};
                         connection_source = b.source || 'skaz';
                         Lampa.Storage.set('connection_source', connection_source);
+                        resetConnectionSourceState(connection_source);
                         balanser = '';
                         source = '';
                         sources = {};
@@ -559,6 +585,8 @@
                         Defined.localhost = getHost();
                         _this.createSource().then(function(){
                              _this.search();
+                        })["catch"](function(e) {
+                             _this.switchConnectionSource(e);
                         });
                         setTimeout(Lampa.Select.close, 10);
                     } 
@@ -635,7 +663,7 @@
                 }
                 _this.search();
             })["catch"](function(e) {
-                _this.noConnectToServer(e);
+                _this.switchConnectionSource(e);
             });
         };
         this.rch = function(json, noreset) {
@@ -876,7 +904,7 @@
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
                         } else {
-                            _this.doesNotAnswer.bind(_this)(e);
+                            _this.switchConnectionSource(e);
                         }
                     }, false, {
                         dataType: 'text',
@@ -907,6 +935,64 @@
             } else {
                 runRequest();
             }
+        };
+        this.switchConnectionSource = function(er) {
+            var _this5 = this;
+            var current = connection_source;
+            var next = getNextConnectionSource(unavailable_connection_sources);
+
+            unavailable_connection_sources[current] = true;
+            if (!next) return this.noConnectToServer(er);
+
+            this.reset();
+
+            var tic = 3;
+            var html = Lampa.Template.get('lampac_does_not_answer', {});
+            html.find('.online-empty__title').text(Lampa.Lang.translate('lampac_server_dont_work'));
+            html.find('.online-empty__time').html(Lampa.Lang.translate('lampac_server_timeout'));
+            html.find('.timeout').text(tic);
+            html.find('.cancel').on('hover:enter', function() {
+                clearInterval(connection_switch_timer);
+            });
+            html.find('.change').text(Lampa.Lang.translate('lampac_change_server')).on('hover:enter', function() {
+                switchConnection();
+            });
+
+            scroll.clear();
+            scroll.append(html);
+            this.loading(false);
+
+            function switchConnection() {
+                clearInterval(connection_switch_timer);
+                if (Lampa.Activity.active().activity !== _this5.activity) return;
+
+                connection_source = next;
+                Lampa.Storage.set('connection_source', connection_source);
+                resetConnectionSourceState(connection_source);
+
+                Defined.localhost = getHost();
+                balanser = '';
+                source = '';
+                sources = {};
+                filter_sources = [];
+                number_of_requests = 0;
+                life_wait_times = 0;
+                clearTimeout(life_wait_timer);
+
+                _this5.reset();
+                _this5.createSource().then(function() {
+                    _this5.search();
+                })["catch"](function(e) {
+                    _this5.switchConnectionSource(e);
+                });
+            }
+
+            clearInterval(connection_switch_timer);
+            connection_switch_timer = setInterval(function() {
+                tic--;
+                html.find('.timeout').text(tic);
+                if (tic == 0) switchConnection();
+            }, 1000);
         };
         this.parseJsonDate = function(str, name) {
             try {
@@ -1319,6 +1405,7 @@
         this.reset = function() {
             last = false;
             clearInterval(balanser_timer);
+            clearInterval(connection_switch_timer);
             network.clear();
             this.clearImages();
             scroll.render().find('.empty').remove();
@@ -1851,9 +1938,10 @@
         };
         this.noConnectToServer = function(er) {
             var html = Lampa.Template.get('lampac_does_not_answer', {});
+            var current_balanser = sources[balanser] ? sources[balanser].name : (SERVER_CONFIG[connection_source] ? SERVER_CONFIG[connection_source].label : connection_source);
             html.find('.online-empty__buttons').remove();
             html.find('.online-empty__title').text(Lampa.Lang.translate('title_error'));
-            html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', balanser[balanser].name));
+            html.find('.online-empty__time').text(er && er.accsdb ? er.msg : Lampa.Lang.translate('lampac_does_not_answer_text').replace('{balanser}', current_balanser));
             scroll.clear();
             scroll.append(html);
             this.loading(false);
@@ -1950,6 +2038,7 @@
             files.destroy();
             scroll.destroy();
             clearInterval(balanser_timer);
+            clearInterval(connection_switch_timer);
             clearTimeout(life_wait_timer);
         };
     }
@@ -2272,6 +2361,24 @@
                 uk: 'Джерело буде автоматично переключено через <span class="timeout">10</span> секунд.',
                 en: 'The source will be switched automatically after <span class="timeout">10</span> seconds.',
                 zh: '平衡器将在<span class="timeout">10</span>秒内 автоматичеки切换。'
+            },
+            lampac_server_dont_work: {
+                ru: 'Сервер недоступен',
+                uk: 'Сервер недоступний',
+                en: 'Server is unavailable',
+                zh: '服务器不可用'
+            },
+            lampac_server_timeout: {
+                ru: 'Сервер будет переключен автоматически через <span class="timeout">3</span> секунд.',
+                uk: 'Сервер буде автоматично переключено через <span class="timeout">3</span> секунд.',
+                en: 'The server will be switched automatically after <span class="timeout">3</span> seconds.',
+                zh: '服务器将在 <span class="timeout">3</span> 秒后自动切换。'
+            },
+            lampac_change_server: {
+                ru: 'Изменить сервер',
+                uk: 'Змінити сервер',
+                en: 'Change server',
+                zh: '更改服务器'
             },
             lampac_does_not_answer_text: {
                 ru: 'Поиск на ({balanser}) не дал результатов',
