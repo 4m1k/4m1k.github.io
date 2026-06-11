@@ -19,7 +19,7 @@
         return typeof url === 'string' && (url.indexOf('apitmdb.') !== -1 || url.indexOf('tmdb.') !== -1) && url.indexOf(TMDB_HOST) === -1;
     }
 
-    var PROXY_API_HOST = 'tmdb.abmsx.tech';
+    var PROXY_API_HOST = 'tmdbapi.bylampa.online';
 
     function directTmdbUrl(type, id, suffix, params) {
         var path = type + '/' + id + (suffix || '') + '?' + params;
