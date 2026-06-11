@@ -194,6 +194,7 @@
     var origOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (method, url) {
         if (typeof url === 'string') this.__admca_url = url;
+        console.log('ADMCA OPEN', url);
         return origOpen.apply(this, arguments);
     };
 
@@ -214,7 +215,11 @@
         var handled = false;
 
         function handleBlocked() {
-            console.log('ANTI-DMCA BLOCK DETECTED', respUrl);
+            console.log('ADMCA URLS', {
+    responseURL: xhr.responseURL,
+    reqUrl: reqUrl,
+    saved: xhr.__admca_url
+});
             if (handled) return true;
             var respUrl = xhr.responseURL || reqUrl;
             if (!cardPathRe.test(respUrl)) return false;
