@@ -7,33 +7,15 @@
         }
     }
 
-    function unpackHidden(data, salt) {
-        var out = '';
-        for (var i = 0; i < data.length; i++) {
-            out += String.fromCharCode(data[i] ^ ((salt + i * 13) & 255));
-        }
-        return out;
-    }
-
-    function secret(data, salt) {
-        return unpackHidden(data, salt);
-    }
-
     function pickRandomIndex(list) {
         return list && list.length ? Math.floor(Math.random() * list.length) : 0;
     }
 
-    function shuffledIndices(list) {
-        var result = [];
-        var i;
-        for (i = 0; i < (list ? list.length : 0); i++) result.push(i);
-        for (i = result.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = result[i];
-            result[i] = result[j];
-            result[j] = temp;
-        }
-        return result;
+    // ПАТЧ: единый хелпер для заголовков запросов (вместо 10 инлайн-копий)
+    function kitHeaders() {
+        return {
+            'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
+        };
     }
 
     // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
@@ -50,9 +32,19 @@
     // ПАТЧ: фильтр качества — скрыть всё ниже 1080p из списка качеств плеера и источников
     function filterMinQuality(qualityObj) {
         if (!qualityObj || typeof qualityObj !== 'object' || Array.isArray(qualityObj)) return qualityObj;
+        var removed = {};
         Object.keys(qualityObj).forEach(function(k) {
-            if (qualityScore(k) < 1080) delete qualityObj[k];
+            if (qualityScore(k) < 1080) {
+                removed[k] = qualityObj[k];
+                delete qualityObj[k];
+            }
         });
+        // ПАТЧ: фолбэк — если у источника нет ничего >= 1080p, оставляем лучшее доступное,
+        // чтобы список качеств не оказался пустым
+        if (!Object.keys(qualityObj).length) {
+            var fallbackKey = highestQualityKey(removed);
+            if (fallbackKey) qualityObj[fallbackKey] = removed[fallbackKey];
+        }
         return qualityObj;
     }
 
@@ -87,26 +79,6 @@
                     url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + encodeURIComponent(token));
                 else
                     url = url.replace(/ab_token=([^&]+)/, 'ab_token=' + encodeURIComponent(token));
-                return url;
-            }
-        },
-        showy: {
-            label: 'Showy',
-            mirrors: [
-                decodeHidden('aHR0cDovLzE4NS4xMjEuMjM1LjEyNDoxMTE3Ni8='),
-                decodeHidden('aHR0cDovL3Nob3d5cHJvLmNvbS8='),
-                decodeHidden('aHR0cDovL3Ntb3RyZXRrLmNvbS8=')
-            ],
-            currentIndex: 0,
-            uid: decodeHidden('aThuYWI5dnc='),
-            showyToken: decodeHidden('ZjgzNzcwNTctOTBlYi00ZDc2LTkzYzktNzYwNTk1MmEwOTZs'),
-            getHost: function() { return this.mirrors[this.currentIndex]; },
-            getSubtitle: function() { return this.mirrors[this.currentIndex]; },
-            auth: function(url, cfg) {
-                if (url.indexOf('uid=') === -1)
-                    url = Lampa.Utils.addUrlComponent(url, 'uid=' + cfg.uid);
-                if (url.indexOf('showy_token=') === -1)
-                    url = Lampa.Utils.addUrlComponent(url, 'showy_token=' + cfg.showyToken);
                 return url;
             }
         },
@@ -648,9 +620,7 @@
                     _this.empty();
                 }, false, {
                     dataType: 'text',
-                    headers: {
-                        'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                    }
+                    headers: kitHeaders()
                 });
             }
             this.externalids().then(function() {
@@ -683,9 +653,7 @@
                     if (object.movie.kinopoisk_id) query.push('kinopoisk_id=' + (object.movie.kinopoisk_id || ''));
                     var url = Defined.localhost + 'externalids?' + query.join('&');
                     
-                    var headers = {
-                        'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                    };
+                    var headers = kitHeaders();
 
                     network.timeout(10000);
                     network.silent(account(url), function(json) {
@@ -836,9 +804,7 @@
                             life_wait_timer = setTimeout(fin, 1000);
                         }
                     }, false, {
-                        headers: {
-                            'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                        }
+                        headers: kitHeaders()
                     });
                 };
                 fin();
@@ -865,9 +831,7 @@
                         _this4.startSource(json).then(resolve)["catch"](reject);
                     }
                 }, reject, false, {
-                    headers: {
-                        'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                    }
+                    headers: kitHeaders()
                 });
             });
         };
@@ -895,9 +859,7 @@
             function runRequest() {
                 number_of_requests++;
                 if (number_of_requests < 10) {
-                    var headers = {
-                        'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                    };
+                    var headers = kitHeaders();
 
                     network["native"](account(url), _this.parse.bind(_this), function(e) {
                         if (rotateAccount(connection_source)) {
@@ -1043,9 +1005,7 @@
                     network.clear();
                 });
                 
-                var headers = {
-                    'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                };
+                var headers = kitHeaders();
 
                 network["native"](account(file.url), function(json) {
                     if (json.rch) {
@@ -1216,9 +1176,7 @@
             network.silent(account(link), function(subs) {
                 Lampa.Player.subtitles(subs)
             }, function() {}, false, {
-                headers: {
-                    'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                }
+                headers: kitHeaders()
             })
         }
         this.parse = function(str) {
@@ -1341,7 +1299,7 @@
 
                     if (elem.img !== undefined) {
                         if (elem.img.charAt(0) === '/')
-                            elem.img = Defined.localhost + item.img.substring(1);
+                            elem.img = Defined.localhost + elem.img.substring(1);
                         if (elem.img.indexOf('/proxyimg') !== -1)
                             elem.img = account(elem.img);
                     }
@@ -2043,122 +2001,6 @@
         };
     }
 
-    function addSourceSearch(spiderName, spiderUri) {
-        var network = new Lampa.Reguest();
-
-        var source = {
-            title: spiderName,
-            search: function(params, oncomplite) {
-                function searchComplite(links) {
-                    var keys = Lampa.Arrays.getKeys(links);
-
-                    if (keys.length) {
-                        var status = new Lampa.Status(keys.length);
-
-                        status.onComplite = function(result) {
-                            var rows = [];
-
-                            keys.forEach(function(name) {
-                                var line = result[name];
-
-                                if (line && line.data && line.type == 'similar') {
-                                    var cards = line.data.map(function(item) {
-                                        item.title = Lampa.Utils.capitalizeFirstLetter(item.title);
-                                        item.release_date = item.year || '0000';
-                                        item.balanser = spiderUri;
-                                        if (item.img !== undefined) {
-                                            if (item.img.charAt(0) === '/')
-                                                item.img = Defined.localhost + item.img.substring(1);
-                                            if (item.img.indexOf('/proxyimg') !== -1)
-                                                item.img = account(item.img);
-                                        }
-
-                                        return item;
-                                    })
-
-                                    rows.push({
-                                        title: name,
-                                        results: cards
-                                    })
-                                }
-                            })
-
-                            oncomplite(rows);
-                        }
-
-                        keys.forEach(function(name) {
-                            network.silent(account(links[name]), function(data) {
-                                status.append(name, data);
-                            }, function() {
-                                status.error();
-                            }, false, {
-                                headers: {
-                                    'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                                }
-                            })
-                        })
-                    } else {
-                        oncomplite([]);
-                    }
-                }
-
-                network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), function(json) {
-                    if (json.rch) {
-                        rchRun(json, function() {
-                            network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), function(links) {
-                                searchComplite(links);
-                            }, function() {
-                                oncomplite([]);
-                            }, false, {
-                                headers: {
-                                    'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                                }
-                            });
-                        });
-                    } else {
-                        searchComplite(json);
-                    }
-                }, function() {
-                    oncomplite([]);
-                }, false, {
-                    headers: {
-                        'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
-                    }
-                });
-            },
-            onCancel: function() {
-                network.clear()
-            },
-            params: {
-                lazy: true,
-                align_left: true,
-                card_events: {
-                    onMenu: function() {}
-                }
-            },
-            onMore: function(params, close) {
-                close();
-            },
-            onSelect: function(params, close) {
-                close();
-
-                Lampa.Activity.push({
-                    url: params.element.url,
-                    title: 'Onlyskaz - ' + params.element.title,
-                    component: 'lampacskaz',
-                    movie: params.element,
-                    page: 1,
-                    search: params.element.title,
-                    clarification: true,
-                    balanser: params.element.balanser,
-                    noinfo: true
-                });
-            }
-        }
-
-        Lampa.Search.addSource(source)
-    }
-
     function startPlugin() {
         window.onlyskaz_plugin = true;
         if (!window.plugin_iptvskaz_ready && !window.plugin_iptv_ready2) {
@@ -2360,7 +2202,7 @@
                 ru: 'Источник будет переключен автоматически через <span class="timeout">10</span> секунд.',
                 uk: 'Джерело буде автоматично переключено через <span class="timeout">10</span> секунд.',
                 en: 'The source will be switched automatically after <span class="timeout">10</span> seconds.',
-                zh: '平衡器将在<span class="timeout">10</span>秒内 автоматичеки切换。'
+                zh: '平衡器将在<span class="timeout">10</span>秒内自动切换。'
             },
             lampac_server_dont_work: {
                 ru: 'Сервер недоступен',
@@ -2443,7 +2285,7 @@
             }
         } catch (e) {}
         if (Lampa.Manifest.app_digital >= 177) {
-            var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix", "videasy", "vidsrc", "movpi", "vidlink", "twoembed", "autoembed", "smashystream", "autoembed", "rgshows", "pidtor", "videoseed", "iptvonline", "veoveo"];
+            var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinoukr", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix", "videasy", "vidsrc", "movpi", "vidlink", "twoembed", "autoembed", "smashystream", "rgshows", "pidtor", "videoseed", "iptvonline", "veoveo"];
             balansers_sync.forEach(function(name) {
                 Lampa.Storage.sync('online_choice_' + name, 'object_object');
             });
