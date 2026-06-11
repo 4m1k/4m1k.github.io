@@ -16,8 +16,14 @@
     var blockedCards = {};
 
     function isMirrorTmdb(url) {
-        return typeof url === 'string' && (url.indexOf('apitmdb.') !== -1 || url.indexOf('tmdb.') !== -1) && url.indexOf(TMDB_HOST) === -1;
-    }
+    return typeof url === 'string' &&
+        (
+            url.indexOf('apitmdb.') !== -1 ||
+            url.indexOf('tmdb.') !== -1 ||
+            url.indexOf('tmdbapi.') !== -1
+        ) &&
+        url.indexOf(TMDB_HOST) === -1;
+}
 
     var PROXY_API_HOST = 'tmdbapi.bylampa.online';
 
