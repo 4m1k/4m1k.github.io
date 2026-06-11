@@ -16,16 +16,10 @@
     var blockedCards = {};
 
     function isMirrorTmdb(url) {
-    return typeof url === 'string' &&
-        (
-            url.indexOf('apitmdb.') !== -1 ||
-            url.indexOf('tmdb.') !== -1 ||
-            url.indexOf('tmdbapi.') !== -1
-        ) &&
-        url.indexOf(TMDB_HOST) === -1;
-}
+        return typeof url === 'string' && (url.indexOf('apitmdb.') !== -1 || url.indexOf('tmdb.') !== -1) && url.indexOf(TMDB_HOST) === -1;
+    }
 
-    var PROXY_API_HOST = 'tmdbapi.bylampa.online';
+    var PROXY_API_HOST = 'tmdb.abmsx.tech';
 
     function directTmdbUrl(type, id, suffix, params) {
         var path = type + '/' + id + (suffix || '') + '?' + params;
@@ -53,6 +47,7 @@
     var seasonCache = {};
 
     function fetchCard(id, type) {
+        console.log('ANTI-DMCA FETCH CARD', id, type);
         var key = type + '_' + id;
         if (cardCache[key]) return cardCache[key];
         var lang = getLang();
@@ -219,6 +214,7 @@
         var handled = false;
 
         function handleBlocked() {
+            console.log('ANTI-DMCA BLOCK DETECTED', respUrl);
             if (handled) return true;
             var respUrl = xhr.responseURL || reqUrl;
             if (!cardPathRe.test(respUrl)) return false;
