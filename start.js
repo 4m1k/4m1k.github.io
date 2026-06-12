@@ -37,6 +37,10 @@
         return typeof url === 'string' && (url.indexOf('apitmdb.') !== -1 || url.indexOf('tmdb.') !== -1) && url.indexOf(TMDB_HOST) === -1;
     }
 
+    function getCardMatch(url) {
+        return typeof url === 'string' ? url.match(cardPathRe) : null;
+    }
+
     var PROXY_API_HOST = 'tmdb.abmsx.tech';
 
     function directTmdbUrl(type, id, suffix, params) {
@@ -233,7 +237,9 @@
         function handleBlocked() {
             if (handled) return true;
             var respUrl = xhr.responseURL || reqUrl;
-            if (!cardPathRe.test(respUrl)) return false;
+            var matchUrl = getCardMatch(respUrl) ? respUrl : reqUrl;
+            var m = getCardMatch(matchUrl);
+            if (!m) return false;
 
             var text = '';
             try { text = (xhr.responseText || '').trim(); } catch (e) {}
@@ -243,6 +249,8 @@
                 try {
                     console.log('[anti-dmca][xhr]', {
                         url: respUrl,
+                        requestUrl: reqUrl,
+                        matchUrl: matchUrl,
                         status: xhr.status,
                         blocked: isBlocked,
                         failed: isFailed,
@@ -252,12 +260,9 @@
             }
             if (!isBlocked && !isFailed) return false;
 
-            var m = respUrl.match(cardPathRe);
-            if (!m) return false;
-
             handled = true;
             var type = m[1], id = m[2];
-            var sm = respUrl.match(subPathRe);
+            var sm = matchUrl.match(subPathRe);
             var sub = sm ? sm[1] : null;
 
             blockedCards[type + '_' + id] = true;
@@ -302,8 +307,7 @@
         };
         xhr.onerror = function () {
             if (handled) { if (origOnError) origOnError.call(xhr); return; }
-            if (!cardPathRe.test(reqUrl)) { if (origOnError) origOnError.call(xhr); return; }
-            var me = reqUrl.match(cardPathRe);
+            var me = getCardMatch(reqUrl);
             if (!me) { if (origOnError) origOnError.call(xhr); return; }
             handled = true;
             var type = me[1], id = me[2];
@@ -338,8 +342,7 @@
         };
         xhr.onabort = function () {
             if (handled) { if (origOnAbort) origOnAbort.call(xhr); return; }
-            if (!cardPathRe.test(reqUrl)) { if (origOnAbort) origOnAbort.call(xhr); return; }
-            var m = reqUrl.match(cardPathRe);
+            var m = getCardMatch(reqUrl);
             if (!m) { if (origOnAbort) origOnAbort.call(xhr); return; }
             handled = true;
             var type = m[1], id = m[2];
@@ -381,7 +384,7 @@
         window.fetch = function (url, opts) {
             var requestedUrl = typeof url === 'string' ? url : '';
             return origFetch.call(this, url, opts).then(function (response) {
-                if (!cardPathRe.test(requestedUrl)) return response;
+                if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl)) return response;
                 return response.clone().text().then(function (text) {
                     var t = (text || '').trim();
                     var isBlocked = isBlockedPayload(t);
@@ -398,8 +401,17 @@
                         } catch (e) {}
                     }
                     if (!isBlocked && !isFailed) return response;
-                    var m = requestedUrl.match(cardPathRe);
-                    if (!m) return response;
+                    var m = getCardMatch(requestedUrl);
+                    if (!m) {
+                        try {
+                            console.log('[anti-dmca][fetch-skip]', {
+                                url: requestedUrl,
+                                status: response.status,
+                                text: t.slice(0, 300)
+                            });
+                        } catch (e) {}
+                        return response;
+                    }
                     var type = m[1], id = m[2];
                     var sm = requestedUrl.match(subPathRe);
                     var sub = sm ? sm[1] : null;
@@ -453,6 +465,10 @@
         if (window.anti_dmca_plugin) return;
         if (typeof Lampa === 'undefined' || !window.lampa_settings) return;
         window.anti_dmca_plugin = true;
+
+        try {
+            console.log('[anti-dmca] start');
+        } catch (e) {}
 
         Lampa.Utils.dcma = function () { return undefined; };
         try {
