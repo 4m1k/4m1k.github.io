@@ -20,6 +20,15 @@
         try {
             var data = JSON.parse(t);
             if (data && typeof data === 'object') {
+                // Не считаем блокировкой валидную TMDB-карточку фильма/сериала.
+                if (typeof data.id !== 'undefined' && (
+                    typeof data.title === 'string' ||
+                    typeof data.name === 'string' ||
+                    Array.isArray(data.genres) ||
+                    typeof data.imdb_id === 'string' ||
+                    typeof data.backdrop_path !== 'undefined'
+                )) return false;
+
                 if (data.blocked === true) return true;
                 if (data.success === false) return true;
                 if (typeof data.error === 'string' && /blocked|forbidden|access denied|dmca|copyright|geo.?blocked|region/i.test(data.error)) return true;
