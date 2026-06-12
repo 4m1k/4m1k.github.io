@@ -284,6 +284,14 @@
                 } catch (e) {}
             }
             if (isCubApi(respUrl) || isCubApi(reqUrl)) {
+                try {
+                    console.log('[anti-dmca][cub-api][xhr-all]', {
+                        url: respUrl,
+                        requestUrl: reqUrl,
+                        status: xhr.status,
+                        text: text.slice(0, 120)
+                    });
+                } catch (e) {}
                 var cubSuspicious = isSuspiciousCubResponse(text, xhr.status);
                 if (cubSuspicious) {
                     try {
@@ -450,6 +458,13 @@
                         } catch (e) {}
                     }
                     if (isCubApi(requestedUrl)) {
+                        try {
+                            console.log('[anti-dmca][cub-api][fetch-all]', {
+                                url: requestedUrl,
+                                status: response.status,
+                                text: t.slice(0, 120)
+                            });
+                        } catch (e) {}
                         var cubSuspicious = isSuspiciousCubResponse(t, response.status);
                         if (cubSuspicious) {
                             try {
