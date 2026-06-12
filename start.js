@@ -20,17 +20,20 @@
         try {
             var data = JSON.parse(t);
             if (data && typeof data === 'object') {
-                // Не считаем блокировкой валидную TMDB-карточку фильма/сериала.
                 if (typeof data.id !== 'undefined' && (
                     typeof data.title === 'string' ||
                     typeof data.name === 'string' ||
                     Array.isArray(data.genres) ||
                     typeof data.imdb_id === 'string' ||
-                    typeof data.backdrop_path !== 'undefined'
+                    typeof data.backdrop_path !== 'undefined' ||
+                    typeof data.poster_path !== 'undefined' ||
+                    typeof data.overview === 'string' ||
+                    Array.isArray(data.episodes) ||
+                    (data.logos || data.backdrops || data.posters)
                 )) return false;
 
                 if (data.blocked === true) return true;
-                if (data.success === false) return true;
+                if (data.success === false && typeof data.status_code !== 'undefined') return true;
                 if (typeof data.error === 'string' && /blocked|forbidden|access denied|dmca|copyright|geo.?blocked|region/i.test(data.error)) return true;
                 if (typeof data.message === 'string' && /blocked|forbidden|access denied|dmca|copyright|geo.?blocked|region/i.test(data.message)) return true;
             }
@@ -56,27 +59,6 @@
         return typeof url === 'string' && url.indexOf('cubnotrip.top/api/') !== -1;
     }
 
-    function isSuspiciousCubResponse(text, status) {
-        var t = (text || '').trim();
-        if (status === 0 || status >= 400 || !t) return true;
-        if (/^<!doctype html/i.test(t) || /^<html/i.test(t)) return true;
-
-        try {
-            var data = JSON.parse(t);
-            if (!data || typeof data !== 'object') return true;
-            if (data.blocked === true) return true;
-            if (data.success === false) return true;
-            if (typeof data.error === 'string' && data.error) return true;
-            if (typeof data.message === 'string' && /blocked|forbidden|access denied|dmca|copyright|geo.?blocked|region/i.test(data.message)) return true;
-        } catch (e) {
-            return true;
-        }
-
-        return false;
-    }
-
-    var PROXY_API_HOST = 'tmdb.abmsx.tech';
-
     function normalizeTmdbImageUrl(url) {
         if (typeof url !== 'string' || url.indexOf('image.tmdb.org/t/p/') === -1) return url;
 
@@ -89,7 +71,7 @@
         } catch (e) {
             return nextUrl
                 .replace(/([?&])email=[^&]*&?/i, '$1')
-                .replace(/[?&]$/,'');
+                .replace(/[?&]$/, '');
         }
     }
 
@@ -291,34 +273,8 @@
 
             var text = '';
             try { text = (xhr.responseText || '').trim(); } catch (e) {}
-            if (isCubApi(respUrl) || isCubApi(reqUrl)) {
-                var cubSuspicious = isSuspiciousCubResponse(text, xhr.status);
-                if (cubSuspicious) {
-                    try {
-                        console.log('[anti-dmca][cub-api][xhr]', {
-                            url: respUrl,
-                            requestUrl: reqUrl,
-                            status: xhr.status,
-                            text: text.slice(0, 300)
-                        });
-                    } catch (e) {}
-                }
-            }
             var isBlocked = isBlockedPayload(text);
             var isFailed = !isBlocked && (xhr.status === 0 || xhr.status >= 400 || !text);
-            if (isBlocked || isFailed) {
-                try {
-                    console.log('[anti-dmca][xhr]', {
-                        url: respUrl,
-                        requestUrl: reqUrl,
-                        matchUrl: matchUrl,
-                        status: xhr.status,
-                        blocked: isBlocked,
-                        failed: isFailed,
-                        text: text.slice(0, 300)
-                    });
-                } catch (e) {}
-            }
             if (!isBlocked && !isFailed) return false;
 
             handled = true;
@@ -448,43 +404,11 @@
                 if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl) && !isCubApi(requestedUrl)) return response;
                 return response.clone().text().then(function (text) {
                     var t = (text || '').trim();
-                    if (isCubApi(requestedUrl)) {
-                        var cubSuspicious = isSuspiciousCubResponse(t, response.status);
-                        if (cubSuspicious) {
-                            try {
-                                console.log('[anti-dmca][cub-api][fetch]', {
-                                    url: requestedUrl,
-                                    status: response.status,
-                                    text: t.slice(0, 300)
-                                });
-                            } catch (e) {}
-                        }
-                    }
                     var isBlocked = isBlockedPayload(t);
                     var isFailed = !response.ok || response.status === 0 || !t;
-                    if (isBlocked || isFailed) {
-                        try {
-                            console.log('[anti-dmca][fetch]', {
-                                url: requestedUrl,
-                                status: response.status,
-                                blocked: isBlocked,
-                                failed: isFailed,
-                                text: t.slice(0, 300)
-                            });
-                        } catch (e) {}
-                    }
                     if (!isBlocked && !isFailed) return response;
                     var m = getCardMatch(requestedUrl);
-                    if (!m) {
-                        try {
-                            console.log('[anti-dmca][fetch-skip]', {
-                                url: requestedUrl,
-                                status: response.status,
-                                text: t.slice(0, 300)
-                            });
-                        } catch (e) {}
-                        return response;
-                    }
+                    if (!m) return response;
                     var type = m[1], id = m[2];
                     var sm = requestedUrl.match(subPathRe);
                     var sub = sm ? sm[1] : null;
@@ -507,8 +431,8 @@
                     }).catch(function () { return response; });
                 }).catch(function () { return response; });
             }).catch(function (err) {
-                if (!cardPathRe.test(requestedUrl)) throw err;
-                var m = requestedUrl.match(cardPathRe);
+                if (!cardPathRe.test(requestedUrl) && !isCubApi(requestedUrl)) throw err;
+                var m = getCardMatch(requestedUrl);
                 if (!m) throw err;
                 var type = m[1], id = m[2];
                 var sm = requestedUrl.match(subPathRe);
@@ -546,35 +470,25 @@
             }
         } catch (e) { try { window.lampa_settings.dcma = []; } catch (e2) {} }
         try {
-            var dcmaKeys = ['dcma', 'dmca', 'black_list', 'blacklist', 'blocked_list', 'blocked_cards'];
-            for (var i = 0; i < dcmaKeys.length; i++) {
-                try {
-                    var stored = Lampa.Storage.get(dcmaKeys[i]);
-                    if (stored && typeof stored === 'object') {
-                        if (Array.isArray(stored) && stored.length > 0) Lampa.Storage.set(dcmaKeys[i], []);
-                        else if (typeof stored === 'object') Lampa.Storage.set(dcmaKeys[i], {});
-                    }
-                } catch (e) {}
+            if (typeof Lampa !== 'undefined' && Lampa.Storage) {
+                var dcmaKeys = ['dcma', 'dmca', 'black_list', 'blacklist', 'blocked_list', 'blocked_cards'];
+                for (var i = 0; i < dcmaKeys.length; i++) {
+                    try {
+                        var stored = Lampa.Storage.get(dcmaKeys[i]);
+                        if (stored && typeof stored === 'object') {
+                            if (Array.isArray(stored) && stored.length > 0) Lampa.Storage.set(dcmaKeys[i], []);
+                            else if (typeof stored === 'object' && !Array.isArray(stored) && Object.keys(stored).length > 0) Lampa.Storage.set(dcmaKeys[i], {});
+                        }
+                    } catch (e) {}
+                }
             }
         } catch (e) {}
     }
 
     function start() {
-        if (window.anti_dmca_plugin) {
-            try { console.log('[anti-dmca] already started, skip'); } catch (e) {}
-            return;
-        }
-        window.anti_dmca_plugin = true;
-
-        try {
-            console.log('[anti-dmca] start', {
-                hasLampa: typeof Lampa !== 'undefined',
-                hasSettings: !!window.lampa_settings,
-                appready: !!window.appready
-            });
-        } catch (e) {}
-
+        if (window.anti_dmca_plugin) return;
         if (typeof Lampa === 'undefined') return;
+        window.anti_dmca_plugin = true;
 
         forceDcmaEmpty();
         setInterval(forceDcmaEmpty, 2000);
@@ -605,6 +519,16 @@
             }
         } catch (e) {}
 
+        try {
+            if (Lampa.Listener) {
+                Lampa.Listener.follow('full', function (event) {
+                    if (event.type === 'complite') {
+                        forceDcmaEmpty();
+                    }
+                });
+            }
+        } catch (e) {}
+
         var tmdbSource = Lampa.Api && Lampa.Api.sources && Lampa.Api.sources.tmdb;
         if (tmdbSource && typeof tmdbSource.parseCountries === 'function') {
             var origPC = tmdbSource.parseCountries;
@@ -614,14 +538,6 @@
             };
         }
     }
-
-    try {
-        console.log('[anti-dmca] iife loaded', {
-            appready: !!window.appready,
-            hasLampa: typeof Lampa !== 'undefined',
-            hasListener: !!(typeof Lampa !== 'undefined' && Lampa.Listener)
-        });
-    } catch (e) {}
 
     if (window.appready) {
         start();
