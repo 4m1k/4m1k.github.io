@@ -560,13 +560,21 @@
     }
 
     function start() {
-        if (window.anti_dmca_plugin) return;
-        if (typeof Lampa === 'undefined' || !window.lampa_settings) return;
+        if (window.anti_dmca_plugin) {
+            try { console.log('[anti-dmca] already started, skip'); } catch (e) {}
+            return;
+        }
         window.anti_dmca_plugin = true;
 
         try {
-            console.log('[anti-dmca] start');
+            console.log('[anti-dmca] start', {
+                hasLampa: typeof Lampa !== 'undefined',
+                hasSettings: !!window.lampa_settings,
+                appready: !!window.appready
+            });
         } catch (e) {}
+
+        if (typeof Lampa === 'undefined') return;
 
         forceDcmaEmpty();
         setInterval(forceDcmaEmpty, 2000);
@@ -607,11 +615,34 @@
         }
     }
 
+    try {
+        console.log('[anti-dmca] iife loaded', {
+            appready: !!window.appready,
+            hasLampa: typeof Lampa !== 'undefined',
+            hasListener: !!(typeof Lampa !== 'undefined' && Lampa.Listener)
+        });
+    } catch (e) {}
+
     if (window.appready) {
         start();
     } else if (typeof Lampa !== 'undefined' && Lampa.Listener) {
         Lampa.Listener.follow('app', function (event) {
             if (event.type === 'ready') start();
         });
+    } else {
+        var dcmaRetryCount = 0;
+        var dcmaRetry = setInterval(function () {
+            dcmaRetryCount++;
+            try {
+                if (window.appready || (typeof Lampa !== 'undefined' && Lampa.Storage)) {
+                    clearInterval(dcmaRetry);
+                    start();
+                } else if (dcmaRetryCount > 30) {
+                    clearInterval(dcmaRetry);
+                }
+            } catch (e) {
+                if (dcmaRetryCount > 30) clearInterval(dcmaRetry);
+            }
+        }, 500);
     }
 })();
