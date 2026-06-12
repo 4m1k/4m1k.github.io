@@ -47,6 +47,29 @@
         return typeof url === 'string' && cubDiscussRe.test(url);
     }
 
+    function isCubApi(url) {
+        return typeof url === 'string' && url.indexOf('cubnotrip.top/api/') !== -1;
+    }
+
+    function isSuspiciousCubResponse(text, status) {
+        var t = (text || '').trim();
+        if (status === 0 || status >= 400 || !t) return true;
+        if (/^<!doctype html/i.test(t) || /^<html/i.test(t)) return true;
+
+        try {
+            var data = JSON.parse(t);
+            if (!data || typeof data !== 'object') return true;
+            if (data.blocked === true) return true;
+            if (data.success === false) return true;
+            if (typeof data.error === 'string' && data.error) return true;
+            if (typeof data.message === 'string' && /blocked|forbidden|access denied|dmca|copyright|geo.?blocked|region/i.test(data.message)) return true;
+        } catch (e) {
+            return true;
+        }
+
+        return false;
+    }
+
     var PROXY_API_HOST = 'tmdb.abmsx.tech';
 
     function directTmdbUrl(type, id, suffix, params) {
@@ -230,7 +253,7 @@
         if (ownXhrs.has(xhr)) return origSend.apply(this, arguments);
 
         var reqUrl = xhr.__admca_url || '';
-        if (!getCardMatch(reqUrl) && !isMirrorTmdb(reqUrl)) {
+        if (!getCardMatch(reqUrl) && !isMirrorTmdb(reqUrl) && !isCubApi(reqUrl)) {
             return origSend.apply(this, arguments);
         }
 
@@ -259,6 +282,19 @@
                         text: text.slice(0, 300)
                     });
                 } catch (e) {}
+            }
+            if (isCubApi(respUrl) || isCubApi(reqUrl)) {
+                var cubSuspicious = isSuspiciousCubResponse(text, xhr.status);
+                if (cubSuspicious) {
+                    try {
+                        console.log('[anti-dmca][cub-api][xhr]', {
+                            url: respUrl,
+                            requestUrl: reqUrl,
+                            status: xhr.status,
+                            text: text.slice(0, 300)
+                        });
+                    } catch (e) {}
+                }
             }
             var isBlocked = isBlockedPayload(text);
             var isFailed = !isBlocked && (xhr.status === 0 || xhr.status >= 400 || !text);
@@ -401,7 +437,7 @@
         window.fetch = function (url, opts) {
             var requestedUrl = typeof url === 'string' ? url : '';
             return origFetch.call(this, url, opts).then(function (response) {
-                if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl)) return response;
+                if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl) && !isCubApi(requestedUrl)) return response;
                 return response.clone().text().then(function (text) {
                     var t = (text || '').trim();
                     if (isCubDiscuss(requestedUrl)) {
@@ -412,6 +448,18 @@
                                 text: t.slice(0, 300)
                             });
                         } catch (e) {}
+                    }
+                    if (isCubApi(requestedUrl)) {
+                        var cubSuspicious = isSuspiciousCubResponse(t, response.status);
+                        if (cubSuspicious) {
+                            try {
+                                console.log('[anti-dmca][cub-api][fetch]', {
+                                    url: requestedUrl,
+                                    status: response.status,
+                                    text: t.slice(0, 300)
+                                });
+                            } catch (e) {}
+                        }
                     }
                     var isBlocked = isBlockedPayload(t);
                     var isFailed = !response.ok || response.status === 0 || !t;
