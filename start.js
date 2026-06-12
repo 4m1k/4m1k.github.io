@@ -52,10 +52,6 @@
         return url.match(cardPathRe) || url.match(cubDiscussRe);
     }
 
-    function isCubDiscuss(url) {
-        return typeof url === 'string' && cubDiscussRe.test(url);
-    }
-
     function isCubApi(url) {
         return typeof url === 'string' && url.indexOf('cubnotrip.top/api/') !== -1;
     }
@@ -81,14 +77,24 @@
 
     var PROXY_API_HOST = 'tmdb.abmsx.tech';
 
+    function normalizeTmdbImageUrl(url) {
+        if (typeof url !== 'string' || url.indexOf('image.tmdb.org/t/p/') === -1) return url;
+
+        var nextUrl = url.replace(/^http:\/\//i, 'https://');
+
+        try {
+            var parsed = new URL(nextUrl, location.href);
+            parsed.searchParams.delete('email');
+            return parsed.toString();
+        } catch (e) {
+            return nextUrl
+                .replace(/([?&])email=[^&]*&?/i, '$1')
+                .replace(/[?&]$/,'');
+        }
+    }
+
     function directTmdbUrl(type, id, suffix, params) {
         var path = type + '/' + id + (suffix || '') + '?' + params;
-        try {
-            var proto = (typeof Lampa !== 'undefined' && Lampa.Utils && typeof Lampa.Utils.protocol === 'function')
-                ? Lampa.Utils.protocol() : 'https://';
-            var useProxy = Lampa.Storage && typeof Lampa.Storage.field === 'function' && Lampa.Storage.field('proxy_tmdb');
-            return (useProxy ? proto + PROXY_API_HOST + '/3/' : proto + TMDB_HOST + '/3/') + path;
-        } catch (e) {}
         return 'https://' + TMDB_HOST + '/3/' + path;
     }
 
@@ -252,7 +258,11 @@
 
     var origOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (method, url) {
-        if (typeof url === 'string') this.__admca_url = url;
+        if (typeof url === 'string') {
+            url = normalizeTmdbImageUrl(url);
+            this.__admca_url = url;
+            arguments[1] = url;
+        }
         return origOpen.apply(this, arguments);
     };
 
@@ -281,26 +291,7 @@
 
             var text = '';
             try { text = (xhr.responseText || '').trim(); } catch (e) {}
-            if (isCubDiscuss(matchUrl)) {
-                try {
-                    console.log('[anti-dmca][cub][xhr]', {
-                        url: respUrl,
-                        requestUrl: reqUrl,
-                        matchUrl: matchUrl,
-                        status: xhr.status,
-                        text: text.slice(0, 300)
-                    });
-                } catch (e) {}
-            }
             if (isCubApi(respUrl) || isCubApi(reqUrl)) {
-                try {
-                    console.log('[anti-dmca][cub-api][xhr-all]', {
-                        url: respUrl,
-                        requestUrl: reqUrl,
-                        status: xhr.status,
-                        text: text.slice(0, 120)
-                    });
-                } catch (e) {}
                 var cubSuspicious = isSuspiciousCubResponse(text, xhr.status);
                 if (cubSuspicious) {
                     try {
@@ -457,23 +448,7 @@
                 if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl) && !isCubApi(requestedUrl)) return response;
                 return response.clone().text().then(function (text) {
                     var t = (text || '').trim();
-                    if (isCubDiscuss(requestedUrl)) {
-                        try {
-                            console.log('[anti-dmca][cub][fetch]', {
-                                url: requestedUrl,
-                                status: response.status,
-                                text: t.slice(0, 300)
-                            });
-                        } catch (e) {}
-                    }
                     if (isCubApi(requestedUrl)) {
-                        try {
-                            console.log('[anti-dmca][cub-api][fetch-all]', {
-                                url: requestedUrl,
-                                status: response.status,
-                                text: t.slice(0, 120)
-                            });
-                        } catch (e) {}
                         var cubSuspicious = isSuspiciousCubResponse(t, response.status);
                         if (cubSuspicious) {
                             try {
@@ -559,6 +534,31 @@
         };
     }
 
+    function forceDcmaEmpty() {
+        try { if (typeof Lampa !== 'undefined' && Lampa.Utils) Lampa.Utils.dcma = function () { return undefined; }; } catch (e) {}
+        try {
+            if (window.lampa_settings) {
+                Object.defineProperty(window.lampa_settings, 'dcma', {
+                    get: function () { return []; },
+                    set: function () {},
+                    configurable: true
+                });
+            }
+        } catch (e) { try { window.lampa_settings.dcma = []; } catch (e2) {} }
+        try {
+            var dcmaKeys = ['dcma', 'dmca', 'black_list', 'blacklist', 'blocked_list', 'blocked_cards'];
+            for (var i = 0; i < dcmaKeys.length; i++) {
+                try {
+                    var stored = Lampa.Storage.get(dcmaKeys[i]);
+                    if (stored && typeof stored === 'object') {
+                        if (Array.isArray(stored) && stored.length > 0) Lampa.Storage.set(dcmaKeys[i], []);
+                        else if (typeof stored === 'object') Lampa.Storage.set(dcmaKeys[i], {});
+                    }
+                } catch (e) {}
+            }
+        } catch (e) {}
+    }
+
     function start() {
         if (window.anti_dmca_plugin) return;
         if (typeof Lampa === 'undefined' || !window.lampa_settings) return;
@@ -568,14 +568,34 @@
             console.log('[anti-dmca] start');
         } catch (e) {}
 
-        Lampa.Utils.dcma = function () { return undefined; };
+        forceDcmaEmpty();
+        setInterval(forceDcmaEmpty, 2000);
+
         try {
-            Object.defineProperty(window.lampa_settings, 'dcma', {
-                get: function () { return []; },
-                set: function () {},
-                configurable: true
-            });
-        } catch (e) { window.lampa_settings.dcma = []; }
+            var origPush = Lampa.Activity.push;
+            Lampa.Activity.push = function () {
+                forceDcmaEmpty();
+                return origPush.apply(this, arguments);
+            };
+        } catch (e) {}
+
+        try {
+            var origReplace = Lampa.Activity.replace;
+            Lampa.Activity.replace = function () {
+                forceDcmaEmpty();
+                return origReplace.apply(this, arguments);
+            };
+        } catch (e) {}
+
+        try {
+            if (Lampa.Listener) {
+                Lampa.Listener.follow('activity', function (event) {
+                    if (event.type === 'build' || event.type === 'complite') {
+                        forceDcmaEmpty();
+                    }
+                });
+            }
+        } catch (e) {}
 
         var tmdbSource = Lampa.Api && Lampa.Api.sources && Lampa.Api.sources.tmdb;
         if (tmdbSource && typeof tmdbSource.parseCountries === 'function') {
