@@ -7,6 +7,7 @@
     var nativeFetch = typeof window !== 'undefined' && typeof window.fetch === 'function' ? window.fetch.bind(window) : null;
 
     var cardPathRe = /\/3\/(movie|tv)\/(\d+)(?:\/|$|\?)/;
+    var cubDiscussRe = /\/api\/discuss\/get\/(movie|tv)_(\d+)(?:\/|$|\?)/;
     var subPathRe = /\/3\/(?:movie|tv)\/\d+\/([^\/\?]+)/;
     var seasonNumRe = /\/season\/(\d+)(?:\/|$|\?)/;
     var blockedRe = /^\s*\{\s*"blocked"\s*:\s*true\s*\}\s*$/;
@@ -38,7 +39,12 @@
     }
 
     function getCardMatch(url) {
-        return typeof url === 'string' ? url.match(cardPathRe) : null;
+        if (typeof url !== 'string') return null;
+        return url.match(cardPathRe) || url.match(cubDiscussRe);
+    }
+
+    function isCubDiscuss(url) {
+        return typeof url === 'string' && cubDiscussRe.test(url);
     }
 
     var PROXY_API_HOST = 'tmdb.abmsx.tech';
@@ -224,7 +230,7 @@
         if (ownXhrs.has(xhr)) return origSend.apply(this, arguments);
 
         var reqUrl = xhr.__admca_url || '';
-        if (!cardPathRe.test(reqUrl) && !isMirrorTmdb(reqUrl)) {
+        if (!getCardMatch(reqUrl) && !isMirrorTmdb(reqUrl)) {
             return origSend.apply(this, arguments);
         }
 
@@ -243,6 +249,17 @@
 
             var text = '';
             try { text = (xhr.responseText || '').trim(); } catch (e) {}
+            if (isCubDiscuss(matchUrl)) {
+                try {
+                    console.log('[anti-dmca][cub][xhr]', {
+                        url: respUrl,
+                        requestUrl: reqUrl,
+                        matchUrl: matchUrl,
+                        status: xhr.status,
+                        text: text.slice(0, 300)
+                    });
+                } catch (e) {}
+            }
             var isBlocked = isBlockedPayload(text);
             var isFailed = !isBlocked && (xhr.status === 0 || xhr.status >= 400 || !text);
             if (isBlocked || isFailed) {
@@ -387,6 +404,15 @@
                 if (!getCardMatch(requestedUrl) && !isMirrorTmdb(requestedUrl)) return response;
                 return response.clone().text().then(function (text) {
                     var t = (text || '').trim();
+                    if (isCubDiscuss(requestedUrl)) {
+                        try {
+                            console.log('[anti-dmca][cub][fetch]', {
+                                url: requestedUrl,
+                                status: response.status,
+                                text: t.slice(0, 300)
+                            });
+                        } catch (e) {}
+                    }
                     var isBlocked = isBlockedPayload(t);
                     var isFailed = !response.ok || response.status === 0 || !t;
                     if (isBlocked || isFailed) {
