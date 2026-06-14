@@ -118,6 +118,24 @@
                     url = Lampa.Utils.addUrlComponent(url, 'uid=' + cfg.uid);
                 return url;
             }
+        },
+        beta: {
+            label: 'Beta',
+            host: 'http://beta.l-vid.online:888/',
+            uids: [
+                'znk9evge'
+            ],
+            currentIndex: 0,
+            getHost: function() { return this.host; },
+            getSubtitle: function() { return this.host; },
+            auth: function(url, cfg) {
+                var uid = cfg.uids[cfg.currentIndex] || cfg.uids[0];
+                if (url.indexOf('uid=') === -1)
+                    url = Lampa.Utils.addUrlComponent(url, 'uid=' + uid);
+                else
+                    url = url.replace(/uid=([^&]+)/, 'uid=' + uid);
+                return url;
+            }
         }
     };
 
@@ -554,6 +572,10 @@
                         sources = {};
                         filter_sources = [];
                         
+                        var last_balansers = Lampa.Storage.cache('online_last_balanser', 3000, {});
+                        delete last_balansers[object.movie.id];
+                        Lampa.Storage.cache('online_last_balanser', 3000, last_balansers);
+                        
                         Defined.localhost = getHost();
                         _this.createSource().then(function(){
                              _this.search();
@@ -762,7 +784,7 @@
                     }
                 };
                 var fin = function fin(call) {
-                    network.timeout(3000);
+                    network.timeout(1500);
                     network.silent(account(url), function(json) {
                         life_wait_times++;
                         filter_sources = [];
@@ -866,7 +888,7 @@
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
                         } else {
-                            _this.switchConnectionSource(e);
+                            _this.doesNotAnswer(e);
                         }
                     }, false, {
                         dataType: 'text',
@@ -1928,10 +1950,8 @@
                 html.find('.timeout').text(tic);
                 if (tic == 0) {
                     clearInterval(balanser_timer);
-                    var keys = Lampa.Arrays.getKeys(sources);
-                    var indx = keys.indexOf(balanser);
-                    var next = keys[indx + 1];
-                    if (!next) next = keys[0];
+                    var next = filter_sources[0];
+                    if (balanser === next && filter_sources.length > 1) next = filter_sources[1];
                     balanser = next;
                     if (Lampa.Activity.active().activity == _this9.activity) _this9.changeBalanser(balanser);
                 }
