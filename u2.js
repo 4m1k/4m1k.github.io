@@ -1950,10 +1950,8 @@
                 html.find('.timeout').text(tic);
                 if (tic == 0) {
                     clearInterval(balanser_timer);
-                    var keys = Lampa.Arrays.getKeys(sources);
-                    var indx = keys.indexOf(balanser);
-                    var next = keys[indx + 1];
-                    if (!next) next = keys[0];
+                    var next = filter_sources[0];
+                    if (balanser === next && filter_sources.length > 1) next = filter_sources[1];
                     balanser = next;
                     if (Lampa.Activity.active().activity == _this9.activity) _this9.changeBalanser(balanser);
                 }
