@@ -572,6 +572,10 @@
                         sources = {};
                         filter_sources = [];
                         
+                        var last_balansers = Lampa.Storage.cache('online_last_balanser', 3000, {});
+                        delete last_balansers[object.movie.id];
+                        Lampa.Storage.cache('online_last_balanser', 3000, last_balansers);
+                        
                         Defined.localhost = getHost();
                         _this.createSource().then(function(){
                              _this.search();
@@ -884,7 +888,7 @@
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
                         } else {
-                            _this.switchConnectionSource(e);
+                            _this.doesNotAnswer(e);
                         }
                     }, false, {
                         dataType: 'text',
