@@ -780,7 +780,7 @@
                     }
                 };
                 var fin = function fin(call) {
-                    network.timeout(3000);
+                    network.timeout(1500);
                     network.silent(account(url), function(json) {
                         life_wait_times++;
                         filter_sources = [];
