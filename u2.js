@@ -197,7 +197,10 @@
     function resetConnectionSourceState(source) {
         var cfg = SERVER_CONFIG[source];
         if (!cfg) return;
-        if (source === 'skaz') setSkazStartupAccount();
+        if (source === 'skaz') {
+            resetSkazMirror();
+            setSkazStartupAccount();
+        }
         else if (typeof cfg.currentIndex !== 'undefined') cfg.currentIndex = 0;
     }
 
@@ -234,6 +237,35 @@
     }
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
+
+    // ПАТЧ: ротация ЗЕРКАЛ skaz (online3/online4/online5).
+    // При падении текущего зеркала сперва перебираем остальные зеркала skaz,
+    // и только когда все они мертвы — переключаемся на другой источник.
+    var skazMirrorOrder = [];
+    var skazMirrorIndex = 0;
+    function buildSkazMirrorOrder() {
+        skazMirrorOrder = [randomIndex];
+        for (var i = 0; i < vybor.length; i++) {
+            if (i !== randomIndex) skazMirrorOrder.push(i);
+        }
+        skazMirrorIndex = 0;
+    }
+    function rotateSkazMirror() {
+        if (skazMirrorIndex < skazMirrorOrder.length - 1) {
+            skazMirrorIndex++;
+            randomIndex = skazMirrorOrder[skazMirrorIndex];
+            randomUrl = vybor[randomIndex];
+            return true;
+        }
+        return false;
+    }
+    function resetSkazMirror() {
+        randomIndex = Math.floor(Math.random() * vybor.length);
+        randomUrl = vybor[randomIndex];
+        buildSkazMirrorOrder();
+    }
+    buildSkazMirrorOrder();
+
     setSkazStartupAccount();
 
     // Helper для получения текущего хоста
@@ -923,9 +955,15 @@
         this.switchConnectionSource = function(er) {
             var _this5 = this;
             var current = connection_source;
-            var next = getNextConnectionSource(unavailable_connection_sources);
 
-            unavailable_connection_sources[current] = true;
+            // ПАТЧ: если текущий источник skaz и есть непробованное зеркало skaz —
+            // сперва переключаемся на другое зеркало skaz, а не на другой источник.
+            var skazMirrorAvailable = (current === 'skaz' && rotateSkazMirror());
+
+            var next = skazMirrorAvailable ? 'skaz' : getNextConnectionSource(unavailable_connection_sources);
+
+            // skaz помечаем недоступным только когда все его зеркала перебраны
+            if (!skazMirrorAvailable) unavailable_connection_sources[current] = true;
             if (!next) return this.noConnectToServer(er);
 
             this.reset();
@@ -950,9 +988,18 @@
                 clearInterval(connection_switch_timer);
                 if (Lampa.Activity.active().activity !== _this5.activity) return;
 
-                connection_source = next;
-                Lampa.Storage.set('connection_source', connection_source);
-                resetConnectionSourceState(connection_source);
+                if (skazMirrorAvailable) {
+                    // Остаёмся на skaz, переходим на следующее зеркало.
+                    // НЕ вызываем resetConnectionSourceState — иначе сбросится
+                    // уже выбранное rotateSkazMirror() зеркало. Обновляем только аккаунты.
+                    connection_source = 'skaz';
+                    Lampa.Storage.set('connection_source', connection_source);
+                    setSkazStartupAccount();
+                } else {
+                    connection_source = next;
+                    Lampa.Storage.set('connection_source', connection_source);
+                    resetConnectionSourceState(connection_source);
+                }
 
                 Defined.localhost = getHost();
                 balanser = '';
