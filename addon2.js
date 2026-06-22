@@ -472,10 +472,6 @@ function openSectionModal(sectionId) {
         }, 250);
     }, 200);
 }
-        });
-        focusModalController();
-    }, 200);
-}
 
 /* Компонент */
 Lampa.SettingsApi.addComponent({
