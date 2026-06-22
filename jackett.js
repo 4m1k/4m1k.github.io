@@ -123,11 +123,15 @@
     }, 1000);
   }
 
+  var selectValues = { no_parser: 'Свой вариант' };
+  servers.forEach(function (s) { selectValues[s.id] = s.name; });
+
   Lampa.SettingsApi.addParam({
     component: 'parser',
     param: {
       name: 'jackett_urltwo',
-      type: 'static',
+      type: 'select',
+      values: selectValues,
       default: 'jac_red'
     },
     field: {
@@ -140,15 +144,23 @@
         + '</div></div></div></div>',
       description: 'Нажмите для выбора парсера из списка'
     },
+    onChange: function () {
+      applyServerConfig();
+      Lampa.Settings.update();
+    },
     onRender: function (element) {
-      element.on('hover:enter', function () {
-        showServerSwitchMenu();
-      });
-
       setTimeout(function () {
+        $('div[data-name="jackett_urltwo"]').on('hover:enter', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          showServerSwitchMenu();
+          return false;
+        });
+
         if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
           $('div[data-name="jackett_url"]').hide();
           $('div[data-name="jackett_key"]').hide();
+          Lampa.Controller.toggle('settings_component');
         }
 
         if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
@@ -164,7 +176,7 @@
 
   Lampa.Settings.listener.follow('open', function (e) {
     if (e.name === 'parser') {
-      e.body.find('[data-name="jackett_url2"], [data-name="jackett_url_two"], [data-name="jackett_two"], [data-name="jackett_url_2"]').remove();
+      e.body.find('[data-name="jackett_url2"], [data-name="jackett_url_two"], [data-name="jackett_two"], [data-name="jackett_url_2"], [data-name="jackett_two_use"], [data-name="parser_two"], [data-name="jackett_second"]').remove();
     }
   });
 
