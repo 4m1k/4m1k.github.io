@@ -123,11 +123,15 @@
     }, 1000);
   }
 
+  var selectValues = { no_parser: 'Свой вариант' };
+  servers.forEach(function (s) { selectValues[s.id] = s.name; });
+
   Lampa.SettingsApi.addParam({
     component: 'parser',
     param: {
       name: 'jackett_urltwo',
-      type: 'static',
+      type: 'select',
+      values: selectValues,
       default: 'jac_red'
     },
     field: {
@@ -138,14 +142,19 @@
         + '<div style="background: #1a7fd4; padding: 0.5em; border-radius: 0.4em;">'
         + '<div style="line-height: 0.3;">Выбрать парсер</div>'
         + '</div></div></div></div>',
-      description: ''
+      description: 'Нажмите для выбора парсера из списка'
+    },
+    onChange: function () {
+      applyServerConfig();
+      Lampa.Settings.update();
     },
     onRender: function (element) {
-      element.on('hover:enter', function () {
-        showServerSwitchMenu();
-      });
-
       setTimeout(function () {
+        var urltwoEl = $('div[data-name="jackett_urltwo"]');
+        urltwoEl.off('hover:enter').on('hover:enter', function () {
+          showServerSwitchMenu();
+        });
+
         if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
           $('div[data-name="jackett_url"]').hide();
           $('div[data-name="jackett_key"]').hide();
@@ -154,10 +163,10 @@
         if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
           element.show();
           $('.settings-param__name', element).css('color', '#ffffff');
-          updateParserDisplay();
+          urltwoEl.find('.settings-param__value').text(getCurrentParserName());
           var firstParam = $('div[data-component="parser"] .settings-param').first();
           if (firstParam.length && firstParam.attr('data-name') !== 'jackett_urltwo') {
-            $('div[data-name="jackett_urltwo"]').insertBefore(firstParam);
+            urltwoEl.insertBefore(firstParam);
           }
         } else {
           element.hide();
@@ -166,24 +175,14 @@
     }
   });
 
-  function updateParserDisplay() {
-    var parserName = getCurrentParserName();
-    var descEl = $('div[data-name="jackett_urltwo"] .settings-param__description');
-    if (descEl.length) {
-      descEl.text('Текущий: ' + parserName);
-    }
-    var nameEl = $('div[data-name="jackett_urltwo"] .settings-param__name');
-    if (nameEl.length) {
-      nameEl.find('.parser-current-name').remove();
-      nameEl.append('<span class="parser-current-name" style="opacity:0.6;font-size:0.85em;margin-left:0.5em">— ' + parserName + '</span>');
-    }
-    var filterEl = document.getElementById('current-parser-name');
-    if (filterEl) filterEl.textContent = parserName;
-  }
-
   Lampa.Settings.listener.follow('open', function (e) {
     if (e.name === 'parser') {
-      e.body.find('[data-name="jackett_url2"], [data-name="jackett_url_two"]').remove();
+      setTimeout(function () {
+        if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
+          $('div[data-name="jackett_url2"]').hide();
+          $('div[data-name="jackett_url_two"]').hide();
+        }
+      }, 10);
     }
   });
 
@@ -277,7 +276,6 @@
 
     var nameEl = document.getElementById('current-parser-name');
     if (nameEl) nameEl.textContent = getCurrentParserName();
-    setTimeout(updateParserDisplay, 100);
 
     var enabled = Lampa.Controller.enabled();
     Lampa.Controller.toggle(enabled && enabled.name);
@@ -448,8 +446,9 @@
       closeModalSafeJ();
       $('div[data-name="jackett_url"]').show();
       $('div[data-name="jackett_key"]').show();
-      Lampa.Settings.update();
-      setTimeout(updateParserDisplay, 100);
+      $('div[data-name="jackett_url2"]').show();
+      $('div[data-name="jackett_url_two"]').show();
+      $('div[data-name="jackett_urltwo"] .settings-param__value').text('Свой вариант');
       closeParserSelectAndRestore(controllerBeforeModal);
     });
 
@@ -470,6 +469,9 @@
         row.on('hover:enter', function () {
           var item = getServerSelectItem(server);
           closeModalSafeJ();
+          $('div[data-name="jackett_url"]').hide();
+          $('div[data-name="jackett_key"]').hide();
+          $('div[data-name="jackett_urltwo"] .settings-param__value').text(server.name);
           applyParserAndRefreshTorrents(item, currentActivity);
         });
 
@@ -581,7 +583,14 @@
     if (e.name === 'jackett_urltwo') {
       var nameEl = document.getElementById('current-parser-name');
       if (nameEl) nameEl.textContent = getCurrentParserName();
-      setTimeout(updateParserDisplay, 50);
+      var valEl = $('div[data-name="jackett_urltwo"] .settings-param__value');
+      if (valEl.length) valEl.text(getCurrentParserName());
+    }
+  });
+
+  Lampa.Controller.listener.follow('toggle', function (e) {
+    if (e.name === 'select') {
+      setTimeout(updateServerStatusInSettings, 10);
     }
   });
 
