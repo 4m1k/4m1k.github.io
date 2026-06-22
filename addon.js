@@ -85,15 +85,14 @@ function showLoadingBar() {
 
   // Добавляем CSS-анимацию
   var style = document.createElement('style');
-  style.textContent = `
-    @keyframes fillProgress {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-    .progress-bar {
-      animation: fillProgress 1s ease-in-out forwards;
-    }
-  `;
+  style.textContent = 
+    '@keyframes fillProgress {' +
+    '  from { width: 0%; }' +
+    '  to { width: 100%; }' +
+    '}' +
+    '.progress-bar {' +
+    '  animation: fillProgress 1s ease-in-out forwards;' +
+    '}';
   document.head.appendChild(style);
 
   // Обновляем текст процентов
@@ -109,10 +108,10 @@ function showLoadingBar() {
   }, 16);
 
   // Удаляем через 1.2 секунды
-  setTimeout(() => {
+  setTimeout(function() {
     loadingContainer.style.opacity = '0';
     loadingContainer.style.transition = 'opacity 0.2s ease';
-    setTimeout(() => {
+    setTimeout(function() {
       loadingContainer.remove();
       document.head.removeChild(style);
     }, 200);
@@ -162,15 +161,14 @@ function showDeletedBar() {
 
   // Добавляем CSS-анимацию
   var style = document.createElement('style');
-  style.textContent = `
-    @keyframes reduceProgress {
-      from { width: 100%; }
-      to { width: 0%; }
-    }
-    .progress-bar {
-      animation: reduceProgress 1s ease-in-out forwards;
-    }
-  `;
+  style.textContent = 
+    '@keyframes reduceProgress {' +
+    '  from { width: 100%; }' +
+    '  to { width: 0%; }' +
+    '}' +
+    '.progress-bar {' +
+    '  animation: reduceProgress 1s ease-in-out forwards;' +
+    '}';
   document.head.appendChild(style);
 
   // Обновляем текст процентов
@@ -186,10 +184,10 @@ function showDeletedBar() {
   }, 16);
 
   // Удаляем через 1.2 секунды
-  setTimeout(() => {
+  setTimeout(function() {
     loadingContainer.style.opacity = '0';
     loadingContainer.style.transition = 'opacity 0.2s ease';
-    setTimeout(() => {
+    setTimeout(function() {
       loadingContainer.remove();
       document.head.removeChild(style);
     }, 200);
