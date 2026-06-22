@@ -326,8 +326,6 @@ function deletePlugin(pluginToRemoveUrl, onDone) {
         Lampa.Noty.show("Плагин успешно удален");
         if (onDone) onDone();
     }, 1500);
-    Lampa.Storage.set('needRebootSettingExit', true);
-    settingsWatch();
     showDeletedBar();
 }
 
@@ -429,7 +427,9 @@ function openSectionModal(sectionId) {
                                 onSelect: function() {
                                     closeModalSafe();
                                     deletePlugin(p.removeUrl, function() {
-                                        setTimeout(function() { openSectionModal(sectionId); }, 200);
+                                        setTimeout(function() {
+                                            showReload('Для полного удаления плагина перезагрузите приложение!');
+                                        }, 200);
                                     });
                                 }
                             }],
