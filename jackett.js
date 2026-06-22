@@ -123,15 +123,11 @@
     }, 1000);
   }
 
-  var selectValues = { no_parser: 'Свой вариант' };
-  servers.forEach(function (s) { selectValues[s.id] = s.name; });
-
   Lampa.SettingsApi.addParam({
     component: 'parser',
     param: {
       name: 'jackett_urltwo',
-      type: 'select',
-      values: selectValues,
+      type: 'static',
       default: 'jac_red'
     },
     field: {
@@ -144,18 +140,15 @@
         + '</div></div></div></div>',
       description: 'Нажмите для выбора парсера из списка'
     },
-    onChange: function () {
-      applyServerConfig();
-      Lampa.Settings.update();
-    },
     onRender: function (element) {
-      setTimeout(function () {
-        $('div[data-children="parser"]').on('hover:enter', function () { Lampa.Settings.update(); });
+      element.on('hover:enter', function () {
+        showServerSwitchMenu();
+      });
 
+      setTimeout(function () {
         if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
           $('div[data-name="jackett_url"]').hide();
           $('div[data-name="jackett_key"]').hide();
-          Lampa.Controller.toggle('settings_component');
         }
 
         if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
@@ -171,7 +164,7 @@
 
   Lampa.Settings.listener.follow('open', function (e) {
     if (e.name === 'parser') {
-      e.body.find('[data-name="jackett_url2"], [data-name="jackett_url_two"]').remove();
+      e.body.find('[data-name="jackett_url2"], [data-name="jackett_url_two"], [data-name="jackett_two"], [data-name="jackett_url_2"]').remove();
     }
   });
 
@@ -419,6 +412,27 @@
 
     var list = $('<div class="jackett-server-list"></div>');
     var rowMap = {};
+
+    var noParserRow = $('<div class="selector jackett-server-item" tabindex="0">' +
+      '<div class="jackett-server-info">' +
+      '<div class="jackett-server-name">Свой вариант</div>' +
+      '</div>' +
+      '<div class="jackett-server-status"></div>' +
+      '</div>');
+
+    if (currentSelected === 'no_parser') noParserRow.addClass('jackett-server-active');
+
+    noParserRow.on('hover:enter', function () {
+      Lampa.Storage.set('jackett_urltwo', 'no_parser');
+      applyServerConfig();
+      closeModalSafeJ();
+      $('div[data-name="jackett_url"]').show();
+      $('div[data-name="jackett_key"]').show();
+      Lampa.Settings.update();
+      closeParserSelectAndRestore(controllerBeforeModal);
+    });
+
+    list.append(noParserRow);
 
     servers.forEach(function (s) {
       (function (server) {
