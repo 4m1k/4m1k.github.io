@@ -439,8 +439,14 @@
 
     noParserRow.on('hover:enter', function () {
       Lampa.Storage.set('jackett_urltwo', 'no_parser');
-      applyServerConfig();
+      Lampa.Storage.set('jackett_url', '');
+      Lampa.Storage.set('jackett_key', '');
+      Lampa.Storage.set('jackett_interview', 'all');
+      Lampa.Storage.set('parse_in_search', false);
+      Lampa.Storage.set('parse_lang', 'lg');
       closeModalSafeJ();
+      $('div[data-name="jackett_url"] input, div[data-name="jackett_url"] .settings-param__value').val('').text('');
+      $('div[data-name="jackett_key"] input, div[data-name="jackett_key"] .settings-param__value').val('').text('');
       $('div[data-name="jackett_url"]').show();
       $('div[data-name="jackett_key"]').show();
       $('div[data-name="jackett_url2"]').show();
