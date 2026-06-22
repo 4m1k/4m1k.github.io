@@ -96,6 +96,42 @@ function showReload(reloadText) {
     focusModalController();
 }
 
+var EDGE_SCROLL_PAD = 8;
+
+function openModalWithEdgeScroll(params) {
+    Lampa.Modal.open(params);
+    patchModalEdgeScroll();
+}
+
+function patchModalEdgeScroll() {
+    try {
+        if (!Lampa.Modal || typeof Lampa.Modal.scroll !== 'function') return;
+        var scroll = Lampa.Modal.scroll();
+        if (!scroll || scroll.__edgeScrollPatched) return;
+        if (typeof scroll.update !== 'function' || typeof scroll.wheel !== 'function' ||
+            typeof scroll.render !== 'function') return;
+        scroll.__edgeScrollPatched = true;
+        scroll.update = function(elem) {
+            try {
+                var target = elem && elem.jquery ? elem[0] : elem;
+                if (!target || typeof target.getBoundingClientRect !== 'function') return;
+                var renderEl = scroll.render(true);
+                if (!renderEl) return;
+                var viewportEl = renderEl.querySelector('.scroll__content') || renderEl;
+                var er = target.getBoundingClientRect();
+                var vr = viewportEl.getBoundingClientRect();
+                if (!er.height || !vr.height) return;
+
+                if (er.bottom > vr.bottom - EDGE_SCROLL_PAD) {
+                    scroll.wheel(er.bottom - vr.bottom + EDGE_SCROLL_PAD);
+                } else if (er.top < vr.top + EDGE_SCROLL_PAD) {
+                    scroll.wheel(er.top - vr.top - EDGE_SCROLL_PAD);
+                }
+            } catch (e) {}
+        };
+    } catch (e) {}
+}
+
 /* Анимация установки плагина */
 function showLoadingBar() {
     var loadingContainer = document.createElement('div');
@@ -421,7 +457,7 @@ function openSectionModal(sectionId) {
 
     closeModalSafe();
     setTimeout(function() {
-        Lampa.Modal.open({
+        openModalWithEdgeScroll({
             title: section.title,
             html: list,
             size: 'medium',
