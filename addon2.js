@@ -17,59 +17,25 @@ var icon_add_sisi_plugin = '<div class="settings-folder" style="padding:0!import
 Lampa.Storage.set('needReboot', false);
 Lampa.Storage.set('needRebootSettingExit', false);
 
-/* Стили для модалки разделов */
+/* Стили для модалки разделов (по образцу buttons.js) */
 var addonStyle = document.createElement('style');
 addonStyle.textContent =
-    '.addon-plugin-row {' +
-    '  display: flex;' +
-    '  align-items: center;' +
-    '  justify-content: space-between;' +
-    '  padding: 1em 1.2em;' +
-    '  border-bottom: 1px solid rgba(255,255,255,0.06);' +
-    '  cursor: pointer;' +
-    '}' +
-    '.addon-plugin-row:hover, .addon-plugin-row.focus {' +
-    '  background: rgba(255,255,255,0.05);' +
-    '}' +
-    '.addon-plugin-info {' +
-    '  flex: 1;' +
-    '  min-width: 0;' +
-    '  padding-right: 1em;' +
-    '}' +
-    '.addon-plugin-name {' +
-    '  font-size: 1.1em;' +
-    '  font-weight: bold;' +
-    '  color: #fff;' +
-    '  margin-bottom: 0.2em;' +
-    '}' +
-    '.addon-plugin-desc {' +
-    '  font-size: 0.85em;' +
-    '  color: rgba(255,255,255,0.5);' +
-    '  overflow: hidden;' +
-    '  text-overflow: ellipsis;' +
-    '  display: -webkit-box;' +
-    '  -webkit-line-clamp: 2;' +
-    '  -webkit-box-orient: vertical;' +
-    '}' +
-    '.addon-plugin-status {' +
-    '  width: 0.8em;' +
-    '  height: 0.8em;' +
-    '  border-radius: 50%;' +
-    '  flex-shrink: 0;' +
-    '  margin-left: 0.5em;' +
-    '}' +
-    '.addon-plugin-status.active {' +
-    '  background-color: #4caf50;' +
-    '  box-shadow: 0 0 6px rgba(76,175,80,0.6);' +
-    '}' +
-    '.addon-plugin-status.error {' +
-    '  background-color: #f44336;' +
-    '  box-shadow: 0 0 6px rgba(244,67,54,0.4);' +
-    '}' +
-    '.addon-plugin-status.disabled {' +
-    '  background-color: #ff9800;' +
-    '  box-shadow: 0 0 6px rgba(255,152,0,0.5);' +
-    '}';
+    '.addon-plugin-list{display:flex;flex-direction:column;gap:.7em;padding-right:1em;max-width:100%;width:100%;box-sizing:border-box}' +
+    '.addon-plugin-list .addon-ui-text{font-family:inherit!important;font-size:inherit!important;font-weight:normal!important;font-style:normal!important}' +
+    '.addon-plugin-item{display:grid;grid-template-columns:minmax(0,1fr) 2.4em 2.4em;align-items:center;gap:.35em;padding:.7em 1em;border-radius:.7em;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);box-sizing:border-box;min-height:3.2em}' +
+    '.addon-plugin-item.focus{border-color:#fff!important;background:rgba(255,255,255,.1)}' +
+    '.addon-plugin-item .addon-plugin-info{min-width:0;overflow:hidden;box-sizing:border-box}' +
+    '.addon-plugin-item .addon-plugin-name{font-family:inherit;font-size:inherit;font-weight:bold;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}' +
+    '.addon-plugin-item .addon-plugin-desc{font-family:inherit;font-size:.8em;color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;line-height:1.2;margin-top:.15em}' +
+    '.addon-plugin-item .addon-plugin-toggle{width:2.4em;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);border-radius:.6em;background:rgba(255,255,255,.1)}' +
+    '.addon-plugin-item .addon-plugin-toggle svg{width:1.2em;height:1.2em}' +
+    '.addon-plugin-item .addon-plugin-toggle.focus{border-color:#fff!important}' +
+    '.addon-plugin-item .addon-plugin-action{width:2.4em;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);border-radius:.6em;background:rgba(255,255,255,.1)}' +
+    '.addon-plugin-item .addon-plugin-action svg{width:1.2em;height:1.2em}' +
+    '.addon-plugin-item .addon-plugin-action.focus{border-color:#fff!important}' +
+    '.addon-plugin-item.addon-plugin-installed .addon-plugin-toggle{border-color:rgba(76,175,80,.6);background:rgba(76,175,80,.2)}' +
+    '.addon-plugin-item.addon-plugin-disabled .addon-plugin-toggle{border-color:rgba(255,152,0,.6);background:rgba(255,152,0,.2)}' +
+    '.addon-plugin-item.addon-plugin-notinstalled .addon-plugin-toggle{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.1)}';
 document.head.appendChild(addonStyle);
 
 /* Модалка перезагрузки (по образцу buttons.js) */
@@ -89,6 +55,22 @@ function focusModalController() {
             }
         } catch (e) {}
     }, 120);
+}
+
+function syncModalFont() {
+    try {
+        var ref = document.querySelector('.settings-param') || document.querySelector('.settings');
+        if (!ref) ref = document.body;
+        var cs = window.getComputedStyle(ref);
+        var modalRoot = document.querySelector('.modal__content') || document.querySelector('.modal .modal__body') || document.querySelector('.modal .modal__html');
+        if (!modalRoot && typeof window.$ !== 'undefined' && window.$) {
+            var $inner = $('.modal').last().find('.modal__body, .modal__content, .modal__html').first();
+            if ($inner.length) modalRoot = $inner[0];
+        }
+        if (!modalRoot) return;
+        if (cs.fontFamily) modalRoot.style.fontFamily = cs.fontFamily;
+        if (cs.fontSize) modalRoot.style.fontSize = cs.fontSize;
+    } catch (e) {}
 }
 
 function showReload(reloadText) {
@@ -351,17 +333,26 @@ function getPluginStatus(pluginUrl) {
     return -1;
 }
 
+var SVG_INSTALL = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
+var SVG_INSTALLED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+var SVG_DISABLED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>';
+var SVG_DELETE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" fill="none"><rect x="1.89" y="1.78" width="21.79" height="21.79" rx="3.5" stroke="currentColor" stroke-width="3"/><path d="M9.5 9.5L16.5 16.5M16.5 9.5L9.5 16.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>';
+
 function updateRowStatus(row, pluginUrl) {
-    var statusEl = row.find('.addon-plugin-status');
     var installed = checkPlugin(pluginUrl);
     var status = getPluginStatus(pluginUrl);
-    statusEl.removeClass('active error disabled');
+    row.removeClass('addon-plugin-installed addon-plugin-disabled addon-plugin-notinstalled');
+    var toggleEl = row.find('.addon-plugin-toggle');
+    toggleEl.find('svg').remove();
     if (installed && status !== 0) {
-        statusEl.addClass('active');
+        row.addClass('addon-plugin-installed');
+        toggleEl.append($(SVG_INSTALLED).clone());
     } else if (status === 0) {
-        statusEl.addClass('disabled');
+        row.addClass('addon-plugin-disabled');
+        toggleEl.append($(SVG_DISABLED).clone());
     } else {
-        statusEl.addClass('error');
+        row.addClass('addon-plugin-notinstalled');
+        toggleEl.append($(SVG_INSTALL).clone());
     }
 }
 
@@ -369,19 +360,20 @@ function openSectionModal(sectionId) {
     var section = SECTIONS[sectionId];
     if (!section) return;
     var plugins = section.plugins;
-    var wrap = $('<div class="addon-section-list"></div>');
+    var list = $('<div class="addon-plugin-list"></div>');
 
     for (var i = 0; i < plugins.length; i++) {
         (function(p) {
-            var row = $('<div class="selector addon-plugin-row" tabindex="0">' +
+            var row = $('<div class="selector addon-plugin-item" tabindex="0">' +
                 '<div class="addon-plugin-info">' +
-                '<div class="addon-plugin-name">' + p.fieldName + '</div>' +
+                '<div class="addon-plugin-name addon-ui-text">' + p.fieldName + '</div>' +
                 '<div class="addon-plugin-desc">' + p.description + '</div>' +
                 '</div>' +
-                '<div class="addon-plugin-status"></div>' +
+                '<div class="addon-plugin-toggle selector"></div>' +
+                '<div class="addon-plugin-action selector">' + SVG_DELETE + '</div>' +
                 '</div>');
 
-            row.on('hover:enter', function() {
+            row.find('.addon-plugin-toggle').on('hover:enter', function() {
                 var installed = checkPlugin(p.url);
                 if (installed) {
                     closeModalSafe();
@@ -394,25 +386,19 @@ function openSectionModal(sectionId) {
                                 name: 'Нет',
                                 onSelect: function() {
                                     closeModalSafe();
-                                    setTimeout(function() {
-                                        openSectionModal(sectionId);
-                                    }, 200);
+                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
                                 }
                             }, {
                                 name: 'Да',
                                 onSelect: function() {
                                     closeModalSafe();
                                     deletePlugin(p.removeUrl);
-                                    setTimeout(function() {
-                                        openSectionModal(sectionId);
-                                    }, 200);
+                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
                                 }
                             }],
                             onBack: function() {
                                 closeModalSafe();
-                                setTimeout(function() {
-                                    openSectionModal(sectionId);
-                                }, 200);
+                                setTimeout(function() { openSectionModal(sectionId); }, 200);
                             }
                         });
                         focusModalController();
@@ -425,7 +411,42 @@ function openSectionModal(sectionId) {
                 }
             });
 
-            wrap.append(row);
+            row.find('.addon-plugin-action').on('hover:enter', function() {
+                var installed = checkPlugin(p.url);
+                if (installed) {
+                    closeModalSafe();
+                    setTimeout(function() {
+                        Lampa.Modal.open({
+                            title: '',
+                            align: 'center',
+                            html: $('<div class="about">Удалить плагин "' + p.pluginName + '"?</div>'),
+                            buttons: [{
+                                name: 'Нет',
+                                onSelect: function() {
+                                    closeModalSafe();
+                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
+                                }
+                            }, {
+                                name: 'Да',
+                                onSelect: function() {
+                                    closeModalSafe();
+                                    deletePlugin(p.removeUrl);
+                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
+                                }
+                            }],
+                            onBack: function() {
+                                closeModalSafe();
+                                setTimeout(function() { openSectionModal(sectionId); }, 200);
+                            }
+                        });
+                        focusModalController();
+                    }, 200);
+                } else {
+                    Lampa.Noty.show('Плагин не установлен');
+                }
+            });
+
+            list.append(row);
             setTimeout(function() {
                 updateRowStatus(row, p.url);
             }, 50);
@@ -436,7 +457,7 @@ function openSectionModal(sectionId) {
     setTimeout(function() {
         Lampa.Modal.open({
             title: section.title,
-            html: wrap,
+            html: list,
             size: 'medium',
             onBack: function() {
                 closeModalSafe();
@@ -444,6 +465,13 @@ function openSectionModal(sectionId) {
                     Lampa.Settings.create('add_plugin');
                 }, 200);
             }
+        });
+        setTimeout(function() {
+            syncModalFont();
+            focusModalController();
+        }, 250);
+    }, 200);
+}
         });
         focusModalController();
     }, 200);
