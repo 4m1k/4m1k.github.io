@@ -17,6 +17,61 @@ var icon_add_sisi_plugin = '<div class="settings-folder" style="padding:0!import
 Lampa.Storage.set('needReboot', false);
 Lampa.Storage.set('needRebootSettingExit', false);
 
+/* Стили для модалки разделов */
+var addonStyle = document.createElement('style');
+addonStyle.textContent =
+    '.addon-plugin-row {' +
+    '  display: flex;' +
+    '  align-items: center;' +
+    '  justify-content: space-between;' +
+    '  padding: 1em 1.2em;' +
+    '  border-bottom: 1px solid rgba(255,255,255,0.06);' +
+    '  cursor: pointer;' +
+    '}' +
+    '.addon-plugin-row:hover, .addon-plugin-row.focus {' +
+    '  background: rgba(255,255,255,0.05);' +
+    '}' +
+    '.addon-plugin-info {' +
+    '  flex: 1;' +
+    '  min-width: 0;' +
+    '  padding-right: 1em;' +
+    '}' +
+    '.addon-plugin-name {' +
+    '  font-size: 1.1em;' +
+    '  font-weight: bold;' +
+    '  color: #fff;' +
+    '  margin-bottom: 0.2em;' +
+    '}' +
+    '.addon-plugin-desc {' +
+    '  font-size: 0.85em;' +
+    '  color: rgba(255,255,255,0.5);' +
+    '  overflow: hidden;' +
+    '  text-overflow: ellipsis;' +
+    '  display: -webkit-box;' +
+    '  -webkit-line-clamp: 2;' +
+    '  -webkit-box-orient: vertical;' +
+    '}' +
+    '.addon-plugin-status {' +
+    '  width: 0.8em;' +
+    '  height: 0.8em;' +
+    '  border-radius: 50%;' +
+    '  flex-shrink: 0;' +
+    '  margin-left: 0.5em;' +
+    '}' +
+    '.addon-plugin-status.active {' +
+    '  background-color: #4caf50;' +
+    '  box-shadow: 0 0 6px rgba(76,175,80,0.6);' +
+    '}' +
+    '.addon-plugin-status.error {' +
+    '  background-color: #f44336;' +
+    '  box-shadow: 0 0 6px rgba(244,67,54,0.4);' +
+    '}' +
+    '.addon-plugin-status.disabled {' +
+    '  background-color: #ff9800;' +
+    '  box-shadow: 0 0 6px rgba(255,152,0,0.5);' +
+    '}';
+document.head.appendChild(addonStyle);
+
 /* Модалка перезагрузки (по образцу buttons.js) */
 function closeModalSafe() {
     try {
@@ -263,64 +318,15 @@ function checkPlugin(pluginToCheck) {
     return false;
 }
 
-/* Универсальный onRender для плагинов */
-function pluginOnRender(pluginUrl, dataName) {
-    return function(item) {
-        $('.settings-param__name', item).css('color', 'f3d900');
-        hideInstall();
-        var myResult = checkPlugin(pluginUrl);
-        var pluginsArray = Lampa.Storage.get('plugins');
-        setTimeout(function() {
-            $('div[data-name="' + dataName + '"]').append('<div class="settings-param__status one"></div>');
-            var pluginStatus = null;
-            for (var i = 0; i < pluginsArray.length; i++) {
-                if (pluginsArray[i].url === pluginUrl) {
-                    pluginStatus = pluginsArray[i].status;
-                    break;
-                }
-            }
-            if (myResult && pluginStatus !== 0) {
-                $('div[data-name="' + dataName + '"]').find('.settings-param__status').removeClass('active error').addClass('active');
-            } else if (pluginStatus === 0) {
-                $('div[data-name="' + dataName + '"]').find('.settings-param__status').removeClass('active error').css('background-color', 'rgb(255, 165, 0)');
-            } else {
-                $('div[data-name="' + dataName + '"]').find('.settings-param__status').removeClass('active error').addClass('error');
-            }
-        }, 100);
-    };
-}
+/* Данные плагинов по разделам */
+var SECTIONS = {};
 
-/* Универсальное добавление плагина */
-function addPluginEntry(config) {
-    Lampa.SettingsApi.addParam({
-        component: config.component,
-        param: {
-            name: config.paramName,
-            type: 'select',
-            values: { 1: 'Установить', 2: 'Удалить' }
-        },
-        field: {
-            name: config.fieldName,
-            description: config.description
-        },
-        onChange: function(value) {
-            if (value == '1') {
-                itemON(config.url, config.pluginName, config.author, config.paramName);
-            }
-            if (value == '2') {
-                deletePlugin(config.removeUrl);
-            }
-        },
-        onRender: pluginOnRender(config.url, config.paramName)
-    });
-}
-
-/* Универсальное добавление раздела */
-function addSection(component, iconVar) {
+function registerSection(id, title, iconVar, plugins) {
+    SECTIONS[id] = { title: title, plugins: plugins };
     Lampa.SettingsApi.addParam({
         component: 'add_plugin',
         param: {
-            name: component,
+            name: id,
             type: 'static',
             default: true
         },
@@ -329,13 +335,118 @@ function addSection(component, iconVar) {
         },
         onRender: function(item) {
             item.on('hover:enter', function() {
-                Lampa.Settings.create(component);
-                Lampa.Controller.enabled().controller.back = function() {
-                    Lampa.Settings.create('add_plugin');
-                };
+                openSectionModal(id);
             });
         }
     });
+}
+
+function getPluginStatus(pluginUrl) {
+    var pluginsArray = Lampa.Storage.get('plugins');
+    for (var i = 0; i < pluginsArray.length; i++) {
+        if (pluginsArray[i].url === pluginUrl) {
+            return pluginsArray[i].status;
+        }
+    }
+    return -1;
+}
+
+function updateRowStatus(row, pluginUrl) {
+    var statusEl = row.find('.addon-plugin-status');
+    var installed = checkPlugin(pluginUrl);
+    var status = getPluginStatus(pluginUrl);
+    statusEl.removeClass('active error disabled');
+    if (installed && status !== 0) {
+        statusEl.addClass('active');
+    } else if (status === 0) {
+        statusEl.addClass('disabled');
+    } else {
+        statusEl.addClass('error');
+    }
+}
+
+function openSectionModal(sectionId) {
+    var section = SECTIONS[sectionId];
+    if (!section) return;
+    var plugins = section.plugins;
+    var wrap = $('<div class="addon-section-list"></div>');
+
+    for (var i = 0; i < plugins.length; i++) {
+        (function(p) {
+            var row = $('<div class="selector addon-plugin-row" tabindex="0">' +
+                '<div class="addon-plugin-info">' +
+                '<div class="addon-plugin-name">' + p.fieldName + '</div>' +
+                '<div class="addon-plugin-desc">' + p.description + '</div>' +
+                '</div>' +
+                '<div class="addon-plugin-status"></div>' +
+                '</div>');
+
+            row.on('hover:enter', function() {
+                var installed = checkPlugin(p.url);
+                if (installed) {
+                    closeModalSafe();
+                    setTimeout(function() {
+                        Lampa.Modal.open({
+                            title: '',
+                            align: 'center',
+                            html: $('<div class="about">Удалить плагин "' + p.pluginName + '"?</div>'),
+                            buttons: [{
+                                name: 'Нет',
+                                onSelect: function() {
+                                    closeModalSafe();
+                                    setTimeout(function() {
+                                        openSectionModal(sectionId);
+                                    }, 200);
+                                }
+                            }, {
+                                name: 'Да',
+                                onSelect: function() {
+                                    closeModalSafe();
+                                    deletePlugin(p.removeUrl);
+                                    setTimeout(function() {
+                                        openSectionModal(sectionId);
+                                    }, 200);
+                                }
+                            }],
+                            onBack: function() {
+                                closeModalSafe();
+                                setTimeout(function() {
+                                    openSectionModal(sectionId);
+                                }, 200);
+                            }
+                        });
+                        focusModalController();
+                    }, 200);
+                } else {
+                    itemON(p.url, p.pluginName, p.author, p.paramName);
+                    setTimeout(function() {
+                        updateRowStatus(row, p.url);
+                    }, 200);
+                }
+            });
+
+            wrap.append(row);
+            setTimeout(function() {
+                updateRowStatus(row, p.url);
+            }, 50);
+        })(plugins[i]);
+    }
+
+    closeModalSafe();
+    setTimeout(function() {
+        Lampa.Modal.open({
+            title: section.title,
+            html: wrap,
+            size: 'medium',
+            onBack: function() {
+                closeModalSafe();
+                setTimeout(function() {
+                    Lampa.Settings.create('add_plugin');
+                }, 200);
+            }
+        });
+        focusModalController();
+    }, 200);
 }
 
 /* Компонент */
@@ -348,42 +459,7 @@ Lampa.SettingsApi.addComponent({
 /* Слушатель для главного меню */
 Lampa.Settings.listener.follow('open', function(e) {
     if (e.name == 'main') {
-        Lampa.SettingsApi.addComponent({
-            component: 'add_interface_plugin',
-            name: 'Interface'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_management_plugin',
-            name: 'Management'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_online_plugin',
-            name: 'Online'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_torrent_plugin',
-            name: 'Torrents'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_tv_plugin',
-            name: 'TV'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_radio_plugin',
-            name: 'Radio'
-        });
-        Lampa.SettingsApi.addComponent({
-            component: 'add_sisi_plugin',
-            name: 'Sisi'
-        });
         setTimeout(function() {
-            $('div[data-component="add_interface_plugin"]').remove();
-            $('div[data-component="add_management_plugin"]').remove();
-            $('div[data-component="add_online_plugin"]').remove();
-            $('div[data-component="add_torrent_plugin"]').remove();
-            $('div[data-component="add_tv_plugin"]').remove();
-            $('div[data-component="add_radio_plugin"]').remove();
-            $('div[data-component="add_sisi_plugin"]').remove();
             $('div[data-component="pirate_store"]').remove();
         }, 0);
         $("#hideInstall").remove();
@@ -394,623 +470,85 @@ Lampa.Settings.listener.follow('open', function(e) {
 });
 
 /* Разделы */
-addSection('add_interface_plugin', icon_add_interface_plugin);
+registerSection('add_interface_plugin', 'Интерфейс', icon_add_interface_plugin, [
+    { paramName: 'TMDB', fieldName: 'TMDB Proxy', description: 'Проксирование постеров для сайта TMDB', url: 'https://4m1k.github.io/tmdb.js', pluginName: 'TMDB Proxy', author: '@lampa', removeUrl: "https://4m1k.github.io/tmdb.js" },
+    { paramName: 'TMDB Alt', fieldName: 'TMDB Alt', description: 'Альтернативный плагин проксирования постеров для сайта TMDB', url: 'https://4m1k.github.io/tmdbalt.js', pluginName: 'TMDB Alt', author: '@lampa', removeUrl: "https://4m1k.github.io/tmdbalt.js" },
+    { paramName: 'Interface Mod', fieldName: 'Interface Mod', description: 'Улучшенный интерфейс', url: 'https://4m1k.github.io/interface_mod.js', pluginName: 'Interface Mod', author: '@lampa', removeUrl: "https://4m1k.github.io/interface_mod.js" },
+    { paramName: 'Torrents Styles', fieldName: 'Torrents Styles', description: 'Цветовая индикация торрентов', url: 'https://amikdn.github.io/torrents_styles.js', pluginName: 'Torrents Styles', author: '@lampa', removeUrl: "https://amikdn.github.io/torrents_styles.js" },
+    { paramName: 'ContinueWatching', fieldName: 'ContinueWatching', description: 'Кнопка продолжить просмотр для торрентов', url: 'https://amikdn.github.io/ContinueWatching.js', pluginName: 'ContinueWatching', author: '@lampa', removeUrl: "https://amikdn.github.io/ContinueWatching.js" },
+    { paramName: 'Snow', fieldName: 'Snow', description: 'Падающий Снег', url: 'https://4m1k.github.io/snow.js', pluginName: 'Snow', author: '@lampa', removeUrl: "https://4m1k.github.io/snow.js" },
+    { paramName: 'filter_content', fieldName: 'Фильтр контента', description: 'Плагин позволяет фильтровать вывод карточек в приложении через настройки в разделе интерфейс - пункт Фильтр контента', url: 'https://4m1k.github.io/filter_content.js', pluginName: 'Фильтр Контента', author: '@lampa', removeUrl: "https://4m1k.github.io/filter_content.js" },
+    { paramName: 'PersonalHub', fieldName: 'PersonalHub', description: 'Плагин добавляет источник Custom, в котором можно сортировать/изменять разделы и карточки на свой вкус', url: 'https://4m1k.github.io/personalhub.js', pluginName: 'PersonalHub', author: '@lampa', removeUrl: "https://4m1k.github.io/personalhub.js" },
+    { paramName: 'qlty', fieldName: 'qlty', description: 'Отметки качества фильмов на карточках', url: 'https://4m1k.github.io/qlty.js', pluginName: 'qlty', author: '@lampa', removeUrl: "https://4m1k.github.io/qlty.js" },
+    { paramName: 'NoTrailer', fieldName: 'Удаление Трейлеров', description: 'Удаляет пункт Трейлеры', url: 'https://4m1k.github.io/notrailer.js', pluginName: 'Удаление Трейлеров', author: '@lampa', removeUrl: "https://4m1k.github.io/notrailer.js" },
+    { paramName: 'Rating', fieldName: 'Рейтинг КиноПоиск и IMDB', description: 'Показ рейтинга КиноПоиск и IMDB в карточке. Функционал аналогичен части из MODSs, так что их не следует использовать вместе', url: 'https://nb557.github.io/plugins/rating.js', pluginName: 'Рейтинг КиноПоиск и IMDB', author: '@t_anton', removeUrl: "https://nb557.github.io/plugins/rating.js" },
+    { paramName: 'Sub_reset', fieldName: 'Сброс настроек субтитров', description: 'Плагин сбрасывает настройки субтитров по умолчанию', url: 'https://nb557.github.io/plugins/reset_subs.js', pluginName: 'Сброс Настроек Субтитров', author: '@t_anton', removeUrl: "https://nb557.github.io/plugins/reset_subs.js" },
+    { paramName: 'Collections', fieldName: 'Коллекции', description: 'Захватывающие коллекции фильмов и сериалов в главном меню приложения. От новинок до классики — каждая коллекция это увлекательное погружение в мир киноискусства', url: 'https://4m1k.github.io/collections.js', pluginName: 'Коллекции', author: '@lampa', removeUrl: "https://4m1k.github.io/collections.js" },
+    { paramName: 'CollectionsPrisma', fieldName: 'Подборки Prisma', description: 'Подборки фильмов и сериалов в главном меню приложения от Prisma.', url: 'https://levende.github.io/lampa-plugins/prisma_collections.js', pluginName: 'Подборки Prisma', author: '@lampa', removeUrl: "https://levende.github.io/lampa-plugins/prisma_collections.js" },
+    { paramName: 'Weather', fieldName: 'Погода', description: 'Плагин будет поочередно показывать время и погоду, чередуя их показания', url: 'https://4m1k.github.io/weather.js', pluginName: 'Погода', author: '@scabrum', removeUrl: "https://4m1k.github.io/weather.js" },
+    { paramName: 'Cub_off', fieldName: 'Cub Off', description: 'Плагин убирает элементы, предлагающие оформить cub premium а так же рекламу в начале видео', url: 'https://4m1k.github.io/cuboff.js', pluginName: 'Cub Off', author: '@lampa', removeUrl: "https://4m1k.github.io/cuboff.js" },
+    { paramName: 'Style_interface_fix', fieldName: 'Стильный интерфейс', description: 'Новый стильный интерфейс для каталога TMDB и CUB. Понравится тем, кому нравится интерфейс в кинопоиске или netflix', url: 'https://4m1k.github.io/interface.js', pluginName: 'Стильный Интерфейс', author: '@lampa', removeUrl: "https://4m1k.github.io/interface.js" },
+    { paramName: 'New_cat', fieldName: 'Дополнительные категории', description: 'Плагин позволяет добавить на выбор в главное меню категории (Документалки, Концерты и Мультфильмы)', url: 'https://lampame.github.io/main/nc/nc.js', pluginName: 'Дополнительные Категории', author: '@GwynnBleiidd', removeUrl: "https://lampame.github.io/main/nc/nc.js" },
+    { paramName: 'New_source', fieldName: 'Дополнительный источник Кинопоиск (KP)', description: 'Плагин добавляет источник Кинопоиск (KP) для получения информации о фильмах', url: 'https://4m1k.github.io/source.js', pluginName: 'Источник Кинопоиск (KP)', author: '@lampa', removeUrl: "https://4m1k.github.io/source.js" },
+    { paramName: 'Start', fieldName: 'Start', description: 'Плагин позволяет заходить на заблокированные карточки', url: 'https://4m1k.github.io/start.js', pluginName: 'Start', author: '@lampa', removeUrl: "https://4m1k.github.io/start.js" },
+    { paramName: 'goldtheme', fieldName: 'Золотая тема', description: 'Плагин включает золотую тему', url: 'https://bazzzilius.github.io/scripts/gold_theme.js', pluginName: 'Золотая Тема', author: '@BazZziliuS', removeUrl: "https://bazzzilius.github.io/scripts/gold_theme.js" },
+    { paramName: 'concert_search', fieldName: 'Поиск концертов', description: 'Плагин осуществляет поиск концертов через парсер Jackett', url: 'https://lampame.github.io/main/cts.js', pluginName: 'Поиск Концертов', author: '@GwynnBleiidd', removeUrl: "https://lampame.github.io/main/cts.js" },
+    { paramName: 'Rezka_comments', fieldName: 'Комментарии от Rezka', description: 'Плагин выводит комментарии к фильму от сервиса Rezka', url: 'https://BDVBurik.github.io/rezkacomment.js', pluginName: 'Комментарии Rezka', author: '@BDV_Burik', removeUrl: "https://BDVBurik.github.io/rezkacomment.js" },
+    { paramName: 'Shikimori', fieldName: 'LME Shikimori', description: 'Отображает информацию по аниме с Shikimori, так же пытается найти по оригинальному названию на TMDB, если найдено множество результатов, то покажет меню с выбором', url: 'https://lampame.github.io/main/shikimori.js', pluginName: 'LME Shikimori', author: '@GwynnBleiidd', removeUrl: "https://lampame.github.io/main/shikimori.js" },
+    { paramName: 'ts_del', fieldName: 'Remove TS', description: 'Плагин убирает на главном экране карточки с качеством TS', url: 'https://4m1k.github.io/nots.js', pluginName: 'Remove TS', author: '@AndreyURL54', removeUrl: "https://4m1k.github.io/nots.js" },
+    { paramName: 'rus_movie', fieldName: 'Русские новинки', description: 'Плагин добавляет в левом меню пункт с русскими новинками фильмов и сериалов общим списком и отсортированных по онлайн кинотеатрам', url: 'https://4m1k.github.io/rusmovies.js', pluginName: 'Русские Новинки', author: '@lampa', removeUrl: "https://4m1k.github.io/rusmovies.js" },
+    { paramName: 'in_qual', fieldName: 'В качестве', description: 'Плагин добавляет в левом меню пункт с фильмами, которые вышли в высоком качестве', url: 'https://4m1k.github.io/quality.js', pluginName: 'В Качестве', author: '@lampa', removeUrl: "https://4m1k.github.io/quality.js" },
+    { paramName: 'logo_title', fieldName: 'Лого вместо названия', description: 'Позволяет заменить в карточке название фильма/сериала и т.д. на логотип. В настройках приложения в разделе интерфейс можно откл/вкл показ', url: 'https://4m1k.github.io/logo.js', pluginName: 'Лого Вместо Названия', author: '@lampa', removeUrl: "https://4m1k.github.io/logo.js" },
+    { paramName: 'trakt', fieldName: 'TraktTV', description: 'Плагин Trakt.TV позволяет пользователям получать контент из Trakt.TV прямо в приложении Lampa. С его помощью можно авторизоваться, просматривать список UpNext и Watchlist, а также обновлять токены авторизации', url: 'https://lampame.github.io/main/trakttv.js', pluginName: 'TraktTV', author: '@lme', removeUrl: "https://lampame.github.io/main/trakttv.js" },
+    { paramName: 'head_filter', fieldName: 'Настройка шапки', description: 'Добавляет возможность скрыть элементы в шапке приложения', url: 'https://and7ey.github.io/lampa/head_filter.js', pluginName: 'Настройка Шапки', author: '@and7ey', removeUrl: "https://and7ey.github.io/lampa/head_filter.js" },
+    { paramName: 'cardify', fieldName: 'Cardify', description: 'Плагин преобразует привычный вид карточек, предлагая обновленный интерфейс — более яркий, красочный и привлекательный', url: 'https://4m1k.github.io/cardify.js', pluginName: 'Cardify', author: '@lampa', removeUrl: "https://4m1k.github.io/cardify.js" },
+    { paramName: 'inter_movie', fieldName: 'Зарубежные подборки', description: 'Плагин добавляет в левом меню пункт с зарубежными подборками', url: 'https://4m1k.github.io/foreign.js', pluginName: 'Зарубежные Подборки', author: '@lampa', removeUrl: "https://4m1k.github.io/foreign.js" },
+    { paramName: 'rate_lampa', fieldName: 'Рейтинг Lampa', description: 'Плагин добавляет в карточку рейтинг Lampa, основываясь на оценках пользователей', url: 'https://4m1k.github.io/lampa_rate.js', pluginName: 'Рейтинг Lampa', author: '@lampa', removeUrl: "https://4m1k.github.io/lampa_rate.js" },
+    { paramName: 'eps_and_seas', fieldName: 'Состояние сериала', description: 'Плагин отображает текущее состояние сериала (сезон/серия) в карточке. Отключить/включить можно в настройках приложения', url: 'https://4m1k.github.io/seaseps.js', pluginName: 'Состояние Сериала', author: '@lampa', removeUrl: "https://4m1k.github.io/seaseps.js" }
+]);
 
-addSection('add_management_plugin', icon_add_management_plugin);
+registerSection('add_management_plugin', 'Управление', icon_add_management_plugin, [
+    { paramName: 'Exit_Menu', fieldName: 'Выход', description: 'Плагин добавляет пункт Выход и Перезагрузка', url: 'https://amikdn.github.io/exit.js', pluginName: 'Выход', author: '@amikdn', removeUrl: "https://amikdn.github.io/exit.js" },
+    { paramName: 'DLNA', fieldName: 'DLNA (Tizen, Orsay)', description: 'Плагин работает на устройстве Orsay, для Tizen необходимо обновить виджет до версии 1.9.1', url: 'http://cub.rip/plugin/dlna', pluginName: 'DLNA', author: '@lampa', removeUrl: "http://cub.rip/plugin/dlna" },
+    { paramName: 'Select_Weapon', fieldName: 'Тип управления', description: 'Плагин при установке позволяет выбрать тип управления (Пульт без мышки, Пульт с мышью, Тачскрин), а так же сбросить тип управления выбранный ранее', url: 'https://nemiroff.github.io/lampa/select_weapon.js', pluginName: 'Тип Управления', author: '@nemiroff', removeUrl: "https://nemiroff.github.io/lampa/select_weapon.js" },
+    { paramName: 'Touch_off', fieldName: 'Выключение тача', description: 'Плагин выключает сенсорное управление, если оно было включено по ошибке', url: 'https://nb557.github.io/plugins/not_mobile.js', pluginName: 'Выключение Тача', author: '@t_anton', removeUrl: "https://nb557.github.io/plugins/not_mobile.js" },
+    { paramName: 'Wsoff', fieldName: 'Wsoff', description: 'Плагин отключения ошибки (Request was denied for security) на старых версиях Android. Не устанавливать, если ошибки нет', url: 'http://plugin.rootu.top/wsoff.js', pluginName: 'Wsoff', author: '@rootu', removeUrl: "http://plugin.rootu.top/wsoff.js" },
+    { paramName: 'Redirect', fieldName: 'Смена сервера', description: 'Плагин позволяет сменить сервер приложения', url: 'https://4m1k.github.io/redirect.js', pluginName: 'Смена Сервера', author: '@scabrum', removeUrl: "https://4m1k.github.io/redirect.js" },
+    { paramName: 'bind_but', fieldName: 'Бинд кнопок', description: 'Плагин позволяет управлять цветными кнопками с ТВ пульта фильтрами в карточке онлайна или торрентов', url: 'https://apxubatop.github.io/lmpPlugs/tvbuttontst.js', pluginName: 'Бинд Кнопок', author: '@Juri_Z', removeUrl: "https://apxubatop.github.io/lmpPlugs/tvbuttontst.js" }
+]);
 
-addSection('add_online_plugin', icon_add_online_plugin);
+registerSection('add_online_plugin', 'Онлайн', icon_add_online_plugin, [
+    { paramName: 'Skaz Online', fieldName: 'Skaz Online', description: 'Фильмы и сериалы онлайн платный плагин', url: 'http://skaz.tv/onlines.js', pluginName: 'Skaz Online', author: '@skaz', removeUrl: "http://skaz.tv/onlines.js" },
+    { paramName: 'Z1 Онлайн', fieldName: 'Z1 Онлайн', description: 'Фильмы и сериалы онлайн', url: 'http://z01.online/live', pluginName: 'Z1 Онлайн', author: '@z1', removeUrl: "http://z01.online/live" },
+    { paramName: 'Online_Mod', fieldName: 'Online_Mod', description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн. На выбор доступно 7 балансеров', url: 'https://nb557.github.io/plugins/online_mod.js', pluginName: 'Online Mod', author: '@t_anton', removeUrl: "https://nb557.github.io/plugins/online_mod.js" },
+    { paramName: 'Онлайн_H', fieldName: 'Онлайн H', description: 'Плагин для просмотра фильмов и сериалов в онлайн', url: 'https://lampadn.github.io/o.js', pluginName: 'Онлайн H', author: '@lampadn', removeUrl: "https://lampadn.github.io/o.js" },
+    { paramName: 'Онлайн Modss', fieldName: 'Онлайн Modss', description: 'Плагин для просмотра фильмов и сериалов в онлайн', url: 'http://lampa.stream/modss', pluginName: 'Онлайн Modss', author: '@lampa', removeUrl: "http://lampa.stream/modss" }
+]);
 
-addSection('add_torrent_plugin', icon_add_torrent_plugin);
+registerSection('add_torrent_plugin', 'Торренты', icon_add_torrent_plugin, [
+    { paramName: 'Switch_Parser', fieldName: 'Переключение парсеров', description: 'Плагин позволяет переключаться между парсерами jackett из списка с уже забитыми правильными параметрами. В настройках парсера появится пункт со списком общедоступных jacketts', url: 'https://4m1k.github.io/jackett.js', pluginName: 'Переключение Парсеров', author: '@4m1K', removeUrl: "https://4m1k.github.io/jackett.js" },
+    { paramName: 'Tracks', fieldName: 'Tracks', description: 'Плагин заменяет название аудиодорожек и субтитров в плеере (работает только в торрентах)', url: 'https://4m1k.github.io/tracks.js', pluginName: 'Tracks', author: '@lampa', removeUrl: "https://4m1k.github.io/tracks.js" },
+    { paramName: 'Setting_torrents', fieldName: 'Настройка торрентов (Web OS, Tizen)', description: 'Плагин для ТВ, на которых Lampa установлена через официальные магазины LG Store и Tizen App Store. Включает в настройках отображение пунктов Парсер и Torrserver, необходимых для просмотра торрентов', url: 'https://4m1k.github.io/etor.js', pluginName: 'Настройка Торрентов', author: '@lampa', removeUrl: "https://4m1k.github.io/etor.js" },
+    { paramName: 'Check_server', fieldName: 'Поиск локального TorrServera', description: 'Плагин позволяет произвести поиск вашего локального TorrServera', url: 'https://amikdn.github.io/checker.js', pluginName: 'Поиск Локального TorrServera', author: '@AndreyURL54', removeUrl: "https://amikdn.github.io/checker.js" },
+    { paramName: 'Torr_download', fieldName: 'Закачка торрентов', description: 'Плагин добавляет подключение торрент клиентов таких как qBittorent, Transmission с последующей возможностью загрузки торрента через него для локального просмотра', url: 'https://lampame.github.io/main/torrentmanager/torrentmanager.js', pluginName: 'Закачка Торрентов', author: '@feliks', removeUrl: "https://lampame.github.io/main/torrentmanager/torrentmanager.js" },
+    { paramName: 'free_torr', fieldName: 'Free Torrserver', description: 'Плагин автоматически подставляет torrserver из своей базы', url: 'https://amikdn.github.io/freet.js', pluginName: 'Free Torrserver', author: '@amik', removeUrl: "https://amikdn.github.io/freet.js" },
+    { paramName: 'visual_ts', fieldName: 'Визуализация загрузки TS', description: 'Плагин показывает визуально загрузку TS перед запуском видео через торренты', url: 'https://plugin.rootu.top/ts-preload.js', pluginName: 'Визуализация Загрузки TS', author: '@rootu', removeUrl: "https://plugin.rootu.top/ts-preload.js" }
+]);
 
-addSection('add_tv_plugin', icon_add_tv_plugin);
+registerSection('add_tv_plugin', 'ТВ', icon_add_tv_plugin, [
+    { paramName: 'Kulik', fieldName: 'Kulik', description: 'Плагин для просмотра IPTV каналов, отсортированных по различным категориям. Есть возможность поменять стиль плагина, сервер вещания, а также добавить каналы в избранное', url: 'http://cdn.kulik.uz/cors', pluginName: 'Kulik TV', author: '@SawamuraRen', removeUrl: "http://cdn.kulik.uz/cors" },
+    { paramName: 'IPTV', fieldName: 'IPTV', description: 'Плагин для просмотра IPTV каналов. Сортировка каналов по группам и возможность добавить каналы в избранное. Работает только со своим плейлистом, добавленным на сайте https://cub.watch/iptv', url: 'http://cub.rip/plugin/iptv', pluginName: 'IPTV', author: '@lampa', removeUrl: "http://cub.rip/plugin/iptv" }
+]);
 
-addSection('add_radio_plugin', icon_add_radio_plugin);
+registerSection('add_radio_plugin', 'Радио', icon_add_radio_plugin, [
+    { paramName: 'Record', fieldName: 'Радио Record', description: 'Прослушивание радио от радиостанции Radio Record. Доступно более 50 жанров, найдется и на ваш вкус', url: 'http://cub.rip/plugin/radio', pluginName: 'Радио Record', author: '@lampa', removeUrl: "http://cub.rip/plugin/radio" },
+    { paramName: 'Record_Mod', fieldName: 'Радио Record Mod', description: 'Всё тот же плагин Радио Record, но с единым списком станций без разделения на жанры', url: 'https://lampame.github.io/main/rradio.js', pluginName: 'Радио Record Mod', author: '@GwynnBleiidd', removeUrl: "https://lampame.github.io/main/rradio.js" },
+    { paramName: 'Radio_Soma', fieldName: 'Радио SomaFM', description: 'Более 30 уникальных каналов андерграундного/альтернативного радиовещания по всему миру, поддерживаемых слушателями, без рекламы.', url: 'https://tsynik.github.io/lampa/soma.js', pluginName: 'Радио SomaFM', author: '@tsynik', removeUrl: "https://tsynik.github.io/lampa/soma.js" }
+]);
 
-addSection('add_sisi_plugin', icon_add_sisi_plugin);
-
-/* Interface */
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'TMDB',
-    fieldName: 'TMDB Proxy',
-    description: 'Проксирование постеров для сайта TMDB',
-    url: 'https://4m1k.github.io/tmdb.js',
-    pluginName: 'TMDB Proxy',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/tmdb.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'TMDB Alt',
-    fieldName: 'TMDB Alt',
-    description: 'Альтернативный плагин проксирования постеров для сайта TMDB',
-    url: 'https://4m1k.github.io/tmdbalt.js',
-    pluginName: 'TMDB Alt',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/tmdbalt.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Interface Mod',
-    fieldName: 'Interface Mod',
-    description: 'Улучшенный интерфейс',
-    url: 'https://4m1k.github.io/interface_mod.js',
-    pluginName: 'Interface Mod',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/interface_mod.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Torrents Styles',
-    fieldName: 'Torrents Styles',
-    description: 'Цветовая индикация торрентов',
-    url: 'https://amikdn.github.io/torrents_styles.js',
-    pluginName: 'Torrents Styles',
-    author: '@lampa',
-    removeUrl: "https://amikdn.github.io/torrents_styles.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'ContinueWatching',
-    fieldName: 'ContinueWatching',
-    description: 'Кнопка продолжить просмотрт для торрентов',
-    url: 'https://amikdn.github.io/ContinueWatching.js',
-    pluginName: 'ContinueWatching',
-    author: '@lampa',
-    removeUrl: "https://amikdn.github.io/ContinueWatching.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Snow',
-    fieldName: 'Snow',
-    description: 'Падающий Снег',
-    url: 'https://4m1k.github.io/snow.js',
-    pluginName: 'Snow',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/snow.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'filter_content',
-    fieldName: 'Фильтр контента',
-    description: 'Плагин позволяет фильтровать вывод карточек в приложении через настройки в разделе интерфейс - пункт Фильтр контента',
-    url: 'https://4m1k.github.io/filter_content.js',
-    pluginName: 'Фильтр Контента',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/filter_content.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'PersonalHub',
-    fieldName: 'PersonalHub',
-    description: 'Плагин добавляет источник Custom, в котором можно сортировать/изменять разделы и карточки на свой вкус',
-    url: 'https://4m1k.github.io/personalhub.js',
-    pluginName: 'PersonalHub',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/personalhub.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'qlty',
-    fieldName: 'qlty',
-    description: 'Отметки качества фильмов на картоках',
-    url: 'https://4m1k.github.io/qlty.js',
-    pluginName: 'qlty',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/qlty.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'NoTrailer',
-    fieldName: 'Удаление Трейлеров',
-    description: 'Удаляет пункт Трейлеры',
-    url: 'https://4m1k.github.io/notrailer.js',
-    pluginName: 'Удаление Трейлеров',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/notrailer.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Rating',
-    fieldName: 'Рейтинг КиноПоиск и IMDB',
-    description: 'Показ рейтинга КиноПоиск и IMDB в карточке. Функционал аналогичен части из MODSs, так что их не следует использовать вместе',
-    url: 'https://nb557.github.io/plugins/rating.js',
-    pluginName: 'Рейтинг КиноПоиск и IMDB',
-    author: '@t_anton',
-    removeUrl: "https://nb557.github.io/plugins/rating.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Sub_reset',
-    fieldName: 'Сброс настроек субтитров',
-    description: 'Плагин сбрасывает настройки субтитров по умолчанию',
-    url: 'https://nb557.github.io/plugins/reset_subs.js',
-    pluginName: 'Сброс Настроек Субтитров',
-    author: '@t_anton',
-    removeUrl: "https://nb557.github.io/plugins/reset_subs.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Collections',
-    fieldName: 'Коллекции',
-    description: 'Захватывающие коллекции фильмов и сериалов в главном меню приложения. От новинок до классики — каждая коллекция это увлекательное погружение в мир киноискусства',
-    url: 'https://4m1k.github.io/collections.js',
-    pluginName: 'Коллекции',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/collections.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'CollectionsPrisma',
-    fieldName: 'Подборки Prisma',
-    description: 'Подборки фильмов и сериалов в главном меню приложения от Prisma.',
-    url: 'https://levende.github.io/lampa-plugins/prisma_collections.js',
-    pluginName: 'Подборки Prisma',
-    author: '@lampa',
-    removeUrl: "https://levende.github.io/lampa-plugins/prisma_collections.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Weather',
-    fieldName: 'Погода',
-    description: 'Плагин будет поочередно показывать время и погоду, чередуя их показания',
-    url: 'https://4m1k.github.io/weather.js',
-    pluginName: 'Погода',
-    author: '@scabrum',
-    removeUrl: "https://4m1k.github.io/weather.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Cub_off',
-    fieldName: 'Cub Off',
-    description: 'Плагин убирает элементы, предлагающие оформить cub premium а так же рекламу в начале видео',
-    url: 'https://4m1k.github.io/cuboff.js',
-    pluginName: 'Cub Off',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/cuboff.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Style_interface_fix',
-    fieldName: 'Стильный интерфейс',
-    description: 'Новый стильный интерфейс для каталога TMDB и CUB. Понравится тем, кому нравится интерфейс в кинопоиске или netflix',
-    url: 'https://4m1k.github.io/interface.js',
-    pluginName: 'Стильный Интерфейс',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/interface.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'New_cat',
-    fieldName: 'Дополнительные категории',
-    description: 'Плагин позволяет добавить на выбор в главное меню категории (Документалки, Концерты и Мультфильмы)',
-    url: 'https://lampame.github.io/main/nc/nc.js',
-    pluginName: 'Дополнительные Категории',
-    author: '@GwynnBleiidd',
-    removeUrl: "https://lampame.github.io/main/nc/nc.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'New_source',
-    fieldName: 'Дополнительный источник Кинопоиск (KP)',
-    description: 'Плагин добавляет источник Кинопоиск (KP) для получения информации о фильмах',
-    url: 'https://4m1k.github.io/source.js',
-    pluginName: 'Источник Кинопоиск (KP)',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/source.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Start',
-    fieldName: 'Start',
-    description: 'Плагин позволяет заходить на заблокированные карточки',
-    url: 'https://4m1k.github.io/start.js',
-    pluginName: 'Start',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/start.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'goldtheme',
-    fieldName: 'Золотая тема',
-    description: 'Плагин включает золотую тему',
-    url: 'https://bazzzilius.github.io/scripts/gold_theme.js',
-    pluginName: 'Золотая Тема',
-    author: '@BazZziliuS',
-    removeUrl: "https://bazzzilius.github.io/scripts/gold_theme.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'concert_search',
-    fieldName: 'Поиск концертов',
-    description: 'Плагин осуществляет поиск концертов через парсер Jackett',
-    url: 'https://lampame.github.io/main/cts.js',
-    pluginName: 'Поиск Концертов',
-    author: '@GwynnBleiidd',
-    removeUrl: "https://lampame.github.io/main/cts.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Rezka_comments',
-    fieldName: 'Комментарии от Rezka',
-    description: 'Плагин выводит комментарии к фильму от сервиса Rezka',
-    url: 'https://BDVBurik.github.io/rezkacomment.js',
-    pluginName: 'Комментарии Rezka',
-    author: '@BDV_Burik',
-    removeUrl: "https://BDVBurik.github.io/rezkacomment.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'Shikimori',
-    fieldName: 'LME Shikimori',
-    description: 'Отображает информацию по аниме с Shikimori, так же пытается найти по оригинальному названию на TMDB, если найдено множество результатов, то покажет меню с выбором',
-    url: 'https://lampame.github.io/main/shikimori.js',
-    pluginName: 'LME Shikimori',
-    author: '@GwynnBleiidd',
-    removeUrl: "https://lampame.github.io/main/shikimori.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'ts_del',
-    fieldName: 'Remove TS',
-    description: 'Плагин убирает на главном экране карточки с качеством TS',
-    url: 'https://4m1k.github.io/nots.js',
-    pluginName: 'Remove TS',
-    author: '@AndreyURL54',
-    removeUrl: "https://4m1k.github.io/nots.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'rus_movie',
-    fieldName: 'Русские новинки',
-    description: 'Плагин добавляет в левом меню пункт с русскими новинками фильмов и сериалов общим списком и отсортированных по онлайн кинотеатрам',
-    url: 'https://4m1k.github.io/rusmovies.js',
-    pluginName: 'Русские Новинки',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/rusmovies.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'in_qual',
-    fieldName: 'В качестве',
-    description: 'Плагин добавляет в левом меню пункт с фильмами, которые вышли в высоком качестве',
-    url: 'https://4m1k.github.io/quality.js',
-    pluginName: 'В Качестве',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/quality.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'logo_title',
-    fieldName: 'Лого вместо названия',
-    description: 'Позволяет заменить в карточке название фильма/сериала и т.д. на логотип. В настройках приложения в разделе интерфейс можно откл/вкл показ',
-    url: 'https://4m1k.github.io/logo.js',
-    pluginName: 'Лого Вместо Названия',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/logo.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'trakt',
-    fieldName: 'TraktTV',
-    description: 'Плагин Trakt.TV позволяет пользователям получать контент из Trakt.TV прямо в приложении Lampa. С его помощью можно авторизоваться, просматривать список UpNext и Watchlist, а также обновлять токены авторизации',
-    url: 'https://lampame.github.io/main/trakttv.js',
-    pluginName: 'TraktTV',
-    author: '@lme',
-    removeUrl: "https://lampame.github.io/main/trakttv.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'head_filter',
-    fieldName: 'Настройка шапки',
-    description: 'Добавляет возможность скрыть элементы в шапке приложения',
-    url: 'https://and7ey.github.io/lampa/head_filter.js',
-    pluginName: 'Настройка Шапки',
-    author: '@and7ey',
-    removeUrl: "https://and7ey.github.io/lampa/head_filter.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'cardify',
-    fieldName: 'Cardify',
-    description: 'Плагин преобразует привычный вид карточек, предлагая обновленный интерфейс — более яркий, красочный и привлекательный',
-    url: 'https://4m1k.github.io/cardify.js',
-    pluginName: 'Cardify',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/cardify.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'inter_movie',
-    fieldName: 'Зарубежные подборки',
-    description: 'Плагин добавляет в левом меню пункт с зарубежными подборками',
-    url: 'https://4m1k.github.io/foreign.js',
-    pluginName: 'Зарубежные Подборки',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/foreign.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'rate_lampa',
-    fieldName: 'Рейтинг Lampa',
-    description: 'Плагин добавляет в карточку рейтинг Lampa, основываясь на оценках пользователей',
-    url: 'https://4m1k.github.io/lampa_rate.js',
-    pluginName: 'Рейтинг Lampa',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/lampa_rate.js"
-});
-addPluginEntry({
-    component: 'add_interface_plugin',
-    paramName: 'eps_and_seas',
-    fieldName: 'Состояние сериала',
-    description: 'Плагин отображает текущее состояние сериала (сезон/серия) в карточке. Отключить/включить можно в настройках приложения',
-    url: 'https://4m1k.github.io/seaseps.js',
-    pluginName: 'Состояние Сериала',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/seaseps.js"
-});
-
-/* Management */
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'Exit_Menu',
-    fieldName: 'Выход',
-    description: 'Плагин добавляет пункт Выход и Перезагрузка',
-    url: 'https://amikdn.github.io/exit.js',
-    pluginName: 'Выход',
-    author: '@amikdn',
-    removeUrl: "https://amikdn.github.io/exit.js"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'DLNA',
-    fieldName: 'DLNA (Tizen, Orsay)',
-    description: 'Плагин работает на устройстве Orsay, для Tizen необходимо обновить виджет до версии 1.9.1',
-    url: 'http://cub.rip/plugin/dlna',
-    pluginName: 'DLNA',
-    author: '@lampa',
-    removeUrl: "http://cub.rip/plugin/dlna"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'Select_Weapon',
-    fieldName: 'Тип управления',
-    description: 'Плагин при установке позволяет выбрать тип управления (Пульт без мышки, Пульт с мышью, Тачскрин), а так же сбросить тип управления выбранный ранее',
-    url: 'https://nemiroff.github.io/lampa/select_weapon.js',
-    pluginName: 'Тип Управления',
-    author: '@nemiroff',
-    removeUrl: "https://nemiroff.github.io/lampa/select_weapon.js"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'Touch_off',
-    fieldName: 'Выключение тача',
-    description: 'Плагин выключает сенсорное управление, если оно было включено по ошибке',
-    url: 'https://nb557.github.io/plugins/not_mobile.js',
-    pluginName: 'Выключение Тача',
-    author: '@t_anton',
-    removeUrl: "https://nb557.github.io/plugins/not_mobile.js"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'Wsoff',
-    fieldName: 'Wsoff',
-    description: 'Плагин отключения ошибки (Request was denied for security) на старых версиях Android.Не устанавливать, если ошибки нет',
-    url: 'http://plugin.rootu.top/wsoff.js',
-    pluginName: 'Wsoff',
-    author: '@rootu',
-    removeUrl: "http://plugin.rootu.top/wsoff.js"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'Redirect',
-    fieldName: 'Смена сервера',
-    description: 'Плагин позволяет сменить сервер приложения',
-    url: 'https://4m1k.github.io/redirect.js',
-    pluginName: 'Смена Сервера',
-    author: '@scabrum',
-    removeUrl: "https://4m1k.github.io/redirect.js"
-});
-addPluginEntry({
-    component: 'add_management_plugin',
-    paramName: 'bind_but',
-    fieldName: 'Бинд кнопок',
-    description: 'Плагин позволяет управлять цветными кнопками с ТВ пульта фильтрами в карточке онлайна или торрентов',
-    url: 'https://apxubatop.github.io/lmpPlugs/tvbuttontst.js',
-    pluginName: 'Бинд Кнопок',
-    author: '@Juri_Z',
-    removeUrl: "https://apxubatop.github.io/lmpPlugs/tvbuttontst.js"
-});
-
-/* Online */
-addPluginEntry({
-    component: 'add_online_plugin',
-    paramName: 'Skaz Online',
-    fieldName: 'Skaz Online',
-    description: 'Фильмы и сериалы онлайн платный плагин',
-    url: 'http://skaz.tv/onlines.js',
-    pluginName: 'Skaz Online',
-    author: '@skaz',
-    removeUrl: "http://skaz.tv/onlines.js"
-});
-addPluginEntry({
-    component: 'add_online_plugin',
-    paramName: 'Z1 Онлайн',
-    fieldName: 'Z1 Онлайн',
-    description: 'Фильмы и сериалы онлайн',
-    url: 'http://z01.online/live',
-    pluginName: 'Z1 Онлайн',
-    author: '@z1',
-    removeUrl: "http://z01.online/live"
-});
-addPluginEntry({
-    component: 'add_online_plugin',
-    paramName: 'Online_Mod',
-    fieldName: 'Online_Mod',
-    description: 'Плагин позволяет смотреть фильмы и сериалы в онлайн. На выбор доступно 7 балансеров',
-    url: 'https://nb557.github.io/plugins/online_mod.js',
-    pluginName: 'Online Mod',
-    author: '@t_anton',
-    removeUrl: "https://nb557.github.io/plugins/online_mod.js"
-});
-addPluginEntry({
-    component: 'add_online_plugin',
-    paramName: 'Онлайн_H',
-    fieldName: 'Онлайн H',
-    description: 'Плагин для просмотра фильмов и сериалов в онлайн',
-    url: 'https://lampadn.github.io/o.js',
-    pluginName: 'Онлайн H',
-    author: '@lampadn',
-    removeUrl: "https://lampadn.github.io/o.js"
-});
-addPluginEntry({
-    component: 'add_online_plugin',
-    paramName: 'Онлайн Modss',
-    fieldName: 'Онлайн Modss',
-    description: 'Плагин для просмотра фильмов и сериалов в онлайн',
-    url: 'http://lampa.stream/modss',
-    pluginName: 'Онлайн Modss',
-    author: '@lampa',
-    removeUrl: "http://lampa.stream/modss"
-});
-
-/* Torrents */
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'Switch_Parser',
-    fieldName: 'Переключение парсеров',
-    description: 'Плагин позволяет переключаться между парсерами jackett из списка с уже забитыми правильными параметрами. В настройках парсера появится пункт со списком общедоступных jacketts',
-    url: 'https://4m1k.github.io/jackett.js',
-    pluginName: 'Переключение Парсеров',
-    author: '@4m1K',
-    removeUrl: "https://4m1k.github.io/jackett.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'Tracks',
-    fieldName: 'Tracks',
-    description: 'Плагин заменяет название аудиодорожек и субтитров в плеере (работает только в торрентах)',
-    url: 'https://4m1k.github.io/tracks.js',
-    pluginName: 'Tracks',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/tracks.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'Setting_torrents',
-    fieldName: 'Настройка торрентов (Web OS, Tizen)',
-    description: 'Плагин для ТВ, на которых Lampa установлена через официальные магазины LG Store и Tizen App Store. Включает в настройках отображение пунктов Парсер и Torrserver, необходимых для просмотра торрентов',
-    url: 'https://4m1k.github.io/etor.js',
-    pluginName: 'Настройка Торрентов',
-    author: '@lampa',
-    removeUrl: "https://4m1k.github.io/etor.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'Check_server',
-    fieldName: 'Поиск локального TorrServera',
-    description: 'Плагин позволяет произвести поиск вашего локального TorrServera',
-    url: 'https://amikdn.github.io/checker.js',
-    pluginName: 'Поиск Локального TorrServera',
-    author: '@AndreyURL54',
-    removeUrl: "https://amikdn.github.io/checker.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'Torr_download',
-    fieldName: 'Закачка торрентов',
-    description: 'Плагин добавляет подключение торрент клиентов таких как qBittorent, Transmission с последующей возможностью загрузки торрента через него для локального просмотра',
-    url: 'https://lampame.github.io/main/torrentmanager/torrentmanager.js',
-    pluginName: 'Закачка Торрентов',
-    author: '@feliks',
-    removeUrl: "https://lampame.github.io/main/torrentmanager/torrentmanager.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'free_torr',
-    fieldName: 'Free Torrserver',
-    description: 'Плагин автоматически подставляет torrserver из своей базы',
-    url: 'https://amikdn.github.io/freet.js',
-    pluginName: 'Free Torrserver',
-    author: '@amik',
-    removeUrl: "https://amikdn.github.io/freet.js"
-});
-addPluginEntry({
-    component: 'add_torrent_plugin',
-    paramName: 'visual_ts',
-    fieldName: 'Визуализация загрузки TS',
-    description: 'Плагин показывает визуально загрузку TS перед запуском видео через торренты',
-    url: 'https://plugin.rootu.top/ts-preload.js',
-    pluginName: 'Визуализация Загрузки TS',
-    author: '@rootu',
-    removeUrl: "https://plugin.rootu.top/ts-preload.js"
-});
-
-/* TV */
-addPluginEntry({
-    component: 'add_tv_plugin',
-    paramName: 'Kulik',
-    fieldName: 'Kulik',
-    description: 'Плагин для просмотра IPTV каналов, отсортированных по различным категориям. Есть возможность поменять стиль плагина, сервер вещания, а также добавить каналы в избранное',
-    url: 'http://cdn.kulik.uz/cors',
-    pluginName: 'Kulik TV',
-    author: '@SawamuraRen',
-    removeUrl: "http://cdn.kulik.uz/cors"
-});
-addPluginEntry({
-    component: 'add_tv_plugin',
-    paramName: 'IPTV',
-    fieldName: 'IPTV',
-    description: 'Плагин для просмотра IPTV каналов. Сортировка каналов по группам и возможность добавить каналы в избранное. Работает только со своим плейлистом, добавленным на сайте https://cub.watch/iptv',
-    url: 'http://cub.rip/plugin/iptv',
-    pluginName: 'IPTV',
-    author: '@lampa',
-    removeUrl: "http://cub.rip/plugin/iptv"
-});
-
-/* Radio */
-addPluginEntry({
-    component: 'add_radio_plugin',
-    paramName: 'Record',
-    fieldName: 'Радио Record',
-    description: 'Прослушивание радио от радиостанции Radio Record. Доступно более 50 жанров, найдется и на ваш вкус',
-    url: 'http://cub.rip/plugin/radio',
-    pluginName: 'Радио Record',
-    author: '@lampa',
-    removeUrl: "http://cub.rip/plugin/radio"
-});
-addPluginEntry({
-    component: 'add_radio_plugin',
-    paramName: 'Record_Mod',
-    fieldName: 'Радио Record Mod',
-    description: 'Всё тот же плагин Радио Record, но с единым списком станций без разделения на жанры',
-    url: 'https://lampame.github.io/main/rradio.js',
-    pluginName: 'Радио Record Mod',
-    author: '@GwynnBleiidd',
-    removeUrl: "https://lampame.github.io/main/rradio.js"
-});
-addPluginEntry({
-    component: 'add_radio_plugin',
-    paramName: 'Radio_Soma',
-    fieldName: 'Радио SomaFM',
-    description: 'Более 30 уникальных каналов андерграундного/альтернативного радиовещания по всему миру, поддерживаемых слушателями, без рекламы.',
-    url: 'https://tsynik.github.io/lampa/soma.js',
-    pluginName: 'Радио SomaFM',
-    author: '@tsynik',
-    removeUrl: "https://tsynik.github.io/lampa/soma.js"
-});
-
-/* Sisi */
-addPluginEntry({
-    component: 'add_sisi_plugin',
-    paramName: 'sisi',
-    fieldName: 'Клубничка (sisi)',
-    description: 'Другая версия плагина Клубничка (у кого не завелся основной плагин)',
-    url: 'http://4m1k.github.io/sisi.js',
-    pluginName: 'Клубничка (sisi)',
-    author: '@lampa',
-    removeUrl: "http://4m1k.github.io/sisi.js"
-});
+registerSection('add_sisi_plugin', 'Клубничка', icon_add_sisi_plugin, [
+    { paramName: 'sisi', fieldName: 'Клубничка (sisi)', description: 'Другая версия плагина Клубничка (у кого не завелся основной плагин)', url: 'http://4m1k.github.io/sisi.js', pluginName: 'Клубничка (sisi)', author: '@lampa', removeUrl: "http://4m1k.github.io/sisi.js" }
+]);
 
 /* Очистка артефактов в Расширениях */
 Lampa.Settings.listener.follow('open', function(e) {
