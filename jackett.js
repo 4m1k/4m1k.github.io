@@ -164,20 +164,11 @@
           element.show();
           $('.settings-param__name', element).css('color', '#ffffff');
           urltwoEl.find('.settings-param__value').text(getCurrentParserName());
+          urltwoEl.insertAfter('div[data-name="parser_torrent_type"]');
         } else {
           element.hide();
         }
       }, 5);
-
-      setTimeout(function () {
-        if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
-          var urltwoEl2 = $('div[data-name="jackett_urltwo"]');
-          var body = urltwoEl2.parent();
-          if (body.length && body.find('.settings-param').first().attr('data-name') !== 'jackett_urltwo') {
-            body.prepend(urltwoEl2);
-          }
-        }
-      }, 50);
     }
   });
 
@@ -188,14 +179,7 @@
           $('div[data-name="jackett_url2"]').hide();
           $('div[data-name="jackett_url_two"]').hide();
         }
-        if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
-          var urltwoEl = $('div[data-name="jackett_urltwo"]');
-          var body = urltwoEl.parent();
-          if (body.length && body.find('.settings-param').first().attr('data-name') !== 'jackett_urltwo') {
-            body.prepend(urltwoEl);
-          }
-        }
-      }, 50);
+      }, 10);
     }
   });
 
@@ -571,13 +555,7 @@
     if (e.name === 'parser_torrent_type') {
       var el = $('div[data-name="jackett_urltwo"]');
       if (e.value !== 'jackett') el.hide();
-      else {
-        el.show();
-        var body = el.parent();
-        if (body.length && body.find('.settings-param').first().attr('data-name') !== 'jackett_urltwo') {
-          body.prepend(el);
-        }
-      }
+      else el.show().insertAfter('div[data-name="parser_torrent_type"]');
     }
 
     if (e.name === 'activity') {
