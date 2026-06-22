@@ -123,15 +123,11 @@
     }, 1000);
   }
 
-  var selectValues = { no_parser: 'Свой вариант' };
-  servers.forEach(function (s) { selectValues[s.id] = s.name; });
-
   Lampa.SettingsApi.addParam({
     component: 'parser',
     param: {
       name: 'jackett_urltwo',
-      type: 'select',
-      values: selectValues,
+      type: 'static',
       default: 'jac_red'
     },
     field: {
@@ -144,19 +140,12 @@
         + '</div></div></div></div>',
       description: 'Текущий: ' + getCurrentParserName()
     },
-    onChange: function () {
-      applyServerConfig();
-      Lampa.Settings.update();
-    },
     onRender: function (element) {
-      setTimeout(function () {
-        $('div[data-name="jackett_urltwo"]').on('hover:enter', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          showServerSwitchMenu();
-          return false;
-        });
+      element.on('hover:enter', function () {
+        showServerSwitchMenu();
+      });
 
+      setTimeout(function () {
         if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
           $('div[data-name="jackett_url"]').hide();
           $('div[data-name="jackett_key"]').hide();
@@ -566,12 +555,6 @@
     if (e.name === 'jackett_urltwo') {
       var nameEl = document.getElementById('current-parser-name');
       if (nameEl) nameEl.textContent = getCurrentParserName();
-    }
-  });
-
-  Lampa.Controller.listener.follow('toggle', function (e) {
-    if (e.name === 'select') {
-      setTimeout(updateServerStatusInSettings, 10);
     }
   });
 
