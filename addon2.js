@@ -244,11 +244,13 @@ function settingsWatch() {
 }
 
 /* Установка плагина */
-function itemON(sourceURL, sourceName, sourceAuthor, itemName) {
+function itemON(sourceURL, sourceName, sourceAuthor, itemName, onDone) {
     if ($('DIV[data-name="' + itemName + '"]').find('.settings-param__status').hasClass('active')) {
         Lampa.Noty.show("Плагин уже установлен!");
+        if (onDone) onDone(false);
     } else if ($('DIV[data-name="' + itemName + '"]').find('.settings-param__status').css('background-color') === 'rgb(255, 165, 0)') {
         Lampa.Noty.show("Плагин уже установлен, но отключен в расширениях!");
+        if (onDone) onDone(false);
     } else {
         if (!Lampa.Storage.get('needReboot')) {
             var pluginsArray = Lampa.Storage.get('plugins');
@@ -264,9 +266,12 @@ function itemON(sourceURL, sourceName, sourceAuthor, itemName) {
             document.getElementsByTagName('head')[0].appendChild(script);
             showLoadingBar();
             setTimeout(function() {
-                Lampa.Settings.update();
+                if (!onDone) Lampa.Settings.update();
                 Lampa.Noty.show("Плагин " + sourceName + " успешно установлен");
+                if (onDone) onDone(true);
             }, 1500);
+        } else {
+            if (onDone) onDone(false);
         }
     }
 }
@@ -276,13 +281,14 @@ function hideInstall() {
     $('body').append('<div id="hideInstall"><style>div.settings-param__value{opacity: 0%!important;display: none;}</style><div>');
 }
 
-function deletePlugin(pluginToRemoveUrl) {
+function deletePlugin(pluginToRemoveUrl, onDone) {
     var plugins = Lampa.Storage.get('plugins');
     var updatedPlugins = plugins.filter(function(obj) { return obj.url !== pluginToRemoveUrl; });
     Lampa.Storage.set('plugins', updatedPlugins);
     setTimeout(function() {
-        Lampa.Settings.update();
+        if (!onDone) Lampa.Settings.update();
         Lampa.Noty.show("Плагин успешно удален");
+        if (onDone) onDone();
     }, 1500);
     Lampa.Storage.set('needRebootSettingExit', true);
     settingsWatch();
@@ -386,8 +392,9 @@ function openSectionModal(sectionId) {
                                 name: 'Да',
                                 onSelect: function() {
                                     closeModalSafe();
-                                    deletePlugin(p.removeUrl);
-                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
+                                    deletePlugin(p.removeUrl, function() {
+                                        setTimeout(function() { openSectionModal(sectionId); }, 200);
+                                    });
                                 }
                             }],
                             onBack: function() {
@@ -398,10 +405,10 @@ function openSectionModal(sectionId) {
                         focusModalController();
                     }, 200);
                 } else {
-                    itemON(p.url, p.pluginName, p.author, p.paramName);
-                    setTimeout(function() {
+                    itemON(p.url, p.pluginName, p.author, p.paramName, function(success) {
                         updateRowStatus(row, p.url);
-                    }, 200);
+                        focusModalController();
+                    });
                 }
             });
 
