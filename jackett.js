@@ -147,6 +147,11 @@
       });
 
       setTimeout(function () {
+        if (Lampa.Storage.get('jackett_urltwo') !== 'no_parser') {
+          $('div[data-name="jackett_url"]').hide();
+          $('div[data-name="jackett_key"]').hide();
+        }
+
         if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
           element.show();
           $('.settings-param__name', element).css('color', '#ffffff');
@@ -322,7 +327,6 @@
     '.jackett-server-item.jackett-server-active{border-color:rgba(66,133,244,.7);background:rgba(66,133,244,.15)}' +
     '.jackett-server-info{min-width:0;overflow:hidden;box-sizing:border-box}' +
     '.jackett-server-name{font-family:inherit;font-size:inherit;font-weight:bold;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}' +
-    '.jackett-server-url{font-family:inherit;font-size:.8em;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;margin-top:.15em}' +
     '.jackett-server-status{width:2.4em;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);border-radius:.6em;background:rgba(255,255,255,.1)}' +
     '.jackett-server-status svg{width:1.2em;height:1.2em}' +
     '.jackett-server-item.jackett-server-online .jackett-server-status{border-color:rgba(76,175,80,.6);background:rgba(76,175,80,.2);color:#4caf50}' +
@@ -345,7 +349,6 @@
     var noParserRow = $('<div class="selector jackett-server-item" tabindex="0">' +
       '<div class="jackett-server-info">' +
       '<div class="jackett-server-name">Свой вариант</div>' +
-      '<div class="jackett-server-url">Без встроенного парсера</div>' +
       '</div>' +
       '<div class="jackett-server-status"></div>' +
       '</div>');
@@ -353,12 +356,16 @@
     if (currentSelected === 'no_parser') noParserRow.addClass('jackett-server-active');
 
     noParserRow.on('hover:enter', function () {
+      Lampa.Storage.set('jackett_urltwo', 'no_parser');
       Lampa.Storage.set('jackett_url', '');
       Lampa.Storage.set('jackett_key', '');
       Lampa.Storage.set('jackett_interview', 'all');
       Lampa.Storage.set('parse_in_search', false);
       Lampa.Storage.set('parse_lang', 'lg');
       closeModalSafeJ();
+      $('div[data-name="jackett_url"]').show();
+      $('div[data-name="jackett_key"]').show();
+      Lampa.Settings.update();
       closeParserSelectAndRestore(controllerBeforeModal);
     });
 
@@ -370,7 +377,6 @@
         var row = $('<div class="selector jackett-server-item jackett-server-checking" tabindex="0">' +
           '<div class="jackett-server-info">' +
           '<div class="jackett-server-name">' + server.name + '</div>' +
-          '<div class="jackett-server-url">' + getServerUrl(server) + '</div>' +
           '</div>' +
           '<div class="jackett-server-status">' + SVG_SPINNER + '</div>' +
           '</div>');
@@ -380,6 +386,8 @@
         row.on('hover:enter', function () {
           var item = getServerSelectItem(server);
           closeModalSafeJ();
+          $('div[data-name="jackett_url"]').hide();
+          $('div[data-name="jackett_key"]').hide();
           applyParserAndRefreshTorrents(item, currentActivity);
         });
 
@@ -390,7 +398,7 @@
 
     closeModalSafeJ();
     setTimeout(function () {
-      Lampa.Modal.open({
+      openModalWithEdgeScrollJ({
         title: 'Меню смены парсера',
         html: list,
         size: 'medium',
@@ -419,6 +427,42 @@
         }
       });
     });
+  }
+
+  var EDGE_SCROLL_PAD_J = 8;
+
+  function openModalWithEdgeScrollJ(params) {
+    Lampa.Modal.open(params);
+    patchModalEdgeScrollJ();
+  }
+
+  function patchModalEdgeScrollJ() {
+    try {
+      if (!Lampa.Modal || typeof Lampa.Modal.scroll !== 'function') return;
+      var scroll = Lampa.Modal.scroll();
+      if (!scroll || scroll.__edgeScrollPatchedJ) return;
+      if (typeof scroll.update !== 'function' || typeof scroll.wheel !== 'function' ||
+          typeof scroll.render !== 'function') return;
+      scroll.__edgeScrollPatchedJ = true;
+      scroll.update = function (elem) {
+        try {
+          var target = elem && elem.jquery ? elem[0] : elem;
+          if (!target || typeof target.getBoundingClientRect !== 'function') return;
+          var renderEl = scroll.render(true);
+          if (!renderEl) return;
+          var viewportEl = renderEl.querySelector('.scroll__content') || renderEl;
+          var er = target.getBoundingClientRect();
+          var vr = viewportEl.getBoundingClientRect();
+          if (!er.height || !vr.height) return;
+
+          if (er.bottom > vr.bottom - EDGE_SCROLL_PAD_J) {
+            scroll.wheel(er.bottom - vr.bottom + EDGE_SCROLL_PAD_J);
+          } else if (er.top < vr.top + EDGE_SCROLL_PAD_J) {
+            scroll.wheel(er.top - vr.top - EDGE_SCROLL_PAD_J);
+          }
+        } catch (e) {}
+      };
+    } catch (e) {}
   }
 
   function closeModalSafeJ() {
