@@ -300,7 +300,7 @@ function itemON(sourceURL, sourceName, sourceAuthor, itemName, onDone) {
             var script = document.createElement('script');
             script.src = sourceURL;
             document.getElementsByTagName('head')[0].appendChild(script);
-            if (!onDone) showLoadingBar();
+            showLoadingBar();
             setTimeout(function() {
                 if (!onDone) Lampa.Settings.update();
                 Lampa.Noty.show("Плагин " + sourceName + " успешно установлен");
