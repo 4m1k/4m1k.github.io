@@ -22,17 +22,13 @@ var addonStyle = document.createElement('style');
 addonStyle.textContent =
     '.addon-plugin-list{display:flex;flex-direction:column;gap:.7em;padding-right:1em;max-width:100%;width:100%;box-sizing:border-box}' +
     '.addon-plugin-list .addon-ui-text{font-family:inherit!important;font-size:inherit!important;font-weight:normal!important;font-style:normal!important}' +
-    '.addon-plugin-item{display:grid;grid-template-columns:minmax(0,1fr) 2.4em 2.4em;align-items:center;gap:.35em;padding:.7em 1em;border-radius:.7em;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);box-sizing:border-box;min-height:3.2em}' +
+    '.addon-plugin-item{display:grid;grid-template-columns:minmax(0,1fr) 2.4em;align-items:center;gap:.35em;padding:.7em 1em;border-radius:.7em;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);box-sizing:border-box;min-height:3.2em}' +
     '.addon-plugin-item.focus{border-color:#fff!important;background:rgba(255,255,255,.1)}' +
     '.addon-plugin-item .addon-plugin-info{min-width:0;overflow:hidden;box-sizing:border-box}' +
     '.addon-plugin-item .addon-plugin-name{font-family:inherit;font-size:inherit;font-weight:bold;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}' +
     '.addon-plugin-item .addon-plugin-desc{font-family:inherit;font-size:.8em;color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;line-height:1.2;margin-top:.15em}' +
     '.addon-plugin-item .addon-plugin-toggle{width:2.4em;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);border-radius:.6em;background:rgba(255,255,255,.1)}' +
     '.addon-plugin-item .addon-plugin-toggle svg{width:1.2em;height:1.2em}' +
-    '.addon-plugin-item .addon-plugin-toggle.focus{border-color:#fff!important}' +
-    '.addon-plugin-item .addon-plugin-action{width:2.4em;min-width:2.4em;height:2.4em;display:flex;align-items:center;justify-content:center;box-sizing:border-box;border:1px solid rgba(255,255,255,.2);border-radius:.6em;background:rgba(255,255,255,.1)}' +
-    '.addon-plugin-item .addon-plugin-action svg{width:1.2em;height:1.2em}' +
-    '.addon-plugin-item .addon-plugin-action.focus{border-color:#fff!important}' +
     '.addon-plugin-item.addon-plugin-installed .addon-plugin-toggle{border-color:rgba(76,175,80,.6);background:rgba(76,175,80,.2)}' +
     '.addon-plugin-item.addon-plugin-disabled .addon-plugin-toggle{border-color:rgba(255,152,0,.6);background:rgba(255,152,0,.2)}' +
     '.addon-plugin-item.addon-plugin-notinstalled .addon-plugin-toggle{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.1)}';
@@ -336,7 +332,6 @@ function getPluginStatus(pluginUrl) {
 var SVG_INSTALL = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>';
 var SVG_INSTALLED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 var SVG_DISABLED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>';
-var SVG_DELETE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 26" fill="none"><rect x="1.89" y="1.78" width="21.79" height="21.79" rx="3.5" stroke="currentColor" stroke-width="3"/><path d="M9.5 9.5L16.5 16.5M16.5 9.5L9.5 16.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>';
 
 function updateRowStatus(row, pluginUrl) {
     var installed = checkPlugin(pluginUrl);
@@ -369,11 +364,10 @@ function openSectionModal(sectionId) {
                 '<div class="addon-plugin-name addon-ui-text">' + p.fieldName + '</div>' +
                 '<div class="addon-plugin-desc">' + p.description + '</div>' +
                 '</div>' +
-                '<div class="addon-plugin-toggle selector"></div>' +
-                '<div class="addon-plugin-action selector">' + SVG_DELETE + '</div>' +
+                '<div class="addon-plugin-toggle"></div>' +
                 '</div>');
 
-            row.find('.addon-plugin-toggle').on('hover:enter', function() {
+            row.on('hover:enter', function() {
                 var installed = checkPlugin(p.url);
                 if (installed) {
                     closeModalSafe();
@@ -408,41 +402,6 @@ function openSectionModal(sectionId) {
                     setTimeout(function() {
                         updateRowStatus(row, p.url);
                     }, 200);
-                }
-            });
-
-            row.find('.addon-plugin-action').on('hover:enter', function() {
-                var installed = checkPlugin(p.url);
-                if (installed) {
-                    closeModalSafe();
-                    setTimeout(function() {
-                        Lampa.Modal.open({
-                            title: '',
-                            align: 'center',
-                            html: $('<div class="about">Удалить плагин "' + p.pluginName + '"?</div>'),
-                            buttons: [{
-                                name: 'Нет',
-                                onSelect: function() {
-                                    closeModalSafe();
-                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
-                                }
-                            }, {
-                                name: 'Да',
-                                onSelect: function() {
-                                    closeModalSafe();
-                                    deletePlugin(p.removeUrl);
-                                    setTimeout(function() { openSectionModal(sectionId); }, 200);
-                                }
-                            }],
-                            onBack: function() {
-                                closeModalSafe();
-                                setTimeout(function() { openSectionModal(sectionId); }, 200);
-                            }
-                        });
-                        focusModalController();
-                    }, 200);
-                } else {
-                    Lampa.Noty.show('Плагин не установлен');
                 }
             });
 
