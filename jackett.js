@@ -138,7 +138,7 @@
         + '<div style="background: #1a7fd4; padding: 0.5em; border-radius: 0.4em;">'
         + '<div style="line-height: 0.3;">Выбрать парсер</div>'
         + '</div></div></div></div>',
-      description: 'Текущий: ' + getCurrentParserName()
+      description: ''
     },
     onRender: function (element) {
       element.on('hover:enter', function () {
@@ -154,14 +154,32 @@
         if (Lampa.Storage.field('parser_use') && Lampa.Storage.field('parser_torrent_type') === 'jackett') {
           element.show();
           $('.settings-param__name', element).css('color', '#ffffff');
-          $('.settings-param__description', element).text('Текущий: ' + getCurrentParserName());
-          $('div[data-name="parser_torrent_type"]').after($('div[data-name="jackett_urltwo"]'));
+          updateParserDisplay();
+          var firstParam = $('div[data-component="parser"] .settings-param').first();
+          if (firstParam.length && firstParam.attr('data-name') !== 'jackett_urltwo') {
+            $('div[data-name="jackett_urltwo"]').insertBefore(firstParam);
+          }
         } else {
           element.hide();
         }
       }, 5);
     }
   });
+
+  function updateParserDisplay() {
+    var parserName = getCurrentParserName();
+    var descEl = $('div[data-name="jackett_urltwo"] .settings-param__description');
+    if (descEl.length) {
+      descEl.text('Текущий: ' + parserName);
+    }
+    var nameEl = $('div[data-name="jackett_urltwo"] .settings-param__name');
+    if (nameEl.length) {
+      nameEl.find('.parser-current-name').remove();
+      nameEl.append('<span class="parser-current-name" style="opacity:0.6;font-size:0.85em;margin-left:0.5em">— ' + parserName + '</span>');
+    }
+    var filterEl = document.getElementById('current-parser-name');
+    if (filterEl) filterEl.textContent = parserName;
+  }
 
   Lampa.Settings.listener.follow('open', function (e) {
     if (e.name === 'parser') {
@@ -259,6 +277,7 @@
 
     var nameEl = document.getElementById('current-parser-name');
     if (nameEl) nameEl.textContent = getCurrentParserName();
+    setTimeout(updateParserDisplay, 100);
 
     var enabled = Lampa.Controller.enabled();
     Lampa.Controller.toggle(enabled && enabled.name);
@@ -430,6 +449,7 @@
       $('div[data-name="jackett_url"]').show();
       $('div[data-name="jackett_key"]').show();
       Lampa.Settings.update();
+      setTimeout(updateParserDisplay, 100);
       closeParserSelectAndRestore(controllerBeforeModal);
     });
 
@@ -536,7 +556,13 @@
     if (e.name === 'parser_torrent_type') {
       var el = $('div[data-name="jackett_urltwo"]');
       if (e.value !== 'jackett') el.hide();
-      else el.show().insertAfter('div[data-name="parser_torrent_type"]');
+      else {
+        el.show();
+        var firstParam = $('div[data-component="parser"] .settings-param').first();
+        if (firstParam.length && firstParam.attr('data-name') !== 'jackett_urltwo') {
+          el.insertBefore(firstParam);
+        }
+      }
     }
 
     if (e.name === 'activity') {
@@ -555,6 +581,7 @@
     if (e.name === 'jackett_urltwo') {
       var nameEl = document.getElementById('current-parser-name');
       if (nameEl) nameEl.textContent = getCurrentParserName();
+      setTimeout(updateParserDisplay, 50);
     }
   });
 
