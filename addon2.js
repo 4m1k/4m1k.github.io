@@ -300,7 +300,7 @@ function itemON(sourceURL, sourceName, sourceAuthor, itemName, onDone) {
             var script = document.createElement('script');
             script.src = sourceURL;
             document.getElementsByTagName('head')[0].appendChild(script);
-            showLoadingBar();
+            if (!onDone) showLoadingBar();
             setTimeout(function() {
                 if (!onDone) Lampa.Settings.update();
                 Lampa.Noty.show("Плагин " + sourceName + " успешно установлен");
@@ -442,8 +442,11 @@ function openSectionModal(sectionId) {
                     }, 200);
                 } else {
                     itemON(p.url, p.pluginName, p.author, p.paramName, function(success) {
-                        updateRowStatus(row, p.url);
-                        focusModalController();
+                        if (success) {
+                            openSectionModal(sectionId);
+                        } else {
+                            focusModalController();
+                        }
                     });
                 }
             });
