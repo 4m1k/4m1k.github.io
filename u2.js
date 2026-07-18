@@ -11,17 +11,14 @@
         return list && list.length ? Math.floor(Math.random() * list.length) : 0;
     }
 
-    // ПАТЧ: единый хелпер для заголовков запросов (вместо 10 инлайн-копий)
     function kitHeaders() {
         return {
             'X-Kit-AesGcm': Lampa.Storage.get('aesgcmkey', '')
         };
     }
 
-    // --- НАСТРОЙКИ СЕРВЕРОВ (ИЗ SKAZ.JS) ---
     var connection_source = Lampa.Storage.get('connection_source', 'skaz');
 
-    // ПАТЧ: численная оценка качества (4K/UHD считаются как 2160)
     function qualityScore(k) {
         var lower = String(k).toLowerCase();
         if (lower.indexOf('4k') !== -1 || lower.indexOf('uhd') !== -1) return 2160;
@@ -29,7 +26,6 @@
         return isNaN(n) ? 0 : n;
     }
 
-    // ПАТЧ: фильтр качества — скрыть всё ниже 1080p из списка качеств плеера и источников
     function filterMinQuality(qualityObj) {
         if (!qualityObj || typeof qualityObj !== 'object' || Array.isArray(qualityObj)) return qualityObj;
         var removed = {};
@@ -39,8 +35,6 @@
                 delete qualityObj[k];
             }
         });
-        // ПАТЧ: фолбэк — если у источника нет ничего >= 1080p, оставляем лучшее доступное,
-        // чтобы список качеств не оказался пустым
         if (!Object.keys(qualityObj).length) {
             var fallbackKey = highestQualityKey(removed);
             if (fallbackKey) qualityObj[fallbackKey] = removed[fallbackKey];
@@ -48,7 +42,6 @@
         return qualityObj;
     }
 
-    // ПАТЧ: ключ с самым высоким качеством (для автовыбора 4K → 1440 → 1080)
     function highestQualityKey(qualityObj) {
         if (!qualityObj || typeof qualityObj !== 'object') return null;
         var keys = Object.keys(qualityObj);
@@ -100,9 +93,6 @@
             getSubtitle: function() { return randomUrl; },
             auth: function(url, cfg) {
                 var acc = cfg.accounts[cfg.currentIndex];
-                // При ротации обязательно заменяем параметры старого аккаунта.
-                // Раньше уже присутствующие account_email/uid оставались в URL,
-                // поэтому запрос повторялся с тем же нерабочим аккаунтом.
                 if (url.indexOf('account_email=') === -1)
                     url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(acc.email));
                 else
@@ -225,7 +215,6 @@
         return null;
     }
 
-    // Skaz (Инициализация зеркал)
     var cf = Lampa.Storage.get('skazonline_servers');
     if (cf == true) {
         var vybor = [
@@ -245,9 +234,6 @@
     var randomIndex = Math.floor(Math.random() * vybor.length);
     var randomUrl = vybor[randomIndex];
 
-    // ПАТЧ: ротация ЗЕРКАЛ skaz (online3/online4/online5).
-    // При падении текущего зеркала сперва перебираем остальные зеркала skaz,
-    // и только когда все они мертвы — переключаемся на другой источник.
     var skazMirrorOrder = [];
     var skazMirrorIndex = 0;
     function buildSkazMirrorOrder() {
@@ -275,7 +261,6 @@
 
     setSkazStartupAccount();
 
-    // Helper для получения текущего хоста
     function getHost() {
         var cfg = SERVER_CONFIG[connection_source];
         if (cfg && cfg.getHost) return cfg.getHost();
@@ -290,7 +275,6 @@
 
     var balansers_with_search;
 
-    // Текущий UID для Skaz
     var unic_id = getCurrentSkazAccount().uid;
 
     function getAndroidVersion() {
@@ -534,7 +518,6 @@
             voice: []
         };
 
-        // Обновляем Defined.localhost при инициализации компонента
         Defined.localhost = getHost();
 
         if (balansers_with_search == undefined) {
@@ -599,7 +582,6 @@
             filter.render().find('.filter--search').appendTo(filter.render().find('.torrent-filter'));
             filter.onSelect = function(type, a, b) {
                 if (type == 'filter') {
-                    // --- ОБРАБОТКА ВЫБОРА СЕРВЕРА ---
                     if (a.stype == 'connection') {
                         clearInterval(connection_switch_timer);
                         unavailable_connection_sources = {};
@@ -760,7 +742,6 @@
             query.push('clarification=' + (object.clarification ? 1 : 0));
             query.push('similar=' + (object.similar ? true : false));
             query.push('rchtype=' + (((window.rch_nws && window.rch_nws[hostkey]) ? window.rch_nws[hostkey].type : (window.rch && window.rch[hostkey]) ? window.rch[hostkey].type : '') || ''));
-            // Hardcoded cub_id
             query.push('cub_id=' + Lampa.Utils.hash('aru@gmail.com'));
             return url + (url.indexOf('?') >= 0 ? '&' : '?') + query.join('&');
         };
@@ -805,8 +786,12 @@
             return new Promise(function(resolve, reject) {
                 var url = _this3.requestParams(Defined.localhost + 'lifeevents?memkey=' + (_this3.memkey || ''));
                 var red = false;
+                var invalid_response_times = 0;
                 var gou = function gou(json, any) {
-                    if (json.accsdb) return reject(json);
+                    if (json && json.accsdb) return reject(json);
+                    if (!json || !Array.isArray(json.online)) {
+                        return reject(json || new Error('Skaz lifeevents: поле online отсутствует'));
+                    }
                     var last_balanser = _this3.getLastChoiceBalanser();
                     if (!red) {
                         var _filter = json.online.filter(function(c) {
@@ -826,9 +811,26 @@
                     network.timeout(1500);
                     network.silent(account(url), function(json) {
                         life_wait_times++;
+
+                        if (!json || !Array.isArray(json.online)) {
+                            if (json && json.accsdb) {
+                                reject(json);
+                                return;
+                            }
+                            invalid_response_times++;
+                            if (invalid_response_times >= 3) {
+                                reject(json || new Error('Skaz lifeevents: некорректный ответ'));
+                            } else {
+                                life_wait_timer = setTimeout(fin, 500);
+                            }
+                            return;
+                        }
+                        invalid_response_times = 0;
+
                         filter_sources = [];
                         sources = {};
                         json.online.forEach(function(j) {
+                            if (!j || !j.name || !j.url) return;
                             var name = balanserName(j);
                             sources[name] = {
                                 url: j.url,
@@ -871,7 +873,6 @@
                 fin();
             });
         };
-        // ВОЗВРАЩАЕМ ЗАПРОС LITE/EVENTS
         this.createSource = function() {
             var _this4 = this;
 
@@ -892,8 +893,6 @@
                 }
 
                 function attempt() {
-                    // URL строится заново для каждой попытки, а account() подставляет
-                    // текущий аккаунт после rotateAccount().
                     var url = _this4.requestParams(Defined.localhost + 'lite/events?life=true');
                     network.timeout(15000);
                     network.silent(account(url), function(json) {
@@ -956,8 +955,6 @@
 
                     network["native"](account(url), function(response) {
                         var responseJson = Lampa.Arrays.isObject(response) ? response : Lampa.Arrays.decodeJson(response, {});
-                        // Skaz иногда возвращает HTTP 200, но внутри сообщает accsdb
-                        // (аккаунт отключён/лимит исчерпан). Это тоже считается ошибкой аккаунта.
                         if (connection_source === 'skaz' && responseJson && responseJson.accsdb) {
                             if (rotateAccount('skaz')) {
                                 console.log('skaz: accsdb, rotating to next account');
@@ -987,11 +984,9 @@
                 } else _this.empty();
             }
 
-            // Логика пробуждения для Skaz
             if (connection_source === 'skaz') {
                 var wake_title = object.movie.title;
                 var wake_url = 'http://online' + dd + '3.skaz.tv/lite/filmix?title=' + encodeURIComponent(wake_title);
-                // account(wake_url) добавит текущий uid/email из ротации
                 network.silent(account(wake_url), function() {
                     runRequest();
                 }, function() {
@@ -1009,13 +1004,10 @@
             var _this5 = this;
             var current = connection_source;
 
-            // ПАТЧ: если текущий источник skaz и есть непробованное зеркало skaz —
-            // сперва переключаемся на другое зеркало skaz, а не на другой источник.
             var skazMirrorAvailable = (current === 'skaz' && rotateSkazMirror());
 
             var next = skazMirrorAvailable ? 'skaz' : getNextConnectionSource(unavailable_connection_sources);
 
-            // skaz помечаем недоступным только когда все его зеркала перебраны
             if (!skazMirrorAvailable) unavailable_connection_sources[current] = true;
             if (!next) return this.noConnectToServer(er);
 
@@ -1042,9 +1034,6 @@
                 if (Lampa.Activity.active().activity !== _this5.activity) return;
 
                 if (skazMirrorAvailable) {
-                    // Остаёмся на skaz, переходим на следующее зеркало.
-                    // НЕ вызываем resetConnectionSourceState — иначе сбросится
-                    // уже выбранное rotateSkazMirror() зеркало. Обновляем только аккаунты.
                     connection_source = 'skaz';
                     Lampa.Storage.set('connection_source', connection_source);
                     setSkazStartupAccount();
@@ -1178,15 +1167,12 @@
             }
         };
         this.setDefaultQuality = function(data) {
-            // ПАТЧ: убираем все варианты качества ниже 1080p
             filterMinQuality(data.quality);
             if (Lampa.Arrays.getKeys(data.quality).length) {
-                // ПАТЧ: чистим возможные " or " дубли
                 for (var qq in data.quality) {
                     if (data.quality[qq].indexOf(" or ") !== -1)
                         data.quality[qq] = data.quality[qq].split(" or ")[0];
                 }
-                // ПАТЧ: автоматически выбираем самое высокое качество (4K если есть, иначе 1080p)
                 var bestKey = highestQualityKey(data.quality);
                 if (bestKey) {
                     data.url = data.quality[bestKey];
@@ -1510,7 +1496,6 @@
             var _this7 = this;
             var select = [];
             
-            // --- ДОБАВЛЕНИЕ ВЫБОРА СЕРВЕРА ---
             var currentCfg = SERVER_CONFIG[connection_source];
             var current_sub = currentCfg && currentCfg.getSubtitle ? currentCfg.getSubtitle() : randomUrl;
 
@@ -1637,8 +1622,6 @@
                 var fully = window.innerWidth > 480;
                 var scroll_to_element = false;
                 var scroll_to_mark = false;
-                // ПАТЧ: для фильмов сортируем источники по максимальному доступному качеству (4K → 1440 → 1080).
-                // Для сериалов сохраняем оригинальный порядок эпизодов.
                 if (!serial) {
                     items.sort(function(a, b) {
                         function maxScore(el) {
@@ -1661,7 +1644,6 @@
                     var episode_last = choice.episodes_view[element.season];
                     var voice_name = choice.voice_name || (filter_find.voice[0] ? filter_find.voice[0].title : false) || element.voice_name || (serial ? 'Неизвестно' : element.text) || 'Неизвестно';
                     if (element.quality) {
-                        // ПАТЧ: убираем варианты ниже 1080p и из подписи источника
                         filterMinQuality(element.quality);
                         element.qualitys = element.quality;
                         element.quality = Lampa.Arrays.getKeys(element.quality)[0];
@@ -1672,7 +1654,6 @@
                         quality: '',
                         time: Lampa.Utils.secondsToTime((episode ? episode.runtime : object.movie.runtime) * 60, true)
                     });
-                    // ПАТЧ: показываем максимальное доступное качество как метку источника (4K / 1440p / 1080p)
                     if (element.qualitys && typeof element.qualitys === 'object') {
                         var keys = Object.keys(element.qualitys);
                         if (keys.length) {
