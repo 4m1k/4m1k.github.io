@@ -100,10 +100,17 @@
             getSubtitle: function() { return randomUrl; },
             auth: function(url, cfg) {
                 var acc = cfg.accounts[cfg.currentIndex];
-                if (url.indexOf('account_email=') == -1)
-                    url = Lampa.Utils.addUrlComponent(url, 'account_email=' + acc.email);
-                if (url.indexOf('uid=') == -1)
-                    url = Lampa.Utils.addUrlComponent(url, 'uid=' + acc.uid);
+                // При ротации обязательно заменяем параметры старого аккаунта.
+                // Раньше уже присутствующие account_email/uid оставались в URL,
+                // поэтому запрос повторялся с тем же нерабочим аккаунтом.
+                if (url.indexOf('account_email=') === -1)
+                    url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(acc.email));
+                else
+                    url = url.replace(/account_email=([^&]+)/, 'account_email=' + encodeURIComponent(acc.email));
+                if (url.indexOf('uid=') === -1)
+                    url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(acc.uid));
+                else
+                    url = url.replace(/uid=([^&]+)/, 'uid=' + encodeURIComponent(acc.uid));
                 return url;
             }
         },
@@ -869,24 +876,56 @@
             var _this4 = this;
 
             return new Promise(function(resolve, reject) {
-                var url = _this4.requestParams(Defined.localhost + 'lite/events?life=true');
-                network.timeout(15000);
-                network.silent(account(url), function(json) {
-                    if (json.accsdb) return reject(json);
-                    if (json.life) {
-                        _this4.memkey = json.memkey;
-                        if (json.title) {
-                            if (object.movie.name) object.movie.name = json.title;
-                            if (object.movie.title) object.movie.title = json.title;
-                        }
-                        filter.render().find('.filter--sort').append('<span class="lampac-balanser-loader" style="width: 1.2em; height: 1.2em; margin-top: 0; background: url(./img/loader.svg) no-repeat 50% 50%; background-size: contain; margin-left: 0.5em"></span>');
-                        _this4.lifeSource().then(_this4.startSource).then(resolve)["catch"](reject);
-                    } else {
-                        _this4.startSource(json).then(resolve)["catch"](reject);
+                function retryWithNextSkazAccount(error) {
+                    if (connection_source === 'skaz' && rotateAccount('skaz')) {
+                        var acc = getCurrentSkazAccount();
+                        console.log('skaz: account failed, switching to account #' + SERVER_CONFIG.skaz.currentIndex + ' (' + acc.email + ')');
+                        life_wait_times = 0;
+                        clearTimeout(life_wait_timer);
+                        filter.render().find('.lampac-balanser-loader').remove();
+                        _this4.memkey = '';
+                        attempt();
+                        return true;
                     }
-                }, reject, false, {
-                    headers: kitHeaders()
-                });
+                    reject(error);
+                    return false;
+                }
+
+                function attempt() {
+                    // URL строится заново для каждой попытки, а account() подставляет
+                    // текущий аккаунт после rotateAccount().
+                    var url = _this4.requestParams(Defined.localhost + 'lite/events?life=true');
+                    network.timeout(15000);
+                    network.silent(account(url), function(json) {
+                        if (json && json.accsdb) {
+                            retryWithNextSkazAccount(json);
+                            return;
+                        }
+
+                        var sourcePromise;
+                        if (json.life) {
+                            _this4.memkey = json.memkey;
+                            if (json.title) {
+                                if (object.movie.name) object.movie.name = json.title;
+                                if (object.movie.title) object.movie.title = json.title;
+                            }
+                            filter.render().find('.filter--sort').append('<span class="lampac-balanser-loader" style="width: 1.2em; height: 1.2em; margin-top: 0; background: url(./img/loader.svg) no-repeat 50% 50%; background-size: contain; margin-left: 0.5em"></span>');
+                            sourcePromise = _this4.lifeSource().then(_this4.startSource);
+                        } else {
+                            sourcePromise = _this4.startSource(json);
+                        }
+
+                        sourcePromise.then(resolve)["catch"](function(error) {
+                            retryWithNextSkazAccount(error);
+                        });
+                    }, function(error) {
+                        retryWithNextSkazAccount(error);
+                    }, false, {
+                        headers: kitHeaders()
+                    });
+                }
+
+                attempt();
             });
         };
         /**
@@ -915,7 +954,21 @@
                 if (number_of_requests < 10) {
                     var headers = kitHeaders();
 
-                    network["native"](account(url), _this.parse.bind(_this), function(e) {
+                    network["native"](account(url), function(response) {
+                        var responseJson = Lampa.Arrays.isObject(response) ? response : Lampa.Arrays.decodeJson(response, {});
+                        // Skaz иногда возвращает HTTP 200, но внутри сообщает accsdb
+                        // (аккаунт отключён/лимит исчерпан). Это тоже считается ошибкой аккаунта.
+                        if (connection_source === 'skaz' && responseJson && responseJson.accsdb) {
+                            if (rotateAccount('skaz')) {
+                                console.log('skaz: accsdb, rotating to next account');
+                                _this.request(url);
+                            } else {
+                                _this.doesNotAnswer(responseJson);
+                            }
+                            return;
+                        }
+                        _this.parse(response);
+                    }, function(e) {
                         if (rotateAccount(connection_source)) {
                             console.log(connection_source + ': rotating to next account');
                             _this.request(url);
