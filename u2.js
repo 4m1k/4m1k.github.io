@@ -215,6 +215,46 @@
         return null;
     }
 
+    /**
+     * Пустой результат поиска (ничего не найдено) - это НЕ отказ сервера.
+     * Такие ошибки помечаются флагом, чтобы не запускать ротацию аккаунтов
+     * и не переключать connection_source (сервер).
+     */
+    function makeNoResultsError(message) {
+        var e = new Error(message || 'Поиск не дал результатов');
+        e.no_results = true;
+        return e;
+    }
+
+    function isNoResultsError(e) {
+        return !!(e && typeof e === 'object' && e.no_results);
+    }
+
+    /**
+     * Уже опробованные балансеры (источники) для текущей карточки.
+     * Живёт на уровне плагина, т.к. changeBalanser() делает
+     * Lampa.Activity.replace() и компонент создаётся заново.
+     */
+    var balanser_attempts = {
+        movie: null,
+        tried: {}
+    };
+
+    function balanserAttemptsReset(movie_id) {
+        balanser_attempts.movie = typeof movie_id === 'undefined' ? null : movie_id;
+        balanser_attempts.tried = {};
+    }
+
+    function balanserAttemptsUse(movie_id) {
+        if (balanser_attempts.movie !== movie_id) balanserAttemptsReset(movie_id);
+        return balanser_attempts.tried;
+    }
+
+    function balanserAttemptsMark(movie_id, name) {
+        if (!name) return;
+        balanserAttemptsUse(movie_id)[name] = true;
+    }
+
     var cf = Lampa.Storage.get('skazonline_servers');
     if (cf == true) {
         var vybor = [
@@ -585,6 +625,7 @@
                     if (a.stype == 'connection') {
                         clearInterval(connection_switch_timer);
                         unavailable_connection_sources = {};
+                        balanserAttemptsReset(object.movie.id);
                         connection_source = b.source || 'skaz';
                         Lampa.Storage.set('connection_source', connection_source);
                         resetConnectionSourceState(connection_source);
@@ -637,6 +678,7 @@
                 } else if (type == 'sort') {
                     Lampa.Select.close();
                     object.lampac_custom_select = a.source;
+                    balanserAttemptsReset(object.movie.id);
                     _this.changeBalanser(a.source);
                 }
             };
@@ -676,6 +718,7 @@
                 }
                 _this.search();
             })["catch"](function(e) {
+                if (isNoResultsError(e)) return _this.noResults();
                 _this.switchConnectionSource(e);
             });
         };
@@ -777,7 +820,7 @@
                     Lampa.Storage.set('active_balanser', balanser);
                     resolve(json);
                 } else {
-                    reject();
+                    reject(makeNoResultsError('Сервер не вернул ни одного источника'));
                 }
             });
         };
@@ -803,7 +846,7 @@
                                 return c.show;
                             }));
                         } else if (any) {
-                            reject();
+                            reject(makeNoResultsError('Ни один источник не дал результатов'));
                         }
                     }
                 };
@@ -878,6 +921,10 @@
 
             return new Promise(function(resolve, reject) {
                 function retryWithNextSkazAccount(error) {
+                    if (isNoResultsError(error)) {
+                        reject(error);
+                        return false;
+                    }
                     if (connection_source === 'skaz' && rotateAccount('skaz')) {
                         var acc = getCurrentSkazAccount();
                         console.log('skaz: account failed, switching to account #' + SERVER_CONFIG.skaz.currentIndex + ' (' + acc.email + ')');
@@ -1048,6 +1095,7 @@
                 source = '';
                 sources = {};
                 filter_sources = [];
+                balanserAttemptsReset(object.movie.id);
                 number_of_requests = 0;
                 life_wait_times = 0;
                 clearTimeout(life_wait_timer);
@@ -1056,6 +1104,7 @@
                 _this5.createSource().then(function() {
                     _this5.search();
                 })["catch"](function(e) {
+                    if (isNoResultsError(e)) return _this5.noResults();
                     _this5.switchConnectionSource(e);
                 });
             }
@@ -2007,13 +2056,76 @@
             scroll.append(html);
             this.loading(false);
         };
+        /**
+         * Следующий источник (балансер) по порядку списка:
+         * сначала те, что ещё не пробовали и у которых есть результаты (show),
+         * затем - остальные непробованные. null = источники исчерпаны.
+         */
+        this.nextBalanser = function() {
+            if (!Array.isArray(filter_sources) || !filter_sources.length) return null;
+
+            var tried = balanserAttemptsUse(object.movie.id);
+            var total = filter_sources.length;
+            var start = filter_sources.indexOf(balanser);
+            if (start < 0) start = -1;
+
+            function pick(only_show) {
+                for (var i = 1; i <= total; i++) {
+                    var name = filter_sources[(start + i + total) % total];
+                    if (!name || name === balanser || tried[name]) continue;
+                    if (only_show && sources[name] && sources[name].show === false) continue;
+                    return name;
+                }
+                return null;
+            }
+
+            return pick(true) || pick(false);
+        };
+        /**
+         * Все источники перебраны и ничего не найдено.
+         * Сервер при этом рабочий, поэтому автоматически его НЕ меняем.
+         */
+        this.noResults = function(er) {
+            var html = Lampa.Template.get('lampac_does_not_answer', {
+                balanser: balanser || ''
+            });
+            var target = (Array.isArray(filter_sources) && filter_sources.length) ? '.filter--sort' : '.filter--filter';
+            var can_change = filter.render().find(target).length > 0;
+
+            clearInterval(balanser_timer);
+            clearInterval(connection_switch_timer);
+
+            if (er && er.accsdb) html.find('.online-empty__title').html(er.msg);
+            else html.find('.online-empty__title').text(Lampa.Lang.translate('lampac_balanser_dont_work'));
+            html.find('.online-empty__time').text(Lampa.Lang.translate('lampac_all_balansers_empty'));
+            html.find('.cancel').remove();
+
+            if (can_change) {
+                html.find('.change').text(Lampa.Lang.translate(target === '.filter--sort' ? 'lampac_change_balanser' : 'lampac_change_server')).on('hover:enter', function() {
+                    filter.render().find(target).trigger('hover:enter');
+                });
+            } else {
+                html.find('.online-empty__buttons').remove();
+            }
+
+            scroll.clear();
+            scroll.append(html);
+            this.loading(false);
+        };
         this.doesNotAnswer = function(er) {
             var _this9 = this;
             this.reset();
+
+            balanserAttemptsMark(object.movie.id, balanser);
+
+            var next_balanser = this.nextBalanser();
+            if (!next_balanser) return this.noResults(er);
+
             var html = Lampa.Template.get('lampac_does_not_answer', {
                 balanser: balanser
             });
             if (er && er.accsdb) html.find('.online-empty__title').html(er.msg);
+            html.find('.online-empty__time').html(Lampa.Lang.translate('lampac_balanser_timeout') + ' (' + ((sources[next_balanser] && sources[next_balanser].name) ? sources[next_balanser].name : next_balanser) + ')');
 
             var tic = er && er.accsdb ? 10 : 5;
             html.find('.cancel').on('hover:enter', function() {
@@ -2031,9 +2143,7 @@
                 html.find('.timeout').text(tic);
                 if (tic == 0) {
                     clearInterval(balanser_timer);
-                    var next = filter_sources[0];
-                    if (balanser === next && filter_sources.length > 1) next = filter_sources[1];
-                    balanser = next;
+                    balanser = next_balanser;
                     if (Lampa.Activity.active().activity == _this9.activity) _this9.changeBalanser(balanser);
                 }
             }, 1000);
@@ -2322,6 +2432,12 @@
                 uk: 'Змінити сервер',
                 en: 'Change server',
                 zh: '更改服务器'
+            },
+            lampac_all_balansers_empty: {
+                ru: 'Ни один источник не дал результатов. Выберите источник или сервер вручную.',
+                uk: 'Жодне джерело не дало результатів. Виберіть джерело або сервер вручну.',
+                en: 'None of the sources returned any results. Pick a source or a server manually.',
+                zh: '所有来源均未返回结果。请手动选择来源或服务器。'
             },
             lampac_does_not_answer_text: {
                 ru: 'Поиск на ({balanser}) не дал результатов',
