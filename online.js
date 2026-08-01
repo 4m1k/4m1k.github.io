@@ -1,19 +1,78 @@
 (function() {
   'use strict';
 
+  function decodeHidden(input) {
+    try {
+      return decodeURIComponent(escape(atob(input)));
+    } catch (e) {
+      return atob(input);
+    }
+  }
+
+  var AB_HOST = 'https://ab2024.ru';
+  var AB_HOST_SLASH = AB_HOST + '/';
+  var AB_UID = decodeHidden('NGV6dTgzN28=');
+  var AB_TOKENS = [
+    decodeHidden('0LzQsNGALjMx'),
+    decodeHidden('VG90YWzhuLThv1VLMFBSSU1FVEVBTQ=='),
+    decodeHidden('0YHQtdC90YLRj9Cx0YDRjA=='),
+    decodeHidden('0LjRjtC90Yw5OQ==')
+  ];
+  var abTokenIndex = 0;
+
+  function getAbToken() {
+    return AB_TOKENS[abTokenIndex] || AB_TOKENS[0] || '';
+  }
+
+  function rotateAbToken() {
+    if (AB_TOKENS.length < 2) return false;
+    abTokenIndex = (abTokenIndex + 1) % AB_TOKENS.length;
+    return true;
+  }
+
+  function isAuthError(data) {
+    if (!data) return false;
+    if (data.accsdb) return true;
+    if (typeof data.status == 'number' && (data.status === 401 || data.status === 403)) return true;
+    var text = '';
+    if (typeof data == 'string') text = data;
+    else if (data.msg) text = data.msg;
+    else if (data.message) text = data.message;
+    text = (text || '').toLowerCase();
+    return text.indexOf('token') >= 0 || text.indexOf('auth') >= 0 || text.indexOf('forbidden') >= 0 || text.indexOf('unauthorized') >= 0 || text.indexOf('доступ') >= 0;
+  }
+
+  function withAuthRetry(makeRequest, onSuccess, onError) {
+    var retried = false;
+
+    function success(data) {
+      if (!retried && isAuthError(data) && rotateAbToken()) {
+        retried = true;
+        makeRequest(success, failure);
+        return;
+      }
+      onSuccess(data);
+    }
+
+    function failure(error) {
+      if (!retried && isAuthError(error) && rotateAbToken()) {
+        retried = true;
+        makeRequest(success, failure);
+        return;
+      }
+      onError(error);
+    }
+
+    makeRequest(success, failure);
+  }
+
   var Defined = {
     api: 'lampac',
-    localhost: 'http://31.129.234.181/',
+    localhost: AB_HOST_SLASH,
     apn: ''
   };
 
   var balansers_with_search;
-  
-  var unic_id = Lampa.Storage.get('lampac_unic_id', '');
-  if (!unic_id) {
-    unic_id = Lampa.Utils.uid(8).toLowerCase();
-    Lampa.Storage.set('lampac_unic_id', unic_id);
-  }
   
     function getAndroidVersion() {
   if (Lampa.Platform.is('android')) {
@@ -28,7 +87,7 @@
   }
 }
 
-var hostkey = 'http://31.129.234.181'.replace('http://', '').replace('https://', '');
+var hostkey = AB_HOST.replace('http://', '').replace('https://', '');
 
 if (!window.rch_nws || !window.rch_nws[hostkey]) {
   if (!window.rch_nws) window.rch_nws = {};
@@ -53,7 +112,7 @@ window.rch_nws[hostkey].typeInvoke = function rchtypeInvoke(host, call) {
     if (Lampa.Platform.is('android') || Lampa.Platform.is('tizen')) check(true);
     else {
       var net = new Lampa.Reguest();
-      net.silent('http://31.129.234.181'.indexOf(location.host) >= 0 ? 'https://github.com/' : host + '/cors/check', function() {
+      net.silent(AB_HOST.indexOf(location.host) >= 0 ? 'https://github.com/' : host + '/cors/check', function() {
         check(true);
       }, function() {
         check(false);
@@ -65,7 +124,7 @@ window.rch_nws[hostkey].typeInvoke = function rchtypeInvoke(host, call) {
 };
 
 window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection) {
-  window.rch_nws[hostkey].typeInvoke('http://31.129.234.181', function() {
+  window.rch_nws[hostkey].typeInvoke(AB_HOST, function() {
 
     client.invoke("RchRegistry", {
       host: location.host,
@@ -92,7 +151,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 	  
 	  function sendResult(uri, html) {
 	    $.ajax({
-	      url: 'http://31.129.234.181/rch/' + uri + '?id=' + rchId,
+	      url: AB_HOST + '/rch/' + uri + '?id=' + rchId,
 	      type: 'POST',
 	      data: html,
 	      async: true,
@@ -174,7 +233,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
   });
 };
 
-  window.rch_nws[hostkey].typeInvoke('http://31.129.234.181', function() {});
+  window.rch_nws[hostkey].typeInvoke(AB_HOST, function() {});
 
   function rchInvoke(json, call) {
     if (!window.nwsClient) 
@@ -207,7 +266,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 
   function rchRun(json, call) {
     if (typeof NativeWsClient == 'undefined') {
-      Lampa.Utils.putScript(["http://31.129.234.181/js/nws-client-es5.js?v21042026"], function() {}, false, function() {
+      Lampa.Utils.putScript([AB_HOST + '/js/nws-client-es5.js?v21042026'], function() {}, false, function() {
         rchInvoke(json, call);
       }, true);
     } else {
@@ -222,12 +281,15 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       if (email) url = Lampa.Utils.addUrlComponent(url, 'account_email=' + encodeURIComponent(email));
     }
     if (url.indexOf('uid=') == -1) {
-      var uid = Lampa.Storage.get('lampac_unic_id', '');
-      if (uid) url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(uid));
+      url = Lampa.Utils.addUrlComponent(url, 'uid=' + encodeURIComponent(AB_UID));
     }
-    if (url.indexOf('token=') == -1) {
-      var token = '';
-      if (token != '') url = Lampa.Utils.addUrlComponent(url, 'token=');
+    var abToken = getAbToken();
+    if (abToken) {
+      if (url.indexOf('ab_token=') == -1) {
+        url = Lampa.Utils.addUrlComponent(url, 'ab_token=' + encodeURIComponent(abToken));
+      } else {
+        url = url.replace(/ab_token=([^&]+)/, 'ab_token=' + encodeURIComponent(abToken));
+      }
     }
     if (url.indexOf('nws_id=') == -1) {
       var nws_id = Lampa.Storage.get('lampac_nws_id', '');
@@ -238,7 +300,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 
   function addHeaders() {
     var kit_aesgcmkey = Lampa.Storage.get('kit_aesgcmkey', '');
-    if (kit_aesgcmkey) return { 'X-Kit-AesGcm': Lampa.Storage.get('kit_aesgcmkey', '') };
+    if (kit_aesgcmkey) return { 'X-Kit-AesGcm': kit_aesgcmkey };
     return {};
   }
 
@@ -280,7 +342,9 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 	
     if (balansers_with_search == undefined) {
       network.timeout(10000);
-      network.silent(account('http://31.129.234.181/lite/withsearch'), function(json) {
+      withAuthRetry(function(success, failure) {
+        network.silent(account(AB_HOST + '/lite/withsearch'), success, failure);
+      }, function(json) {
         balansers_with_search = json;
       }, function() {
 		  balansers_with_search = [];
@@ -291,96 +355,6 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       var bals = j.balanser;
       var name = j.name.split(' ')[0];
       return (bals || name).toLowerCase();
-    }
-
-    var hiddenBalanserTerms = [
-      'kinoukr',
-      'uaflix',
-      'uafilme',
-      'uafilmme',
-      'klonfun',
-      'uakino',
-      'kino-ukr',
-      'ukrkino',
-      'ukrain',
-      'махно',
-      'kinoflix',
-	  'geosaitebi',
-      'укр'
-    ];
-
-    function getBalanserSearchText(j) {
-      return [
-        j && j.balanser,
-        j && j.name,
-        j && j.url
-      ].join(' ').toLowerCase();
-    }
-
-    function isUkrainianBalanser(j) {
-      var name = typeof j === 'string' ? j.toLowerCase() : getBalanserSearchText(j);
-      for (var i = 0; i < hiddenBalanserTerms.length; i++) {
-        if (name.indexOf(hiddenBalanserTerms[i]) !== -1) return true;
-      }
-      return false;
-    }
-
-    function normalizeBalanser(j) {
-      if (!j) return j;
-      if (getBalanserSearchText(j).indexOf('pizdatoehd') !== -1) j.name = 'Rezka - 720p';
-      return j;
-    }
-
-    function filterUkrainianBalansers(list) {
-      return (list || []).filter(function(j) {
-        return !isUkrainianBalanser(j);
-      }).map(function(j) {
-        return normalizeBalanser(j);
-      });
-    }
-
-    function visibleBalanserKeys(list) {
-      return (list || []).map(function(j) {
-        return balanserName(j) + ':' + (typeof j.show == 'undefined' ? '1' : String(j.show)) + ':' + ((j && j.name) || '');
-      }).join('|');
-    }
-
-    function saveAvailableSources(list) {
-      var nextSources = {};
-      (list || []).forEach(function(j) {
-        var name = balanserName(j);
-        nextSources[name] = {
-          url: j.url,
-          name: j.name,
-          show: typeof j.show == 'undefined' ? true : j.show
-        };
-      });
-      sources = nextSources;
-      filter_sources = Lampa.Arrays.getKeys(sources);
-    }
-
-    function sanitizeStoredBalanser() {
-      var stored = Lampa.Storage.get('online_balanser', '');
-      if (stored && isUkrainianBalanser(stored)) Lampa.Storage.set('online_balanser', filter_sources.length ? filter_sources[0] : '');
-      var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
-      if (last_select_balanser[object.movie.id] && isUkrainianBalanser(last_select_balanser[object.movie.id])) {
-        delete last_select_balanser[object.movie.id];
-        Lampa.Storage.set('online_last_balanser', last_select_balanser);
-      }
-    }
-
-    function renderSourceFilterIfChanged(sourceKey) {
-      if (renderSourceFilterIfChanged.last === sourceKey) return;
-      renderSourceFilterIfChanged.last = sourceKey;
-      filter.set('sort', filter_sources.map(function(e) {
-        return {
-          title: sources[e].name,
-          source: e,
-          selected: e == balanser,
-          ghost: !sources[e].show
-        };
-      }));
-      filter.chosen('sort', [sources[balanser] ? sources[balanser].name : balanser]);
     }
 	
 	function clarificationSearchAdd(value){
@@ -481,12 +455,14 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
 		  balanser = object.balanser;
 		  filter_sources = [];
 		  
-		  return network["native"](account(object.url.replace('rjson=','nojson=')), this.parse.bind(this), function(){
-			  files.render().find('.torrent-filter').remove();
-			  _this.empty();
-		  }, false, {
+		  return withAuthRetry(function(success, failure) {
+		    network["native"](account(object.url.replace('rjson=','nojson=')), success, failure, false, {
             dataType: 'text',
 			headers: addHeaders()
+		  });
+		  }, this.parse.bind(this), function(){
+			  files.render().find('.torrent-filter').remove();
+			  _this.empty();
 		  });
 	  } 
       this.externalids().then(function() {
@@ -519,16 +495,18 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
           if (object.movie.kinopoisk_id) query.push('kinopoisk_id=' + (object.movie.kinopoisk_id || ''));
           var url = Defined.localhost + 'externalids?' + query.join('&');
           network.timeout(10000);
-          network.silent(account(url), function(json) {
+          withAuthRetry(function(success, failure) {
+            network.silent(account(url), success, failure, false, {
+              headers: addHeaders()
+		  });
+          }, function(json) {
             for (var name in json) {
               object.movie[name] = json[name];
             }
             resolve();
           }, function() {
             resolve();
-          }, false, {
-              headers: addHeaders()
-		  });
+          });
         } else resolve();
       });
     };
@@ -550,9 +528,20 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       var query = [];
       var card_source = object.movie.source || 'tmdb'; //Lampa.Storage.field('source')
       query.push('id=' + encodeURIComponent(object.movie.id));
+
       if (object.movie.imdb_id) query.push('imdb_id=' + (object.movie.imdb_id || ''));
       if (object.movie.kinopoisk_id) query.push('kinopoisk_id=' + (object.movie.kinopoisk_id || ''));
-	  if (object.movie.tmdb_id) query.push('tmdb_id=' + (object.movie.tmdb_id || ''));
+      if (object.movie.tmdb_id) query.push('tmdb_id=' + (object.movie.tmdb_id || ''));
+
+      if (object.movie.keywords && object.movie.keywords.results) {
+         for (var i = 0, a = object.movie.keywords.results; i < a.length; i++) {
+            if (a[i].name == 'anime') {
+                query.push('anime=1');
+                break;
+            }
+         }
+      }
+
       query.push('title=' + encodeURIComponent(object.clarification ? object.search : object.movie.title || object.movie.name));
       query.push('original_title=' + encodeURIComponent(object.movie.original_title || object.movie.original_name));
       query.push('serial=' + (object.movie.name ? 1 : 0));
@@ -575,9 +564,15 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
     };
     this.startSource = function(json) {
       return new Promise(function(resolve, reject) {
-        json = filterUkrainianBalansers(json);
-        saveAvailableSources(json);
-        sanitizeStoredBalanser();
+        json.forEach(function(j) {
+          var name = balanserName(j);
+          sources[name] = {
+            url: j.url,
+            name: j.name,
+            show: typeof j.show == 'undefined' ? true : j.show
+          };
+        });
+        filter_sources = Lampa.Arrays.getKeys(sources);
         if (filter_sources.length) {
           var last_select_balanser = Lampa.Storage.cache('online_last_balanser', 3000, {});
           if (last_select_balanser[object.movie.id]) {
@@ -603,7 +598,6 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
         var gou = function gou(json, any) {
           if (json.accsdb) return reject(json);
           var last_balanser = _this3.getLastChoiceBalanser();
-          json.online = filterUkrainianBalansers(json.online);
           if (!red) {
             var _filter = json.online.filter(function(c) {
               return any ? c.show : c.show && c.name.toLowerCase() == last_balanser;
@@ -620,14 +614,32 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
         };
         var fin = function fin(call) {
           network.timeout(3000);
-            network.silent(account(url), function(json) {
-              life_wait_times++;
-              json.online = filterUkrainianBalansers(json.online);
-              var sourceKey = visibleBalanserKeys(json.online);
-              saveAvailableSources(json.online);
-              sanitizeStoredBalanser();
-              if (!sources[balanser]) balanser = filter_sources[0];
-              renderSourceFilterIfChanged(sourceKey);
+          withAuthRetry(function(success, failure) {
+            network.silent(account(url), success, failure, false, {
+              headers: addHeaders()
+		  });
+          }, function(json) {
+            life_wait_times++;
+            filter_sources = [];
+            sources = {};
+            json.online.forEach(function(j) {
+              var name = balanserName(j);
+              sources[name] = {
+                url: j.url,
+                name: j.name,
+                show: typeof j.show == 'undefined' ? true : j.show
+              };
+            });
+            filter_sources = Lampa.Arrays.getKeys(sources);
+            filter.set('sort', filter_sources.map(function(e) {
+              return {
+                title: sources[e].name,
+                source: e,
+                selected: e == balanser,
+                ghost: !sources[e].show
+              };
+            }));
+            filter.chosen('sort', [sources[balanser] ? sources[balanser].name : balanser]);
             gou(json);
             var lastb = _this3.getLastChoiceBalanser();
             if (life_wait_times > 15 || json.ready) {
@@ -646,9 +658,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
             } else {
               life_wait_timer = setTimeout(fin, 1000);
             }
-          }, false, {
-              headers: addHeaders()
-		  });
+          });
         };
         fin();
       });
@@ -658,7 +668,11 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       return new Promise(function(resolve, reject) {
         var url = _this4.requestParams(Defined.localhost + 'lite/events?life=true');
         network.timeout(15000);
-        network.silent(account(url), function(json) {
+        withAuthRetry(function(success, failure) {
+          network.silent(account(url), success, failure, false, {
+            headers: addHeaders()
+		  });
+        }, function(json) {
           if (json.accsdb) return reject(json);
           if (json.life) {
 			_this4.memkey = json.memkey;
@@ -671,9 +685,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
           } else {
             _this4.startSource(json).then(resolve)["catch"](reject);
           }
-        }, reject, false, {
-            headers: addHeaders()
-		  });
+        }, reject);
       });
     };
     /**
@@ -697,10 +709,12 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
     this.request = function(url) {
       number_of_requests++;
       if (number_of_requests < 10) {
-        network["native"](account(url), this.parse.bind(this), this.doesNotAnswer.bind(this), false, {
-          dataType: 'text',
-		  headers: addHeaders()
-        });
+        withAuthRetry(function(success, failure) {
+          network["native"](account(url), success, failure, false, {
+            dataType: 'text',
+		    headers: addHeaders()
+          });
+        }, this.parse.bind(this), this.doesNotAnswer.bind(this));
         clearTimeout(number_of_requests_timer);
         number_of_requests_timer = setTimeout(function() {
           number_of_requests = 0;
@@ -756,7 +770,11 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
           Lampa.Controller.toggle('content');
           network.clear();
         });
-        network["native"](account(file.url), function(json) {
+        withAuthRetry(function(success, failure) {
+          network["native"](account(file.url), success, failure, false, {
+            headers: addHeaders()
+		  });
+        }, function(json) {
 			if(json.rch){
 				if(waiting_rch) {
 					waiting_rch = false;
@@ -778,9 +796,7 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
         }, function() {
           Lampa.Loading.stop();
           call(false, {});
-        }, false, {
-            headers: addHeaders()
-		  });
+        });
       }
     };
     this.toPlayElement = function(file) {
@@ -919,11 +935,13 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       }, this.getChoice());
     };
 	this.loadSubtitles = function(link){
-		network.silent(account(link), function(subs){
-			Lampa.Player.subtitles(subs)
-		}, function() {},false, {
+		withAuthRetry(function(success, failure) {
+			network.silent(account(link), success, failure, false, {
             headers: addHeaders()
-		  })
+		  });
+		}, function(subs){
+			Lampa.Player.subtitles(subs)
+		}, function() {});
 	}
     this.parse = function(str) {
       var json = Lampa.Arrays.decodeJson(str, {});
@@ -1166,9 +1184,14 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       if (filter_items.voice && filter_items.voice.length) add('voice', Lampa.Lang.translate('torrent_parser_voice'));
       if (filter_items.season && filter_items.season.length) add('season', Lampa.Lang.translate('torrent_serial_season'));
       filter.set('filter', select);
-      renderSourceFilterIfChanged(filter_sources.map(function(e) {
-        return e + ':' + (sources[e] ? sources[e].show : '') + ':' + (sources[e] ? sources[e].name : '');
-      }).join('|'));
+      filter.set('sort', filter_sources.map(function(e) {
+        return {
+          title: sources[e].name,
+          source: e,
+          selected: e == balanser,
+          ghost: !sources[e].show
+        };
+      }));
       this.selected(filter_items);
     };
     /**
@@ -1749,38 +1772,44 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
             }
 
             keys.forEach(function(name) {
-              network.silent(account(links[name]), function(data) {
+              withAuthRetry(function(success, failure) {
+                network.silent(account(links[name]), success, failure, false, {
+                  headers: addHeaders()
+		  });
+              }, function(data) {
                 status.append(name, data);
               }, function() {
                 status.error();
-              }, false, {
-                  headers: addHeaders()
-		  })
+              });
             })
           } else {
             oncomplite([]);
           }
         }
 
-        network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), function(json) {
+        withAuthRetry(function(success, failure) {
+          network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), success, failure, false, {
+            headers: addHeaders()
+		  });
+        }, function(json) {
           if (json.rch) {
             rchRun(json, function() {
-              network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), function(links) {
+              withAuthRetry(function(success, failure) {
+                network.silent(account(Defined.localhost + 'lite/' + spiderUri + '?title=' + params.query), success, failure, false, {
+                  headers: addHeaders()
+		  });
+              }, function(links) {
                 searchComplite(links);
               }, function() {
                 oncomplite([]);
-              }, false, {
-                  headers: addHeaders()
-		  });
+              });
             });
           } else {
             searchComplite(json);
           }
         }, function() {
           oncomplite([]);
-        }, false, {
-            headers: addHeaders()
-		  });
+        });
       },
       onCancel: function() {
         network.clear()
@@ -1819,8 +1848,8 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
     window.lampac_plugin = true;
     var manifst = {
       type: 'video',
-      version: '1.6.9',
-      name: 'Lampac',
+      version: '1.7.1',
+      name: 'a.b',
       description: 'Плагин для просмотра онлайн сериалов и фильмов',
       component: 'lampac',
       onContextMenu: function onContextMenu(object) {
@@ -1849,8 +1878,8 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
         });
       }
     };
-	addSourceSearch('Spider', 'spider');
-	addSourceSearch('Anime', 'spider/anime');
+	addSourceSearch('akter.black', 'spider');
+	addSourceSearch('akter.black - Anime', 'spider/anime');
     Lampa.Manifest.plugins = manifst;
     Lampa.Lang.add({
       lampac_watch: { //
@@ -1962,7 +1991,6 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       Lampa.Template.add('lampac_prestige_watched', "<div class=\"online-prestige online-prestige-watched selector\">\n            <div class=\"online-prestige-watched__icon\">\n                <svg width=\"21\" height=\"21\" viewBox=\"0 0 21 21\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"10.5\" cy=\"10.5\" r=\"9\" stroke=\"currentColor\" stroke-width=\"3\"/>\n                    <path d=\"M14.8477 10.5628L8.20312 14.399L8.20313 6.72656L14.8477 10.5628Z\" fill=\"currentColor\"/>\n                </svg>\n            </div>\n            <div class=\"online-prestige-watched__body\">\n                \n            </div>\n        </div>");
     }
     var button = "<div class=\"full-start__button selector view--online lampac--button\" data-subtitle=\"".concat(manifst.name, " v").concat(manifst.version, "\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 392.697 392.697\" xml:space=\"preserve\">\n            <path d=\"M21.837,83.419l36.496,16.678L227.72,19.886c1.229-0.592,2.002-1.846,1.98-3.209c-0.021-1.365-0.834-2.592-2.082-3.145\n                L197.766,0.3c-0.903-0.4-1.933-0.4-2.837,0L21.873,77.036c-1.259,0.559-2.073,1.803-2.081,3.18\n                C19.784,81.593,20.584,82.847,21.837,83.419z\" fill=\"currentColor\"></path>\n            <path d=\"M185.689,177.261l-64.988-30.01v91.617c0,0.856-0.44,1.655-1.167,2.114c-0.406,0.257-0.869,0.386-1.333,0.386\n                c-0.368,0-0.736-0.082-1.079-0.244l-68.874-32.625c-0.869-0.416-1.421-1.293-1.421-2.256v-92.229L6.804,95.5\n                c-1.083-0.496-2.344-0.406-3.347,0.238c-1.002,0.645-1.608,1.754-1.608,2.944v208.744c0,1.371,0.799,2.615,2.045,3.185\n                l178.886,81.768c0.464,0.211,0.96,0.315,1.455,0.315c0.661,0,1.318-0.188,1.892-0.555c1.002-0.645,1.608-1.754,1.608-2.945\n                V180.445C187.735,179.076,186.936,177.831,185.689,177.261z\" fill=\"currentColor\"></path>\n            <path d=\"M389.24,95.74c-1.002-0.644-2.264-0.732-3.347-0.238l-178.876,81.76c-1.246,0.57-2.045,1.814-2.045,3.185v208.751\n                c0,1.191,0.606,2.302,1.608,2.945c0.572,0.367,1.23,0.555,1.892,0.555c0.495,0,0.991-0.104,1.455-0.315l178.876-81.768\n                c1.246-0.568,2.045-1.813,2.045-3.185V98.685C390.849,97.494,390.242,96.384,389.24,95.74z\" fill=\"currentColor\"></path>\n            <path d=\"M372.915,80.216c-0.009-1.377-0.823-2.621-2.082-3.18l-60.182-26.681c-0.938-0.418-2.013-0.399-2.938,0.045\n                l-173.755,82.992l60.933,29.117c0.462,0.211,0.958,0.316,1.455,0.316s0.993-0.105,1.455-0.316l173.066-79.092\n                C372.122,82.847,372.923,81.593,372.915,80.216z\" fill=\"currentColor\"></path>\n        </svg>\n\n        <span>#{title_online}</span>\n    </div>"); // нужна заглушка, а то при страте лампы говорит пусто
-    button = "<div class=\"full-start__button selector view--online lampac--button\" data-subtitle=\"".concat(manifst.name, " v").concat(manifst.version, "\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"96\" height=\"96\" viewBox=\"0 0 32 32\"><path fill=\"currentColor\" d=\"M20.331 14.644L6.537.813l17.55 10.075zM2.938 0c-.813.425-1.356 1.2-1.356 2.206v27.581c0 1.006.544 1.781 1.356 2.206l16.038-16zm26.574 14.1l-3.681-2.131L21.725 16l4.106 4.031l3.756-2.131c1.125-.893 1.125-2.906-.075-3.8zM6.538 31.188l17.55-10.075l-3.756-3.756z\"/></svg><span>".concat(Lampa.Lang.translate('title_online'), "</span></div>"));
     Lampa.Component.add('lampac', component); //то же самое
     resetTemplates();
 
@@ -2008,7 +2036,63 @@ window.rch_nws[hostkey].Registry = function RchRegistry(client, startConnection)
       }
     } catch (e) {}
     if (Lampa.Manifest.app_digital >= 177) {
-        var balansers_sync = ["filmix", 'filmixtv', "fxapi", "rezka", "rhsprem", "lumex", "videodb", "collaps", "collaps-dash", "hdvb", "zetflix", "kodik", "ashdi", "kinotochka", "remux", "iframevideo", "cdnmovies", "anilibria", "animedia", "animego", "animevost", "animebesst", "redheadsound", "alloha", "animelib", "moonanime", "kinopub", "vibix", "vdbmovies", "fancdn", "cdnvideohub", "vokino", "rc/filmix", "rc/fxapi", "rc/rhs", "vcdn", "videocdn", "mirage", "hydraflix", "videasy", "vidsrc", "movpi", "vidlink", "twoembed", "autoembed", "smashystream", "autoembed", "rgshows", "pidtor", "videoseed", "iptvonline", "veoveo", "kinoflix"];
+        var balansers_sync = [
+            "filmix",
+            "filmixtv",
+            "fxapi",
+            "rezka",
+            "pizdatoehd",
+            "getstv",
+            "kinopub",
+            "zetflixdb",
+            "collaps",
+            "hdvb",
+            "kodik",
+            "bamboo",
+            "eneyida",
+            "kinoukr",
+            "uafilm",
+            "uakino",
+            "kinotochka",
+            "remux",
+            "anilibria",
+            "animedia",
+            "animego",
+            "animevost",
+            "animebesst",
+            "alloha",
+            "mirage",
+            "phantom",
+            "animelib",
+            "moonanime",
+            "vibix",
+            "fancdn",
+            "cdnvideohub",
+            "vokino",
+            "hydraflix",
+            "videasy",
+            "vidsrc",
+            "movpi",
+            "vidlink",
+            "smashystream",
+            "autoembed",
+            "pidtor",
+            "videoseed",
+            "iptvonline",
+            "veoveo",
+            "kinoflix",
+            "leproduction",
+            "vkmovie",
+            "videoseed",
+            "veoveo",
+            "kinogo",
+            "kinobase",
+            "fancdn",
+            "asiage",
+            "geosaitebi",
+            "mikai",
+            "dreamerscast"
+        ];
       balansers_sync.forEach(function(name) {
         Lampa.Storage.sync('online_choice_' + name, 'object_object');
       });
